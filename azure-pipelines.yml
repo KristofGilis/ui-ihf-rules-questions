@@ -4,7 +4,7 @@ trigger:
 variables:
   isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
   azureSubscription: sc-ihf-rules-questions
-  azureWebAppName: ihf-rules-questions
+  azureWebAppName: rulequestions
 
 stages:
   - stage: Build
