@@ -1,0 +1,90 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+      <h4>{{ 'home.title' | translate }}</h4>
+      <div class="mat-body" [innerHTML]="'home.subtitle' | translate"></div>
+      <div class="alert alert-warning mt-3" role="alert">
+        {{ 'home.alert' | translate }}
+      </div>
+
+      <div class="container-fluid p-0">
+        <div class="row g-4">
+          <div class="col-12">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>
+                  {{ 'home.rules_card.title' | translate }}
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                {{ 'home.rules_card.content' | translate }}
+              </mat-card-content>
+              <mat-card-actions [align]="'end'">
+                <button type="button" mat-button routerLink="/rules">
+                  {{ 'home.rules_card.button' | translate }}
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+          <div class="col-12 col-md-6">
+            <mat-card class="h-100">
+              <mat-card-header>
+                <mat-card-title>
+                  {{ 'home.all_questions_card.title' | translate }}
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content class="h-100">
+                {{ 'home.all_questions_card.content' | translate }}
+              </mat-card-content>
+              <mat-card-actions [align]="'end'">
+                <button type="button" mat-button routerLink="/questions">
+                  {{ 'home.all_questions_card.button' | translate }}
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+          <div class="col-12 col-md-6">
+            <mat-card class="h-100">
+              <mat-card-header>
+                <mat-card-title>
+                  {{ 'home.random_questions_card.title' | translate }}
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content class="h-100">
+                <div class="d-block">
+                  <div class="d-block">
+                    {{ 'home.random_questions_card.content' | translate }}
+                  </div>
+                  <mat-form-field class="mt-4">
+                    <mat-label>{{
+                      'home.random_questions_card.count' | translate
+                    }}</mat-label>
+                    <mat-select [(ngModel)]="questionCount">
+                      <mat-option [value]="10">10</mat-option>
+                      <mat-option [value]="20">20</mat-option>
+                      <mat-option [value]="30">30</mat-option>
+                      <mat-option [value]="50">50</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </mat-card-content>
+              <mat-card-actions [align]="'end'">
+                <button
+                  type="button"
+                  mat-button
+                  routerLink="/questions"
+                  [queryParams]="{ count: questionCount }"
+                >
+                  {{
+                    'home.random_questions_card.button'
+                      | translate : { count: questionCount }
+                  }}
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

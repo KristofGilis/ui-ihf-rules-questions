@@ -1,0 +1,62 @@
+<mat-sidenav-container fullscreen>
+  <mat-sidenav
+    #drawer
+    fixedInViewport
+    [mode]="!(isHandset$ | async) ? 'side' : 'over'"
+    [opened]="(isHandset$ | async) === false"
+    [autoFocus]="false"
+  >
+    <div class="d-flex flex-column h-100">
+      <div class="d-flex justify-content-center background">
+        <img
+          title="logo"
+          class="logo-image py-4"
+          src="icons/android-chrome-256x256.png"
+        />
+      </div>
+      <mat-nav-list class="pt-3 px-2 navigation-container">
+        @for (item of rootRoutes; track $index) {
+        <a
+          mat-list-item
+          [routerLink]="item.path"
+          #link="routerLinkActive"
+          routerLinkActive
+          [activated]="link.isActive"
+          class="mb-1"
+          (click)="onNavigationLinkClicked(drawer)"
+        >
+          {{ 'navigation.' + item.path | translate }}
+        </a>
+        }
+      </mat-nav-list>
+      <div class="mt-auto">
+        <div class="px-3 pt-2 pb-5 background">
+          <small class="fw-bold">&copy; Copyright 2024, Kristof Gilis</small>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar class="sticky-top">
+      @if (isHandset$ | async) {
+      <button
+        type="button"
+        class="me-2"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        onclick="blur()"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+      }
+      <h1 class="fw-bolder">{{ 'main.title' | translate }}</h1>
+    </mat-toolbar>
+    <div class="container-fluid py-4">
+      <div class="row">
+        <div class="col">
+          <router-outlet />
+        </div>
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

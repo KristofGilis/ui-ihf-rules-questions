@@ -1,0 +1,65 @@
+trigger:
+  - main
+
+variables:
+  isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+  azureSubscription: sc-ihf-rules-questions
+  azureWebAppName: ihf-rules-questions
+
+stages:
+  - stage: Build
+    displayName: Build image
+    jobs:
+      - job: Build
+        displayName: Build image
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - checkout: self
+          - task: Npm@1
+            displayName: npm install
+            inputs:
+              command: 'install'
+          - task: Npm@1
+            displayName: npm build
+            inputs:
+              command: 'custom'
+              customCommand: 'run build -- --configuration=production'
+          - task: CopyFiles@2
+            condition: and(succeeded(), eq(variables.isMain, true))
+            displayName: 'Copy files to artifact staging directory'
+            inputs:
+              SourceFolder: 'dist/ui-ihf-rules-questions'
+              Contents: '**'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)'
+              OverWrite: true
+          - task: PublishBuildArtifacts@1
+            condition: and(succeeded(), eq(variables.isMain, true))
+            displayName: 'Publish artifact'
+            inputs:
+              PathtoPublish: '$(Build.ArtifactstagingDirectory)'
+              ArtifactName: 'dist'
+              publishLocation: 'Container'
+  - stage: deploy
+    condition: and(succeeded(), eq(variables.isMain, true))
+    displayName: Deploy image
+    jobs:
+      - job: Deploy
+        displayName: Deploy
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: DownloadBuildArtifacts@1
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'dist'
+              downloadPath: '$(System.ArtifactsDirectory)'
+          - task: AzureRmWebAppDeployment@4
+            displayName: Deploy Azure App Service
+            inputs:
+              azureSubscription: $(azureSubscription)
+              appType: webAppLinux
+              WebAppName: $(azureWebAppName)
+              packageForLinux: '$(Build.ArtifactStagingDirectory)'
+              StartupCommand: node dist/server/server.mjs

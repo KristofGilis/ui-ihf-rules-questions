@@ -1,0 +1,28 @@
+query getQuestions(
+  $first: Int!
+  $after: String
+  $order: [QuestionSortInput!]
+  $random: Boolean = false
+) {
+  questions(first: $first, after: $after, order: $order, random: $random) {
+    edges {
+      cursor
+      node {
+        id
+        number
+        phrase
+        answers(order: [{ number: ASC }]) {
+          nodes {
+            id
+            number
+            phrase
+          }
+        }
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}

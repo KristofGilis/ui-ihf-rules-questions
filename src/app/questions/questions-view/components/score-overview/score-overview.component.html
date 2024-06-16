@@ -1,0 +1,48 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+      <mat-card appearance="outlined">
+        <mat-card-header>
+          <mat-card-title>
+            <h4 class="fw-bold">{{ 'score_overview.title' | translate }}</h4>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="container-fluid p-0">
+            <div class="row gy-3">
+              <div class="col-12">
+                <div class="d-flex">
+                  <div>
+                    {{ 'score_overview.score' | translate }}
+                    <span class="fw-bold">
+                      {{ score?.score }} / {{ score?.total }}
+                    </span>
+                  </div>
+                  <div
+                    class="position-absolute top-0 end-0 fw-bold fs-3 pt-4 pe-4"
+                    [class.red]="isBadResult"
+                  >
+                    {{ score?.percentage }}
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                @if (score?.wrongQuestionsIds?.length ?? 0 > 0) {
+                <span
+                  [innerHTML]="
+                    'score_overview.wrong_questionNumbers' | translate
+                  "
+                >
+                </span>
+                } @for (wrongQuestionId of score?.wrongQuestionsIds; track
+                wrongQuestionId) {
+                <div class="my-2">{{ getQuestionNumber(wrongQuestionId) }}</div>
+                }
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

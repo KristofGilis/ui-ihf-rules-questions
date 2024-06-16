@@ -1,0 +1,47 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$light-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+  )
+);
+
+$dark-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: mat.$cyan-palette,
+      tertiary: mat.$orange-palette,
+    ),
+  )
+);
+
+html {
+  @include mat.core-theme($dark-theme);
+  @include mat.all-component-themes($dark-theme);
+  @include mat.checkbox-color($dark-theme, $color-variant: tertiary);
+
+  @media (prefers-color-scheme: light) {
+    @include mat.core-color($light-theme);
+    @include mat.all-component-colors($light-theme);
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.fw-500 {
+  font-weight: 500;
+}

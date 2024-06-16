@@ -1,0 +1,5 @@
+@use '@angular/material' as mat;
+
+.red {
+  color: map-get($map: mat.$red-palette, $key: 40);
+}

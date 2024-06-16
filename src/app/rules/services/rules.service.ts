@@ -1,0 +1,34 @@
+import { Injectable, inject } from '@angular/core';
+import { tap } from 'rxjs';
+import { GetRulesGQL } from '../../../../graphql/generated';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class RulesService {
+  private _cursor?: string | null;
+  private _pageSize = 20;
+  private _getRulesGQL = inject(GetRulesGQL);
+  private _rulesQuery = this._getRulesGQL.watch(
+    {
+      first: this._pageSize,
+      after: null,
+    },
+    {
+      notifyOnNetworkStatusChange: true,
+    }
+  );
+
+  rules$ = this._rulesQuery.valueChanges.pipe(
+    tap((x) => (this._cursor = x.data?.rules?.pageInfo.endCursor))
+  );
+
+  fetchMore(): void {
+    this._rulesQuery.fetchMore({
+      variables: {
+        first: this._pageSize,
+        after: this._cursor,
+      },
+    });
+  }
+}

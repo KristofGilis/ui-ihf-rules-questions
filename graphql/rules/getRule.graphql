@@ -1,0 +1,28 @@
+query getRule($id: ID!, $first: Int!, $after: String) {
+  ruleById(id: $id) {
+    id
+    number
+    name
+    questions(first: $first, after: $after, order: [{ number: ASC }]) {
+      edges {
+        cursor
+        node {
+          id
+          number
+          phrase
+          answers(order: [{ number: ASC }]) {
+            nodes {
+              id
+              number
+              phrase
+            }
+          }
+        }
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "home": {
+    "alert": "For now, only the English version is available. As soon as the version of the other languages(Dutch, French, German, Slovenian,...) are available, they will be published.",
+    "all_questions_card": {
+      "button": "Answer all questions",
+      "content": "Go to the list of all questions.",
+      "title": "All Questions"
+    },
+    "random_questions_card": {
+      "button": "Answer {{count}} questions",
+      "content": "Go to the list of random question",
+      "count": "# Questions",
+      "title": "Random Questions"
+    },
+    "rules_card": {
+      "button": "Go to rules",
+      "content": "Go to the list of all rules. From here you can get all questions related to the selected rule.",
+      "title": "Rules"
+    },
+    "subtitle": "Test your knowledge of the rules of the game. <br> Questions about the IHF Rules of the Game valid as of the <b>1st of July 2024</b>",
+    "title": "Welcome"
+  },
+  "main": {
+    "title": "IHF Rules Questions"
+  },
+  "navigation": {
+    "home": "Home",
+    "questions": "Questions",
+    "rules": "Rules"
+  },
+  "questions": {
+    "calculate_score": "Calculate score",
+    "title": "All Questions"
+  },
+  "random_questions": {
+    "title": "Random Questions"
+  },
+  "rules": {
+    "title": "Rules"
+  },
+  "score_overview": {
+    "score": "Your score:",
+    "title": "Result",
+    "wrong_questionNumbers": "The questions you answered <u>wrong</u>:"
+  }
+}

@@ -1,0 +1,17 @@
+@if (loading) {
+<div class="d-flex justify-content-center align-items-center">
+  <mat-progress-spinner
+    mode="indeterminate"
+    diameter="50"
+  ></mat-progress-spinner>
+</div>
+} @else {
+
+<mat-nav-list>
+  @for (rule of rules; track rule.number) {
+  <a mat-list-item [routerLink]="rule.id">
+    {{ rule.number }} - {{ rule.name }}
+  </a>
+  }
+</mat-nav-list>
+}

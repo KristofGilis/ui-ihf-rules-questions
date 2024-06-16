@@ -1,0 +1,15 @@
+query getRules($first: Int!, $after: String) {
+  rules(first: $first, after: $after, order: { number: ASC }) {
+    edges {
+      cursor
+      node {
+        id
+        number
+        name
+      }
+    }
+    pageInfo {
+      endCursor
+    }
+  }
+}

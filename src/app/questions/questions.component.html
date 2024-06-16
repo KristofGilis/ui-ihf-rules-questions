@@ -1,0 +1,25 @@
+<div class="container-fluid h-100">
+  <div class="row">
+    <div class="col">
+      <h4>
+        @if (!!randomCount) {
+        {{ 'random_questions.title' | translate }}
+        } @else {
+        {{ 'questions.title' | translate }}
+        }
+      </h4>
+
+      <app-questions-view
+        [questions]="(questions$ | async) ?? []"
+        [loading]="loading"
+        [hasMoreQuestions]="hasMoreQuestions"
+        [score]="(score$ | async) ?? undefined"
+        [scoreLoading]="scoreLoading"
+        (calculareScore)="
+          onCalculateScore($event.questionIds, $event.selectedAnswerIds)
+        "
+      >
+      </app-questions-view>
+    </div>
+  </div>
+</div>
