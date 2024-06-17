@@ -10,6 +10,7 @@
             <div class="d-flex flex-column">
               @for (answer of question?.answers?.nodes; track answer.id) {
               <mat-checkbox
+                class="mb-2"
                 (change)="
                   $event.checked
                     ? selectAnswer.emit(answer.id)
