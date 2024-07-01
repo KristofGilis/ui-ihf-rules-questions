@@ -34,6 +34,17 @@
       }
     </div>
   </button>
+  @if(isRandom) {
+  <button
+    type="button"
+    class="ms-2"
+    mat-button
+    [disabled]="scoreLoading"
+    (click)="newRandomQuestions.emit()"
+  >
+    {{ 'questions_random_new' | translate : { count: randomCount } }}
+  </button>
+  }
 </div>
 } @if (score) {
 <div class="mt-4">

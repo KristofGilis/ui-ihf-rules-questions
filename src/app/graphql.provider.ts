@@ -52,7 +52,7 @@ export const graphqlProvider: ApplicationConfig['providers'] = [
         Query: {
           fields: {
             rules: relayStylePagination(),
-            questions: relayStylePagination(),
+            questions: relayStylePagination(['order', 'random']),
           },
         },
         Rule: {

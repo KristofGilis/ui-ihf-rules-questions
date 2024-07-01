@@ -32,6 +32,7 @@
     "calculate_score": "Calculate score",
     "title": "All Questions"
   },
+  "questions_random_new": "{{count}} new questions",
   "random_questions": {
     "title": "Random Questions"
   },

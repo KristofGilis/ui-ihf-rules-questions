@@ -23,7 +23,7 @@
           routerLinkActive
           [activated]="link.isActive"
           class="mb-1"
-          (click)="onNavigationLinkClicked(drawer)"
+          (click)="onNavigationLinkClicked(drawer, item.path)"
         >
           {{ 'navigation.' + item.path | translate }}
         </a>

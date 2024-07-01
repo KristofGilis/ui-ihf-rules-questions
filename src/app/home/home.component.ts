@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import {
@@ -16,6 +16,7 @@ import {
 } from '@angular/material/select';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { RandomStateService } from '../questions/services/random-state.service';
 
 @Component({
   selector: 'app-home',
@@ -40,5 +41,6 @@ import { TranslateModule } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
+  randomStateService = inject(RandomStateService);
   questionCount = 10;
 }

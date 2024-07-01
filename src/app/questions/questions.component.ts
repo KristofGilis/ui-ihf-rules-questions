@@ -1,18 +1,13 @@
 import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Observable, finalize, map, tap } from 'rxjs';
 import { Question, Score } from '../../../graphql/generated';
 import { QuestionsViewComponent } from './questions-view/questions-view.component';
 import { QuestionsService } from './services/questions.service';
+import { RandomStateService } from './services/random-state.service';
 
 @Component({
   selector: 'app-questions',
@@ -22,16 +17,21 @@ import { QuestionsService } from './services/questions.service';
   styleUrl: './questions.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class QuestionsComponent implements OnInit {
-  private _activatedRoute = inject(ActivatedRoute);
+export class QuestionsComponent {
   private _questionsService = inject(QuestionsService);
   private _scrollDispatcher = inject(ScrollDispatcher);
+  private _randomStateService = inject(RandomStateService);
 
-  randomCount = this._activatedRoute.snapshot.queryParams['count'];
+  random = this._randomStateService.random;
   loading = false;
   questions$ = this._questionsService.questions$.pipe(
     tap((x) => (this.loading = x.loading)),
-    map((x) => x.data?.questions?.edges?.map((y) => y.node as Question) ?? []),
+    map((x) => {
+      if (x.loading) {
+        return [];
+      }
+      return x.data?.questions?.edges?.map((y) => y.node as Question) ?? [];
+    }),
     finalize(() => (this.loading = false))
   );
   score$?: Observable<Score>;
@@ -52,14 +52,6 @@ export class QuestionsComponent implements OnInit {
       });
   }
 
-  ngOnInit(): void {
-    if (this.randomCount && !Number.isNaN(this.randomCount)) {
-      this._questionsService.getRandom(Number.parseInt(this.randomCount));
-    } else {
-      this._questionsService.getAll();
-    }
-  }
-
   onCalculateScore(questionIds: string[], selectedAnswerIds: string[]): void {
     this.score$ = this._questionsService
       .calculateScore(questionIds, selectedAnswerIds)
@@ -68,5 +60,14 @@ export class QuestionsComponent implements OnInit {
         map((x) => x.data?.calculateScore as Score),
         finalize(() => (this.scoreLoading = false))
       );
+  }
+
+  onNewRandomQuestions(): void {
+    if (this._randomStateService.random().isRandom) {
+      this._randomStateService.random.set({
+        isRandom: true,
+        count: this._randomStateService.random().count,
+      });
+    }
   }
 }

@@ -32,10 +32,13 @@ export class QuestionsViewComponent {
   @Input({ required: true }) hasMoreQuestions = true;
   @Input({ required: true }) score?: Score;
   @Input({ required: true }) scoreLoading = false;
+  @Input() isRandom = false;
+  @Input() randomCount?: number;
   @Output() calculareScore = new EventEmitter<{
     questionIds: string[];
     selectedAnswerIds: string[];
   }>();
+  @Output() newRandomQuestions = new EventEmitter();
 
   selectedAnswers: string[] = [];
 

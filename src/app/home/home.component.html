@@ -37,7 +37,17 @@
                 {{ 'home.all_questions_card.content' | translate }}
               </mat-card-content>
               <mat-card-actions [align]="'end'">
-                <button type="button" mat-button routerLink="/questions">
+                <button
+                  type="button"
+                  mat-button
+                  routerLink="/questions"
+                  (click)="
+                    randomStateService.random.set({
+                      isRandom: false,
+                      count: 0
+                    })
+                  "
+                >
                   {{ 'home.all_questions_card.button' | translate }}
                 </button>
               </mat-card-actions>
@@ -73,7 +83,12 @@
                   type="button"
                   mat-button
                   routerLink="/questions"
-                  [queryParams]="{ count: questionCount }"
+                  (click)="
+                    randomStateService.random.set({
+                      isRandom: true,
+                      count: questionCount
+                    })
+                  "
                 >
                   {{
                     'home.random_questions_card.button'

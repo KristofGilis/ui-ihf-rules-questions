@@ -18,6 +18,7 @@ import {
 } from '@ngx-translate/core';
 import { Observable, map, shareReplay, tap } from 'rxjs';
 import { routes } from './app.routes';
+import { RandomStateService } from './questions/services/random-state.service';
 
 @Component({
   selector: 'app-root',
@@ -43,6 +44,7 @@ import { routes } from './app.routes';
   providers: [TranslatePipe],
 })
 export class AppComponent {
+  private _randomStateService = inject(RandomStateService);
   private _breakpointObserver = inject(BreakpointObserver);
   private _translateService = inject(TranslateService);
 
@@ -62,7 +64,10 @@ export class AppComponent {
     this._translateService.use(this._translateService.defaultLang);
   }
 
-  onNavigationLinkClicked(drawer: MatSidenav) {
+  onNavigationLinkClicked(drawer: MatSidenav, route?: string) {
+    if (route === 'questions') {
+      this._randomStateService.random.set({ isRandom: false, count: 0 });
+    }
     if (this._isHandset) {
       drawer.close();
     }
