@@ -27,7 +27,7 @@ export class QuestionsComponent {
   questions$ = this._questionsService.questions$.pipe(
     tap((x) => (this.loading = x.loading)),
     map((x) => {
-      if (x.loading) {
+      if (x.loading && this._randomStateService.random().isRandom) {
         return [];
       }
       return x.data?.questions?.edges?.map((y) => y.node as Question) ?? [];
