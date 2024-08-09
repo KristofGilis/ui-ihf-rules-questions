@@ -1,0 +1,52 @@
+{
+  "home": {
+    "alert": "Op dit moment zijn alleen de Engelse en Nederlandse versie beschikbaar. Zodra de versies van de andere talen (Frans, Duits, Sloveens,...) beschikbaar zijn, worden ze gepubliceerd.",
+    "all_questions_card": {
+      "button": "Alle vragen beantwoorden",
+      "content": "Ga naar de lijst met alle vragen.",
+      "title": "Alle vragen"
+    },
+    "random_questions_card": {
+      "button": "Beantwoord {{count}} vragen",
+      "content": "Ga naar de lijst met willekeurige vragen",
+      "count": "# Vragen",
+      "title": "Willekeurige vragen"
+    },
+    "rules_card": {
+      "button": "Ga naar spelregels",
+      "content": "Ga naar de lijst met alle spelregels. Vanaf hier kun je alle vragen krijgen die betrekking hebben op de geselecteerde spelregel.",
+      "title": "Spelregels"
+    },
+    "subtitle": "Test je kennis van de spelregels. <br> Vragen over de IHF Spelregels geldig vanaf <b>1 juli 2024</b>",
+    "title": "Welkom"
+  },
+  "languages": {
+    "en": "Engels",
+    "label": "Taal",
+    "nl": "Nederlands"
+  },
+  "main": {
+    "title": "IHF spelregelvragen"
+  },
+  "navigation": {
+    "home": "Home",
+    "questions": "Vragen",
+    "rules": "Spelregels"
+  },
+  "questions": {
+    "calculate_score": "Bereken score",
+    "title": "Alle vragen"
+  },
+  "questions_random_new": "{{count}}} nieuwe vragen",
+  "random_questions": {
+    "title": "Willekeurige vragen"
+  },
+  "rules": {
+    "title": "Spelregels"
+  },
+  "score_overview": {
+    "score": "Uw score:",
+    "title": "Resultaat",
+    "wrong_questionNumbers": "De vragen die je <u>fout</u> hebt beantwoord:"
+  }
+}

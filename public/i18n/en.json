@@ -1,6 +1,6 @@
 {
   "home": {
-    "alert": "For now, only the English version is available. As soon as the version of the other languages(Dutch, French, German, Slovenian,...) are available, they will be published.",
+    "alert": "For now, only the English and Dutch version are available. As soon as the version of the other languages(French, German, Slovenian,...) are available, they will be published.",
     "all_questions_card": {
       "button": "Answer all questions",
       "content": "Go to the list of all questions.",
@@ -19,6 +19,11 @@
     },
     "subtitle": "Test your knowledge of the rules of the game. <br> Questions about the IHF Rules of the Game valid as of the <b>1st of July 2024</b>",
     "title": "Welcome"
+  },
+  "languages": {
+    "en": "English",
+    "label": "Language",
+    "nl": "Dutch"
   },
   "main": {
     "title": "IHF Rules Questions"

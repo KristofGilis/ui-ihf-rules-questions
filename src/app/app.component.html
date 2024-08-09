@@ -31,6 +31,25 @@
       </mat-nav-list>
       <div class="mt-auto">
         <div class="px-3 pt-2 pb-5 background">
+          <mat-form-field class="w-100 mt-3">
+            <mat-label>{{ 'languages.label' | translate }}</mat-label>
+            <mat-select
+              [(value)]="currentLang"
+              (selectionChange)="onChangeLanguage($event.value)"
+              [hideSingleSelectionIndicator]="true"
+            >
+              <mat-select-trigger>
+                {{ 'languages.' + currentLang | translate }}
+              </mat-select-trigger>
+              <mat-option value="en">
+                {{ 'languages.en' | translate }}
+              </mat-option>
+              <mat-option value="nl">
+                {{ 'languages.nl' | translate }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
           <small class="fw-bold">&copy; Copyright 2024, Kristof Gilis</small>
         </div>
       </div>

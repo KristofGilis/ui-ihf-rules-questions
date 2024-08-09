@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { HomeComponent } from './home/home.component';
-import { QuestionsComponent } from './questions/questions.component';
 
 _('navigation.home');
 _('navigation.rules');
@@ -24,6 +23,7 @@ export const routes: Routes = [
   },
   {
     path: 'questions',
-    component: QuestionsComponent,
+    loadChildren: () =>
+      import('./questions/questions.routes').then((r) => r.QUESTIONS_ROUTES),
   },
 ];

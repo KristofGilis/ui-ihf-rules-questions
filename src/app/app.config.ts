@@ -6,7 +6,13 @@ import {
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
-import { HttpClient, provideHttpClient, withFetch } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpInterceptorFn,
+  provideHttpClient,
+  withFetch,
+  withInterceptors,
+} from '@angular/common/http';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -15,6 +21,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { routes } from './app.routes';
 import { graphqlProvider } from './graphql.provider';
+import { getLanguage } from './language';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, '../i18n/', '.json');
@@ -23,6 +30,19 @@ export function createTranslateLoader(http: HttpClient) {
 export function getBaseUrl(): string {
   return document.getElementsByTagName('base')[0].href;
 }
+
+export const languageInterceptor: HttpInterceptorFn = (req, next) => {
+  if (req.url.endsWith('/graphql')) {
+    const langReq = req.clone({
+      setHeaders: {
+        'Accept-Language': getLanguage(),
+      },
+    });
+
+    return next(langReq);
+  }
+  return next(req);
+};
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -34,7 +54,7 @@ export const appConfig: ApplicationConfig = {
       registrationStrategy: 'registerWhenStable:30000',
     }),
     provideAnimationsAsync(),
-    provideHttpClient(withFetch()),
+    provideHttpClient(withFetch(), withInterceptors([languageInterceptor])),
     graphqlProvider,
     importProvidersFrom(
       TranslateModule.forRoot({
@@ -44,7 +64,6 @@ export const appConfig: ApplicationConfig = {
           deps: [HttpClient],
         },
         defaultLanguage: 'en',
-        useDefaultLang: true,
       })
     ),
     { provide: 'BASE_URL', useFactory: getBaseUrl, deps: [] },

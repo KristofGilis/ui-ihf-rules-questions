@@ -1,15 +1,14 @@
 import { HttpHeaders } from '@angular/common/http';
 import {
   ApplicationConfig,
-  InjectionToken,
-  TransferState,
   inject,
+  InjectionToken,
   makeStateKey,
+  TransferState,
 } from '@angular/core';
 import { ApolloClientOptions, InMemoryCache } from '@apollo/client/core';
 import { relayStylePagination } from '@apollo/client/utilities';
-import { TranslateService } from '@ngx-translate/core';
-import { APOLLO_FLAGS, APOLLO_OPTIONS, Apollo } from 'apollo-angular';
+import { Apollo, APOLLO_FLAGS, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 
 const APOLLO_CACHE = new InjectionToken<InMemoryCache>('apollo-cache');
@@ -18,7 +17,6 @@ const uri = 'https://api-ihf-rules-questions.azurewebsites.net/graphql';
 
 export function apolloOptionsFactory(): ApolloClientOptions<any> {
   const httpLink = inject(HttpLink);
-  const translateService = inject(TranslateService);
   const cache = inject(APOLLO_CACHE);
   const transferState = inject(TransferState);
   const isBrowser = transferState.hasKey<any>(STATE_KEY);
@@ -34,9 +32,7 @@ export function apolloOptionsFactory(): ApolloClientOptions<any> {
   return {
     link: httpLink.create({
       uri,
-      headers: new HttpHeaders()
-        .append('graphql-preflight', '1')
-        .append('Accept-Language', translateService.currentLang),
+      headers: new HttpHeaders().append('graphql-preflight', '1'),
     }),
     cache,
     ssrMode: true,
@@ -66,7 +62,6 @@ export const graphqlProvider: ApplicationConfig['providers'] = [
   {
     provide: APOLLO_OPTIONS,
     useFactory: apolloOptionsFactory,
-    deps: [TranslateService],
   },
   {
     provide: APOLLO_FLAGS,

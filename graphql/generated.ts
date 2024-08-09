@@ -33,7 +33,7 @@ export type Answer = Node & {
   question: Question;
   /** The id the the rule */
   questionId: Scalars['ID']['output'];
-  /** The phrase of the answer in different translations (En) */
+  /** The phrase of the answer in different translations (En, Nl) */
   translations?: Maybe<TranslatedString>;
 };
 
@@ -245,7 +245,7 @@ export type Question = Node & {
   rule: Rule;
   /** The id the the rule */
   ruleId: Scalars['ID']['output'];
-  /** The phrase of the question in different translations (En) */
+  /** The phrase of the question in different translations (En, Nl) */
   translations?: Maybe<TranslatedString>;
 };
 
@@ -316,7 +316,7 @@ export type Rule = Node & {
   number?: Maybe<Scalars['String']['output']>;
   /** Rule questions */
   questions?: Maybe<QuestionsConnection>;
-  /** The name of the rule in different translations (En) */
+  /** The name of the rule in different translations (En, Nl) */
   translations?: Maybe<TranslatedString>;
 };
 
@@ -420,20 +420,24 @@ export type StringOperationFilterInput = {
 export type TranslatedString = {
   __typename?: 'TranslatedString';
   en?: Maybe<Scalars['String']['output']>;
+  nl?: Maybe<Scalars['String']['output']>;
 };
 
 export type TranslatedStringFilterInput = {
   and?: InputMaybe<Array<TranslatedStringFilterInput>>;
   en?: InputMaybe<StringOperationFilterInput>;
+  nl?: InputMaybe<StringOperationFilterInput>;
   or?: InputMaybe<Array<TranslatedStringFilterInput>>;
 };
 
 export type TranslatedStringInput = {
   en?: InputMaybe<Scalars['String']['input']>;
+  nl?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TranslatedStringSortInput = {
   en?: InputMaybe<SortEnumType>;
+  nl?: InputMaybe<SortEnumType>;
 };
 
 export type UuidOperationFilterInput = {
