@@ -1,11 +1,12 @@
 {
   "home": {
-    "alert": "Op dit moment zijn alleen de Engelse en Nederlandse versie beschikbaar. Zodra de versies van de andere talen (Frans, Duits, Sloveens,...) beschikbaar zijn, worden ze gepubliceerd.",
+    "alert": "Voorlopig zijn alleen de Engelse en Nederlandse versie beschikbaar. Ik heb besloten om de andere talen niet automatisch toe te voegen, omdat ik daar de tijd niet voor heb. Maar je kan helpen. ;-)",
     "all_questions_card": {
       "button": "Alle vragen beantwoorden",
       "content": "Ga naar de lijst met alle vragen.",
       "title": "Alle vragen"
     },
+    "collaborate": "Help om andere talen te ondersteunen",
     "random_questions_card": {
       "button": "Beantwoord {{count}} vragen",
       "content": "Ga naar de lijst met willekeurige vragen",

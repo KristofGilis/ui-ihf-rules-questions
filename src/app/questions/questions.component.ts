@@ -68,6 +68,7 @@ export class QuestionsComponent {
         isRandom: true,
         count: this._randomStateService.random().count,
       });
+      this.score$ = undefined;
     }
   }
 }

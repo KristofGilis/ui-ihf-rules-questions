@@ -1,11 +1,12 @@
 {
   "home": {
-    "alert": "For now, only the English and Dutch version are available. As soon as the version of the other languages(French, German, Slovenian,...) are available, they will be published.",
+    "alert": "For now, only the English and Dutch version are available. I decided to not automatically add the other languages, because I do not have the time. But you can help. ;-)",
     "all_questions_card": {
       "button": "Answer all questions",
       "content": "Go to the list of all questions.",
       "title": "All Questions"
     },
+    "collaborate": "Help to support other languages",
     "random_questions_card": {
       "button": "Answer {{count}} questions",
       "content": "Go to the list of random question",
