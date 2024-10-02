@@ -81,7 +81,7 @@ export class AppComponent {
   currentLang: string;
 
   constructor() {
-    this._translateService.addLangs(['en', 'nl']);
+    this._translateService.addLangs(['en', 'nl', 'srb']);
 
     this.currentLang = getLanguage();
 

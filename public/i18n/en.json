@@ -1,6 +1,6 @@
 {
   "home": {
-    "alert": "For now, only the English and Dutch version are available. I decided to not automatically add the other languages, because I do not have the time. But you can help. ;-)",
+    "alert": "I decided to not automatically add the other languages, because I do not have the time. But you can help. ;-) Special thanks for all collaborators.",
     "all_questions_card": {
       "button": "Answer all questions",
       "content": "Go to the list of all questions.",
@@ -24,7 +24,8 @@
   "languages": {
     "en": "English",
     "label": "Language",
-    "nl": "Dutch"
+    "nl": "Dutch",
+    "srb": "Serbian"
   },
   "main": {
     "title": "IHF Rules Questions"

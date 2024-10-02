@@ -1,6 +1,6 @@
 {
   "home": {
-    "alert": "Voorlopig zijn alleen de Engelse en Nederlandse versie beschikbaar. Ik heb besloten om de andere talen niet automatisch toe te voegen, omdat ik daar de tijd niet voor heb. Maar je kan helpen. ;-)",
+    "alert": "Ik heb besloten om de andere talen niet automatisch toe te voegen, omdat ik daar de tijd niet voor heb. Maar je kan helpen. ;-) Speciale dank aan alle medewerkers.",
     "all_questions_card": {
       "button": "Alle vragen beantwoorden",
       "content": "Ga naar de lijst met alle vragen.",
@@ -24,7 +24,8 @@
   "languages": {
     "en": "Engels",
     "label": "Taal",
-    "nl": "Nederlands"
+    "nl": "Nederlands",
+    "srb": "Servisch"
   },
   "main": {
     "title": "IHF spelregelvragen"

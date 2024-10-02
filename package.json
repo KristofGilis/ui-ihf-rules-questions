@@ -9,8 +9,8 @@
     "serve:ssr": "node dist/ui-ihf-rules-questions/server/server.mjs",
     "generate": "graphql-codegen",
     "i18n:init": "ngx-translate-extract --input ./src --output ./public/i18n/template.json --key-as-default-value --replace --format json --format-indentation \"  \"",
-    "i18n:extract": "ngx-translate-extract --input ./src --output ./public/i18n/en.json --output ./public/i18n/nl.json --format namespaced-json --format-indentation \"  \" --sort",
-    "i18n:clean": "ngx-translate-extract --input ./src --output ./public/i18n/en.json --output ./public/i18n/nl.json --clean --format namespaced-json --format-indentation \"  \" --sort"
+    "i18n:extract": "ngx-translate-extract --input ./src --output ./public/i18n/en.json --output ./public/i18n/nl.json --output ./public/i18n/srb.json --format namespaced-json --format-indentation \"  \" --sort",
+    "i18n:clean": "ngx-translate-extract --input ./src --output ./public/i18n/en.json --output ./public/i18n/nl.json --output ./public/i18n/srb.json --clean --format namespaced-json --format-indentation \"  \" --sort"
   },
   "private": true,
   "dependencies": {
