@@ -52,7 +52,7 @@ export class RuleComponent {
   }
 
   getQuestions(rule: Rule | null): Question[] {
-    return rule?.questions?.edges?.map((x) => x.node) ?? [];
+    return rule?.questions?.edges?.map((x) => x.node as Question) ?? [];
   }
 
   getRuleName(rule: Rule | null): string | undefined {

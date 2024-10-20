@@ -30,10 +30,10 @@ export type Answer = Node & {
   /** The answer phrase based on the "Accept-Language" HTTP header */
   phrase?: Maybe<Scalars['String']['output']>;
   /** The question of this answer */
-  question: Question;
+  question?: Maybe<Question>;
   /** The id the the rule */
   questionId: Scalars['ID']['output'];
-  /** The phrase of the answer in different translations (En, Nl) */
+  /** The phrase of the answer in different translations (En, Nl, Srb) */
   translations?: Maybe<TranslatedString>;
 };
 
@@ -69,7 +69,7 @@ export type AnswersConnection = {
   /** A list of edges. */
   edges?: Maybe<Array<AnswersEdge>>;
   /** A flattened list of the nodes. */
-  nodes?: Maybe<Array<Answer>>;
+  nodes?: Maybe<Array<Maybe<Answer>>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** Identifies the total count of items in the connection. */
@@ -82,7 +82,7 @@ export type AnswersEdge = {
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
-  node: Answer;
+  node?: Maybe<Answer>;
 };
 
 export type BooleanOperationFilterInput = {
@@ -242,10 +242,10 @@ export type Question = Node & {
   /** The question phrase based on the "Accept-Language" HTTP header */
   phrase?: Maybe<Scalars['String']['output']>;
   /** The rule of this question */
-  rule: Rule;
+  rule?: Maybe<Rule>;
   /** The id the the rule */
   ruleId: Scalars['ID']['output'];
-  /** The phrase of the question in different translations (En, Nl) */
+  /** The phrase of the question in different translations (En, Nl, Srb) */
   translations?: Maybe<TranslatedString>;
 };
 
@@ -289,7 +289,7 @@ export type QuestionsConnection = {
   /** A list of edges. */
   edges?: Maybe<Array<QuestionsEdge>>;
   /** A flattened list of the nodes. */
-  nodes?: Maybe<Array<Question>>;
+  nodes?: Maybe<Array<Maybe<Question>>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** Identifies the total count of items in the connection. */
@@ -302,7 +302,7 @@ export type QuestionsEdge = {
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
-  node: Question;
+  node?: Maybe<Question>;
 };
 
 /** IHF rule */
@@ -316,7 +316,7 @@ export type Rule = Node & {
   number?: Maybe<Scalars['String']['output']>;
   /** Rule questions */
   questions?: Maybe<QuestionsConnection>;
-  /** The name of the rule in different translations (En, Nl) */
+  /** The name of the rule in different translations (En, Nl, Srb) */
   translations?: Maybe<TranslatedString>;
 };
 
@@ -421,6 +421,7 @@ export type TranslatedString = {
   __typename?: 'TranslatedString';
   en?: Maybe<Scalars['String']['output']>;
   nl?: Maybe<Scalars['String']['output']>;
+  srb?: Maybe<Scalars['String']['output']>;
 };
 
 export type TranslatedStringFilterInput = {
@@ -428,16 +429,19 @@ export type TranslatedStringFilterInput = {
   en?: InputMaybe<StringOperationFilterInput>;
   nl?: InputMaybe<StringOperationFilterInput>;
   or?: InputMaybe<Array<TranslatedStringFilterInput>>;
+  srb?: InputMaybe<StringOperationFilterInput>;
 };
 
 export type TranslatedStringInput = {
   en?: InputMaybe<Scalars['String']['input']>;
   nl?: InputMaybe<Scalars['String']['input']>;
+  srb?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TranslatedStringSortInput = {
   en?: InputMaybe<SortEnumType>;
   nl?: InputMaybe<SortEnumType>;
+  srb?: InputMaybe<SortEnumType>;
 };
 
 export type UuidOperationFilterInput = {
@@ -471,7 +475,7 @@ export type GetQuestionsQueryVariables = Exact<{
 }>;
 
 
-export type GetQuestionsQuery = { __typename?: 'Query', questions?: { __typename?: 'QuestionsConnection', edges?: Array<{ __typename?: 'QuestionsEdge', cursor: string, node: { __typename?: 'Question', id: string, number?: string | null, phrase?: string | null, answers?: { __typename?: 'AnswersConnection', nodes?: Array<{ __typename?: 'Answer', id: string, number?: string | null, phrase?: string | null }> | null } | null } }> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null };
+export type GetQuestionsQuery = { __typename?: 'Query', questions?: { __typename?: 'QuestionsConnection', edges?: Array<{ __typename?: 'QuestionsEdge', cursor: string, node?: { __typename?: 'Question', id: string, number?: string | null, phrase?: string | null, answers?: { __typename?: 'AnswersConnection', nodes?: Array<{ __typename?: 'Answer', id: string, number?: string | null, phrase?: string | null } | null> | null } | null } | null }> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null };
 
 export type GetRuleQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -480,7 +484,7 @@ export type GetRuleQueryVariables = Exact<{
 }>;
 
 
-export type GetRuleQuery = { __typename?: 'Query', ruleById?: { __typename?: 'Rule', id: string, number?: string | null, name?: string | null, questions?: { __typename?: 'QuestionsConnection', edges?: Array<{ __typename?: 'QuestionsEdge', cursor: string, node: { __typename?: 'Question', id: string, number?: string | null, phrase?: string | null, answers?: { __typename?: 'AnswersConnection', nodes?: Array<{ __typename?: 'Answer', id: string, number?: string | null, phrase?: string | null }> | null } | null } }> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null } | null };
+export type GetRuleQuery = { __typename?: 'Query', ruleById?: { __typename?: 'Rule', id: string, number?: string | null, name?: string | null, questions?: { __typename?: 'QuestionsConnection', edges?: Array<{ __typename?: 'QuestionsEdge', cursor: string, node?: { __typename?: 'Question', id: string, number?: string | null, phrase?: string | null, answers?: { __typename?: 'AnswersConnection', nodes?: Array<{ __typename?: 'Answer', id: string, number?: string | null, phrase?: string | null } | null> | null } | null } | null }> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null } | null };
 
 export type GetRulesQueryVariables = Exact<{
   first: Scalars['Int']['input'];
