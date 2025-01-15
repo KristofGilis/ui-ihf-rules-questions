@@ -10,7 +10,6 @@ import { Question } from '../../../../../../graphql/generated';
 
 @Component({
   selector: 'app-question',
-  standalone: true,
   imports: [MatCheckbox],
   templateUrl: './question.component.html',
   styleUrl: './question.component.scss',

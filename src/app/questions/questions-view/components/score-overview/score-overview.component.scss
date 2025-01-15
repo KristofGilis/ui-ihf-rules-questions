@@ -1,5 +1,6 @@
+@use 'sass:map';
 @use '@angular/material' as mat;
 
 .red {
-  color: map-get($map: mat.$red-palette, $key: 40);
+  color: map.get($map: mat.$red-palette, $key: 40);
 }

@@ -8,7 +8,6 @@ import { RulesService } from './services/rules.service';
 
 @Component({
   selector: 'app-rules',
-  standalone: true,
   imports: [AsyncPipe, RulesViewComponent, TranslateModule],
   templateUrl: './rules.component.html',
   styleUrl: './rules.component.scss',

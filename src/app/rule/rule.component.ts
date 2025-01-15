@@ -11,7 +11,6 @@ import { RuleService } from './services/rule.service';
 
 @Component({
   selector: 'app-rule',
-  standalone: true,
   imports: [AsyncPipe, QuestionsViewComponent],
   templateUrl: './rule.component.html',
   styleUrl: './rule.component.scss',

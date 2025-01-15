@@ -20,7 +20,6 @@ import { RandomStateService } from '../questions/services/random-state.service';
 
 @Component({
   selector: 'app-home',
-  standalone: true,
   imports: [
     MatCard,
     MatCardHeader,

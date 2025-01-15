@@ -14,7 +14,6 @@ import { ScoreOverviewComponent } from './components/score-overview/score-overvi
 
 @Component({
   selector: 'app-questions-view',
-  standalone: true,
   imports: [
     MatProgressSpinner,
     QuestionComponent,

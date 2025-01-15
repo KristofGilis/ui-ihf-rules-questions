@@ -10,7 +10,6 @@ import { Question, Score } from '../../../../../../graphql/generated';
 
 @Component({
   selector: 'app-score-overview',
-  standalone: true,
   imports: [
     MatCard,
     MatCardHeader,

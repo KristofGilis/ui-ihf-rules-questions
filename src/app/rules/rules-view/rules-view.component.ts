@@ -6,7 +6,6 @@ import { Rule } from '../../../../graphql/generated';
 
 @Component({
   selector: 'app-rules-view',
-  standalone: true,
   imports: [MatProgressSpinner, MatNavList, MatListItem, RouterLink],
   templateUrl: './rules-view.component.html',
   styleUrl: './rules-view.component.scss',

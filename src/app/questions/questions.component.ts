@@ -11,7 +11,6 @@ import { RandomStateService } from './services/random-state.service';
 
 @Component({
   selector: 'app-questions',
-  standalone: true,
   imports: [TranslateModule, AsyncPipe, QuestionsViewComponent],
   templateUrl: './questions.component.html',
   styleUrl: './questions.component.scss',

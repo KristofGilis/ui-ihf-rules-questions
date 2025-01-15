@@ -33,7 +33,6 @@ import { RandomStateService } from './questions/services/random-state.service';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [
     RouterOutlet,
     MatToolbar,
