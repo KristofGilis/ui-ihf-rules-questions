@@ -61,4 +61,4 @@ stages:
               azureSubscription: $(azureSubscription)
               appType: webAppLinux
               WebAppName: $(azureWebAppName)
-              packageForLinux: '$(System.ArtifactsDirectory)'
+              packageForLinux: '$(System.ArtifactsDirectory)/drop'
