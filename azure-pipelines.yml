@@ -25,29 +25,12 @@ stages:
             inputs:
               command: 'custom'
               customCommand: 'run build -- --configuration=production'
-          - task: CopyFiles@2
-            condition: and(succeeded(), eq(variables.isMain, true))
-            displayName: 'Copy files to artifact staging directory'
-            inputs:
-              SourceFolder: dist/ui-ihf-rules-questions/browser
-              Contents: '**'
-              TargetFolder: '$(Build.ArtifactStagingDirectory)'
-              OverWrite: true
-          - task: ArchiveFiles@2
-            condition: and(succeeded(), eq(variables.isMain, true))
-            displayName: 'Create deployment zip'
-            inputs:
-              rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
-              includeRootFolder: false
-              archiveType: 'zip'
-              archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
-              replaceExistingArchive: true
           - task: PublishBuildArtifacts@1
             condition: and(succeeded(), eq(variables.isMain, true))
             displayName: 'Publish artifact'
             inputs:
-              PathtoPublish: '$(Build.ArtifactStagingDirectory)/app.zip'
-              ArtifactName: 'app'
+              PathtoPublish: 'dist/ui-ihf-rules-questions/browser'
+              ArtifactName: 'drop'
               publishLocation: 'Container'
   - stage: deploy
     condition: and(succeeded(), eq(variables.isMain, true))
@@ -62,7 +45,7 @@ stages:
             inputs:
               buildType: 'current'
               downloadType: 'single'
-              artifactName: 'app'
+              artifactName: 'drop'
               downloadPath: '$(System.ArtifactsDirectory)'
           - task: AzureRmWebAppDeployment@4
             displayName: Deploy Azure Web App
@@ -70,4 +53,4 @@ stages:
               azureSubscription: $(azureSubscription)
               appType: webAppLinux
               WebAppName: $(azureWebAppName)
-              packageForLinux: '$(System.ArtifactsDirectory)/app/app.zip'
+              packageForLinux: '$(System.ArtifactsDirectory)/drop'
