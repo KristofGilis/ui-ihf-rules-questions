@@ -9,7 +9,8 @@
     "generate": "graphql-codegen",
     "i18n:init": "ngx-translate-extract --input ./src --output ./public/i18n/template.json --key-as-default-value --replace --format json --format-indentation \"  \"",
     "i18n:extract": "ngx-translate-extract --input ./src --output ./public/i18n/en.json --output ./public/i18n/nl.json --output ./public/i18n/srb.json --format namespaced-json --format-indentation \"  \" --sort",
-    "i18n:clean": "ngx-translate-extract --input ./src --output ./public/i18n/en.json --output ./public/i18n/nl.json --output ./public/i18n/srb.json --clean --format namespaced-json --format-indentation \"  \" --sort"
+    "i18n:clean": "ngx-translate-extract --input ./src --output ./public/i18n/en.json --output ./public/i18n/nl.json --output ./public/i18n/srb.json --clean --format namespaced-json --format-indentation \"  \" --sort",
+    "serve:ssr:ui-ihf-rules-questions": "node dist/ui-ihf-rules-questions/server/server.mjs"
   },
   "private": true,
   "dependencies": {
@@ -25,11 +26,13 @@
     "@angular/platform-server": "^19.2.9",
     "@angular/router": "^19.2.9",
     "@angular/service-worker": "^19.2.9",
+    "@angular/ssr": "^19.2.10",
     "@apollo/client": "^3.13.8",
     "@ngx-translate/core": "^16.0.4",
     "@ngx-translate/http-loader": "^16.0.1",
     "apollo-angular": "^10.0.3",
     "bootstrap": "^5.3.5",
+    "express": "^4.21.2",
     "graphql": "^16.11.0",
     "rxjs": "~7.8.2",
     "tslib": "^2.8.1",
@@ -44,6 +47,7 @@
     "@graphql-codegen/typescript": "^4.1.6",
     "@graphql-codegen/typescript-apollo-angular": "^4.0.0",
     "@graphql-codegen/typescript-operations": "^4.6.0",
+    "@types/express": "^4.17.17",
     "@types/node": "^22.15.3",
     "@vendure/ngx-translate-extract": "^9.4.0",
     "typescript": "~5.8.3"

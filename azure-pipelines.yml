@@ -25,12 +25,20 @@ stages:
             inputs:
               command: 'custom'
               customCommand: 'run build -- --configuration=production'
+          - task: CopyFiles@2
+            condition: and(succeeded(), eq(variables.isMain, true))
+            displayName: 'Copy files to artifact staging directory'
+            inputs:
+              SourceFolder: 'dist/ui-ihf-rules-questions'
+              Contents: '**'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)'
+              OverWrite: true
           - task: PublishBuildArtifacts@1
             condition: and(succeeded(), eq(variables.isMain, true))
             displayName: 'Publish artifact'
             inputs:
-              PathtoPublish: 'dist/ui-ihf-rules-questions/browser'
-              ArtifactName: 'drop'
+              PathtoPublish: '$(Build.ArtifactstagingDirectory)'
+              ArtifactName: 'dist'
               publishLocation: 'Container'
   - stage: deploy
     condition: and(succeeded(), eq(variables.isMain, true))
@@ -45,12 +53,13 @@ stages:
             inputs:
               buildType: 'current'
               downloadType: 'single'
-              artifactName: 'drop'
+              artifactName: 'dist'
               downloadPath: '$(System.ArtifactsDirectory)'
-          - task: AzureWebApp@1
-            displayName: Deploy Azure Web App
+          - task: AzureRmWebAppDeployment@4
+            displayName: Deploy Azure App Service
             inputs:
-              appType: webAppLinux
               azureSubscription: $(azureSubscription)
-              appName: $(azureWebAppName)
-              package: '$(System.ArtifactsDirectory)/drop'
+              appType: webAppLinux
+              WebAppName: $(azureWebAppName)
+              packageForLinux: '$(Build.ArtifactStagingDirectory)'
+              StartupCommand: node dist/server/server.mjs
