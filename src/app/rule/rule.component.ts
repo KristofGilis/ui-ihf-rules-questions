@@ -3,7 +3,7 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, finalize, map, tap } from 'rxjs';
+import { Observable, finalize, map, shareReplay, tap } from 'rxjs';
 import { Question, Rule, Score } from '../../../graphql/generated';
 import { QuestionsViewComponent } from '../questions/questions-view/questions-view.component';
 import { QuestionsService } from '../questions/services/questions.service';
@@ -37,7 +37,8 @@ export class RuleComponent {
       .pipe(
         tap((x) => (this.loading = x.loading)),
         map((x) => x.data?.ruleById as Rule),
-        finalize(() => (this.loading = false))
+        finalize(() => (this.loading = false)),
+        shareReplay()
       );
 
     this._scrollDispatcher

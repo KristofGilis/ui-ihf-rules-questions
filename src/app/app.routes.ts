@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { HomeComponent } from './home/home.component';
+
 
 _('navigation.home');
 _('navigation.rules');
@@ -14,7 +14,7 @@ export const routes: Routes = [
   },
   {
     path: 'home',
-    component: HomeComponent,
+    loadComponent: () => import('./home/home.component').then(m => m.HomeComponent),
   },
   {
     path: 'rules',

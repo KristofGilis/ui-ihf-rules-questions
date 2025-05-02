@@ -3,7 +3,7 @@ module.exports = {
     excludes: ['./graphql/generated.ts'],
     service: {
       name: 'gateway',
-      url: 'https://api-ihf-rules-questions.azurewebsites.net/graphql',
+      url: 'http://localhost:5067/graphql',
     },
   },
 };

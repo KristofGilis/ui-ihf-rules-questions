@@ -1,7 +1,7 @@
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
-  schema: 'https://api-ihf-rules-questions.azurewebsites.net/graphql',
+  schema: 'http://localhost:5067/graphql',
   documents: './graphql/**/*.graphql',
   generates: {
     './graphql/generated.ts': {

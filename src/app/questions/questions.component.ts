@@ -1,6 +1,11 @@
 import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
 import { Observable, finalize, map, tap } from 'rxjs';
@@ -41,6 +46,10 @@ export class QuestionsComponent {
   }
 
   constructor() {
+    effect(() => {
+      this._questionsService.refetch();
+    });
+
     this._scrollDispatcher
       .scrolled()
       .pipe(takeUntilDestroyed())

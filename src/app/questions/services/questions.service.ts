@@ -1,4 +1,4 @@
-import { Injectable, effect, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ApolloQueryResult } from '@apollo/client/core';
 import { Observable, tap } from 'rxjs';
 import {
@@ -65,15 +65,13 @@ export class QuestionsService {
     })
   );
 
-  constructor() {
-    effect(() => {
-      this._cursor = null;
-      this._questionsQuery.refetch({
-        first: this._pageSize,
-        after: this._cursor,
-        order: this._isRandom ? [] : this._order,
-        random: this._isRandom,
-      });
+  refetch(): void {
+    this._cursor = null;
+    this._questionsQuery.refetch({
+      first: this._pageSize,
+      after: this._cursor,
+      order: this._isRandom ? [] : this._order,
+      random: this._isRandom,
     });
   }
 

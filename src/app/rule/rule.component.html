@@ -1,10 +1,12 @@
 <div class="container-fluid h-100">
   <div class="row">
     <div class="col">
-      <h4 class="pb-4">{{ getRuleName(rule$ | async) }}</h4>
+      @if (rule$ | async; as rule) {
+
+      <h4 class="pb-4">{{ getRuleName(rule) }}</h4>
 
       <app-questions-view
-        [questions]="getQuestions(rule$ | async)"
+        [questions]="getQuestions(rule)"
         [loading]="loading"
         [hasMoreQuestions]="hasMoreQuestions"
         [score]="(score$ | async) ?? undefined"
@@ -12,8 +14,8 @@
         (calculareScore)="
           onCalculateScore($event.questionIds, $event.selectedAnswerIds)
         "
-      >
-      </app-questions-view>
+      />
+      }
     </div>
   </div>
 </div>

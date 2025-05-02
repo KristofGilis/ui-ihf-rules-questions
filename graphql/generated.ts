@@ -163,7 +163,7 @@ export type QueryAnswersArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   order?: InputMaybe<Array<AnswerSortInput>>;
-  random?: InputMaybe<Scalars['Boolean']['input']>;
+  random?: Scalars['Boolean']['input'];
   where?: InputMaybe<AnswerFilterInput>;
 };
 
@@ -200,7 +200,7 @@ export type QueryQuestionsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   order?: InputMaybe<Array<QuestionSortInput>>;
-  random?: InputMaybe<Scalars['Boolean']['input']>;
+  random?: Scalars['Boolean']['input'];
   where?: InputMaybe<QuestionFilterInput>;
 };
 
@@ -221,7 +221,7 @@ export type QueryRulesArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   order?: InputMaybe<Array<RuleSortInput>>;
-  random?: InputMaybe<Scalars['Boolean']['input']>;
+  random?: Scalars['Boolean']['input'];
   where?: InputMaybe<RuleFilterInput>;
 };
 
