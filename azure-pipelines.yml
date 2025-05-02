@@ -61,5 +61,5 @@ stages:
               azureSubscription: $(azureSubscription)
               appType: webAppLinux
               WebAppName: $(azureWebAppName)
-              packageForLinux: '$(System.ArtifactsDirectory)/dist/browser'
+              packageForLinux: '$(Build.ArtifactStagingDirectory)/dist/browser'
 
