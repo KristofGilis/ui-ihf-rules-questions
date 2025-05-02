@@ -70,4 +70,4 @@ stages:
               azureSubscription: $(azureSubscription)
               appType: webAppLinux
               WebAppName: $(azureWebAppName)
-              packageForLinux: '$(System.ArtifactsDirectory)/app.zip'
+              packageForLinux: '$(System.ArtifactsDirectory)/app/app.zip'
