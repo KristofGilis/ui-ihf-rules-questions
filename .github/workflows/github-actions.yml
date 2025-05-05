@@ -34,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dist
-          path: dist/ui-ihf-rules-questions/
+          path: dist/ui-ihf-rules-questions/browser
 
   deploy:
     needs: build
@@ -56,4 +56,4 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: ${{ github.workspace }}/dist/browser
+          package: ${{ github.workspace }}/dist
