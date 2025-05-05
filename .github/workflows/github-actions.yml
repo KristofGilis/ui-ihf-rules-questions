@@ -2,11 +2,9 @@ name: Build and Deploy UI
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 env:
   AZURE_WEBAPP_NAME: rulequestions
@@ -15,7 +13,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -33,6 +30,7 @@ jobs:
         run: npm run build -- --configuration=production
 
       - name: Upload artifact
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v3
         with:
           name: dist
