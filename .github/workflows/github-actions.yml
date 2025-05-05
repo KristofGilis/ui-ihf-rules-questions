@@ -56,5 +56,5 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: ${{ github.workspace }}/dist
-          startup-command: pm2 serve /home/site/wwwroot/browser --no-daemon --spa
+          package: ${{ github.workspace }}/dist/browser
+          startup-command: nginx -g 'daemon off;'
