@@ -57,4 +57,5 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           package: ${{ github.workspace }}/dist/browser
-          startup-command: nginx -g 'daemon off;'
+          clean: true
+          startup-command: pm2 serve /home/site/wwwroot --no-daemon --spa
