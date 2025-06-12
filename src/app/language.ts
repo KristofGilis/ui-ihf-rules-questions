@@ -1,5 +1,5 @@
-import { DOCUMENT } from '@angular/common';
-import { inject } from '@angular/core';
+
+import { inject, DOCUMENT } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 export function getLanguage(): string {
