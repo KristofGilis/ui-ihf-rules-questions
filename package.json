@@ -45,7 +45,7 @@
     "@graphql-codegen/typescript-apollo-angular": "^4.0.0",
     "@graphql-codegen/typescript-operations": "^4.6.0",
     "@types/node": "^22.15.3",
-    "@vendure/ngx-translate-extract": "^9.4.0",
+    "@vendure/ngx-translate-extract": "^10.0.0",
     "typescript": "~5.8.3"
   }
 }
