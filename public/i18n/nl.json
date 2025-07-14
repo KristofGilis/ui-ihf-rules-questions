@@ -18,7 +18,7 @@
       "content": "Ga naar de lijst met alle spelregels. Vanaf hier kun je alle vragen krijgen die betrekking hebben op de geselecteerde spelregel.",
       "title": "Spelregels"
     },
-    "subtitle": "Test je kennis van de spelregels. <br> Vragen over de IHF Spelregels geldig vanaf <b>1 juli 2024</b>",
+    "subtitle": "Test je kennis van de spelregels. <br> Vragen over de IHF Spelregels geldig vanaf <b>{{version}}</b>",
     "title": "Welkom"
   },
   "languages": {

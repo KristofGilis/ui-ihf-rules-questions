@@ -33,8 +33,6 @@ export type Answer = Node & {
   question?: Maybe<Question>;
   /** The id the the rule */
   questionId: Scalars['ID']['output'];
-  /** The phrase of the answer in different translations (En, Nl, Srb) */
-  translations?: Maybe<TranslatedString>;
 };
 
 /** Filter answers based on Id, Name, Number or if the answer is correct */
@@ -42,25 +40,17 @@ export type AnswerFilterInput = {
   and?: InputMaybe<Array<AnswerFilterInput>>;
   /** Filter on answer id */
   id?: InputMaybe<UuidOperationFilterInput>;
-  /** Filter on the (in)correct answers */
-  isCorrect?: InputMaybe<BooleanOperationFilterInput>;
   /** Filter on answer number */
   number?: InputMaybe<StringOperationFilterInput>;
   or?: InputMaybe<Array<AnswerFilterInput>>;
-  /** Filter on answer phrase */
-  phrase?: InputMaybe<TranslatedStringFilterInput>;
 };
 
 /** Sort answers based on Id, Name, Number or if the answer is correct */
 export type AnswerSortInput = {
   /** Sort on answer id */
   id?: InputMaybe<SortEnumType>;
-  /** Sort on the (in)correct answers */
-  isCorrect?: InputMaybe<SortEnumType>;
   /** Sort on answer number */
   number?: InputMaybe<SortEnumType>;
-  /** Sort on answer phrase */
-  phrase?: InputMaybe<TranslatedStringSortInput>;
 };
 
 /** A connection to a list of items. */
@@ -83,11 +73,6 @@ export type AnswersEdge = {
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
   node?: Maybe<Answer>;
-};
-
-export type BooleanOperationFilterInput = {
-  eq?: InputMaybe<Scalars['Boolean']['input']>;
-  neq?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type IntOperationFilterInput = {
@@ -149,6 +134,7 @@ export type Query = {
   rules?: Maybe<RulesConnection>;
   /** IHF rules by ids */
   rulesById?: Maybe<Array<Maybe<Rule>>>;
+  version?: Maybe<Scalars['String']['output']>;
 };
 
 
@@ -245,8 +231,6 @@ export type Question = Node & {
   rule?: Maybe<Rule>;
   /** The id the the rule */
   ruleId: Scalars['ID']['output'];
-  /** The phrase of the question in different translations (En, Nl, Srb) */
-  translations?: Maybe<TranslatedString>;
 };
 
 
@@ -269,8 +253,6 @@ export type QuestionFilterInput = {
   /** Filter on question number */
   number?: InputMaybe<StringOperationFilterInput>;
   or?: InputMaybe<Array<QuestionFilterInput>>;
-  /** Filter on question phrase */
-  phrase?: InputMaybe<TranslatedStringFilterInput>;
 };
 
 /** Sort questions based on Id, Phrase or Number */
@@ -279,8 +261,6 @@ export type QuestionSortInput = {
   id?: InputMaybe<SortEnumType>;
   /** Sort on question number */
   number?: InputMaybe<SortEnumType>;
-  /** Sort on question phrase */
-  phrase?: InputMaybe<TranslatedStringSortInput>;
 };
 
 /** A connection to a list of items. */
@@ -316,8 +296,6 @@ export type Rule = Node & {
   number?: Maybe<Scalars['String']['output']>;
   /** Rule questions */
   questions?: Maybe<QuestionsConnection>;
-  /** The name of the rule in different translations (En, Nl, Srb) */
-  translations?: Maybe<TranslatedString>;
 };
 
 
@@ -337,8 +315,6 @@ export type RuleFilterInput = {
   and?: InputMaybe<Array<RuleFilterInput>>;
   /** Filter on rule id */
   id?: InputMaybe<UuidOperationFilterInput>;
-  /** Filter on rule name */
-  name?: InputMaybe<TranslatedStringFilterInput>;
   /** Filter on rule number */
   number?: InputMaybe<IntOperationFilterInput>;
   or?: InputMaybe<Array<RuleFilterInput>>;
@@ -348,8 +324,6 @@ export type RuleFilterInput = {
 export type RuleSortInput = {
   /** Sort on rule id */
   id?: InputMaybe<SortEnumType>;
-  /** Sort on rule name */
-  name?: InputMaybe<TranslatedStringSortInput>;
   /** Sort on rule number */
   number?: InputMaybe<SortEnumType>;
 };
@@ -417,33 +391,6 @@ export type StringOperationFilterInput = {
   startsWith?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type TranslatedString = {
-  __typename?: 'TranslatedString';
-  en?: Maybe<Scalars['String']['output']>;
-  nl?: Maybe<Scalars['String']['output']>;
-  srb?: Maybe<Scalars['String']['output']>;
-};
-
-export type TranslatedStringFilterInput = {
-  and?: InputMaybe<Array<TranslatedStringFilterInput>>;
-  en?: InputMaybe<StringOperationFilterInput>;
-  nl?: InputMaybe<StringOperationFilterInput>;
-  or?: InputMaybe<Array<TranslatedStringFilterInput>>;
-  srb?: InputMaybe<StringOperationFilterInput>;
-};
-
-export type TranslatedStringInput = {
-  en?: InputMaybe<Scalars['String']['input']>;
-  nl?: InputMaybe<Scalars['String']['input']>;
-  srb?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type TranslatedStringSortInput = {
-  en?: InputMaybe<SortEnumType>;
-  nl?: InputMaybe<SortEnumType>;
-  srb?: InputMaybe<SortEnumType>;
-};
-
 export type UuidOperationFilterInput = {
   eq?: InputMaybe<Scalars['UUID']['input']>;
   gt?: InputMaybe<Scalars['UUID']['input']>;
@@ -493,6 +440,11 @@ export type GetRulesQueryVariables = Exact<{
 
 
 export type GetRulesQuery = { __typename?: 'Query', rules?: { __typename?: 'RulesConnection', edges?: Array<{ __typename?: 'RulesEdge', cursor: string, node?: { __typename?: 'Rule', id: string, number?: string | null, name?: string | null } | null }> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null } } | null };
+
+export type GetVersionQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetVersionQuery = { __typename?: 'Query', version?: string | null };
 
 export const CalculateScoreDocument = gql`
     query calculateScore($questionIds: [ID], $selectedAnswerIds: [ID]) {
@@ -615,6 +567,22 @@ export const GetRulesDocument = gql`
   })
   export class GetRulesGQL extends Apollo.Query<GetRulesQuery, GetRulesQueryVariables> {
     document = GetRulesDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetVersionDocument = gql`
+    query getVersion {
+  version
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetVersionGQL extends Apollo.Query<GetVersionQuery, GetVersionQueryVariables> {
+    document = GetVersionDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

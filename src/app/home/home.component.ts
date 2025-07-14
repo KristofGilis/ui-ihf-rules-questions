@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
@@ -16,6 +17,8 @@ import {
 } from '@angular/material/select';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { map } from 'rxjs';
+import { GetVersionGQL } from '../../../graphql/generated';
 import { RandomStateService } from '../questions/services/random-state.service';
 
 @Component({
@@ -34,12 +37,17 @@ import { RandomStateService } from '../questions/services/random-state.service';
     MatFormField,
     MatLabel,
     FormsModule,
+    AsyncPipe,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
+  private readonly _versionGQL = inject(GetVersionGQL);
+
   randomStateService = inject(RandomStateService);
   questionCount = 10;
+
+  version$ = this._versionGQL.fetch().pipe(map((x) => x.data.version));
 }
