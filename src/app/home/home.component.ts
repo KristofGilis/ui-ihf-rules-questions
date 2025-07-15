@@ -51,9 +51,9 @@ export class HomeComponent {
   randomStateService = inject(RandomStateService);
   questionCount = 10;
 
-  private readonly _query = this._versionGQL.fetch();
+  private readonly _query = this._versionGQL.watch(undefined, { useInitialLoading: false });
 
-  version$ = this._query.pipe(map((x) => x.data.version));
+  version$ = this._query.valueChanges.pipe(map((x) => x.data.version));
 
   constructor() {
     this._translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => this._query.refetch());
