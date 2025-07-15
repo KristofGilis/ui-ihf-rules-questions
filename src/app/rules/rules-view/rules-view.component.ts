@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { MatListItem, MatNavList } from '@angular/material/list';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
@@ -12,6 +12,6 @@ import { Rule } from '../../../../graphql/generated';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RulesViewComponent {
-  @Input({ required: true }) rules: Rule[] = [];
-  @Input({ required: true }) loading = false;
+  readonly rules = input.required<Rule[]>();
+  readonly loading = input.required<boolean>();
 }

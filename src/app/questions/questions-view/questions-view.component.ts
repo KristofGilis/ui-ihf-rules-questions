@@ -1,43 +1,31 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Question, Score } from '../../../../graphql/generated';
 import { QuestionComponent } from './components/question/question.component';
 import { ScoreOverviewComponent } from './components/score-overview/score-overview.component';
 
 @Component({
   selector: 'app-questions-view',
-  imports: [
-    MatProgressSpinner,
-    QuestionComponent,
-    MatButton,
-    TranslateModule,
-    ScoreOverviewComponent,
-  ],
+  imports: [MatProgressSpinner, QuestionComponent, MatButton, TranslatePipe, ScoreOverviewComponent],
   templateUrl: './questions-view.component.html',
   styleUrl: './questions-view.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuestionsViewComponent {
-  @Input({ required: true }) questions: Question[] = [];
-  @Input({ required: true }) loading = false;
-  @Input({ required: true }) hasMoreQuestions = true;
-  @Input({ required: true }) score?: Score;
-  @Input({ required: true }) scoreLoading = false;
-  @Input() isRandom = false;
-  @Input() randomCount?: number;
-  @Output() calculareScore = new EventEmitter<{
+  readonly questions = input.required<Question[]>();
+  readonly loading = input.required<boolean>();
+  readonly hasMoreQuestions = input.required<boolean>();
+  readonly score = input.required<Score | undefined>();
+  readonly scoreLoading = input.required<boolean>();
+  readonly isRandom = input(false);
+  readonly randomCount = input<number>();
+  readonly calculareScore = output<{
     questionIds: string[];
     selectedAnswerIds: string[];
   }>();
-  @Output() newRandomQuestions = new EventEmitter();
+  readonly newRandomQuestions = output();
 
   selectedAnswers: string[] = [];
 
@@ -52,9 +40,9 @@ export class QuestionsViewComponent {
   }
 
   onCalculateScore(): void {
-    if (!this.hasMoreQuestions) {
+    if (!this.hasMoreQuestions()) {
       this.calculareScore.emit({
-        questionIds: this.questions.map((x) => x.id),
+        questionIds: this.questions().map((x) => x.id),
         selectedAnswerIds: this.selectedAnswers,
       });
     }

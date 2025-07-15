@@ -1,10 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import {
-  ApplicationConfig,
-  inject,
-  InjectionToken,
-  isDevMode,
-} from '@angular/core';
+import { ApplicationConfig, inject, InjectionToken, isDevMode } from '@angular/core';
 import { ApolloClientOptions, InMemoryCache } from '@apollo/client/core';
 import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev';
 import { relayStylePagination } from '@apollo/client/utilities';
@@ -33,25 +28,32 @@ export function apolloOptionsFactory(): ApolloClientOptions<any> {
   };
 }
 
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        rules: relayStylePagination(),
+        questions: relayStylePagination(['order', 'random']),
+      },
+    },
+    Rule: {
+      fields: {
+        questions: relayStylePagination(),
+      },
+    },
+    Question: {
+      fields: {
+        answers: relayStylePagination(),
+      },
+    },
+  },
+});
+
 export const graphqlProvider: ApplicationConfig['providers'] = [
   Apollo,
   {
     provide: APOLLO_CACHE,
-    useValue: new InMemoryCache({
-      typePolicies: {
-        Query: {
-          fields: {
-            rules: relayStylePagination(),
-            questions: relayStylePagination(['order', 'random']),
-          },
-        },
-        Rule: {
-          fields: {
-            questions: relayStylePagination(),
-          },
-        },
-      },
-    }),
+    useValue: cache,
   },
   {
     provide: APOLLO_OPTIONS,

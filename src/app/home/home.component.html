@@ -3,7 +3,7 @@
     <div class="col">
       <h4>{{ 'home.title' | translate }}</h4>
       @if (version$ | async; as version) {
-        <div class="mat-body" [innerHTML]="'home.subtitle' | translate:{version}"></div>
+        <div class="mat-body" [innerHTML]="'home.subtitle' | translate: { version }"></div>
       }
       <div class="alert alert-warning mt-3" role="alert">
         {{ 'home.alert' | translate }}
@@ -54,10 +54,9 @@
                   (click)="
                     randomStateService.random.set({
                       isRandom: false,
-                      count: 0
+                      count: 0,
                     })
-                  "
-                >
+                  ">
                   {{ 'home.all_questions_card.button' | translate }}
                 </button>
               </mat-card-actions>
@@ -76,9 +75,7 @@
                     {{ 'home.random_questions_card.content' | translate }}
                   </div>
                   <mat-form-field class="mt-4">
-                    <mat-label>{{
-                      'home.random_questions_card.count' | translate
-                    }}</mat-label>
+                    <mat-label>{{ 'home.random_questions_card.count' | translate }}</mat-label>
                     <mat-select [(ngModel)]="questionCount">
                       <mat-option [value]="10">10</mat-option>
                       <mat-option [value]="20">20</mat-option>
@@ -96,14 +93,10 @@
                   (click)="
                     randomStateService.random.set({
                       isRandom: true,
-                      count: questionCount
+                      count: questionCount,
                     })
-                  "
-                >
-                  {{
-                    'home.random_questions_card.button'
-                      | translate : { count: questionCount }
-                  }}
+                  ">
+                  {{ 'home.random_questions_card.button' | translate: { count: questionCount } }}
                 </button>
               </mat-card-actions>
             </mat-card>

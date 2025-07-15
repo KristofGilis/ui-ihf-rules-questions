@@ -1,30 +1,16 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, DOCUMENT } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatListItem, MatNavList } from '@angular/material/list';
-import {
-  MatFormField,
-  MatLabel,
-  MatOption,
-  MatSelect,
-  MatSelectTrigger,
-} from '@angular/material/select';
-import {
-  MatSidenav,
-  MatSidenavContainer,
-  MatSidenavContent,
-} from '@angular/material/sidenav';
+import { MatFormField, MatLabel, MatOption, MatSelect, MatSelectTrigger } from '@angular/material/select';
+import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/material/sidenav';
 import { MatToolbar } from '@angular/material/toolbar';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import {
-  TranslateModule,
-  TranslatePipe,
-  TranslateService,
-} from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Apollo } from 'apollo-angular';
 import { Observable, map, shareReplay, tap } from 'rxjs';
 import { routes } from './app.routes';
@@ -44,7 +30,7 @@ import { RandomStateService } from './questions/services/random-state.service';
     MatListItem,
     MatIcon,
     AsyncPipe,
-    TranslateModule,
+    TranslatePipe,
     RouterLink,
     RouterLinkActive,
     MatFormField,
@@ -57,14 +43,13 @@ import { RandomStateService } from './questions/services/random-state.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [TranslatePipe],
 })
 export class AppComponent {
-  private _randomStateService = inject(RandomStateService);
-  private _breakpointObserver = inject(BreakpointObserver);
-  private _translateService = inject(TranslateService);
-  private _document = inject(DOCUMENT);
-  private _apollo = inject(Apollo);
+  private readonly _randomStateService = inject(RandomStateService);
+  private readonly _breakpointObserver = inject(BreakpointObserver);
+  private readonly _translateService = inject(TranslateService);
+  private readonly _document = inject(DOCUMENT);
+  private readonly _apollo = inject(Apollo);
 
   private _isHandset = false;
 
@@ -86,9 +71,7 @@ export class AppComponent {
 
     this._translateService.use(this.currentLang);
 
-    this._translateService.onLangChange
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => this._apollo.client.resetStore());
+    this._translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => this._apollo.client.resetStore());
   }
 
   onNavigationLinkClicked(drawer: MatSidenav, route?: string): void {

@@ -1,6 +1,6 @@
 import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, finalize, map, shareReplay, tap } from 'rxjs';
@@ -17,29 +17,27 @@ import { RuleService } from './services/rule.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RuleComponent {
-  private _activatedRoute = inject(ActivatedRoute);
-  private _ruleService = inject(RuleService);
-  private _questionsService = inject(QuestionsService);
-  private _scrollDispatcher = inject(ScrollDispatcher);
+  private readonly _activatedRoute = inject(ActivatedRoute);
+  private readonly _ruleService = inject(RuleService);
+  private readonly _questionsService = inject(QuestionsService);
+  private readonly _scrollDispatcher = inject(ScrollDispatcher);
 
-  loading = false;
+  loading = signal(false);
   rule$: Observable<Rule>;
   score$?: Observable<Score>;
-  scoreLoading = false;
+  scoreLoading = signal(false);
 
   get hasMoreQuestions(): boolean {
     return this._ruleService.hasNextPage;
   }
 
   constructor() {
-    this.rule$ = this._ruleService
-      .get(this._activatedRoute.snapshot.params['id'])
-      .pipe(
-        tap((x) => (this.loading = x.loading)),
-        map((x) => x.data?.ruleById as Rule),
-        finalize(() => (this.loading = false)),
-        shareReplay()
-      );
+    this.rule$ = this._ruleService.get(this._activatedRoute.snapshot.params['id']).pipe(
+      tap((x) => this.loading.set(x.loading)),
+      map((x) => x.data?.ruleById as Rule),
+      finalize(() => this.loading.set(false)),
+      shareReplay()
+    );
 
     this._scrollDispatcher
       .scrolled()
@@ -64,12 +62,10 @@ export class RuleComponent {
   }
 
   onCalculateScore(questionIds: string[], selectedAnswerIds: string[]): void {
-    this.score$ = this._questionsService
-      .calculateScore(questionIds, selectedAnswerIds)
-      .pipe(
-        tap((x) => (this.scoreLoading = x.loading)),
-        map((x) => x.data?.calculateScore as Score),
-        finalize(() => (this.scoreLoading = false))
-      );
+    this.score$ = this._questionsService.calculateScore(questionIds, selectedAnswerIds).pipe(
+      tap((x) => this.scoreLoading.set(x.loading)),
+      map((x) => x.data?.calculateScore as Score),
+      finalize(() => this.scoreLoading.set(false))
+    );
   }
 }

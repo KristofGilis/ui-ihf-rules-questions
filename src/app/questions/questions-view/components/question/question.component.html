@@ -1,25 +1,22 @@
 <div class="container-fluid p-0">
   <div class="row">
     <div class="col">
-      <span class="fw-500"> {{ question?.number }}) </span>
-      <span class="fw-500" [innerHTML]="question?.phrase"></span>
+      <span class="fw-500"> {{ question().number }}) </span>
+      <span class="fw-500" [innerHTML]="question().phrase"></span>
 
       <div class="container-fluid mt-2">
         <div class="row">
           <div class="col">
             <div class="d-flex flex-column">
-              @for (answer of question?.answers?.nodes; track answer?.id) {
-              <mat-checkbox
-                class="mb-2"
-                (change)="
-                  $event.checked
-                    ? selectAnswer.emit(answer?.id)
-                    : deselectAnswer.emit(answer?.id)
-                "
-              >
-                <span class="fw-500">{{ answer?.number }})</span>
-                {{ answer?.phrase }}
-              </mat-checkbox>
+              @for (answer of question().answers?.nodes; track answer?.id) {
+                <mat-checkbox
+                  class="mb-2"
+                  (change)="
+                    $event.checked ? selectAnswer.emit(answer?.id ?? '') : deselectAnswer.emit(answer?.id ?? '')
+                  ">
+                  <span class="fw-500">{{ answer?.number }})</span>
+                  {{ answer?.phrase }}
+                </mat-checkbox>
               }
             </div>
           </div>

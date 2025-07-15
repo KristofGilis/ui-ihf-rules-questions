@@ -7,9 +7,9 @@ import { GetRulesGQL } from '../../../../graphql/generated';
 })
 export class RulesService {
   private _cursor?: string | null;
-  private _pageSize = 20;
-  private _getRulesGQL = inject(GetRulesGQL);
-  private _rulesQuery = this._getRulesGQL.watch(
+  private readonly _pageSize = 20;
+  private readonly _getRulesGQL = inject(GetRulesGQL);
+  private readonly _rulesQuery = this._getRulesGQL.watch(
     {
       first: this._pageSize,
       after: null,
@@ -19,9 +19,7 @@ export class RulesService {
     }
   );
 
-  rules$ = this._rulesQuery.valueChanges.pipe(
-    tap((x) => (this._cursor = x.data?.rules?.pageInfo.endCursor))
-  );
+  rules$ = this._rulesQuery.valueChanges.pipe(tap((x) => (this._cursor = x.data?.rules?.pageInfo.endCursor)));
 
   fetchMore(): void {
     this._rulesQuery.fetchMore({

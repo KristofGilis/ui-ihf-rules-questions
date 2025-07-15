@@ -4,29 +4,23 @@
     fixedInViewport
     [mode]="!(isHandset$ | async) ? 'side' : 'over'"
     [opened]="(isHandset$ | async) === false"
-    [autoFocus]="false"
-  >
+    [autoFocus]="false">
     <div class="d-flex flex-column h-100">
       <div class="d-flex justify-content-center background">
-        <img
-          title="logo"
-          class="logo-image py-4"
-          src="icons/android-chrome-256x256.png"
-        />
+        <img title="logo" class="logo-image py-4" src="icons/android-chrome-256x256.png" />
       </div>
       <mat-nav-list class="pt-3 px-2 navigation-container">
         @for (item of rootRoutes; track $index) {
-        <a
-          mat-list-item
-          [routerLink]="item.path"
-          #link="routerLinkActive"
-          routerLinkActive
-          [activated]="link.isActive"
-          class="mb-1"
-          (click)="onNavigationLinkClicked(drawer, item.path)"
-        >
-          {{ 'navigation.' + item.path | translate }}
-        </a>
+          <a
+            mat-list-item
+            [routerLink]="item.path"
+            #link="routerLinkActive"
+            routerLinkActive
+            [activated]="link.isActive"
+            class="mb-1"
+            (click)="onNavigationLinkClicked(drawer, item.path)">
+            {{ 'navigation.' + item.path | translate }}
+          </a>
         }
       </mat-nav-list>
       <div class="mt-auto">
@@ -36,8 +30,7 @@
             <mat-select
               [(value)]="currentLang"
               (selectionChange)="onChangeLanguage($event.value)"
-              [hideSingleSelectionIndicator]="true"
-            >
+              [hideSingleSelectionIndicator]="true">
               <mat-select-trigger>
                 {{ 'languages.' + currentLang | translate }}
               </mat-select-trigger>
@@ -61,15 +54,9 @@
   <mat-sidenav-content>
     <mat-toolbar class="sticky-top">
       @if (isHandset$ | async) {
-      <button
-        type="button"
-        class="me-2"
-        mat-icon-button
-        (click)="drawer.toggle()"
-        onclick="blur()"
-      >
-        <mat-icon>menu</mat-icon>
-      </button>
+        <button type="button" class="me-2" mat-icon-button (click)="drawer.toggle()" onclick="blur()">
+          <mat-icon>menu</mat-icon>
+        </button>
       }
       <h1 class="fw-bolder">{{ 'main.title' | translate }}</h1>
     </mat-toolbar>

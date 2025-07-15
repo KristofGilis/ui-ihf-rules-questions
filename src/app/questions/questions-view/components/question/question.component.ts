@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { Question } from '../../../../../../graphql/generated';
 
@@ -16,7 +10,7 @@ import { Question } from '../../../../../../graphql/generated';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuestionComponent {
-  @Input({ required: true }) question?: Question;
-  @Output() selectAnswer = new EventEmitter<string>();
-  @Output() deselectAnswer = new EventEmitter<string>();
+  readonly question = input.required<Question>();
+  readonly selectAnswer = output<string>();
+  readonly deselectAnswer = output<string>();
 }

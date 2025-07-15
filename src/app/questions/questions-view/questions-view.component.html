@@ -1,56 +1,40 @@
-@for (question of questions; track question.id) {
-<div class="mb-4">
-  <app-question
-    [question]="question"
-    (selectAnswer)="onSelectAnswer($event)"
-    (deselectAnswer)="onDeselectAnswer($event)"
-  ></app-question>
-</div>
-} @if (loading) {
-<div class="d-flex justify-content-center align-items-center">
-  <mat-progress-spinner
-    mode="indeterminate"
-    diameter="50"
-  ></mat-progress-spinner>
-</div>
-} @if (!hasMoreQuestions && !loading) {
-<div class="d-flex w-100">
-  <button
-    type="button"
-    class="ms-auto ms-md-0"
-    mat-flat-button
-    [disabled]="scoreLoading"
-    (click)="onCalculateScore()"
-  >
-    <div class="d-flex align-items-center">
-      {{ 'questions.calculate_score' | translate }}
-      @if(scoreLoading) {
-      <mat-progress-spinner
-        class="ms-2"
-        diameter="20"
-        color="primary"
-        mode="indeterminate"
-      ></mat-progress-spinner>
-      }
-    </div>
-  </button>
-  @if(isRandom) {
-  <button
-    type="button"
-    class="ms-2"
-    mat-button
-    [disabled]="scoreLoading"
-    (click)="newRandomQuestions.emit()"
-  >
-    {{ 'questions_random_new' | translate : { count: randomCount } }}
-  </button>
-  }
-</div>
-} @if (score) {
-<div class="mt-4">
-  <app-score-overview
-    [score]="score"
-    [questions]="questions"
-  ></app-score-overview>
-</div>
+@for (question of questions(); track question.id) {
+  <div class="mb-4">
+    <app-question
+      [question]="question"
+      (selectAnswer)="onSelectAnswer($event)"
+      (deselectAnswer)="onDeselectAnswer($event)" />
+  </div>
+}
+@if (loading()) {
+  <div class="d-flex justify-content-center align-items-center">
+    <mat-progress-spinner mode="indeterminate" diameter="50" />
+  </div>
+}
+@if (!hasMoreQuestions() && !loading()) {
+  <div class="d-flex w-100">
+    <button
+      type="button"
+      class="ms-auto ms-md-0"
+      mat-flat-button
+      [disabled]="scoreLoading()"
+      (click)="onCalculateScore()">
+      <div class="d-flex align-items-center">
+        {{ 'questions.calculate_score' | translate }}
+        @if (scoreLoading()) {
+          <mat-progress-spinner class="ms-2" diameter="20" color="primary" mode="indeterminate" />
+        }
+      </div>
+    </button>
+    @if (isRandom()) {
+      <button type="button" class="ms-2" mat-button [disabled]="scoreLoading()" (click)="newRandomQuestions.emit()">
+        {{ 'questions_random_new' | translate: { count: randomCount() } }}
+      </button>
+    }
+  </div>
+}
+@if (score()) {
+  <div class="mt-4">
+    <app-score-overview [score]="score()" [questions]="questions()" />
+  </div>
 }

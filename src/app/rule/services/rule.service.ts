@@ -2,20 +2,15 @@ import { Injectable, inject } from '@angular/core';
 import { ApolloQueryResult } from '@apollo/client/core';
 import { QueryRef } from 'apollo-angular';
 import { Observable, tap } from 'rxjs';
-import {
-  GetRuleGQL,
-  GetRuleQuery,
-  GetRuleQueryVariables,
-} from '../../../../graphql/generated';
+import { GetRuleGQL, GetRuleQuery, GetRuleQueryVariables } from '../../../../graphql/generated';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RuleService {
-  // private _ruleId: string;
   private _cursor?: string | null;
-  private _pageSize = 10;
-  private _getRuleGQL = inject(GetRuleGQL);
+  private readonly _pageSize = 10;
+  private readonly _getRuleGQL = inject(GetRuleGQL);
   private _hasNextPage = true;
 
   private _ruleQuery?: QueryRef<GetRuleQuery, GetRuleQueryVariables>;
@@ -27,7 +22,6 @@ export class RuleService {
   }
 
   get(id: string): Observable<ApolloQueryResult<GetRuleQuery>> {
-    // this._ruleId = id;
     this._ruleQuery = this._getRuleGQL.watch(
       {
         id,
@@ -40,8 +34,7 @@ export class RuleService {
     this.rule$ = this._ruleQuery.valueChanges.pipe(
       tap((x) => {
         this._cursor = x.data?.ruleById?.questions?.pageInfo.endCursor;
-        this._hasNextPage =
-          x.data?.ruleById?.questions?.pageInfo.hasNextPage ?? true;
+        this._hasNextPage = x.data?.ruleById?.questions?.pageInfo.hasNextPage ?? true;
       })
     );
 

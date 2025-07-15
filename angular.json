@@ -53,10 +53,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "bootstrap/dist/css/bootstrap.min.css",
-              "src/styles.scss"
-            ],
+            "styles": ["bootstrap/dist/css/bootstrap.min.css", "src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -98,12 +95,19 @@
         },
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+          }
         }
       }
     }
   },
   "cli": {
-    "analytics": "9a2b9825-96db-4930-86ca-9ead088e89c0"
+    "analytics": "9a2b9825-96db-4930-86ca-9ead088e89c0",
+    "schematicCollections": ["angular-eslint"]
   },
   "schematics": {
     "@schematics/angular:component": {

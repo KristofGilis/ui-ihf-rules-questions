@@ -14,15 +14,15 @@ import { RandomStateService } from './random-state.service';
   providedIn: 'root',
 })
 export class QuestionsService {
-  private _randomStateService = inject(RandomStateService);
+  private readonly _randomStateService = inject(RandomStateService);
   private _cursor: string | null = null;
   private _hasNextPage = true;
 
-  private _order: QuestionSortInput[] = [{ number: SortEnumType.Asc }];
-  private _pageSize = 10;
+  private readonly _order: QuestionSortInput[] = [{ number: SortEnumType.Asc }];
+  private readonly _pageSize = 10;
   private _questionsFetchedCount = 0;
-  private _getQuestionsGQL = inject(GetQuestionsGQL);
-  private _questionsQuery = this._getQuestionsGQL.watch(
+  private readonly _getQuestionsGQL = inject(GetQuestionsGQL);
+  private readonly _questionsQuery = this._getQuestionsGQL.watch(
     {
       first: this._pageSize,
       after: this._cursor,
@@ -35,7 +35,7 @@ export class QuestionsService {
       nextFetchPolicy: 'network-only',
     }
   );
-  private _calculateScoreGQL = inject(CalculateScoreGQL);
+  private readonly _calculateScoreGQL = inject(CalculateScoreGQL);
 
   get hasNextPage(): boolean {
     return this._hasNextPage;
@@ -53,11 +53,7 @@ export class QuestionsService {
     tap((x) => {
       this._cursor = x.data?.questions?.pageInfo.endCursor ?? null;
       this._questionsFetchedCount = x.data?.questions?.edges?.length ?? 0;
-      if (
-        !this._isRandom ||
-        (this._isRandom &&
-          this._questionsFetchedCount < this._maxRandomQuestionsCount)
-      ) {
+      if (!this._isRandom || (this._isRandom && this._questionsFetchedCount < this._maxRandomQuestionsCount)) {
         this._hasNextPage = x.data?.questions?.pageInfo.hasNextPage ?? true;
       } else {
         this._hasNextPage = false;
@@ -78,8 +74,7 @@ export class QuestionsService {
   fetchMore(): void {
     if (
       (this._hasNextPage && !this._isRandom) ||
-      (this._isRandom &&
-        this._questionsFetchedCount < this._maxRandomQuestionsCount)
+      (this._isRandom && this._questionsFetchedCount < this._maxRandomQuestionsCount)
     ) {
       this._questionsQuery.fetchMore({
         variables: {

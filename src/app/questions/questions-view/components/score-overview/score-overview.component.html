@@ -14,29 +14,21 @@
                 <div class="d-flex">
                   <div>
                     {{ 'score_overview.score' | translate }}
-                    <span class="fw-bold">
-                      {{ score?.score }} / {{ score?.total }}
-                    </span>
+                    <span class="fw-bold"> {{ score()?.score }} / {{ score()?.total }} </span>
                   </div>
-                  <div
-                    class="position-absolute top-0 end-0 fw-bold fs-3 pt-4 pe-4"
-                    [class.red]="isBadResult"
-                  >
-                    {{ score?.percentage }}
+                  <div class="position-absolute top-0 end-0 fw-bold fs-3 pt-4 pe-4" [class.red]="isBadResult">
+                    {{ score()?.percentage }}
                   </div>
                 </div>
               </div>
               <div class="col">
-                @if (score?.wrongQuestionsIds?.length ?? 0 > 0) {
-                <span
-                  [innerHTML]="
-                    'score_overview.wrong_questionNumbers' | translate
-                  "
-                >
-                </span>
-                } @for (wrongQuestionId of score?.wrongQuestionsIds; track
-                wrongQuestionId) {
-                <div class="my-2">{{ getQuestionNumber(wrongQuestionId) }}</div>
+                @if (score()?.wrongQuestionsIds?.length ?? 0 > 0) {
+                  <span [innerHTML]="'score_overview.wrong_questionNumbers' | translate"> </span>
+                }
+                @for (wrongQuestionId of score()?.wrongQuestionsIds; track wrongQuestionId) {
+                  <div class="my-2">
+                    {{ getQuestionNumber(wrongQuestionId) }}
+                  </div>
                 }
               </div>
             </div>

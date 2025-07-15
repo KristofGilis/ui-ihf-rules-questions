@@ -9,7 +9,11 @@
     "generate": "graphql-codegen",
     "i18n:init": "ngx-translate-extract --input ./src --output ./public/i18n/template.json --key-as-default-value --replace --format json --format-indentation \"  \"",
     "i18n:extract": "ngx-translate-extract --input ./src --output ./public/i18n/en.json --output ./public/i18n/nl.json --output ./public/i18n/srb.json --format namespaced-json --format-indentation \"  \" --sort",
-    "i18n:clean": "ngx-translate-extract --input ./src --output ./public/i18n/en.json --output ./public/i18n/nl.json --output ./public/i18n/srb.json --clean --format namespaced-json --format-indentation \"  \" --sort"
+    "i18n:clean": "ngx-translate-extract --input ./src --output ./public/i18n/en.json --output ./public/i18n/nl.json --output ./public/i18n/srb.json --clean --format namespaced-json --format-indentation \"  \" --sort",
+    "prettier:check": "npx prettier --check .",
+    "prettier:write": "npx prettier --write .",
+    "lint": "npx ng lint",
+    "lint:fix": "npx ng lint --fix"
   },
   "private": true,
   "dependencies": {
@@ -28,7 +32,7 @@
     "@apollo/client": "^3.13.8",
     "@ngx-translate/core": "^16.0.4",
     "@ngx-translate/http-loader": "^16.0.1",
-    "apollo-angular": "^11.0.0-alpha-20250530113112-5a07a4995ce9aba2564b06e4344516edb24e9b7e",
+    "apollo-angular": "^11.0.0",
     "bootstrap": "^5.3.5",
     "graphql": "^16.11.0",
     "rxjs": "~7.8.2",
@@ -46,6 +50,15 @@
     "@graphql-codegen/typescript-operations": "^4.6.0",
     "@types/node": "^22.15.3",
     "@vendure/ngx-translate-extract": "^10.0.0",
-    "typescript": "~5.8.3"
+    "typescript": "~5.8.3",
+    "@angular-eslint/builder": "20.1.1",
+    "@angular-eslint/eslint-plugin": "20.1.1",
+    "@angular-eslint/eslint-plugin-template": "20.1.1",
+    "@angular-eslint/schematics": "20.1.1",
+    "@angular-eslint/template-parser": "20.1.1",
+    "@typescript-eslint/eslint-plugin": "^8.34.0",
+    "@typescript-eslint/parser": "^8.34.0",
+    "eslint": "^9.29.0",
+    "prettier": "^3.6.2"
   }
 }
