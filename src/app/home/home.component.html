@@ -2,7 +2,9 @@
   <div class="row">
     <div class="col">
       <h4>{{ 'home.title' | translate }}</h4>
-      <div class="mat-body" [innerHTML]="'home.subtitle' | translate:{version: version$ | async}"></div>
+      @if (version$ | async; as version) {
+        <div class="mat-body" [innerHTML]="'home.subtitle' | translate:{version}"></div>
+      }
       <div class="alert alert-warning mt-3" role="alert">
         {{ 'home.alert' | translate }}
         <br />
