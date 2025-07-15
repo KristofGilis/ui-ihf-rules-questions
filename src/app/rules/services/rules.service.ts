@@ -29,4 +29,8 @@ export class RulesService {
       },
     });
   }
+
+  refetch(): void {
+    this._rulesQuery.refetch({ first: this._pageSize, after: null });
+  }
 }

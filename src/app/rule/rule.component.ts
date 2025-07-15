@@ -3,6 +3,7 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable, finalize, map, shareReplay, tap } from 'rxjs';
 import { Question, Rule, Score } from '../../../graphql/generated';
 import { QuestionsViewComponent } from '../questions/questions-view/questions-view.component';
@@ -21,24 +22,24 @@ export class RuleComponent {
   private readonly _ruleService = inject(RuleService);
   private readonly _questionsService = inject(QuestionsService);
   private readonly _scrollDispatcher = inject(ScrollDispatcher);
+  private readonly _translateService = inject(TranslateService);
 
   loading = signal(false);
-  rule$: Observable<Rule>;
   score$?: Observable<Score>;
   scoreLoading = signal(false);
+
+  rule$ = this._ruleService.get(this._activatedRoute.snapshot.params['id']).pipe(
+    tap((x) => this.loading.set(x.loading)),
+    map((x) => x.data?.ruleById as Rule),
+    finalize(() => this.loading.set(false)),
+    shareReplay()
+  );
 
   get hasMoreQuestions(): boolean {
     return this._ruleService.hasNextPage;
   }
 
   constructor() {
-    this.rule$ = this._ruleService.get(this._activatedRoute.snapshot.params['id']).pipe(
-      tap((x) => this.loading.set(x.loading)),
-      map((x) => x.data?.ruleById as Rule),
-      finalize(() => this.loading.set(false)),
-      shareReplay()
-    );
-
     this._scrollDispatcher
       .scrolled()
       .pipe(takeUntilDestroyed())
@@ -47,6 +48,8 @@ export class RuleComponent {
           this._ruleService.fetchMoreQuestions();
         }
       });
+
+    this._translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => this._ruleService.refetch());
   }
 
   getQuestions(rule: Rule | null): Question[] {

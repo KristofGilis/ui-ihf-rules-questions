@@ -51,4 +51,8 @@ export class RuleService {
       });
     }
   }
+
+  refetch(): void {
+    this._ruleQuery?.refetch({ first: this._pageSize, after: null });
+  }
 }

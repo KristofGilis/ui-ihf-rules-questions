@@ -2,7 +2,7 @@ import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Observable, finalize, map, tap } from 'rxjs';
 import { Question, Score } from '../../../graphql/generated';
 import { QuestionsViewComponent } from './questions-view/questions-view.component';
@@ -20,6 +20,7 @@ export class QuestionsComponent {
   private readonly _questionsService = inject(QuestionsService);
   private readonly _scrollDispatcher = inject(ScrollDispatcher);
   private readonly _randomStateService = inject(RandomStateService);
+  private readonly _translateService = inject(TranslateService);
 
   random = this._randomStateService.random;
   loading = signal(false);
@@ -53,6 +54,8 @@ export class QuestionsComponent {
           this._questionsService.fetchMore();
         }
       });
+
+    this._translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => this._questionsService.refetch());
   }
 
   onCalculateScore(questionIds: string[], selectedAnswerIds: string[]): void {

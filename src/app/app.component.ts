@@ -1,7 +1,6 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DOCUMENT, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -11,7 +10,6 @@ import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/mat
 import { MatToolbar } from '@angular/material/toolbar';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Apollo } from 'apollo-angular';
 import { Observable, map, shareReplay, tap } from 'rxjs';
 import { routes } from './app.routes';
 import { getLanguage } from './language';
@@ -49,7 +47,6 @@ export class AppComponent {
   private readonly _breakpointObserver = inject(BreakpointObserver);
   private readonly _translateService = inject(TranslateService);
   private readonly _document = inject(DOCUMENT);
-  private readonly _apollo = inject(Apollo);
 
   private _isHandset = false;
 
@@ -70,8 +67,6 @@ export class AppComponent {
     this.currentLang = getLanguage();
 
     this._translateService.use(this.currentLang);
-
-    this._translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => this._apollo.client.resetStore());
   }
 
   onNavigationLinkClicked(drawer: MatSidenav, route?: string): void {
