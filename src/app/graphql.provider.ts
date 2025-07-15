@@ -15,7 +15,7 @@ if (isDevMode()) {
 const APOLLO_CACHE = new InjectionToken<InMemoryCache>('apollo-cache');
 const uri = 'https://api-ihf-rules-questions.azurewebsites.net/graphql';
 
-export function apolloOptionsFactory(): ApolloClientOptions<any> {
+export function apolloOptionsFactory(): ApolloClientOptions<unknown> {
   const httpLink = inject(HttpLink);
   const cache = inject(APOLLO_CACHE);
 

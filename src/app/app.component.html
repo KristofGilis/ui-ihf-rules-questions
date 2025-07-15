@@ -1,9 +1,10 @@
+@let isHandset = isHandset$ | async;
 <mat-sidenav-container fullscreen>
   <mat-sidenav
     #drawer
     fixedInViewport
-    [mode]="!(isHandset$ | async) ? 'side' : 'over'"
-    [opened]="(isHandset$ | async) === false"
+    [mode]="!isHandset ? 'side' : 'over'"
+    [opened]="!isHandset"
     [autoFocus]="false">
     <div class="d-flex flex-column h-100">
       <div class="d-flex justify-content-center background">
