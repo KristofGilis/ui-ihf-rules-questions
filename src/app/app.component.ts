@@ -13,6 +13,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Observable, map, shareReplay, tap } from 'rxjs';
 import { routes } from './app.routes';
 import { getLanguage } from './language';
+import { LogoComponent } from './logo/logo.component';
 import { RandomStateService } from './questions/services/random-state.service';
 
 @Component({
@@ -37,6 +38,7 @@ import { RandomStateService } from './questions/services/random-state.service';
     MatSelectTrigger,
     MatOption,
     FormsModule,
+    LogoComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
