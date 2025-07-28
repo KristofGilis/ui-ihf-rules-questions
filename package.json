@@ -31,7 +31,7 @@
     "@angular/service-worker": "^20.0.3",
     "@apollo/client": "^3.13.8",
     "@ngx-translate/core": "^16.0.4",
-    "@ngx-translate/http-loader": "^16.0.1",
+    "@ngx-translate/http-loader": "^17.0.0",
     "apollo-angular": "^11.0.0",
     "bootstrap": "^5.3.5",
     "graphql": "^16.11.0",
