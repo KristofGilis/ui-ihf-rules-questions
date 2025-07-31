@@ -18,12 +18,12 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^20.0.3",
-    "@angular/cdk": "^20.0.3",
+    "@angular/cdk": "^20.1.4",
     "@angular/common": "^20.0.3",
     "@angular/compiler": "^20.0.3",
     "@angular/core": "^20.0.3",
     "@angular/forms": "^20.0.3",
-    "@angular/material": "^20.0.3",
+    "@angular/material": "^20.1.4",
     "@angular/platform-browser": "^20.0.3",
     "@angular/platform-browser-dynamic": "^20.0.3",
     "@angular/platform-server": "^20.0.3",
@@ -40,8 +40,8 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular/build": "^20.0.2",
-    "@angular/cli": "^20.0.2",
+    "@angular/build": "^20.1.4",
+    "@angular/cli": "^20.1.4",
     "@angular/compiler-cli": "^20.0.3",
     "@biesbjerg/ngx-translate-extract-marker": "^1.0.0",
     "@graphql-codegen/cli": "^5.0.5",
