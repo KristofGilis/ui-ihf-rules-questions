@@ -1,4 +1,4 @@
-import { inject, DOCUMENT } from '@angular/core';
+import { DOCUMENT, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 export function getLanguage(): string {
@@ -8,7 +8,7 @@ export function getLanguage(): string {
 
   const browserLanguage = translateService.getBrowserLang()?.match(/en|fr|nl/)
     ? translateService.getBrowserLang()
-    : translateService.defaultLang;
+    : translateService.getFallbackLang();
   const localStorageLanguage = localStorage?.getItem('language');
 
   return localStorageLanguage ?? browserLanguage ?? 'en';
