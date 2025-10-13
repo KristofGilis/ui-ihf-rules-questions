@@ -1,16 +1,9 @@
 import { HttpHeaders } from '@angular/common/http';
-import { ApplicationConfig, inject, InjectionToken, isDevMode } from '@angular/core';
+import { ApplicationConfig, inject, InjectionToken } from '@angular/core';
 import { ApolloClientOptions, InMemoryCache } from '@apollo/client/core';
-import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev';
 import { relayStylePagination } from '@apollo/client/utilities';
 import { Apollo, APOLLO_FLAGS, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
-
-if (isDevMode()) {
-  // Adds messages only in a dev environment
-  loadDevMessages();
-  loadErrorMessages();
-}
 
 const APOLLO_CACHE = new InjectionToken<InMemoryCache>('apollo-cache');
 const uri = 'https://api-ihf-rules-questions.azurewebsites.net/graphql';
