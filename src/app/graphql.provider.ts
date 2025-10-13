@@ -8,7 +8,7 @@ import { HttpLink } from 'apollo-angular/http';
 const APOLLO_CACHE = new InjectionToken<InMemoryCache>('apollo-cache');
 const uri = 'https://api-ihf-rules-questions.azurewebsites.net/graphql';
 
-export function apolloOptionsFactory(): ApolloClientOptions<unknown> {
+export function apolloOptionsFactory(): ApolloClientOptions {
   const httpLink = inject(HttpLink);
   const cache = inject(APOLLO_CACHE);
 
