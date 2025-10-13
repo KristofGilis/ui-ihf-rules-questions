@@ -22,14 +22,14 @@ export class RuleService {
   }
 
   get(id: string): Observable<ApolloQueryResult<GetRuleQuery>> {
-    this._ruleQuery = this._getRuleGQL.watch(
-      {
+    this._ruleQuery = this._getRuleGQL.watch({
+      variables: {
         id,
         first: this._pageSize,
         after: null,
       },
-      { notifyOnNetworkStatusChange: true }
-    );
+      notifyOnNetworkStatusChange: true,
+    });
 
     this.rule$ = this._ruleQuery.valueChanges.pipe(
       tap((x) => {

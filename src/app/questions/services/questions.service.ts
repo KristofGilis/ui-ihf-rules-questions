@@ -22,19 +22,17 @@ export class QuestionsService {
   private readonly _pageSize = 10;
   private _questionsFetchedCount = 0;
   private readonly _getQuestionsGQL = inject(GetQuestionsGQL);
-  private readonly _questionsQuery = this._getQuestionsGQL.watch(
-    {
+  private readonly _questionsQuery = this._getQuestionsGQL.watch({
+    variables: {
       first: this._pageSize,
       after: this._cursor,
       order: this._order,
       random: this._randomStateService.random().isRandom,
     },
-    {
-      notifyOnNetworkStatusChange: true,
-      refetchWritePolicy: 'overwrite',
-      nextFetchPolicy: 'network-only',
-    }
-  );
+    notifyOnNetworkStatusChange: true,
+    refetchWritePolicy: 'overwrite',
+    nextFetchPolicy: 'network-only',
+  });
   private readonly _calculateScoreGQL = inject(CalculateScoreGQL);
 
   get hasNextPage(): boolean {
@@ -88,12 +86,12 @@ export class QuestionsService {
     questionIds: string[],
     selectedAnswerIds: string[]
   ): Observable<ApolloQueryResult<CalculateScoreQuery>> {
-    return this._calculateScoreGQL.watch(
-      {
+    return this._calculateScoreGQL.watch({
+      variables: {
         questionIds,
         selectedAnswerIds,
       },
-      { fetchPolicy: 'no-cache' }
-    ).valueChanges;
+      fetchPolicy: 'no-cache',
+    }).valueChanges;
   }
 }
