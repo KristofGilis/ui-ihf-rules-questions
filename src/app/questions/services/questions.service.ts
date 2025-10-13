@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { ApolloQueryResult } from '@apollo/client/core';
+import { ApolloQueryResult } from '@apollo/client';
 import { Observable, tap } from 'rxjs';
 import {
   CalculateScoreGQL,

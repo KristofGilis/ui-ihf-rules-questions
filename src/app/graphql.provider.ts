@@ -1,9 +1,9 @@
 import { HttpHeaders } from '@angular/common/http';
 import { ApplicationConfig, inject, InjectionToken, isDevMode } from '@angular/core';
-import { ApolloClientOptions, InMemoryCache } from '@apollo/client/core';
+import { ApolloClientOptions, InMemoryCache } from '@apollo/client';
 import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev';
 import { relayStylePagination } from '@apollo/client/utilities';
-import { Apollo, APOLLO_FLAGS, APOLLO_OPTIONS } from 'apollo-angular';
+import { Apollo, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 
 if (isDevMode()) {
@@ -58,11 +58,5 @@ export const graphqlProvider: ApplicationConfig['providers'] = [
   {
     provide: APOLLO_OPTIONS,
     useFactory: apolloOptionsFactory,
-  },
-  {
-    provide: APOLLO_FLAGS,
-    useValue: {
-      useInitialLoading: true,
-    },
   },
 ];

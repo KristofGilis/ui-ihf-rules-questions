@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { ApolloQueryResult } from '@apollo/client/core';
+import { ApolloQueryResult } from '@apollo/client';
 import { QueryRef } from 'apollo-angular';
 import { Observable, tap } from 'rxjs';
 import { GetRuleGQL, GetRuleQuery, GetRuleQueryVariables } from '../../../../graphql/generated';
