@@ -30,7 +30,7 @@ export class QuestionsComponent {
       if (x.loading && this._randomStateService.random().isRandom) {
         return [];
       }
-      return x.data?.questions?.edges?.map((y) => y.node as Question) ?? [];
+      return x.data?.questions?.edges?.map((y) => y?.node as Question) ?? [];
     }),
     finalize(() => this.loading.set(false))
   );

@@ -49,10 +49,10 @@ export class QuestionsService {
 
   questions$ = this._questionsQuery.valueChanges.pipe(
     tap((x) => {
-      this._cursor = x.data?.questions?.pageInfo.endCursor ?? null;
+      this._cursor = x.data?.questions?.pageInfo?.endCursor ?? null;
       this._questionsFetchedCount = x.data?.questions?.edges?.length ?? 0;
       if (!this._isRandom || (this._isRandom && this._questionsFetchedCount < this._maxRandomQuestionsCount)) {
-        this._hasNextPage = x.data?.questions?.pageInfo.hasNextPage ?? true;
+        this._hasNextPage = x.data?.questions?.pageInfo?.hasNextPage ?? true;
       } else {
         this._hasNextPage = false;
       }

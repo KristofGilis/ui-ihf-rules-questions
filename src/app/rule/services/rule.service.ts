@@ -33,8 +33,8 @@ export class RuleService {
 
     this.rule$ = this._ruleQuery.valueChanges.pipe(
       tap((x) => {
-        this._cursor = x.data?.ruleById?.questions?.pageInfo.endCursor;
-        this._hasNextPage = x.data?.ruleById?.questions?.pageInfo.hasNextPage ?? true;
+        this._cursor = x.data?.ruleById?.questions?.pageInfo?.endCursor;
+        this._hasNextPage = x.data?.ruleById?.questions?.pageInfo?.hasNextPage ?? true;
       })
     );
 

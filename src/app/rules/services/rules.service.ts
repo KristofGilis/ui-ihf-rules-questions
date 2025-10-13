@@ -17,7 +17,7 @@ export class RulesService {
     notifyOnNetworkStatusChange: true,
   });
 
-  rules$ = this._rulesQuery.valueChanges.pipe(tap((x) => (this._cursor = x.data?.rules?.pageInfo.endCursor)));
+  rules$ = this._rulesQuery.valueChanges.pipe(tap((x) => (this._cursor = x.data?.rules?.pageInfo?.endCursor)));
 
   fetchMore(): void {
     this._rulesQuery.fetchMore({
