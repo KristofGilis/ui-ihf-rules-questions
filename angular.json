@@ -54,7 +54,10 @@
               }
             ],
             "styles": ["bootstrap/dist/css/bootstrap.min.css", "src/styles.scss"],
-            "scripts": []
+            "scripts": [],
+            "optimization": {
+              "fonts": false
+            }
           },
           "configurations": {
             "production": {
