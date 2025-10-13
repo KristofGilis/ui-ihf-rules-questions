@@ -21,7 +21,7 @@ export class RulesComponent {
   loading = signal(false);
   rules$ = this._rulesService.rules$.pipe(
     tap((x) => this.loading.set(x.loading)),
-    map((x) => x.data?.rules?.edges?.map((y) => y.node as Rule) ?? []),
+    map((x) => x.data?.rules?.edges?.map((y) => y?.node as Rule).filter((r): r is Rule => r != null) ?? []),
     finalize(() => this.loading.set(false))
   );
 
