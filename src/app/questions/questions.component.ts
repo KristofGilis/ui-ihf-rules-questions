@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@ang
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
-import { Observable, finalize, map, tap } from 'rxjs';
+import { Observable, debounceTime, finalize, map, tap } from 'rxjs';
 import { Question, Score } from '../../../graphql/generated';
 import { QuestionsViewComponent } from './questions-view/questions-view.component';
 import { QuestionsService } from './services/questions.service';
@@ -50,9 +50,12 @@ export class QuestionsComponent {
 
     this._scrollDispatcher
       .scrolled()
-      .pipe(takeUntilDestroyed())
+      .pipe(
+        debounceTime(100),
+        takeUntilDestroyed()
+      )
       .subscribe((res) => {
-        if ((res as CdkScrollable).measureScrollOffset('bottom') < 50) {
+        if ((res as CdkScrollable).measureScrollOffset('bottom') < 50 && !this.loading()) {
           this._questionsService.fetchMore();
         }
       });

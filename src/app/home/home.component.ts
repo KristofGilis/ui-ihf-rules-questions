@@ -8,7 +8,7 @@ import { MatFormField, MatLabel, MatOption, MatSelect } from '@angular/material/
 import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
-import { map } from 'rxjs';
+import { map, shareReplay } from 'rxjs';
 import { GetVersionGQL } from '../../../graphql/generated';
 import { RandomStateService } from '../questions/services/random-state.service';
 
@@ -45,7 +45,8 @@ export class HomeComponent {
 
   version$ = this._query.valueChanges.pipe(
     onlyCompleteData(),
-    map((x) => x.data.version)
+    map((x) => x.data.version),
+    shareReplay(1)
   );
 
   constructor() {

@@ -9,7 +9,14 @@ export function getLanguage(): string {
   const browserLanguage = translateService.getBrowserLang()?.match(/en|fr|nl/)
     ? translateService.getBrowserLang()
     : translateService.getFallbackLang();
-  const localStorageLanguage = localStorage?.getItem('language');
+  
+  let localStorageLanguage: string | null = null;
+  try {
+    localStorageLanguage = localStorage?.getItem('language') ?? null;
+  } catch (error) {
+    // localStorage may fail in private browsing mode
+    console.warn('Failed to access localStorage:', error);
+  }
 
   return localStorageLanguage ?? browserLanguage ?? 'en';
 }
