@@ -55,7 +55,7 @@ export class QuestionsComponent {
         takeUntilDestroyed()
       )
       .subscribe((res) => {
-        if ((res as CdkScrollable).measureScrollOffset('bottom') < 50 && !this.loading()) {
+        if (res && (res as CdkScrollable).measureScrollOffset('bottom') < 50 && !this.loading()) {
           this._questionsService.fetchMore();
         }
       });
