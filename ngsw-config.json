@@ -17,5 +17,26 @@
         "files": ["/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"]
       }
     }
+  ],
+  "dataGroups": [
+    {
+      "name": "api-performance",
+      "urls": ["https://api-ihf-rules-questions.azurewebsites.net/graphql"],
+      "cacheConfig": {
+        "maxSize": 100,
+        "maxAge": "1h",
+        "timeout": "10s",
+        "strategy": "performance"
+      }
+    },
+    {
+      "name": "translations",
+      "urls": ["/i18n/*.json"],
+      "cacheConfig": {
+        "maxSize": 10,
+        "maxAge": "7d",
+        "strategy": "performance"
+      }
+    }
   ]
 }

@@ -18,6 +18,16 @@ export function apolloOptionsFactory(): ApolloClient.Options {
       headers: new HttpHeaders().append('graphql-preflight', '1'),
     }),
     cache,
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: 'cache-first',
+        errorPolicy: 'all',
+      },
+      query: {
+        fetchPolicy: 'cache-first',
+        errorPolicy: 'all',
+      },
+    },
   };
 }
 
