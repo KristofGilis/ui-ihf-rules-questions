@@ -4,6 +4,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { onlyCompleteData } from 'apollo-angular';
 import { Observable, finalize, map, shareReplay, tap } from 'rxjs';
 import { Question, Rule, Score } from '../../../graphql/generated';
 import { QuestionsViewComponent } from '../questions/questions-view/questions-view.component';
@@ -30,7 +31,8 @@ export class RuleComponent {
 
   rule$ = this._ruleService.get(this._activatedRoute.snapshot.params['id']).pipe(
     tap((x) => this.loading.set(x.loading)),
-    map((x) => x.data?.ruleById as Rule),
+    onlyCompleteData(),
+    map((x) => x.data.ruleById as Rule),
     finalize(() => this.loading.set(false)),
     shareReplay()
   );
@@ -67,7 +69,8 @@ export class RuleComponent {
   onCalculateScore(questionIds: string[], selectedAnswerIds: string[]): void {
     this.score$ = this._questionsService.calculateScore(questionIds, selectedAnswerIds).pipe(
       tap((x) => this.scoreLoading.set(x.loading)),
-      map((x) => x.data?.calculateScore as Score),
+      onlyCompleteData(),
+      map((x) => x.data.calculateScore as Score),
       finalize(() => this.scoreLoading.set(false))
     );
   }

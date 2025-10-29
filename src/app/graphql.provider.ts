@@ -1,6 +1,6 @@
 import { HttpHeaders } from '@angular/common/http';
 import { ApplicationConfig, inject, InjectionToken } from '@angular/core';
-import { ApolloClientOptions, InMemoryCache } from '@apollo/client/core';
+import { ApolloClient, InMemoryCache } from '@apollo/client/core';
 import { relayStylePagination } from '@apollo/client/utilities';
 import { Apollo, APOLLO_FLAGS, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
@@ -8,7 +8,7 @@ import { HttpLink } from 'apollo-angular/http';
 const APOLLO_CACHE = new InjectionToken<InMemoryCache>('apollo-cache');
 const uri = 'https://api-ihf-rules-questions.azurewebsites.net/graphql';
 
-export function apolloOptionsFactory(): ApolloClientOptions {
+export function apolloOptionsFactory(): ApolloClient.Options {
   const httpLink = inject(HttpLink);
   const cache = inject(APOLLO_CACHE);
 

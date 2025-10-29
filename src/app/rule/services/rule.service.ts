@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { ApolloQueryResult } from '@apollo/client/core';
+import { ObservableQuery } from '@apollo/client/core';
 import { QueryRef } from 'apollo-angular';
 import { Observable, tap } from 'rxjs';
 import { GetRuleGQL, GetRuleQuery, GetRuleQueryVariables } from '../../../../graphql/generated';
@@ -15,13 +15,13 @@ export class RuleService {
 
   private _ruleQuery?: QueryRef<GetRuleQuery, GetRuleQueryVariables>;
 
-  rule$?: Observable<ApolloQueryResult<GetRuleQuery>>;
+  rule$?: Observable<ObservableQuery.Result<GetRuleQuery>>;
 
   get hasNextPage(): boolean {
     return this._hasNextPage;
   }
 
-  get(id: string): Observable<ApolloQueryResult<GetRuleQuery>> {
+  get(id: string): Observable<ObservableQuery.Result<GetRuleQuery>> {
     this._ruleQuery = this._getRuleGQL.watch({
       variables: {
         id,

@@ -7,6 +7,7 @@ import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle } 
 import { MatFormField, MatLabel, MatOption, MatSelect } from '@angular/material/select';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { onlyCompleteData } from 'apollo-angular';
 import { map } from 'rxjs';
 import { GetVersionGQL } from '../../../graphql/generated';
 import { RandomStateService } from '../questions/services/random-state.service';
@@ -42,7 +43,10 @@ export class HomeComponent {
 
   private readonly _query = this._versionGQL.watch();
 
-  version$ = this._query.valueChanges.pipe(map((x) => x.data?.version));
+  version$ = this._query.valueChanges.pipe(
+    onlyCompleteData(),
+    map((x) => x.data.version)
+  );
 
   constructor() {
     this._translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => this._query.refetch());

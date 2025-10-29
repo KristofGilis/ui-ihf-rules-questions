@@ -2,6 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { onlyCompleteData } from 'apollo-angular';
 import { finalize, map, tap } from 'rxjs';
 import { Rule } from '../../../graphql/generated';
 import { RulesViewComponent } from './rules-view/rules-view.component';
@@ -21,7 +22,8 @@ export class RulesComponent {
   loading = signal(false);
   rules$ = this._rulesService.rules$.pipe(
     tap((x) => this.loading.set(x.loading)),
-    map((x) => x.data?.rules?.edges?.map((y) => y?.node as Rule) ?? []),
+    onlyCompleteData(),
+    map((x) => x.data.rules?.edges?.map((y) => y?.node as Rule) ?? []),
     finalize(() => this.loading.set(false))
   );
 

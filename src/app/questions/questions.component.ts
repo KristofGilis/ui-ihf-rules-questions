@@ -3,6 +3,7 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { onlyCompleteData } from 'apollo-angular';
 import { Observable, finalize, map, tap } from 'rxjs';
 import { Question, Score } from '../../../graphql/generated';
 import { QuestionsViewComponent } from './questions-view/questions-view.component';
@@ -26,11 +27,12 @@ export class QuestionsComponent {
   loading = signal(false);
   questions$ = this._questionsService.questions$.pipe(
     tap((x) => this.loading.set(x.loading)),
+    onlyCompleteData(),
     map((x) => {
       if (x.loading && this._randomStateService.random().isRandom) {
         return [];
       }
-      return x.data?.questions?.edges?.map((y) => y?.node as Question) ?? [];
+      return x.data.questions?.edges?.map((y) => y?.node as Question) ?? [];
     }),
     finalize(() => this.loading.set(false))
   );
@@ -61,7 +63,8 @@ export class QuestionsComponent {
   onCalculateScore(questionIds: string[], selectedAnswerIds: string[]): void {
     this.score$ = this._questionsService.calculateScore(questionIds, selectedAnswerIds).pipe(
       tap((x) => this.scoreLoading.set(x.loading)),
-      map((x) => x.data?.calculateScore as Score),
+      onlyCompleteData(),
+      map((x) => x.data.calculateScore as Score),
       finalize(() => this.scoreLoading.set(false))
     );
   }

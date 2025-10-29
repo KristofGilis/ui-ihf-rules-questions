@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { ApolloQueryResult } from '@apollo/client/core';
+import { ObservableQuery } from '@apollo/client/core';
 import { Observable, tap } from 'rxjs';
 import {
   CalculateScoreGQL,
@@ -85,7 +85,7 @@ export class QuestionsService {
   calculateScore(
     questionIds: string[],
     selectedAnswerIds: string[]
-  ): Observable<ApolloQueryResult<CalculateScoreQuery>> {
+  ): Observable<ObservableQuery.Result<CalculateScoreQuery>> {
     return this._calculateScoreGQL.watch({
       variables: {
         questionIds,
