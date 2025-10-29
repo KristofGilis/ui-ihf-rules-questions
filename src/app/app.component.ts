@@ -12,6 +12,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Observable, map, shareReplay, tap } from 'rxjs';
 import { routes } from './app.routes';
+import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
 import { getLanguage } from './language';
 import { LogoComponent } from './logo/logo.component';
 import { RandomStateService } from './questions/services/random-state.service';
@@ -39,6 +40,7 @@ import { RandomStateService } from './questions/services/random-state.service';
     MatOption,
     FormsModule,
     LogoComponent,
+    ThemeToggleComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

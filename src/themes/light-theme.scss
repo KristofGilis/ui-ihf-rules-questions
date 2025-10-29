@@ -1,0 +1,17 @@
+@use '@angular/material' as mat;
+
+// Light theme using Angular Material's azure-blue preset (compatible with existing)
+$light-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+  )
+);
+
+// Apply all component themes for light theme
+@mixin apply-light-theme() {
+  @include mat.all-component-colors($light-theme);
+}

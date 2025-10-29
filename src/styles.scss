@@ -1,9 +1,12 @@
 @use '@angular/material' as mat;
+@use './themes/light-theme' as light;
+@use './themes/dark-theme' as dark;
 
 @include mat.elevation-classes();
 @include mat.app-background();
 
-$light-theme: mat.define-theme(
+// Base theme configuration (using existing colors for compatibility)
+$base-light-theme: mat.define-theme(
   (
     color: (
       theme-type: light,
@@ -13,7 +16,7 @@ $light-theme: mat.define-theme(
   )
 );
 
-$dark-theme: mat.define-theme(
+$base-dark-theme: mat.define-theme(
   (
     color: (
       theme-type: dark,
@@ -23,13 +26,23 @@ $dark-theme: mat.define-theme(
   )
 );
 
+// Apply base theme
 html {
-  @include mat.all-component-themes($dark-theme);
-  @include mat.checkbox-color($dark-theme, $color-variant: tertiary);
+  @include mat.all-component-themes($base-dark-theme);
+  @include mat.checkbox-color($base-dark-theme, $color-variant: tertiary);
 
   @media (prefers-color-scheme: light) {
-    @include mat.all-component-colors($light-theme);
+    @include mat.all-component-colors($base-light-theme);
   }
+}
+
+// Dynamic theme switching via body classes
+body.light-theme {
+  @include light.apply-light-theme();
+}
+
+body.dark-theme {
+  @include dark.apply-dark-theme();
 }
 
 html,

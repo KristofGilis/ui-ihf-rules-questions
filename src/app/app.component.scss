@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
 
+// Mobile-first base styles (320px+)
 .mat-sidenav {
   width: 15.625rem;
   border-top-right-radius: unset;
@@ -9,6 +10,25 @@
 
   @media (prefers-color-scheme: light) {
     border-right-color: map.get($map: mat.$azure-palette, $key: 90);
+  }
+}
+
+.mat-toolbar {
+  padding: 0 0.5rem; // Mobile padding
+
+  // Tablet and above
+  @media (min-width: 768px) {
+    padding: 0 1rem;
+  }
+
+  h1 {
+    font-size: 1.25rem; // Mobile font size
+    margin: 0;
+
+    // Tablet and above
+    @media (min-width: 768px) {
+      font-size: 1.5rem;
+    }
   }
 }
 
@@ -23,4 +43,30 @@
 
 .navigation-container {
   background-color: var(--mat-sidenav-content-background-color);
+}
+
+// Spacer for toolbar
+.spacer {
+  flex: 1 1 auto;
+}
+
+// Ensure touch targets are at least 44x44px
+button[mat-icon-button] {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+// Responsive container
+.container-fluid {
+  padding: 0.75rem; // Mobile padding
+
+  // Tablet and above
+  @media (min-width: 768px) {
+    padding: 1rem;
+  }
+
+  // Desktop and above
+  @media (min-width: 1024px) {
+    padding: 1.5rem;
+  }
 }
