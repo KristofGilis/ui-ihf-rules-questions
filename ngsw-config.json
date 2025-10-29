@@ -17,17 +17,5 @@
         "files": ["/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)", "/i18n/*.json"]
       }
     }
-  ],
-  "dataGroups": [
-    {
-      "name": "api-performance",
-      "urls": ["https://api-ihf-rules-questions.azurewebsites.net/graphql"],
-      "cacheConfig": {
-        "maxSize": 100,
-        "maxAge": "1h",
-        "timeout": "10s",
-        "strategy": "performance"
-      }
-    }
   ]
 }
