@@ -1,27 +1,22 @@
-<div class="container-fluid p-0">
-  <div class="row">
-    <div class="col">
-      <span class="fw-500"> {{ question().number }}) </span>
-      <span class="fw-500" [innerHTML]="question().phrase"></span>
+<div class="mb-6">
+  <div class="mb-4">
+    <span class="font-semibold text-[rgb(var(--color-text))]">{{ question().number }}) </span>
+    <span class="font-medium text-[rgb(var(--color-text))]" [innerHTML]="question().phrase"></span>
+  </div>
 
-      <div class="container-fluid mt-2">
-        <div class="row">
-          <div class="col">
-            <div class="d-flex flex-column">
-              @for (answer of question().answers?.nodes; track answer?.id) {
-                <mat-checkbox
-                  class="mb-2"
-                  (change)="
-                    $event.checked ? selectAnswer.emit(answer?.id ?? '') : deselectAnswer.emit(answer?.id ?? '')
-                  ">
-                  <span class="fw-500">{{ answer?.number }})</span>
-                  {{ answer?.phrase }}
-                </mat-checkbox>
-              }
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="space-y-2">
+    @for (answer of question().answers?.nodes; track answer?.id) {
+      <label class="flex items-start p-3 rounded-lg border border-[rgb(var(--color-border))] hover:bg-[rgb(var(--color-hover))] cursor-pointer transition-colors">
+        <input
+          type="checkbox"
+          [checked]="selectedAnswers().includes(answer?.id ?? '')"
+          (change)="onAnswerChange($event, answer?.id)"
+          class="mt-1 w-5 h-5 rounded border-[rgb(var(--color-border))] text-[rgb(var(--color-primary))] focus:ring-2 focus:ring-[rgb(var(--color-primary))]" />
+        <span class="ml-3 text-[rgb(var(--color-text))]">
+          <span class="font-semibold">{{ answer?.number }})</span>
+          {{ answer?.phrase }}
+        </span>
+      </label>
+    }
   </div>
 </div>

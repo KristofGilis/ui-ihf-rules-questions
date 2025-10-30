@@ -1,8 +1,4 @@
-<div class="container-fluid h-100">
-  <div class="row">
-    <div class="col">
-      <h4>{{ 'rules.title' | translate }}</h4>
-      <app-rules-view [rules]="(rules$ | async) ?? []" [loading]="loading()" />
-    </div>
-  </div>
+<div class="max-w-4xl mx-auto">
+  <h2 class="text-3xl font-bold mb-6 text-[rgb(var(--color-text))]">{{ 'rules.title' | translate }}</h2>
+  <app-rules-view [rules]="(rules$ | async) ?? []" [loading]="loading()" />
 </div>

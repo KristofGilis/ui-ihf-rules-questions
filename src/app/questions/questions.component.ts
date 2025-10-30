@@ -1,10 +1,9 @@
-import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
-import { Observable, debounceTime, finalize, map, tap } from 'rxjs';
+import { Observable, finalize, map, tap } from 'rxjs';
 import { Question, Score } from '../../../graphql/generated';
 import { QuestionsViewComponent } from './questions-view/questions-view.component';
 import { QuestionsService } from './services/questions.service';
@@ -12,6 +11,7 @@ import { RandomStateService } from './services/random-state.service';
 
 @Component({
   selector: 'app-questions',
+  standalone: true,
   imports: [TranslatePipe, AsyncPipe, QuestionsViewComponent],
   templateUrl: './questions.component.html',
   styleUrl: './questions.component.scss',
@@ -19,7 +19,6 @@ import { RandomStateService } from './services/random-state.service';
 })
 export class QuestionsComponent {
   private readonly _questionsService = inject(QuestionsService);
-  private readonly _scrollDispatcher = inject(ScrollDispatcher);
   private readonly _randomStateService = inject(RandomStateService);
   private readonly _translateService = inject(TranslateService);
 
@@ -47,18 +46,6 @@ export class QuestionsComponent {
     effect(() => {
       this._questionsService.refetch();
     });
-
-    this._scrollDispatcher
-      .scrolled()
-      .pipe(
-        debounceTime(100),
-        takeUntilDestroyed()
-      )
-      .subscribe((res) => {
-        if (res && (res as CdkScrollable).measureScrollOffset('bottom') < 50 && !this.loading()) {
-          this._questionsService.fetchMore();
-        }
-      });
 
     this._translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => this._questionsService.refetch());
   }

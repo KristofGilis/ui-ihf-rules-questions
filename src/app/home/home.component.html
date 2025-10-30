@@ -67,7 +67,7 @@
           </label>
           <select
             [(ngModel)]="questionCount"
-            (ngModelChange)="quizService.config.update(c => ({ ...c, questionCount: $event }))"
+            (ngModelChange)="onQuestionCountChange($event)"
             class="w-full px-3 py-2 border border-[rgb(var(--color-border))] rounded-lg bg-[rgb(var(--color-background))] text-[rgb(var(--color-text))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--color-primary))]">
             <option [value]="10">10</option>
             <option [value]="20">20</option>
@@ -81,7 +81,7 @@
             <input
               type="checkbox"
               [checked]="quizService.config().timedMode"
-              (change)="quizService.config.update(c => ({ ...c, timedMode: !c.timedMode }))"
+              (change)="onTimedModeToggle()"
               class="w-5 h-5 rounded border-[rgb(var(--color-border))] text-[rgb(var(--color-primary))] focus:ring-2 focus:ring-[rgb(var(--color-primary))]" />
             <span class="ml-2 text-sm font-medium text-[rgb(var(--color-text))]">
               {{ 'home.timed_quiz' | translate }}

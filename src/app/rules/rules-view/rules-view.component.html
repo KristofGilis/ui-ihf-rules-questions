@@ -1,11 +1,15 @@
 @if (loading()) {
-  <div class="d-flex justify-content-center align-items-center">
-    <mat-progress-spinner mode="indeterminate" diameter="50" />
+  <div class="flex justify-center items-center py-8">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[rgb(var(--color-primary))]"></div>
   </div>
 } @else {
-  <mat-nav-list>
+  <div class="space-y-2">
     @for (rule of rules(); track rule.number) {
-      <a mat-list-item [routerLink]="rule.id"> {{ rule.number }} - {{ rule.name }} </a>
+      <a
+        [routerLink]="rule.id"
+        class="block p-4 bg-[rgb(var(--color-surface))] border border-[rgb(var(--color-border))] rounded-lg hover:bg-[rgb(var(--color-hover))] transition-colors">
+        <span class="text-[rgb(var(--color-text))] font-medium">{{ rule.number }} - {{ rule.name }}</span>
+      </a>
     }
-  </mat-nav-list>
+  </div>
 }

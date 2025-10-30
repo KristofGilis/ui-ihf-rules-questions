@@ -8,10 +8,10 @@
     },
     "collaborate": "Help om andere talen te ondersteunen",
     "random_questions_card": {
-      "button": "Beantwoord {{count}} vragen",
-      "content": "Ga naar de lijst met willekeurige vragen",
+      "button": "Start Quiz ({{count}} vragen)",
+      "content": "Doe een quiz met willekeurige vragen",
       "count": "# Vragen",
-      "title": "Willekeurige vragen"
+      "title": "Quiz Modus"
     },
     "rules_card": {
       "button": "Ga naar spelregels",
@@ -19,6 +19,8 @@
       "title": "Spelregels"
     },
     "subtitle": "Test je kennis van de spelregels. <br> Vragen over de IHF Spelregels geldig vanaf <b>{{version}}</b>",
+    "timed_quiz": "Quiz met tijdslimiet",
+    "timed_quiz_description": "90 seconden per vraag",
     "title": "Welkom"
   },
   "languages": {

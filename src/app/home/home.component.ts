@@ -26,6 +26,14 @@ export class HomeComponent {
   quizService = inject(QuizService);
   questionCount = 10;
 
+  onQuestionCountChange(count: number): void {
+    this.quizService.config.update((c) => ({ ...c, questionCount: count }));
+  }
+
+  onTimedModeToggle(): void {
+    this.quizService.config.update((c) => ({ ...c, timedMode: !c.timedMode }));
+  }
+
   private readonly _query = this._versionGQL.watch();
 
   version$ = this._query.valueChanges.pipe(

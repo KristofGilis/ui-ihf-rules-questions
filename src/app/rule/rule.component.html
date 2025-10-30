@@ -1,17 +1,13 @@
-<div class="container-fluid h-100">
-  <div class="row">
-    <div class="col">
-      @if (rule$ | async; as rule) {
-        <h4 class="pb-4">{{ getRuleName(rule) }}</h4>
+<div class="max-w-4xl mx-auto">
+  @if (rule$ | async; as rule) {
+    <h2 class="text-3xl font-bold mb-6 text-[rgb(var(--color-text))]">{{ getRuleName(rule) }}</h2>
 
-        <app-questions-view
-          [questions]="getQuestions(rule)"
-          [loading]="loading()"
-          [hasMoreQuestions]="hasMoreQuestions"
-          [score]="(score$ | async) ?? undefined"
-          [scoreLoading]="scoreLoading()"
-          (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)" />
-      }
-    </div>
-  </div>
+    <app-questions-view
+      [questions]="getQuestions(rule)"
+      [loading]="loading()"
+      [hasMoreQuestions]="hasMoreQuestions"
+      [score]="(score$ | async) ?? undefined"
+      [scoreLoading]="scoreLoading()"
+      (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)" />
+  }
 </div>

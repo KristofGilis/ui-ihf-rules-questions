@@ -8,10 +8,10 @@
     },
     "collaborate": "Help to support other languages",
     "random_questions_card": {
-      "button": "Answer {{count}} questions",
-      "content": "Go to the list of random question",
+      "button": "Start Quiz ({{count}} questions)",
+      "content": "Take a timed quiz with randomized questions",
       "count": "# Questions",
-      "title": "Random Questions"
+      "title": "Quiz Mode"
     },
     "rules_card": {
       "button": "Go to rules",
@@ -19,6 +19,8 @@
       "title": "Rules"
     },
     "subtitle": "Test your knowledge of the rules of the game. <br> Questions about the IHF Rules of the Game valid as of the <b>{{version}}</b>",
+    "timed_quiz": "Timed Quiz",
+    "timed_quiz_description": "90 seconds per question",
     "title": "Welcome"
   },
   "languages": {

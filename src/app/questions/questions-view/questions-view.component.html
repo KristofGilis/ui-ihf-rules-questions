@@ -1,40 +1,43 @@
 @for (question of questions(); track question.id) {
-  <div class="mb-4">
-    <app-question
-      [question]="question"
-      (selectAnswer)="onSelectAnswer($event)"
-      (deselectAnswer)="onDeselectAnswer($event)" />
-  </div>
+  <app-question
+    [question]="question"
+    [selectedAnswers]="selectedAnswers"
+    (selectAnswer)="onSelectAnswer($event)"
+    (deselectAnswer)="onDeselectAnswer($event)" />
 }
+
 @if (loading()) {
-  <div class="d-flex justify-content-center align-items-center">
-    <mat-progress-spinner mode="indeterminate" diameter="50" />
+  <div class="flex justify-center items-center py-8">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[rgb(var(--color-primary))]"></div>
   </div>
 }
+
 @if (!hasMoreQuestions() && !loading()) {
-  <div class="d-flex w-100">
+  <div class="flex flex-col md:flex-row gap-3 mt-6">
     <button
       type="button"
-      class="ms-auto ms-md-0"
-      mat-flat-button
       [disabled]="scoreLoading()"
-      (click)="onCalculateScore()">
-      <div class="d-flex align-items-center">
-        {{ 'questions.calculate_score' | translate }}
-        @if (scoreLoading()) {
-          <mat-progress-spinner class="ms-2" diameter="20" color="primary" mode="indeterminate" />
-        }
-      </div>
+      (click)="onCalculateScore()"
+      class="flex-1 bg-[rgb(var(--color-primary))] hover:bg-[rgb(var(--color-primary-hover))] disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
+      {{ 'questions.calculate_score' | translate }}
+      @if (scoreLoading()) {
+        <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+      }
     </button>
     @if (isRandom()) {
-      <button type="button" class="ms-2" mat-button [disabled]="scoreLoading()" (click)="newRandomQuestions.emit()">
+      <button
+        type="button"
+        [disabled]="scoreLoading()"
+        (click)="newRandomQuestions.emit()"
+        class="bg-[rgb(var(--color-surface))] hover:bg-[rgb(var(--color-hover))] disabled:opacity-50 disabled:cursor-not-allowed border border-[rgb(var(--color-border))] text-[rgb(var(--color-text))] font-medium py-3 px-6 rounded-lg transition-colors">
         {{ 'questions_random_new' | translate: { count: randomCount() } }}
       </button>
     }
   </div>
 }
+
 @if (score()) {
-  <div class="mt-4">
+  <div class="mt-8">
     <app-score-overview [score]="score()" [questions]="questions()" />
   </div>
 }
