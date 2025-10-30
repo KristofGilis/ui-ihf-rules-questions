@@ -1,43 +1,44 @@
 /* Tailwind CSS v4 - Use base styles */
 @use "tailwindcss";
 
-/* IHF Brand Colors - Tailwind v4 Theme Configuration */
+/* IHF Official Brand Colors - Tailwind v4 Theme Configuration */
+/* Extracted from IHF official website (ihf.info) homepage */
 @theme {
-  /* IHF Official Blue (from logo) */
-  --color-ihf-blue-50: #eff6ff;
-  --color-ihf-blue-100: #dbeafe;
-  --color-ihf-blue-200: #bfdbfe;
-  --color-ihf-blue-300: #93bbfd;
-  --color-ihf-blue-400: #6097fa;
-  --color-ihf-blue-500: #3b73f6;
-  --color-ihf-blue-600: #2557eb;
-  --color-ihf-blue-700: #1d44d8;
-  --color-ihf-blue-800: #1e38af;
-  --color-ihf-blue-900: #1e338a;
+  /* IHF Official Navy Blue (Primary brand color from website navigation - #001E3C) */
+  --color-ihf-blue-50: #e6eaed;
+  --color-ihf-blue-100: #ccd4db;
+  --color-ihf-blue-200: #99a9b7;
+  --color-ihf-blue-300: #667f92;
+  --color-ihf-blue-400: #33546e;
+  --color-ihf-blue-500: #001E3C;
+  --color-ihf-blue-600: #001830;
+  --color-ihf-blue-700: #001224;
+  --color-ihf-blue-800: #000c18;
+  --color-ihf-blue-900: #00060c;
   
-  /* IHF Official Gold (from logo) */
-  --color-ihf-gold-50: #fffbeb;
-  --color-ihf-gold-100: #fef3c7;
-  --color-ihf-gold-200: #fde68a;
-  --color-ihf-gold-300: #fcd34d;
-  --color-ihf-gold-400: #fbbf24;
-  --color-ihf-gold-500: #f59e0b;
-  --color-ihf-gold-600: #d97706;
-  --color-ihf-gold-700: #b45309;
-  --color-ihf-gold-800: #92400e;
-  --color-ihf-gold-900: #78350f;
+  /* IHF Official Orange (Secondary brand color from website - #FF7A00) */
+  --color-ihf-orange-50: #fff5e6;
+  --color-ihf-orange-100: #ffebcc;
+  --color-ihf-orange-200: #ffd799;
+  --color-ihf-orange-300: #ffc266;
+  --color-ihf-orange-400: #ffae33;
+  --color-ihf-orange-500: #FF7A00;
+  --color-ihf-orange-600: #cc6200;
+  --color-ihf-orange-700: #994900;
+  --color-ihf-orange-800: #663100;
+  --color-ihf-orange-900: #331800;
   
-  /* IHF Accent Red (handball context) */
-  --color-ihf-red-50: #fef2f2;
-  --color-ihf-red-100: #fee2e2;
-  --color-ihf-red-200: #fecaca;
-  --color-ihf-red-300: #fca5a5;
-  --color-ihf-red-400: #f87171;
-  --color-ihf-red-500: #ef4444;
-  --color-ihf-red-600: #dc2626;
-  --color-ihf-red-700: #b91c1c;
-  --color-ihf-red-800: #991b1b;
-  --color-ihf-red-900: #7f1d1d;
+  /* IHF Accent Red (for handball/sports context - #E30613) */
+  --color-ihf-red-50: #fce7e8;
+  --color-ihf-red-100: #f9cfd1;
+  --color-ihf-red-200: #f39fa3;
+  --color-ihf-red-300: #ed6f75;
+  --color-ihf-red-400: #e73f47;
+  --color-ihf-red-500: #E30613;
+  --color-ihf-red-600: #b6050f;
+  --color-ihf-red-700: #88040b;
+  --color-ihf-red-800: #5b0208;
+  --color-ihf-red-900: #2d0104;
 }
 
 /* Custom Component Styles */
@@ -48,11 +49,11 @@
   }
 
   .ihf-gradient-secondary {
-    background: linear-gradient(to right, var(--color-ihf-gold-600), var(--color-ihf-gold-500));
+    background: linear-gradient(to right, var(--color-ihf-orange-600), var(--color-ihf-orange-500));
   }
 
   .ihf-gradient-hero {
-    background: linear-gradient(to bottom right, var(--color-ihf-blue-600), var(--color-ihf-blue-500), var(--color-ihf-gold-500));
+    background: linear-gradient(to bottom right, var(--color-ihf-blue-600), var(--color-ihf-blue-500), var(--color-ihf-orange-500));
   }
 
   /* Custom Button Styles */
@@ -61,7 +62,7 @@
   }
 
   .btn-secondary {
-    @apply bg-ihf-gold-600 hover:bg-ihf-gold-700 text-white font-medium px-6 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200;
+    @apply bg-ihf-orange-600 hover:bg-ihf-orange-700 text-white font-medium px-6 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200;
   }
 
   .btn-outline {
@@ -83,8 +84,8 @@
     @apply icon-badge;
   }
 
-  .icon-badge-gold {
-    background: linear-gradient(to bottom right, var(--color-ihf-gold-500), var(--color-ihf-gold-600));
+  .icon-badge-orange {
+    background: linear-gradient(to bottom right, var(--color-ihf-orange-500), var(--color-ihf-orange-600));
     @apply icon-badge;
   }
 
