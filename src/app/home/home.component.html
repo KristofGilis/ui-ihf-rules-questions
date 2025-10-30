@@ -1,108 +1,91 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col">
-      <h4>{{ 'home.title' | translate }}</h4>
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">{{ 'home.title' | translate }}</h1>
       @if (version$ | async; as version) {
-        <div class="mat-body" [innerHTML]="'home.subtitle' | translate: { version }"></div>
+        <p class="hero-subtitle" [innerHTML]="'home.subtitle' | translate: { version }"></p>
       }
-      <div class="alert alert-warning mt-3" role="alert">
-        {{ 'home.alert' | translate }}
-        <br />
+    </div>
+  </section>
+
+  <!-- Alert Banner -->
+  <div class="alert-banner">
+    <div class="alert-content">
+      <mat-icon class="alert-icon">info</mat-icon>
+      <div class="alert-text">
+        <span>{{ 'home.alert' | translate }}</span>
         <a
-          class="mat-mdc-button px-0"
           href="https://github.com/KristofGilis/ihf_rules_questions"
           target="_blank"
           rel="noopener"
-          >{{ 'home.collaborate' | translate }}</a
-        >
-      </div>
-
-      <div class="container-fluid p-0">
-        <div class="row g-4">
-          <div class="col-12">
-            <mat-card>
-              <mat-card-header>
-                <mat-card-title>
-                  {{ 'home.rules_card.title' | translate }}
-                </mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                {{ 'home.rules_card.content' | translate }}
-              </mat-card-content>
-              <mat-card-actions [align]="'end'">
-                <button type="button" mat-button routerLink="/rules">
-                  {{ 'home.rules_card.button' | translate }}
-                </button>
-              </mat-card-actions>
-            </mat-card>
-          </div>
-          <div class="col-12 col-md-6">
-            <mat-card class="h-100">
-              <mat-card-header>
-                <mat-card-title>
-                  {{ 'home.all_questions_card.title' | translate }}
-                </mat-card-title>
-              </mat-card-header>
-              <mat-card-content class="h-100">
-                {{ 'home.all_questions_card.content' | translate }}
-              </mat-card-content>
-              <mat-card-actions [align]="'end'">
-                <button
-                  type="button"
-                  mat-button
-                  routerLink="/questions"
-                  (click)="
-                    randomStateService.random.set({
-                      isRandom: false,
-                      count: 0,
-                    })
-                  ">
-                  {{ 'home.all_questions_card.button' | translate }}
-                </button>
-              </mat-card-actions>
-            </mat-card>
-          </div>
-          <div class="col-12 col-md-6">
-            <mat-card class="h-100">
-              <mat-card-header>
-                <mat-card-title>
-                  {{ 'home.random_questions_card.title' | translate }}
-                </mat-card-title>
-              </mat-card-header>
-              <mat-card-content class="h-100">
-                <div class="d-block">
-                  <div class="d-block">
-                    {{ 'home.random_questions_card.content' | translate }}
-                  </div>
-                  <mat-form-field class="mt-4">
-                    <mat-label>{{ 'home.random_questions_card.count' | translate }}</mat-label>
-                    <mat-select [(ngModel)]="questionCount">
-                      <mat-option [value]="10">10</mat-option>
-                      <mat-option [value]="20">20</mat-option>
-                      <mat-option [value]="30">30</mat-option>
-                      <mat-option [value]="50">50</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </mat-card-content>
-              <mat-card-actions [align]="'end'">
-                <button
-                  type="button"
-                  mat-button
-                  routerLink="/questions"
-                  (click)="
-                    randomStateService.random.set({
-                      isRandom: true,
-                      count: questionCount,
-                    })
-                  ">
-                  {{ 'home.random_questions_card.button' | translate: { count: questionCount } }}
-                </button>
-              </mat-card-actions>
-            </mat-card>
-          </div>
-        </div>
+          class="alert-link">
+          {{ 'home.collaborate' | translate }}
+        </a>
       </div>
     </div>
   </div>
+
+  <!-- Features Grid -->
+  <section class="features-section">
+    <div class="features-grid">
+      <!-- Rules Card -->
+      <div class="feature-card feature-card-primary">
+        <div class="card-icon">
+          <mat-icon>menu_book</mat-icon>
+        </div>
+        <h2 class="card-title">{{ 'home.rules_card.title' | translate }}</h2>
+        <p class="card-description">{{ 'home.rules_card.content' | translate }}</p>
+        <button mat-flat-button class="card-button" routerLink="/rules">
+          {{ 'home.rules_card.button' | translate }}
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </div>
+
+      <!-- All Questions Card -->
+      <div class="feature-card feature-card-secondary">
+        <div class="card-icon">
+          <mat-icon>quiz</mat-icon>
+        </div>
+        <h2 class="card-title">{{ 'home.all_questions_card.title' | translate }}</h2>
+        <p class="card-description">{{ 'home.all_questions_card.content' | translate }}</p>
+        <button
+          mat-flat-button
+          class="card-button"
+          routerLink="/questions"
+          (click)="randomStateService.random.set({ isRandom: false, count: 0 })">
+          {{ 'home.all_questions_card.button' | translate }}
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </div>
+
+      <!-- Random Questions Card -->
+      <div class="feature-card feature-card-accent">
+        <div class="card-icon">
+          <mat-icon>shuffle</mat-icon>
+        </div>
+        <h2 class="card-title">{{ 'home.random_questions_card.title' | translate }}</h2>
+        <p class="card-description">{{ 'home.random_questions_card.content' | translate }}</p>
+        
+        <mat-form-field appearance="outline" class="question-count-field">
+          <mat-label>{{ 'home.random_questions_card.count' | translate }}</mat-label>
+          <mat-select [(ngModel)]="questionCount">
+            <mat-option [value]="10">10</mat-option>
+            <mat-option [value]="20">20</mat-option>
+            <mat-option [value]="30">30</mat-option>
+            <mat-option [value]="50">50</mat-option>
+          </mat-select>
+        </mat-form-field>
+        
+        <button
+          mat-flat-button
+          class="card-button"
+          routerLink="/questions"
+          (click)="randomStateService.random.set({ isRandom: true, count: questionCount })">
+          {{ 'home.random_questions_card.button' | translate: { count: questionCount } }}
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </div>
+    </div>
+  </section>
 </div>

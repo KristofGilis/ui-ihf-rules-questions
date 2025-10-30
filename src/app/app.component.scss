@@ -1,121 +1,199 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
 
-// Mobile-first base styles (320px+) with modern design
-.mat-sidenav {
-  width: 16rem;
-  border: none !important;
-  background: var(--app-sidebar-bg) !important;
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.08);
+// Mobile-first new layout design
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--app-bg-gradient);
 }
 
-.mat-toolbar {
-  padding: 0.75rem 1rem;
-  background: var(--app-toolbar-bg) !important;
-  color: white !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  border: none;
+// Modern Top Navigation
+.top-nav {
+  background: var(--app-toolbar-bg);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(20px);
+}
 
-  @media (min-width: 768px) {
-    padding: 1rem 1.5rem;
+.nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  
+  .nav-logo {
+    height: 40px;
+    width: auto;
+    filter: brightness(0) invert(1);
   }
-
-  h1 {
+  
+  .brand-text {
     font-size: 1.25rem;
-    margin: 0;
     font-weight: 700;
+    color: white;
     letter-spacing: -0.5px;
-
+    display: none;
+    
     @media (min-width: 768px) {
-      font-size: 1.75rem;
+      display: block;
     }
   }
 }
 
-.background {
-  background: var(--app-sidebar-bg) !important;
-  padding: 1.5rem 1rem;
-}
-
-.navigation-container {
-  background: transparent !important;
-  padding: 1rem 0.5rem;
+.nav-links {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1;
+  justify-content: center;
   
-  a[mat-list-item] {
-    margin-bottom: 0.5rem;
+  .nav-link {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    padding: 0.5rem 1.5rem;
     border-radius: 12px;
     font-weight: 500;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     
     &:hover {
-      background: var(--app-nav-item-hover) !important;
-      transform: translateX(4px);
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
     }
     
-    &[activated="true"] {
-      background: var(--app-nav-item-active) !important;
-      color: white !important;
+    &.active {
+      background: rgba(255, 255, 255, 0.25);
+      color: white;
       font-weight: 600;
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     }
   }
 }
 
-// Logo styling
-.logo-image {
-  max-width: 120px;
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  
+  .language-select {
+    width: 80px;
+    
+    ::ng-deep {
+      .mat-mdc-text-field-wrapper {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+      }
+      
+      .mat-mdc-form-field-flex {
+        padding: 0.25rem 0.5rem;
+      }
+      
+      .mat-mdc-select-value,
+      .mat-mdc-select-arrow {
+        color: white;
+      }
+      
+      .mat-mdc-form-field-underline {
+        display: none;
+      }
+    }
+  }
+  
+  app-theme-toggle button {
+    background: rgba(255, 255, 255, 0.15) !important;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.25) !important;
+    }
+    
+    mat-icon {
+      color: white !important;
+    }
+  }
+}
+
+// Mobile Drawer
+.mobile-drawer-container {
+  flex: 1;
+  
+  mat-sidenav {
+    width: 280px;
+    background: var(--app-card-bg) !important;
+  }
+}
+
+.mobile-menu {
+  padding: 2rem 1rem;
+  
+  .mobile-menu-item {
+    display: block;
+    padding: 1rem 1.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 12px;
+    color: var(--app-text-primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s;
+    
+    &:hover {
+      background: var(--app-nav-item-hover);
+    }
+    
+    &.active {
+      background: var(--app-nav-item-active);
+      color: white;
+    }
+  }
+}
+
+// Main Content
+.main-content {
+  flex: 1;
+  width: 100%;
+  max-width: 1400px;
   margin: 0 auto;
-  display: block;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  padding: 2rem 1rem;
+  
+  @media (min-width: 768px) {
+    padding: 3rem 2rem;
+  }
+  
+  @media (min-width: 1024px) {
+    padding: 4rem 3rem;
+  }
 }
 
-// Spacer for toolbar
-.spacer {
-  flex: 1 1 auto;
+// Footer
+.app-footer {
+  background: var(--app-card-bg);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  margin-top: auto;
+  
+  .footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    text-align: center;
+    
+    small {
+      color: var(--app-text-secondary);
+      font-size: 0.875rem;
+    }
+  }
 }
 
-// Ensure touch targets are at least 44x44px
+// Touch targets
 button[mat-icon-button] {
   min-width: 44px;
   min-height: 44px;
-  background: rgba(255, 255, 255, 0.15) !important;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  &:hover {
-    background: rgba(255, 255, 255, 0.25) !important;
-    transform: scale(1.05);
-  }
-  
-  mat-icon {
-    color: white !important;
-  }
-}
-
-// Responsive container with modern spacing
-.container-fluid {
-  padding: 1rem;
-
-  @media (min-width: 768px) {
-    padding: 1.5rem;
-  }
-
-  @media (min-width: 1024px) {
-    padding: 2rem;
-  }
-}
-
-// Language selector styling
-mat-form-field {
-  .mat-mdc-select {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    padding: 4px 8px;
-  }
-}
-
-// Copyright text
-small {
-  opacity: 0.7;
-  font-size: 0.75rem;
 }

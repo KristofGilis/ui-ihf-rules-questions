@@ -1,6 +1,6 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DOCUMENT, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, inject, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -21,22 +21,17 @@ import { RandomStateService } from './questions/services/random-state.service';
   selector: 'app-root',
   imports: [
     RouterOutlet,
-    MatToolbar,
     MatIconButton,
     MatSidenavContainer,
     MatSidenav,
     MatSidenavContent,
-    MatNavList,
-    MatListItem,
     MatIcon,
     AsyncPipe,
     TranslatePipe,
     RouterLink,
     RouterLinkActive,
     MatFormField,
-    MatLabel,
     MatSelect,
-    MatSelectTrigger,
     MatOption,
     FormsModule,
     LogoComponent,
@@ -51,6 +46,8 @@ export class AppComponent {
   private readonly _breakpointObserver = inject(BreakpointObserver);
   private readonly _translateService = inject(TranslateService);
   private readonly _document = inject(DOCUMENT);
+
+  @ViewChild('drawer') drawer?: MatSidenav;
 
   private _isHandset = false;
 
@@ -73,11 +70,11 @@ export class AppComponent {
     this._translateService.use(this.currentLang);
   }
 
-  onNavigationLinkClicked(drawer: MatSidenav, route?: string): void {
+  onNavigationLinkClicked(drawer: MatSidenav | null, route?: string): void {
     if (route === 'questions') {
       this._randomStateService.random.set({ isRandom: false, count: 0 });
     }
-    if (this._isHandset) {
+    if (this._isHandset && drawer) {
       drawer.close();
     }
   }
