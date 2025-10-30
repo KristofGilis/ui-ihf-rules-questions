@@ -2,9 +2,6 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { MatButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { MatFormField, MatLabel, MatOption, MatSelect } from '@angular/material/select';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
@@ -15,14 +12,8 @@ import { RandomStateService } from '../questions/services/random-state.service';
 @Component({
   selector: 'app-home',
   imports: [
-    MatIcon,
-    MatButton,
     TranslatePipe,
     RouterLink,
-    MatSelect,
-    MatOption,
-    MatFormField,
-    MatLabel,
     FormsModule,
     AsyncPipe,
   ],

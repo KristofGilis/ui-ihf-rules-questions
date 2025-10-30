@@ -15,8 +15,14 @@ export class ThemeService {
 
   // Signal for current theme
   private readonly _theme = signal<Theme>(this._getInitialTheme());
+  
+  // Observable created once in constructor (injection context)
+  public readonly theme$: Observable<Theme>;
 
   constructor() {
+    // Create observable in injection context
+    this.theme$ = toObservable(this._theme);
+    
     // Effect to apply theme changes to document body
     effect(() => {
       const theme = this._theme();
@@ -36,13 +42,6 @@ export class ThemeService {
    */
   get currentTheme(): Theme {
     return this._theme();
-  }
-
-  /**
-   * Get theme changes as an observable (for compatibility)
-   */
-  get theme$(): Observable<Theme> {
-    return toObservable(this._theme);
   }
 
   /**

@@ -1,76 +1,99 @@
-@let isHandset = isHandset$ | async;
-<div class="app-container">
-  <!-- Modern Top Navigation -->
+<div class="app-wrapper" [class.dark-theme]="(themeService.theme$ | async) === 'dark'">
+  <!-- Top Navigation -->
   <nav class="top-nav">
-    <div class="nav-container">
+    <div class="container nav-content">
+      <!-- Logo & Brand -->
       <div class="nav-brand">
-        <app-logo class="nav-logo" />
-        <span class="brand-text">{{ 'main.title' | translate }}</span>
+        <app-logo class="logo" />
+        <span class="brand-name hidden-mobile">{{ 'main.title' | translate }}</span>
       </div>
       
-      @if (!isHandset) {
-        <div class="nav-links">
-          @for (item of rootRoutes; track $index) {
-            <a
-              [routerLink]="item.path"
-              routerLinkActive="active"
-              class="nav-link"
-              (click)="onNavigationLinkClicked(null, item.path)">
-              {{ 'navigation.' + item.path | translate }}
-            </a>
-          }
-        </div>
-      }
+      <!-- Desktop Navigation -->
+      <div class="nav-links hidden-mobile">
+        @for (item of rootRoutes; track $index) {
+          <a
+            [routerLink]="item.path"
+            routerLinkActive="active"
+            class="nav-link"
+            (click)="onNavigationLinkClicked(null, item.path)">
+            {{ 'navigation.' + item.path | translate }}
+          </a>
+        }
+      </div>
       
+      <!-- Actions -->
       <div class="nav-actions">
-        <mat-form-field class="language-select" appearance="outline">
-          <mat-select
-            [(value)]="currentLang"
-            (selectionChange)="onChangeLanguage($event.value)"
-            [hideSingleSelectionIndicator]="true">
-            <mat-option value="en">EN</mat-option>
-            <mat-option value="nl">NL</mat-option>
-            <mat-option value="srb">SRB</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <app-theme-toggle />
-        @if (isHandset) {
-          <button type="button" mat-icon-button (click)="drawer?.toggle()">
-            <mat-icon>menu</mat-icon>
+        <!-- Language Selector -->
+        <select
+          [(ngModel)]="currentLang"
+          (change)="onChangeLanguage(currentLang)"
+          class="lang-select">
+          <option value="en">EN</option>
+          <option value="nl">NL</option>
+          <option value="srb">SRB</option>
+        </select>
+        
+        <!-- Theme Toggle -->
+        <button
+          (click)="themeService.toggleTheme()"
+          class="theme-toggle"
+          [attr.aria-label]="(themeService.theme$ | async) === 'dark' ? 
+            ('theme.switchToLight' | translate) : ('theme.switchToDark' | translate)">
+          @if ((themeService.theme$ | async) === 'dark') {
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" />
+            </svg>
+          } @else {
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+            </svg>
+          }
+        </button>
+        
+        <!-- Mobile Menu Button -->
+        @if (isHandset$ | async) {
+          <button
+            (click)="mobileMenuOpen = !mobileMenuOpen"
+            class="mobile-menu-btn hidden-desktop">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              @if (mobileMenuOpen) {
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              } @else {
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              }
+            </svg>
           </button>
         }
       </div>
     </div>
-  </nav>
-
-  <!-- Mobile Drawer -->
-  <mat-sidenav-container class="mobile-drawer-container" [class.is-mobile]="isHandset">
-    @if (isHandset) {
-      <mat-sidenav #drawer mode="over" position="end">
-        <div class="mobile-menu">
-          @for (item of rootRoutes; track $index) {
-            <a
-              [routerLink]="item.path"
-              routerLinkActive="active"
-              class="mobile-menu-item"
-              (click)="onNavigationLinkClicked(drawer, item.path)">
-              {{ 'navigation.' + item.path | translate }}
-            </a>
-          }
-        </div>
-      </mat-sidenav>
+    
+    <!-- Mobile Menu -->
+    @if (mobileMenuOpen && (isHandset$ | async)) {
+      <div class="mobile-menu animate-fade-in">
+        @for (item of rootRoutes; track $index) {
+          <a
+            [routerLink]="item.path"
+            routerLinkActive="active"
+            class="mobile-menu-item"
+            (click)="onNavigationLinkClicked(null, item.path); mobileMenuOpen = false">
+            {{ 'navigation.' + item.path | translate }}
+          </a>
+        }
+      </div>
     }
-    <mat-sidenav-content>
-      <main class="main-content">
-        <router-outlet />
-      </main>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+  </nav>
   
-  <!-- Modern Footer -->
-  <footer class="app-footer">
-    <div class="footer-content">
-      <small>&copy; Copyright 2025, Kristof Gilis</small>
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      <router-outlet />
+    </div>
+  </main>
+  
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; Copyright 2025, Kristof Gilis</p>
     </div>
   </footer>
 </div>
