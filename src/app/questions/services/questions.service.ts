@@ -94,4 +94,23 @@ export class QuestionsService {
       fetchPolicy: 'no-cache',
     }).valueChanges;
   }
+
+  async fetchQuestions(count: number): Promise<any[] | null> {
+    try {
+      const query = this._getQuestionsGQL.watch({
+        variables: {
+          first: count,
+          order: [],
+          random: true,
+        },
+        fetchPolicy: 'network-only',
+      });
+
+      const result = await query.result();
+      return result?.data?.questions?.edges?.map((edge) => edge?.node) ?? null;
+    } catch (error) {
+      console.error('Error fetching questions for quiz:', error);
+      return null;
+    }
+  }
 }

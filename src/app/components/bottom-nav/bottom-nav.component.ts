@@ -18,6 +18,15 @@ import { TranslatePipe } from '@ngx-translate/core';
         </a>
 
         <a
+          routerLink="/quiz"
+          routerLinkActive="active-nav-link"
+          class="flex flex-col items-center justify-center flex-1 h-full nav-link"
+          [attr.aria-label]="'navigation.quiz' | translate">
+          <i class="fas fa-graduation-cap text-xl mb-1"></i>
+          <span class="text-xs">{{ 'navigation.quiz' | translate }}</span>
+        </a>
+
+        <a
           routerLink="/rules"
           routerLinkActive="active-nav-link"
           class="flex flex-col items-center justify-center flex-1 h-full nav-link"

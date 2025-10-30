@@ -1,0 +1,270 @@
+<div class="max-w-4xl mx-auto">
+  @if (!quizService.isQuizActive() && !showingResults()) {
+    <!-- Quiz Setup -->
+    <div class="rounded-lg border p-6 shadow-lg" style="background-color: var(--surface-color); border-color: var(--border-color);">
+      <h2 class="text-2xl font-bold mb-6">
+        <i class="fas fa-graduation-cap mr-2" style="color: var(--color-primary);"></i>
+        {{ 'home.quiz_card.title' | translate }}
+      </h2>
+
+      <div class="space-y-6">
+        <!-- Question Count -->
+        <div>
+          <label class="block text-sm font-medium mb-2">
+            {{ 'home.quiz_card.question_count' | translate }}
+          </label>
+          <select
+            [(ngModel)]="questionCount"
+            (ngModelChange)="questionCount.set($event)"
+            class="w-full px-4 py-3 rounded-lg border text-lg"
+            style="background-color: var(--bg-color); border-color: var(--border-color); color: var(--text-color);">
+            <option [value]="5">5</option>
+            <option [value]="10">10</option>
+            <option [value]="15">15</option>
+            <option [value]="20">20</option>
+            <option [value]="30">30</option>
+          </select>
+        </div>
+
+        <!-- Timer Toggle -->
+        <div class="flex items-center gap-3">
+          <input
+            type="checkbox"
+            id="timedMode"
+            [(ngModel)]="timedMode"
+            (ngModelChange)="timedMode.set($event)"
+            class="w-5 h-5 rounded"
+            style="accent-color: var(--color-primary);" />
+          <label for="timedMode" class="font-medium cursor-pointer">
+            {{ 'home.quiz_card.enable_timer' | translate }}
+          </label>
+        </div>
+
+        <!-- Time Per Question (if timer enabled) -->
+        @if (timedMode()) {
+          <div>
+            <label class="block text-sm font-medium mb-2">
+              {{ 'home.quiz_card.time_per_question' | translate }}
+            </label>
+            <select
+              [(ngModel)]="timePerQuestion"
+              (ngModelChange)="timePerQuestion.set($event)"
+              class="w-full px-4 py-3 rounded-lg border text-lg"
+              style="background-color: var(--bg-color); border-color: var(--border-color); color: var(--text-color);">
+              <option [value]="15">15</option>
+              <option [value]="30">30</option>
+              <option [value]="45">45</option>
+              <option [value]="60">60</option>
+            </select>
+          </div>
+        }
+
+        <!-- Start Button -->
+        <button
+          (click)="startQuiz()"
+          class="w-full px-6 py-4 rounded-lg font-semibold text-lg transition-colors"
+          style="background-color: var(--color-primary); color: white;">
+          <i class="fas fa-play mr-2"></i>
+          {{ 'home.quiz_card.button' | translate }}
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (quizService.isQuizActive()) {
+    <!-- Quiz In Progress -->
+    <div class="space-y-6">
+      <!-- Progress Bar and Timer -->
+      <div class="rounded-lg border p-4" style="background-color: var(--surface-color); border-color: var(--border-color);">
+        <div class="flex justify-between items-center mb-2">
+          <div class="font-semibold">
+            {{ 'quiz.progress' | translate: { current: progress().current, total: progress().total } }}
+          </div>
+          @if (quizService.timedMode()) {
+            <div class="flex items-center gap-2 font-mono font-semibold" style="color: var(--color-primary);">
+              <i class="fas fa-clock"></i>
+              {{ timeRemaining() }}
+            </div>
+          }
+        </div>
+        <div class="w-full h-2 rounded-full" style="background-color: var(--border-color);">
+          <div
+            class="h-full rounded-full transition-all duration-300"
+            style="background-color: var(--color-primary);"
+            [style.width.%]="(progress().current / progress().total) * 100"></div>
+        </div>
+      </div>
+
+      <!-- Question -->
+      @if (currentQuestion(); as question) {
+        <div class="rounded-lg border p-6" style="background-color: var(--surface-color); border-color: var(--border-color);">
+          <div class="mb-6">
+            <div class="text-sm mb-2" style="color: var(--text-secondary-color);">
+              {{ 'quiz.select_answers' | translate }}
+            </div>
+            <h3 class="text-xl font-semibold" [innerHTML]="question.question.phrase"></h3>
+          </div>
+
+          <div class="space-y-3">
+            @for (answer of question.answers; track answer?.id) {
+              <label
+                class="flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-all"
+                [class.selected-answer]="isAnswerSelected(answer?.id ?? '')"
+                style="border-color: var(--border-color);"
+                [style.background-color]="isAnswerSelected(answer?.id ?? '') ? 'var(--color-primary)' : 'transparent'"
+                [style.color]="isAnswerSelected(answer?.id ?? '') ? 'white' : 'inherit'">
+                <input
+                  type="checkbox"
+                  [checked]="isAnswerSelected(answer?.id ?? '')"
+                  (change)="toggleAnswer(answer?.id ?? '')"
+                  class="mt-1 w-5 h-5 rounded"
+                  style="accent-color: white;" />
+                <span class="flex-1">{{ answer?.phrase }}</span>
+              </label>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Navigation -->
+      <div class="flex gap-3">
+        <button
+          (click)="previousQuestion()"
+          [disabled]="!canGoPrevious()"
+          class="px-6 py-3 rounded-lg font-medium border transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          style="border-color: var(--border-color); color: var(--text-color);">
+          <i class="fas fa-arrow-left mr-2"></i>
+          {{ 'quiz.previous' | translate }}
+        </button>
+
+        <div class="flex-1"></div>
+
+        @if (canGoNext()) {
+          <button
+            (click)="nextQuestion()"
+            class="px-6 py-3 rounded-lg font-medium transition-colors"
+            style="background-color: var(--color-primary); color: white;">
+            {{ 'quiz.next' | translate }}
+            <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        } @else {
+          <button
+            (click)="finishQuiz()"
+            class="px-6 py-3 rounded-lg font-medium transition-colors"
+            style="background-color: var(--color-success); color: white;">
+            <i class="fas fa-check mr-2"></i>
+            {{ 'quiz.finish' | translate }}
+          </button>
+        }
+      </div>
+    </div>
+  }
+
+  @if (showingResults() && quizService.quizResult(); as result) {
+    <!-- Quiz Results -->
+    <div class="space-y-6">
+      <!-- Score Summary -->
+      <div class="rounded-lg border p-6 shadow-lg" style="background-color: var(--surface-color); border-color: var(--border-color);">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold">
+            <i class="fas fa-trophy mr-2" style="color: var(--color-primary);"></i>
+            {{ 'score_overview.title' | translate }}
+          </h2>
+          <div
+            class="text-4xl font-bold"
+            [style.color]="result.percentage >= 70 ? 'var(--color-success)' : result.percentage >= 50 ? 'var(--color-warning)' : 'var(--color-error)'">
+            {{ result.percentage }}%
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div class="p-4 rounded-lg border" style="border-color: var(--border-color);">
+            <div class="text-sm mb-1" style="color: var(--text-secondary-color);">
+              {{ 'score_overview.total_questions' | translate }}
+            </div>
+            <div class="text-2xl font-bold">{{ result.totalQuestions }}</div>
+          </div>
+
+          <div class="p-4 rounded-lg border" style="border-color: var(--border-color); background-color: rgba(0, 200, 100, 0.1);">
+            <div class="text-sm mb-1" style="color: var(--color-success);">
+              {{ 'score_overview.correct_answers' | translate }}
+            </div>
+            <div class="text-2xl font-bold" style="color: var(--color-success);">
+              {{ result.correctAnswers }}
+            </div>
+          </div>
+
+          <div class="p-4 rounded-lg border" style="border-color: var(--border-color); background-color: rgba(255, 0, 0, 0.1);">
+            <div class="text-sm mb-1" style="color: var(--color-error);">
+              {{ 'score_overview.wrong_answers' | translate }}
+            </div>
+            <div class="text-2xl font-bold" style="color: var(--color-error);">
+              {{ result.wrongAnswers }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row gap-3">
+          <button
+            (click)="restartQuiz()"
+            class="flex-1 px-6 py-3 rounded-lg font-medium transition-colors"
+            style="background-color: var(--color-primary); color: white;">
+            <i class="fas fa-redo mr-2"></i>
+            {{ 'home.quiz_card.button' | translate }}
+          </button>
+          <button
+            (click)="exitQuiz()"
+            class="flex-1 px-6 py-3 rounded-lg font-medium border transition-colors"
+            style="border-color: var(--border-color); color: var(--text-color);">
+            <i class="fas fa-home mr-2"></i>
+            {{ 'navigation.home' | translate }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Detailed Results -->
+      <div class="rounded-lg border p-6" style="background-color: var(--surface-color); border-color: var(--border-color);">
+        <h3 class="text-xl font-bold mb-4">{{ 'score_overview.view_details' | translate }}</h3>
+        <div class="space-y-4">
+          @for (question of result.questions; track question.question.id; let i = $index) {
+            @if (isQuestionCorrect(question); as isCorrect) {
+              <div
+                class="p-4 rounded-lg border"
+                [style.border-color]="isCorrect ? 'var(--color-success)' : 'var(--color-error)'"
+                [style.background-color]="isCorrect ? 'rgba(0, 200, 100, 0.05)' : 'rgba(255, 0, 0, 0.05)'">
+                <div class="flex items-start gap-3 mb-3">
+                  <div
+                    class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                    [style.background-color]="isCorrect ? 'var(--color-success)' : 'var(--color-error)'"
+                    style="color: white;">
+                    <i [class]="isCorrect ? 'fas fa-check' : 'fas fa-times'"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="font-semibold mb-1">{{ 'questions.title' | translate }} {{ i + 1 }}</div>
+                  <div [innerHTML]="question.question.phrase"></div>
+                  </div>
+                </div>
+                <div class="ml-11 space-y-2">
+                  @for (answer of question.answers; track answer?.id) {
+                    <div
+                      class="text-sm p-2 rounded"
+                      [class]="answer?.isCorrect ? 'font-semibold' : ''"
+                      [style.background-color]="answer?.isCorrect ? 'rgba(0, 200, 100, 0.1)' : question.selectedAnswerIds.includes(answer?.id ?? '') && !answer?.isCorrect ? 'rgba(255, 0, 0, 0.1)' : 'transparent'">
+                      @if (answer?.isCorrect) {
+                        <i class="fas fa-check mr-2" style="color: var(--color-success);"></i>
+                      } @else if (question.selectedAnswerIds.includes(answer?.id ?? '')) {
+                        <i class="fas fa-times mr-2" style="color: var(--color-error);"></i>
+                      }
+                      {{ answer?.phrase }}
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

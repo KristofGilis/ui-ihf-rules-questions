@@ -25,6 +25,15 @@ import { LogoComponent } from '../../logo/logo.component';
         </a>
 
         <a
+          routerLink="/quiz"
+          routerLinkActive="active-nav-link"
+          class="flex items-center gap-3 px-4 py-3 rounded-lg nav-link"
+          [attr.aria-label]="'navigation.quiz' | translate">
+          <i class="fas fa-graduation-cap text-lg w-5"></i>
+          <span>{{ 'navigation.quiz' | translate }}</span>
+        </a>
+
+        <a
           routerLink="/rules"
           routerLinkActive="active-nav-link"
           class="flex items-center gap-3 px-4 py-3 rounded-lg nav-link"
