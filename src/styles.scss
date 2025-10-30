@@ -1,46 +1,64 @@
-@use '@angular/material' as mat;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@include mat.elevation-classes();
-@include mat.app-background();
+@import '@fortawesome/fontawesome-free/css/all.min.css';
 
-$light-theme: mat.define-theme(
-  (
-    color: (
-      theme-type: light,
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-  )
-);
+/* CSS Variables for theming */
+:root {
+  --color-primary: #0ea5e9;
+  --color-secondary: #3b82f6;
+  --color-background: #ffffff;
+  --color-surface: #f8fafc;
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+  --color-border: #e2e8f0;
+  --color-success: #22c55e;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+}
 
-$dark-theme: mat.define-theme(
-  (
-    color: (
-      theme-type: dark,
-      primary: mat.$cyan-palette,
-      tertiary: mat.$orange-palette,
-    ),
-  )
-);
-
-html {
-  @include mat.all-component-themes($dark-theme);
-  @include mat.checkbox-color($dark-theme, $color-variant: tertiary);
-
-  @media (prefers-color-scheme: light) {
-    @include mat.all-component-colors($light-theme);
+/* Dark theme - follows system preference by default */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #06b6d4;
+    --color-secondary: #f97316;
+    --color-background: #1e293b;
+    --color-surface: #334155;
+    --color-text: #f1f5f9;
+    --color-text-muted: #94a3b8;
+    --color-border: #475569;
   }
 }
 
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+/* Manual theme override classes */
+.theme-light {
+  --color-primary: #0ea5e9;
+  --color-secondary: #3b82f6;
+  --color-background: #ffffff;
+  --color-surface: #f8fafc;
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+  --color-border: #e2e8f0;
 }
 
-.fw-500 {
-  font-weight: 500;
+.theme-dark {
+  --color-primary: #06b6d4;
+  --color-secondary: #f97316;
+  --color-background: #1e293b;
+  --color-surface: #334155;
+  --color-text: #f1f5f9;
+  --color-text-muted: #94a3b8;
+  --color-border: #475569;
+}
+
+@layer base {
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-text);
+  }
 }

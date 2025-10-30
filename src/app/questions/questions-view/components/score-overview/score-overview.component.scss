@@ -1,6 +1,4 @@
-@use 'sass:map';
-@use '@angular/material' as mat;
-
+// Temporary styles for migration
 .red {
-  color: map.get($map: mat.$red-palette, $key: 40);
+  color: var(--color-error);
 }
