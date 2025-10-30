@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Injectable, effect, inject, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 
 export type Theme = 'light' | 'dark';
@@ -41,12 +42,7 @@ export class ThemeService {
    * Get theme changes as an observable (for compatibility)
    */
   get theme$(): Observable<Theme> {
-    return new Observable((observer) => {
-      const unsubscribe = effect(() => {
-        observer.next(this._theme());
-      });
-      return () => unsubscribe.destroy();
-    });
+    return toObservable(this._theme);
   }
 
   /**

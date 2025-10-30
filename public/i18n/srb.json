@@ -30,6 +30,10 @@
   "main": {
     "title": "ИХФ каталог питања"
   },
+  "theme": {
+    "switchToDark": "Пређите на тамну тему",
+    "switchToLight": "Пређите на светлу тему"
+  },
   "navigation": {
     "home": "Почетна",
     "questions": "Питања",

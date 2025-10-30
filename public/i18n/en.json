@@ -30,6 +30,10 @@
   "main": {
     "title": "IHF Rules Questions"
   },
+  "theme": {
+    "switchToDark": "Switch to dark theme",
+    "switchToLight": "Switch to light theme"
+  },
   "navigation": {
     "home": "Home",
     "questions": "Questions",

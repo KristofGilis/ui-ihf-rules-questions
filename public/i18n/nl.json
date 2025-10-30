@@ -30,6 +30,10 @@
   "main": {
     "title": "IHF spelregelvragen"
   },
+  "theme": {
+    "switchToDark": "Schakel over naar donker thema",
+    "switchToLight": "Schakel over naar licht thema"
+  },
   "navigation": {
     "home": "Home",
     "questions": "Vragen",

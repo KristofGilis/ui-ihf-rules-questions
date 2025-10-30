@@ -5,8 +5,8 @@
 @include mat.elevation-classes();
 @include mat.app-background();
 
-// Base theme configuration (using existing colors for compatibility)
-$base-light-theme: mat.define-theme(
+// Default theme (using existing azure/cyan colors for compatibility)
+$default-light-theme: mat.define-theme(
   (
     color: (
       theme-type: light,
@@ -16,7 +16,7 @@ $base-light-theme: mat.define-theme(
   )
 );
 
-$base-dark-theme: mat.define-theme(
+$default-dark-theme: mat.define-theme(
   (
     color: (
       theme-type: dark,
@@ -26,17 +26,17 @@ $base-dark-theme: mat.define-theme(
   )
 );
 
-// Apply base theme
+// Apply default theme based on system preference
 html {
-  @include mat.all-component-themes($base-dark-theme);
-  @include mat.checkbox-color($base-dark-theme, $color-variant: tertiary);
+  @include mat.all-component-themes($default-dark-theme);
+  @include mat.checkbox-color($default-dark-theme, $color-variant: tertiary);
 
   @media (prefers-color-scheme: light) {
-    @include mat.all-component-colors($base-light-theme);
+    @include mat.all-component-colors($default-light-theme);
   }
 }
 
-// Dynamic theme switching via body classes
+// Dynamic theme switching via body classes (overrides system preference when user explicitly chooses)
 body.light-theme {
   @include light.apply-light-theme();
 }

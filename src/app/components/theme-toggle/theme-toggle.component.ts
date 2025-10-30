@@ -1,20 +1,21 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-theme-toggle',
-  imports: [MatIconButton, MatIcon],
+  imports: [MatIconButton, MatIcon, TranslatePipe],
   template: `
     <button
       type="button"
       mat-icon-button
       (click)="toggleTheme()"
       [attr.aria-label]="
-        themeService.currentTheme === 'light'
-          ? 'Switch to dark theme'
-          : 'Switch to light theme'
+        (themeService.currentTheme === 'light'
+          ? 'theme.switchToDark'
+          : 'theme.switchToLight') | translate
       "
       [attr.aria-pressed]="themeService.currentTheme === 'dark'">
       <mat-icon>
