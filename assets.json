@@ -1,0 +1,21 @@
+{
+  "assetPath": "public",
+  "iconPath": "icon.svg",
+  "splashPath": "icon.svg",
+  "ios": {
+    "icon": {
+      "sources": ["icon.svg"]
+    },
+    "splash": {
+      "sources": ["icon.svg"]
+    }
+  },
+  "android": {
+    "icon": {
+      "sources": ["icon.svg"]
+    },
+    "splash": {
+      "sources": ["icon.svg"]
+    }
+  }
+}
