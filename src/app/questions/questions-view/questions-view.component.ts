@@ -1,6 +1,5 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { MatButton } from '@angular/material/button';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Question, Score } from '../../../../graphql/generated';
 import { QuestionComponent } from './components/question/question.component';
@@ -8,7 +7,7 @@ import { ScoreOverviewComponent } from './components/score-overview/score-overvi
 
 @Component({
   selector: 'app-questions-view',
-  imports: [MatProgressSpinner, QuestionComponent, MatButton, TranslatePipe, ScoreOverviewComponent],
+  imports: [CommonModule, QuestionComponent, TranslatePipe, ScoreOverviewComponent],
   templateUrl: './questions-view.component.html',
   styleUrl: './questions-view.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

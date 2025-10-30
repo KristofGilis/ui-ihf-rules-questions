@@ -32,6 +32,7 @@
   },
   "navigation": {
     "home": "Home",
+    "menu": "Menu",
     "questions": "Vragen",
     "rules": "Spelregels"
   },
@@ -50,5 +51,8 @@
     "score": "Uw score:",
     "title": "Resultaat",
     "wrong_questionNumbers": "De vragen die je <u>fout</u> hebt beantwoord:"
+  },
+  "theme": {
+    "toggle": "Thema wisselen"
   }
 }

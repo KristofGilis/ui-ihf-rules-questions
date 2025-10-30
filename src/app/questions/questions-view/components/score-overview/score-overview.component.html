@@ -1,40 +1,35 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col">
-      <mat-card appearance="outlined">
-        <mat-card-header>
-          <mat-card-title>
-            <h4 class="fw-bold">{{ 'score_overview.title' | translate }}</h4>
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="container-fluid p-0">
-            <div class="row gy-3">
-              <div class="col-12">
-                <div class="d-flex">
-                  <div>
-                    {{ 'score_overview.score' | translate }}
-                    <span class="fw-bold"> {{ score()?.score }} / {{ score()?.total }} </span>
-                  </div>
-                  <div class="position-absolute top-0 end-0 fw-bold fs-3 pt-4 pe-4" [class.red]="isBadResult">
-                    {{ score()?.percentage }}
-                  </div>
-                </div>
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6">
+  <div class="relative">
+    <h4 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+      {{ 'score_overview.title' | translate }}
+    </h4>
+    
+    <div class="space-y-4">
+      <div class="flex items-center justify-between">
+        <div class="text-gray-700 dark:text-gray-300">
+          {{ 'score_overview.score' | translate }}
+          <span class="font-bold text-xl"> {{ score()?.score }} / {{ score()?.total }} </span>
+        </div>
+        <div 
+          class="text-4xl font-bold"
+          [class.text-red-600]="isBadResult"
+          [class.text-green-600]="!isBadResult">
+          {{ score()?.percentage }}
+        </div>
+      </div>
+      
+      @if (score()?.wrongQuestionsIds?.length ?? 0 > 0) {
+        <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div class="mb-3 text-gray-700 dark:text-gray-300" [innerHTML]="'score_overview.wrong_questionNumbers' | translate"></div>
+          <div class="space-y-2">
+            @for (wrongQuestionId of score()?.wrongQuestionsIds; track wrongQuestionId) {
+              <div class="px-3 py-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md text-red-800 dark:text-red-300 font-medium">
+                {{ getQuestionNumber(wrongQuestionId) }}
               </div>
-              <div class="col">
-                @if (score()?.wrongQuestionsIds?.length ?? 0 > 0) {
-                  <span [innerHTML]="'score_overview.wrong_questionNumbers' | translate"> </span>
-                }
-                @for (wrongQuestionId of score()?.wrongQuestionsIds; track wrongQuestionId) {
-                  <div class="my-2">
-                    {{ getQuestionNumber(wrongQuestionId) }}
-                  </div>
-                }
-              </div>
-            </div>
+            }
           </div>
-        </mat-card-content>
-      </mat-card>
+        </div>
+      }
     </div>
   </div>
 </div>

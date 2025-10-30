@@ -1,72 +1,112 @@
-@let isHandset = isHandset$ | async;
-<mat-sidenav-container fullscreen>
-  <mat-sidenav
-    #drawer
-    fixedInViewport
-    [mode]="!isHandset ? 'side' : 'over'"
-    [opened]="!isHandset"
-    [autoFocus]="false">
-    <div class="d-flex flex-column h-100">
-      <div class="d-flex justify-content-center background">
-        <app-logo class="logo-image py-4" />
+<div class="min-h-screen flex flex-col bg-white dark:bg-gray-900">
+  <!-- Header -->
+  <header class="bg-primary-600 dark:bg-primary-700 text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <button 
+        type="button"
+        (click)="toggleMobileMenu()"
+        class="md:hidden p-2 rounded-md hover:bg-primary-700 dark:hover:bg-primary-800 transition-colors"
+        [attr.aria-label]="'navigation.menu' | translate">
+        <fa-icon [icon]="faBars" size="lg"></fa-icon>
+      </button>
+      
+      <h1 class="text-xl md:text-2xl font-bold">{{ 'main.title' | translate }}</h1>
+      
+      <div class="flex items-center gap-3">
+        <!-- Theme Toggle -->
+        <button 
+          type="button"
+          (click)="toggleTheme()"
+          class="p-2 rounded-md hover:bg-primary-700 dark:hover:bg-primary-800 transition-colors"
+          [attr.aria-label]="'theme.toggle' | translate">
+          <fa-icon [icon]="isDarkMode() ? faSun : faMoon"></fa-icon>
+        </button>
+        
+        <!-- Language Selector (Desktop) -->
+        <div class="hidden md:block">
+          <select 
+            [(ngModel)]="currentLang"
+            (change)="onChangeLanguage(currentLang)"
+            class="bg-primary-700 dark:bg-primary-800 text-white px-3 py-2 rounded-md border-none focus:ring-2 focus:ring-white">
+            <option value="en">{{ 'languages.en' | translate }}</option>
+            <option value="nl">{{ 'languages.nl' | translate }}</option>
+            <option value="srb">{{ 'languages.srb' | translate }}</option>
+          </select>
+        </div>
       </div>
-      <mat-nav-list class="pt-3 px-2 navigation-container">
+    </div>
+  </header>
+
+  <!-- Mobile Menu Overlay -->
+  @if (mobileMenuOpen()) {
+    <div 
+      class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+      (click)="toggleMobileMenu()">
+    </div>
+  }
+
+  <!-- Mobile Menu -->
+  <aside 
+    [class.translate-x-0]="mobileMenuOpen()"
+    [class.-translate-x-full]="!mobileMenuOpen()"
+    class="fixed top-0 left-0 h-full w-64 bg-white dark:bg-gray-800 shadow-xl z-50 transform transition-transform duration-300 md:hidden">
+    <div class="flex flex-col h-full">
+      <div class="bg-primary-600 dark:bg-primary-700 p-6 flex justify-center">
+        <app-logo class="w-32 h-32" />
+      </div>
+      
+      <nav class="flex-1 px-4 py-6">
         @for (item of rootRoutes; track $index) {
           <a
-            mat-list-item
             [routerLink]="item.path"
-            #link="routerLinkActive"
-            routerLinkActive
-            [activated]="link.isActive"
-            class="mb-1"
-            (click)="onNavigationLinkClicked(drawer, item.path)">
-            {{ 'navigation.' + item.path | translate }}
+            routerLinkActive="bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300"
+            (click)="onNavigationLinkClicked(item.path)"
+            class="flex items-center gap-3 px-4 py-3 mb-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+            <fa-icon [icon]="getIconForRoute(item.path)" class="w-5"></fa-icon>
+            <span class="font-medium">{{ 'navigation.' + item.path | translate }}</span>
           </a>
         }
-      </mat-nav-list>
-      <div class="mt-auto">
-        <div class="px-3 pt-2 pb-5 background">
-          <mat-form-field class="w-100 mt-3">
-            <mat-label>{{ 'languages.label' | translate }}</mat-label>
-            <mat-select
-              [(value)]="currentLang"
-              (selectionChange)="onChangeLanguage($event.value)"
-              [hideSingleSelectionIndicator]="true">
-              <mat-select-trigger>
-                {{ 'languages.' + currentLang | translate }}
-              </mat-select-trigger>
-              <mat-option value="en">
-                {{ 'languages.en' | translate }}
-              </mat-option>
-              <mat-option value="nl">
-                {{ 'languages.nl' | translate }}
-              </mat-option>
-              <mat-option value="srb">
-                {{ 'languages.srb' | translate }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+      </nav>
+      
+      <div class="px-4 pb-6 border-t border-gray-200 dark:border-gray-700">
+        <div class="py-4">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            {{ 'languages.label' | translate }}
+          </label>
+          <select 
+            [(ngModel)]="currentLang"
+            (change)="onChangeLanguage(currentLang)"
+            class="w-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-primary-500">
+            <option value="en">{{ 'languages.en' | translate }}</option>
+            <option value="nl">{{ 'languages.nl' | translate }}</option>
+            <option value="srb">{{ 'languages.srb' | translate }}</option>
+          </select>
+        </div>
+        <small class="text-xs text-gray-600 dark:text-gray-400">&copy; Copyright 2025, Kristof Gilis</small>
+      </div>
+    </div>
+  </aside>
 
-          <small class="fw-bold">&copy; Copyright 2025, Kristof Gilis</small>
-        </div>
-      </div>
+  <!-- Main Content -->
+  <main class="flex-1 pb-20 md:pb-4">
+    <div class="max-w-7xl mx-auto px-4 py-6">
+      <router-outlet />
     </div>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <mat-toolbar class="sticky-top">
-      @if (isHandset$ | async) {
-        <button type="button" class="me-2" mat-icon-button (click)="drawer.toggle()" onclick="blur()">
-          <mat-icon>menu</mat-icon>
-        </button>
+  </main>
+
+  <!-- Bottom Navigation (Mobile) -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-lg z-40">
+    <div class="flex justify-around">
+      @for (item of rootRoutes; track $index) {
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="text-primary-600 dark:text-primary-400"
+          (click)="onNavigationLinkClicked(item.path)"
+          class="flex flex-col items-center justify-center py-3 px-4 text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors flex-1">
+          <fa-icon [icon]="getIconForRoute(item.path)" size="lg"></fa-icon>
+          <span class="text-xs mt-1">{{ 'navigation.' + item.path | translate }}</span>
+        </a>
       }
-      <h1 class="fw-bolder">{{ 'main.title' | translate }}</h1>
-    </mat-toolbar>
-    <div class="container-fluid py-4">
-      <div class="row">
-        <div class="col">
-          <router-outlet />
-        </div>
-      </div>
     </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+  </nav>
+</div>

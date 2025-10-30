@@ -32,6 +32,7 @@
   },
   "navigation": {
     "home": "Home",
+    "menu": "Menu",
     "questions": "Questions",
     "rules": "Rules"
   },
@@ -50,5 +51,8 @@
     "score": "Your score:",
     "title": "Result",
     "wrong_questionNumbers": "The questions you answered <u>wrong</u>:"
+  },
+  "theme": {
+    "toggle": "Toggle theme"
   }
 }
