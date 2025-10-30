@@ -1,26 +1,169 @@
-@use 'sass:map';
-@use '@angular/material' as mat;
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--color-background);
+}
 
-.mat-sidenav {
-  width: 15.625rem;
-  border-top-right-radius: unset;
-  border-bottom-right-radius: unset;
-  border-right-color: map.get($map: mat.$cyan-palette, $key: 30);
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background-color: var(--color-primary);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
 
-  @media (prefers-color-scheme: light) {
-    border-right-color: map.get($map: mat.$azure-palette, $key: 90);
+.header-content {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  gap: 1rem;
+}
+
+.header-logo {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.header-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  flex: 1;
+}
+
+.language-selector {
+  display: none;
+  
+  @media (min-width: 768px) {
+    display: block;
   }
 }
 
-.mat-toolbar,
-.background {
-  background-color: map.get($map: mat.$cyan-palette, $key: 30);
+.language-select {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
 
-  @media (prefers-color-scheme: light) {
-    background-color: map.get($map: mat.$azure-palette, $key: 90);
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  &:focus {
+    outline: 2px solid white;
+    outline-offset: 2px;
+  }
+
+  option {
+    background-color: var(--color-primary);
+    color: white;
   }
 }
 
-.navigation-container {
-  background-color: var(--mat-sidenav-content-background-color);
+.app-main {
+  flex: 1;
+  padding-bottom: 5rem; /* Space for bottom nav */
+  
+  @media (min-width: 768px) {
+    padding-bottom: 0;
+  }
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: flex;
+  justify-content: space-around;
+  background-color: white;
+  border-top: 1px solid var(--color-border);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  
+  @media (min-width: 768px) {
+    position: static;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1rem 0;
+    border-top: none;
+    box-shadow: none;
+    border-bottom: 1px solid var(--color-border);
+  }
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+  flex: 1;
+  
+  @media (min-width: 768px) {
+    flex-direction: row;
+    gap: 0.5rem;
+    flex: initial;
+  }
+
+  &:hover {
+    color: var(--color-primary);
+  }
+
+  &.active {
+    color: var(--color-primary);
+    font-weight: 600;
+    
+    .nav-icon {
+      color: var(--color-primary);
+    }
+  }
+}
+
+.nav-icon {
+  font-size: 1.5rem;
+  
+  @media (min-width: 768px) {
+    font-size: 1.25rem;
+  }
+}
+
+.nav-label {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  
+  @media (min-width: 768px) {
+    font-size: 1rem;
+    margin-top: 0;
+  }
+}
+
+.app-footer {
+  background-color: var(--color-surface);
+  padding: 1rem;
+  text-align: center;
+  border-top: 1px solid var(--color-border);
+  margin-top: auto;
+  
+  @media (max-width: 767px) {
+    margin-bottom: 4rem;
+  }
+}
+
+.footer-text {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
 }

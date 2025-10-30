@@ -1,72 +1,52 @@
-@let isHandset = isHandset$ | async;
-<mat-sidenav-container fullscreen>
-  <mat-sidenav
-    #drawer
-    fixedInViewport
-    [mode]="!isHandset ? 'side' : 'over'"
-    [opened]="!isHandset"
-    [autoFocus]="false">
-    <div class="d-flex flex-column h-100">
-      <div class="d-flex justify-content-center background">
-        <app-logo class="logo-image py-4" />
+<div class="app-container">
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-content">
+      <app-logo class="header-logo" />
+      <h1 class="header-title">{{ 'main.title' | translate }}</h1>
+      
+      <!-- Language selector for desktop -->
+      <div class="language-selector">
+        <select
+          [(ngModel)]="currentLang"
+          (change)="onChangeLanguage(currentLang)"
+          class="language-select"
+          [attr.aria-label]="'languages.label' | translate">
+          <option value="en">{{ 'languages.en' | translate }}</option>
+          <option value="nl">{{ 'languages.nl' | translate }}</option>
+          <option value="srb">{{ 'languages.srb' | translate }}</option>
+        </select>
       </div>
-      <mat-nav-list class="pt-3 px-2 navigation-container">
-        @for (item of rootRoutes; track $index) {
-          <a
-            mat-list-item
-            [routerLink]="item.path"
-            #link="routerLinkActive"
-            routerLinkActive
-            [activated]="link.isActive"
-            class="mb-1"
-            (click)="onNavigationLinkClicked(drawer, item.path)">
-            {{ 'navigation.' + item.path | translate }}
-          </a>
-        }
-      </mat-nav-list>
-      <div class="mt-auto">
-        <div class="px-3 pt-2 pb-5 background">
-          <mat-form-field class="w-100 mt-3">
-            <mat-label>{{ 'languages.label' | translate }}</mat-label>
-            <mat-select
-              [(value)]="currentLang"
-              (selectionChange)="onChangeLanguage($event.value)"
-              [hideSingleSelectionIndicator]="true">
-              <mat-select-trigger>
-                {{ 'languages.' + currentLang | translate }}
-              </mat-select-trigger>
-              <mat-option value="en">
-                {{ 'languages.en' | translate }}
-              </mat-option>
-              <mat-option value="nl">
-                {{ 'languages.nl' | translate }}
-              </mat-option>
-              <mat-option value="srb">
-                {{ 'languages.srb' | translate }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+    </div>
+  </header>
 
-          <small class="fw-bold">&copy; Copyright 2025, Kristof Gilis</small>
-        </div>
-      </div>
+  <!-- Main content area -->
+  <main class="app-main">
+    <div class="container">
+      <router-outlet />
     </div>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <mat-toolbar class="sticky-top">
-      @if (isHandset$ | async) {
-        <button type="button" class="me-2" mat-icon-button (click)="drawer.toggle()" onclick="blur()">
-          <mat-icon>menu</mat-icon>
-        </button>
-      }
-      <h1 class="fw-bolder">{{ 'main.title' | translate }}</h1>
-    </mat-toolbar>
-    <div class="container-fluid py-4">
-      <div class="row">
-        <div class="col">
-          <router-outlet />
-        </div>
-      </div>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+  </main>
+
+  <!-- Bottom navigation for mobile -->
+  <nav class="bottom-nav">
+    @for (item of rootRoutes; track item.path) {
+      <a
+        [routerLink]="item.path"
+        routerLinkActive="active"
+        class="nav-item"
+        (click)="onNavigationLinkClicked(item.path)">
+        <i class="nav-icon" [ngClass]="{
+          'fa-solid fa-house': item.path === 'home',
+          'fa-solid fa-book': item.path === 'rules',
+          'fa-solid fa-circle-question': item.path === 'questions'
+        }"></i>
+        <span class="nav-label">{{ 'navigation.' + item.path | translate }}</span>
+      </a>
+    }
+  </nav>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <p class="footer-text">&copy; Copyright 2025, Kristof Gilis</p>
+  </footer>
+</div>

@@ -1,16 +1,8 @@
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { AsyncPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DOCUMENT, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { MatListItem, MatNavList } from '@angular/material/list';
-import { MatFormField, MatLabel, MatOption, MatSelect, MatSelectTrigger } from '@angular/material/select';
-import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/material/sidenav';
-import { MatToolbar } from '@angular/material/toolbar';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Observable, map, shareReplay, tap } from 'rxjs';
 import { routes } from './app.routes';
 import { getLanguage } from './language';
 import { LogoComponent } from './logo/logo.component';
@@ -19,24 +11,11 @@ import { RandomStateService } from './questions/services/random-state.service';
 @Component({
   selector: 'app-root',
   imports: [
+    CommonModule,
     RouterOutlet,
-    MatToolbar,
-    MatIconButton,
-    MatSidenavContainer,
-    MatSidenav,
-    MatSidenavContent,
-    MatNavList,
-    MatListItem,
-    MatIcon,
-    AsyncPipe,
     TranslatePipe,
     RouterLink,
     RouterLinkActive,
-    MatFormField,
-    MatLabel,
-    MatSelect,
-    MatSelectTrigger,
-    MatOption,
     FormsModule,
     LogoComponent,
   ],
@@ -46,37 +25,21 @@ import { RandomStateService } from './questions/services/random-state.service';
 })
 export class AppComponent {
   private readonly _randomStateService = inject(RandomStateService);
-  private readonly _breakpointObserver = inject(BreakpointObserver);
   private readonly _translateService = inject(TranslateService);
   private readonly _document = inject(DOCUMENT);
-
-  private _isHandset = false;
-
-  isHandset$: Observable<boolean> = this._breakpointObserver
-    .observe([Breakpoints.Handset, Breakpoints.TabletPortrait])
-    .pipe(
-      map((result) => result.matches),
-      tap((result) => (this._isHandset = result)),
-      shareReplay()
-    );
 
   rootRoutes = routes.filter((x) => x.path);
   currentLang: string;
 
   constructor() {
     this._translateService.addLangs(['en', 'nl', 'srb']);
-
     this.currentLang = getLanguage();
-
     this._translateService.use(this.currentLang);
   }
 
-  onNavigationLinkClicked(drawer: MatSidenav, route?: string): void {
+  onNavigationLinkClicked(route?: string): void {
     if (route === 'questions') {
       this._randomStateService.random.set({ isRandom: false, count: 0 });
-    }
-    if (this._isHandset) {
-      drawer.close();
     }
   }
 
