@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
 import { Question } from '../../../../../../graphql/generated';
 
 @Component({
   selector: 'app-question',
-  imports: [MatCheckbox],
+  imports: [FormsModule],
   templateUrl: './question.component.html',
   styleUrl: './question.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

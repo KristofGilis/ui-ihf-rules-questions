@@ -7,6 +7,14 @@
       "title": "All Questions"
     },
     "collaborate": "Help to support other languages",
+    "quiz_card": {
+      "button": "Start Quiz",
+      "content": "Take a quiz with randomized questions and get instant feedback.",
+      "enable_timer": "Enable timer",
+      "question_count": "Number of questions",
+      "time_per_question": "Time per question (seconds)",
+      "title": "Quiz Mode"
+    },
     "random_questions_card": {
       "button": "Answer {{count}} questions",
       "content": "Go to the list of random question",
@@ -40,6 +48,17 @@
     "title": "All Questions"
   },
   "questions_random_new": "{{count}} new questions",
+  "quiz": {
+    "correct_answer": "Correct answer",
+    "finish": "Finish Quiz",
+    "next": "Next",
+    "previous": "Previous",
+    "progress": "Question {{current}} / {{total}}",
+    "select_answers": "Select all correct answers",
+    "time_remaining": "Time remaining: {{time}}",
+    "title": "Quiz",
+    "your_answer": "Your answer"
+  },
   "random_questions": {
     "title": "Random Questions"
   },
@@ -47,8 +66,21 @@
     "title": "Rules"
   },
   "score_overview": {
+    "correct": "Correct",
+    "correct_answers": "Correct answers",
+    "incorrect": "Incorrect",
+    "percentage": "{{percentage}}%",
     "score": "Your score:",
-    "title": "Result",
+    "title": "Quiz Results",
+    "total_questions": "Total questions",
+    "view_details": "View detailed answers",
+    "wrong_answers": "Wrong answers",
     "wrong_questionNumbers": "The questions you answered <u>wrong</u>:"
+  },
+  "theme": {
+    "auto": "Auto",
+    "dark": "Dark",
+    "light": "Light",
+    "toggle": "Toggle theme"
   }
 }

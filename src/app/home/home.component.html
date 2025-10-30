@@ -1,107 +1,96 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col">
-      <h4>{{ 'home.title' | translate }}</h4>
-      @if (version$ | async; as version) {
-        <div class="mat-body" [innerHTML]="'home.subtitle' | translate: { version }"></div>
-      }
-      <div class="alert alert-warning mt-3" role="alert">
-        {{ 'home.alert' | translate }}
-        <br />
-        <a
-          class="mat-mdc-button px-0"
-          href="https://github.com/KristofGilis/ihf_rules_questions"
-          target="_blank"
-          rel="noopener"
-          >{{ 'home.collaborate' | translate }}</a
-        >
-      </div>
+<div class="max-w-7xl mx-auto">
+  <div class="mb-6">
+    <h2 class="text-3xl font-bold mb-4">{{ 'home.title' | translate }}</h2>
+    @if (version$ | async; as version) {
+      <p class="text-lg mb-4" style="color: var(--text-secondary-color);" [innerHTML]="'home.subtitle' | translate: { version }"></p>
+    }
+    <div class="p-4 rounded-lg border mb-6" style="background-color: var(--color-warning); border-color: var(--border-color);">
+      <p class="text-sm mb-2">{{ 'home.alert' | translate }}</p>
+      <a
+        class="text-sm font-semibold underline"
+        style="color: var(--color-primary);"
+        href="https://github.com/KristofGilis/ihf_rules_questions"
+        target="_blank"
+        rel="noopener"
+        >{{ 'home.collaborate' | translate }}</a
+      >
+    </div>
+  </div>
 
-      <div class="container-fluid p-0">
-        <div class="row g-4">
-          <div class="col-12">
-            <mat-card>
-              <mat-card-header>
-                <mat-card-title>
-                  {{ 'home.rules_card.title' | translate }}
-                </mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                {{ 'home.rules_card.content' | translate }}
-              </mat-card-content>
-              <mat-card-actions [align]="'end'">
-                <button type="button" mat-button routerLink="/rules">
-                  {{ 'home.rules_card.button' | translate }}
-                </button>
-              </mat-card-actions>
-            </mat-card>
-          </div>
-          <div class="col-12 col-md-6">
-            <mat-card class="h-100">
-              <mat-card-header>
-                <mat-card-title>
-                  {{ 'home.all_questions_card.title' | translate }}
-                </mat-card-title>
-              </mat-card-header>
-              <mat-card-content class="h-100">
-                {{ 'home.all_questions_card.content' | translate }}
-              </mat-card-content>
-              <mat-card-actions [align]="'end'">
-                <button
-                  type="button"
-                  mat-button
-                  routerLink="/questions"
-                  (click)="
-                    randomStateService.random.set({
-                      isRandom: false,
-                      count: 0,
-                    })
-                  ">
-                  {{ 'home.all_questions_card.button' | translate }}
-                </button>
-              </mat-card-actions>
-            </mat-card>
-          </div>
-          <div class="col-12 col-md-6">
-            <mat-card class="h-100">
-              <mat-card-header>
-                <mat-card-title>
-                  {{ 'home.random_questions_card.title' | translate }}
-                </mat-card-title>
-              </mat-card-header>
-              <mat-card-content class="h-100">
-                <div class="d-block">
-                  <div class="d-block">
-                    {{ 'home.random_questions_card.content' | translate }}
-                  </div>
-                  <mat-form-field class="mt-4">
-                    <mat-label>{{ 'home.random_questions_card.count' | translate }}</mat-label>
-                    <mat-select [(ngModel)]="questionCount">
-                      <mat-option [value]="10">10</mat-option>
-                      <mat-option [value]="20">20</mat-option>
-                      <mat-option [value]="30">30</mat-option>
-                      <mat-option [value]="50">50</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </mat-card-content>
-              <mat-card-actions [align]="'end'">
-                <button
-                  type="button"
-                  mat-button
-                  routerLink="/questions"
-                  (click)="
-                    randomStateService.random.set({
-                      isRandom: true,
-                      count: questionCount,
-                    })
-                  ">
-                  {{ 'home.random_questions_card.button' | translate: { count: questionCount } }}
-                </button>
-              </mat-card-actions>
-            </mat-card>
-          </div>
-        </div>
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+    <!-- Rules Card -->
+    <div class="rounded-lg border p-6 shadow-sm" style="background-color: var(--surface-color); border-color: var(--border-color);">
+      <h3 class="text-xl font-semibold mb-3">
+        <i class="fas fa-book mr-2" style="color: var(--color-primary);"></i>
+        {{ 'home.rules_card.title' | translate }}
+      </h3>
+      <p class="mb-4" style="color: var(--text-secondary-color);">
+        {{ 'home.rules_card.content' | translate }}
+      </p>
+      <div class="flex justify-end">
+        <button
+          type="button"
+          routerLink="/rules"
+          class="px-4 py-2 rounded-lg font-medium transition-colors"
+          style="background-color: var(--color-primary); color: white;">
+          {{ 'home.rules_card.button' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <!-- All Questions Card -->
+    <div class="rounded-lg border p-6 shadow-sm" style="background-color: var(--surface-color); border-color: var(--border-color);">
+      <h3 class="text-xl font-semibold mb-3">
+        <i class="fas fa-question-circle mr-2" style="color: var(--color-primary);"></i>
+        {{ 'home.all_questions_card.title' | translate }}
+      </h3>
+      <p class="mb-4" style="color: var(--text-secondary-color);">
+        {{ 'home.all_questions_card.content' | translate }}
+      </p>
+      <div class="flex justify-end">
+        <button
+          type="button"
+          routerLink="/questions"
+          (click)="randomStateService.random.set({ isRandom: false, count: 0 })"
+          class="px-4 py-2 rounded-lg font-medium transition-colors"
+          style="background-color: var(--color-primary); color: white;">
+          {{ 'home.all_questions_card.button' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Random Questions Card -->
+    <div class="rounded-lg border p-6 shadow-sm md:col-span-2" style="background-color: var(--surface-color); border-color: var(--border-color);">
+      <h3 class="text-xl font-semibold mb-3">
+        <i class="fas fa-random mr-2" style="color: var(--color-primary);"></i>
+        {{ 'home.random_questions_card.title' | translate }}
+      </h3>
+      <p class="mb-4" style="color: var(--text-secondary-color);">
+        {{ 'home.random_questions_card.content' | translate }}
+      </p>
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-2">
+          {{ 'home.random_questions_card.count' | translate }}
+        </label>
+        <select
+          [(ngModel)]="questionCount"
+          class="px-3 py-2 rounded-lg border w-full md:w-48"
+          style="background-color: var(--bg-color); border-color: var(--border-color); color: var(--text-color);">
+          <option [value]="10">10</option>
+          <option [value]="20">20</option>
+          <option [value]="30">30</option>
+          <option [value]="50">50</option>
+        </select>
+      </div>
+      <div class="flex justify-end">
+        <button
+          type="button"
+          routerLink="/questions"
+          (click)="randomStateService.random.set({ isRandom: true, count: questionCount })"
+          class="px-4 py-2 rounded-lg font-medium transition-colors"
+          style="background-color: var(--color-primary); color: white;">
+          {{ 'home.random_questions_card.button' | translate: { count: questionCount } }}
+        </button>
       </div>
     </div>
   </div>

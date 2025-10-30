@@ -7,6 +7,14 @@
       "title": "Alle vragen"
     },
     "collaborate": "Help om andere talen te ondersteunen",
+    "quiz_card": {
+      "button": "Start Quiz",
+      "content": "Neem een quiz met willekeurige vragen en krijg directe feedback.",
+      "enable_timer": "Schakel timer in",
+      "question_count": "Aantal vragen",
+      "time_per_question": "Tijd per vraag (seconden)",
+      "title": "Quiz Modus"
+    },
     "random_questions_card": {
       "button": "Beantwoord {{count}} vragen",
       "content": "Ga naar de lijst met willekeurige vragen",
@@ -40,6 +48,17 @@
     "title": "Alle vragen"
   },
   "questions_random_new": "{{count}}} nieuwe vragen",
+  "quiz": {
+    "correct_answer": "Correct antwoord",
+    "finish": "Quiz Voltooien",
+    "next": "Volgende",
+    "previous": "Vorige",
+    "progress": "Vraag {{current}} / {{total}}",
+    "select_answers": "Selecteer alle juiste antwoorden",
+    "time_remaining": "Resterende tijd: {{time}}",
+    "title": "Quiz",
+    "your_answer": "Jouw antwoord"
+  },
   "random_questions": {
     "title": "Willekeurige vragen"
   },
@@ -47,8 +66,21 @@
     "title": "Spelregels"
   },
   "score_overview": {
+    "correct": "Correct",
+    "correct_answers": "Juiste antwoorden",
+    "incorrect": "Onjuist",
+    "percentage": "{{percentage}}%",
     "score": "Uw score:",
-    "title": "Resultaat",
+    "title": "Quiz Resultaten",
+    "total_questions": "Totaal vragen",
+    "view_details": "Bekijk gedetailleerde antwoorden",
+    "wrong_answers": "Foute antwoorden",
     "wrong_questionNumbers": "De vragen die je <u>fout</u> hebt beantwoord:"
+  },
+  "theme": {
+    "auto": "Auto",
+    "dark": "Donker",
+    "light": "Licht",
+    "toggle": "Thema wisselen"
   }
 }

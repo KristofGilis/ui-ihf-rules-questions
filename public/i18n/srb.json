@@ -7,6 +7,14 @@
       "title": "Сва питања"
     },
     "collaborate": "Помозите у додавању нових језика",
+    "quiz_card": {
+      "button": "Започни квиз",
+      "content": "Решите квиз са насумичним питањима и добијте тренутну повратну информацију.",
+      "enable_timer": "Омогући тајмер",
+      "question_count": "Број питања",
+      "time_per_question": "Време по питању (секунде)",
+      "title": "Квиз режим"
+    },
     "random_questions_card": {
       "button": "Одговорите на {{count}} питања",
       "content": "Идите на листу насумичних питања",
@@ -40,6 +48,17 @@
     "title": "Сва питања"
   },
   "questions_random_new": "{{count}} нових питања",
+  "quiz": {
+    "correct_answer": "Тачан одговор",
+    "finish": "Заврши квиз",
+    "next": "Следеће",
+    "previous": "Претходно",
+    "progress": "Питање {{current}} / {{total}}",
+    "select_answers": "Изаберите све тачне одговоре",
+    "time_remaining": "Преостало време: {{time}}",
+    "title": "Квиз",
+    "your_answer": "Ваш одговор"
+  },
   "random_questions": {
     "title": "Насумична питања"
   },
@@ -47,8 +66,21 @@
     "title": "Правила"
   },
   "score_overview": {
+    "correct": "Тачно",
+    "correct_answers": "Тачни одговори",
+    "incorrect": "Нетачно",
+    "percentage": "{{percentage}}%",
     "score": "Ваши бодови:",
-    "title": "Резултат",
+    "title": "Резултати квиза",
+    "total_questions": "Укупно питања",
+    "view_details": "Прикажи детаљне одговоре",
+    "wrong_answers": "Погрешни одговори",
     "wrong_questionNumbers": "Питања на која сте одговорили <u>погрешно</u>:"
+  },
+  "theme": {
+    "auto": "Аутоматски",
+    "dark": "Тамно",
+    "light": "Светло",
+    "toggle": "Промени тему"
   }
 }

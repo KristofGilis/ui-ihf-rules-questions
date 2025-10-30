@@ -1,10 +1,10 @@
-import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
+import { DOCUMENT } from '@angular/common';
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
-import { Observable, debounceTime, finalize, map, tap } from 'rxjs';
+import { Observable, debounceTime, finalize, fromEvent, map, tap } from 'rxjs';
 import { Question, Score } from '../../../graphql/generated';
 import { QuestionsViewComponent } from './questions-view/questions-view.component';
 import { QuestionsService } from './services/questions.service';
@@ -19,9 +19,9 @@ import { RandomStateService } from './services/random-state.service';
 })
 export class QuestionsComponent {
   private readonly _questionsService = inject(QuestionsService);
-  private readonly _scrollDispatcher = inject(ScrollDispatcher);
   private readonly _randomStateService = inject(RandomStateService);
   private readonly _translateService = inject(TranslateService);
+  private readonly _document = inject(DOCUMENT);
 
   random = this._randomStateService.random;
   loading = signal(false);
@@ -48,17 +48,20 @@ export class QuestionsComponent {
       this._questionsService.refetch();
     });
 
-    this._scrollDispatcher
-      .scrolled()
-      .pipe(
-        debounceTime(100),
-        takeUntilDestroyed()
-      )
-      .subscribe((res) => {
-        if (res && (res as CdkScrollable).measureScrollOffset('bottom') < 50 && !this.loading()) {
-          this._questionsService.fetchMore();
-        }
-      });
+    // Use native scroll events instead of CDK
+    if (typeof window !== 'undefined') {
+      fromEvent(window, 'scroll')
+        .pipe(debounceTime(100), takeUntilDestroyed())
+        .subscribe(() => {
+          const scrollHeight = this._document.documentElement.scrollHeight;
+          const scrollTop = this._document.documentElement.scrollTop || this._document.body.scrollTop;
+          const clientHeight = this._document.documentElement.clientHeight;
+
+          if (scrollHeight - scrollTop - clientHeight < 50 && !this.loading()) {
+            this._questionsService.fetchMore();
+          }
+        });
+    }
 
     this._translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => this._questionsService.refetch());
   }

@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Question, Score } from '../../../../../../graphql/generated';
 
 @Component({
   selector: 'app-score-overview',
-  imports: [MatCard, MatCardHeader, MatCardTitle, MatCardContent, TranslatePipe],
+  imports: [TranslatePipe],
   templateUrl: './score-overview.component.html',
   styleUrl: './score-overview.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

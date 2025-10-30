@@ -1,40 +1,53 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col">
-      <mat-card appearance="outlined">
-        <mat-card-header>
-          <mat-card-title>
-            <h4 class="fw-bold">{{ 'score_overview.title' | translate }}</h4>
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="container-fluid p-0">
-            <div class="row gy-3">
-              <div class="col-12">
-                <div class="d-flex">
-                  <div>
-                    {{ 'score_overview.score' | translate }}
-                    <span class="fw-bold"> {{ score()?.score }} / {{ score()?.total }} </span>
-                  </div>
-                  <div class="position-absolute top-0 end-0 fw-bold fs-3 pt-4 pe-4" [class.red]="isBadResult">
-                    {{ score()?.percentage }}
-                  </div>
-                </div>
-              </div>
-              <div class="col">
-                @if (score()?.wrongQuestionsIds?.length ?? 0 > 0) {
-                  <span [innerHTML]="'score_overview.wrong_questionNumbers' | translate"> </span>
-                }
-                @for (wrongQuestionId of score()?.wrongQuestionsIds; track wrongQuestionId) {
-                  <div class="my-2">
-                    {{ getQuestionNumber(wrongQuestionId) }}
-                  </div>
-                }
-              </div>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
+<div class="rounded-lg border p-6 shadow-lg" style="background-color: var(--surface-color); border-color: var(--border-color);">
+  <div class="flex items-center justify-between mb-6">
+    <h3 class="text-2xl font-bold">
+      <i class="fas fa-trophy mr-2" style="color: var(--color-primary);"></i>
+      {{ 'score_overview.title' | translate }}
+    </h3>
+    <div
+      class="text-4xl font-bold"
+      [style.color]="isBadResult ? 'var(--color-error)' : 'var(--color-success)'">
+      {{ score()?.percentage }}%
     </div>
   </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div class="p-4 rounded-lg border" style="border-color: var(--border-color);">
+      <div class="text-sm mb-1" style="color: var(--text-secondary-color);">
+        {{ 'score_overview.total_questions' | translate }}
+      </div>
+      <div class="text-2xl font-bold">{{ score()?.total }}</div>
+    </div>
+
+    <div class="p-4 rounded-lg border" style="border-color: var(--border-color); background-color: rgba(0, 200, 100, 0.1);">
+      <div class="text-sm mb-1" style="color: var(--color-success);">
+        {{ 'score_overview.correct_answers' | translate }}
+      </div>
+      <div class="text-2xl font-bold" style="color: var(--color-success);">
+        {{ score()?.score }}
+      </div>
+    </div>
+
+    <div class="p-4 rounded-lg border" style="border-color: var(--border-color); background-color: rgba(255, 0, 0, 0.1);">
+      <div class="text-sm mb-1" style="color: var(--color-error);">
+        {{ 'score_overview.wrong_answers' | translate }}
+      </div>
+      <div class="text-2xl font-bold" style="color: var(--color-error);">
+        {{ (score()?.total ?? 0) - (score()?.score ?? 0) }}
+      </div>
+    </div>
+  </div>
+
+  @if (score()?.wrongQuestionsIds?.length ?? 0 > 0) {
+    <div class="mt-6">
+      <h4 class="font-semibold mb-3" [innerHTML]="'score_overview.wrong_questionNumbers' | translate"></h4>
+      <div class="space-y-2">
+        @for (wrongQuestionId of score()?.wrongQuestionsIds; track wrongQuestionId) {
+          <div class="px-3 py-2 rounded border" style="border-color: var(--color-error); background-color: rgba(255, 0, 0, 0.05);">
+            {{ 'questions.title' | translate }} {{ getQuestionNumber(wrongQuestionId) }}
+          </div>
+        }
+      </div>
+    </div>
+  }
 </div>

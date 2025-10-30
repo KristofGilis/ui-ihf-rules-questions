@@ -1,11 +1,21 @@
-@if (loading()) {
-  <div class="d-flex justify-content-center align-items-center">
-    <mat-progress-spinner mode="indeterminate" diameter="50" />
-  </div>
-} @else {
-  <mat-nav-list>
-    @for (rule of rules(); track rule.number) {
-      <a mat-list-item [routerLink]="rule.id"> {{ rule.number }} - {{ rule.name }} </a>
-    }
-  </mat-nav-list>
-}
+<div class="max-w-4xl mx-auto">
+  @if (loading()) {
+    <div class="flex justify-center items-center py-8">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2" style="border-color: var(--color-primary);"></div>
+    </div>
+  } @else {
+    <div class="space-y-2">
+      @for (rule of rules(); track rule.number) {
+        <a
+          [routerLink]="rule.id"
+          class="block p-4 rounded-lg border transition-colors hover:bg-opacity-5 hover:bg-gray-500"
+          style="border-color: var(--border-color); color: var(--text-color); text-decoration: none;">
+          <div class="flex items-center gap-3">
+            <i class="fas fa-book-open" style="color: var(--color-primary);"></i>
+            <span class="font-medium">{{ rule.number }} - {{ rule.name }}</span>
+          </div>
+        </a>
+      }
+    </div>
+  }
+</div>

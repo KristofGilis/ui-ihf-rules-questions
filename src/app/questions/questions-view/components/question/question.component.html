@@ -1,27 +1,22 @@
-<div class="container-fluid p-0">
-  <div class="row">
-    <div class="col">
-      <span class="fw-500"> {{ question().number }}) </span>
-      <span class="fw-500" [innerHTML]="question().phrase"></span>
+<div class="mb-6">
+  <div class="mb-4">
+    <span class="font-medium">{{ question().number }}) </span>
+    <span class="font-medium" [innerHTML]="question().phrase"></span>
+  </div>
 
-      <div class="container-fluid mt-2">
-        <div class="row">
-          <div class="col">
-            <div class="d-flex flex-column">
-              @for (answer of question().answers?.nodes; track answer?.id) {
-                <mat-checkbox
-                  class="mb-2"
-                  (change)="
-                    $event.checked ? selectAnswer.emit(answer?.id ?? '') : deselectAnswer.emit(answer?.id ?? '')
-                  ">
-                  <span class="fw-500">{{ answer?.number }})</span>
-                  {{ answer?.phrase }}
-                </mat-checkbox>
-              }
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="space-y-3">
+    @for (answer of question().answers?.nodes; track answer?.id) {
+      <label class="flex items-start gap-3 p-3 rounded-lg border cursor-pointer hover:bg-opacity-5 hover:bg-gray-500 transition-colors" style="border-color: var(--border-color);">
+        <input
+          type="checkbox"
+          class="mt-1 w-5 h-5 rounded border-2 cursor-pointer"
+          style="border-color: var(--border-color); accent-color: var(--color-primary);"
+          (change)="$event.target && ($any($event.target).checked ? selectAnswer.emit(answer?.id ?? '') : deselectAnswer.emit(answer?.id ?? ''))" />
+        <span class="flex-1">
+          <span class="font-medium">{{ answer?.number }})</span>
+          {{ answer?.phrase }}
+        </span>
+      </label>
+    }
   </div>
 </div>

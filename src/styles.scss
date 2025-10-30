@@ -1,46 +1,95 @@
-@use '@angular/material' as mat;
+/* Tailwind CSS v4 - CSS-based configuration */
+@use "tailwindcss";
 
-@include mat.elevation-classes();
-@include mat.app-background();
-
-$light-theme: mat.define-theme(
-  (
-    color: (
-      theme-type: light,
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-  )
-);
-
-$dark-theme: mat.define-theme(
-  (
-    color: (
-      theme-type: dark,
-      primary: mat.$cyan-palette,
-      tertiary: mat.$orange-palette,
-    ),
-  )
-);
-
-html {
-  @include mat.all-component-themes($dark-theme);
-  @include mat.checkbox-color($dark-theme, $color-variant: tertiary);
-
-  @media (prefers-color-scheme: light) {
-    @include mat.all-component-colors($light-theme);
-  }
+/* Theme variables */
+@theme {
+  /* Light theme colors */
+  --color-primary: oklch(0.55 0.18 231);
+  --color-primary-hover: oklch(0.45 0.18 231);
+  --color-secondary: oklch(0.75 0.12 231);
+  --color-accent: oklch(0.60 0.20 270);
+  
+  --color-bg-light: oklch(0.98 0.01 231);
+  --color-surface-light: oklch(1 0 0);
+  --color-text-light: oklch(0.20 0.01 231);
+  --color-text-secondary-light: oklch(0.50 0.01 231);
+  --color-border-light: oklch(0.85 0.01 231);
+  
+  /* Dark theme colors */
+  --color-bg-dark: oklch(0.15 0.01 231);
+  --color-surface-dark: oklch(0.20 0.01 231);
+  --color-text-dark: oklch(0.95 0.01 231);
+  --color-text-secondary-dark: oklch(0.65 0.01 231);
+  --color-border-dark: oklch(0.30 0.01 231);
+  
+  /* Success/Error colors */
+  --color-success: oklch(0.60 0.15 145);
+  --color-error: oklch(0.55 0.20 25);
+  --color-warning: oklch(0.70 0.15 70);
 }
 
+/* Base styles */
 html,
 body {
   height: 100%;
-}
-body {
   margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  padding: 0;
 }
 
-.fw-500 {
-  font-weight: 500;
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Light theme (default) */
+:root {
+  --bg-color: var(--color-bg-light);
+  --surface-color: var(--color-surface-light);
+  --text-color: var(--color-text-light);
+  --text-secondary-color: var(--color-text-secondary-light);
+  --border-color: var(--color-border-light);
+  
+  color-scheme: light;
+}
+
+/* Dark theme */
+:root.dark {
+  --bg-color: var(--color-bg-dark);
+  --surface-color: var(--color-surface-dark);
+  --text-color: var(--color-text-dark);
+  --text-secondary-color: var(--color-text-secondary-dark);
+  --border-color: var(--color-border-dark);
+  
+  color-scheme: dark;
+}
+
+/* Auto dark mode based on system preference */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --bg-color: var(--color-bg-dark);
+    --surface-color: var(--color-surface-dark);
+    --text-color: var(--color-text-dark);
+    --text-secondary-color: var(--color-text-secondary-dark);
+    --border-color: var(--color-border-dark);
+    
+    color-scheme: dark;
+  }
+}
+
+/* Apply theme colors */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* Smooth transitions for theme changes */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Focus visible styles for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
