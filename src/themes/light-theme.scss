@@ -1,12 +1,12 @@
 @use '@angular/material' as mat;
 
-// Light theme using Angular Material's azure-blue preset (compatible with existing)
+// Modern light theme with vibrant colors
 $light-theme: mat.define-theme(
   (
     color: (
       theme-type: light,
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
+      primary: mat.$violet-palette,
+      tertiary: mat.$rose-palette,
     ),
   )
 );
@@ -14,4 +14,20 @@ $light-theme: mat.define-theme(
 // Apply all component themes for light theme
 @mixin apply-light-theme() {
   @include mat.all-component-colors($light-theme);
+  
+  // Custom light theme variables
+  --app-bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --app-card-bg: #ffffff;
+  --app-card-shadow: 0 8px 32px rgba(102, 126, 234, 0.1);
+  --app-card-hover-shadow: 0 16px 48px rgba(102, 126, 234, 0.2);
+  --app-sidebar-bg: #f8f9ff;
+  --app-toolbar-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --app-text-primary: #2d3748;
+  --app-text-secondary: #718096;
+  --app-accent-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --app-success-color: #48bb78;
+  --app-warning-color: #ed8936;
+  --app-border-radius: 16px;
+  --app-nav-item-hover: rgba(102, 126, 234, 0.1);
+  --app-nav-item-active: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
 }

@@ -5,13 +5,13 @@
 @include mat.elevation-classes();
 @include mat.app-background();
 
-// Default theme (using existing azure/cyan colors for compatibility)
+// Modern default theme with vibrant colors
 $default-light-theme: mat.define-theme(
   (
     color: (
       theme-type: light,
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
+      primary: mat.$violet-palette,
+      tertiary: mat.$rose-palette,
     ),
   )
 );
@@ -20,8 +20,8 @@ $default-dark-theme: mat.define-theme(
   (
     color: (
       theme-type: dark,
-      primary: mat.$cyan-palette,
-      tertiary: mat.$orange-palette,
+      primary: mat.$magenta-palette,
+      tertiary: mat.$cyan-palette,
     ),
   )
 );
@@ -49,11 +49,57 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-family: 'Inter', 'Roboto', 'Helvetica Neue', sans-serif;
+  background: var(--app-bg-gradient);
 }
 
+// Modern utility classes
 .fw-500 {
   font-weight: 500;
+}
+
+.fw-600 {
+  font-weight: 600;
+}
+
+.fw-700 {
+  font-weight: 700;
+}
+
+// Modern card styling
+mat-card {
+  background: var(--app-card-bg) !important;
+  box-shadow: var(--app-card-shadow) !important;
+  border-radius: var(--app-border-radius) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none !important;
+  
+  &:hover {
+    box-shadow: var(--app-card-hover-shadow) !important;
+    transform: translateY(-4px);
+  }
+}
+
+// Modern button styling
+button[mat-button], button[mat-raised-button], button[mat-flat-button] {
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  padding: 8px 24px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+// Alert styling with modern design
+.alert {
+  border-radius: 12px;
+  border: none;
+  padding: 16px 20px;
+  box-shadow: var(--app-card-shadow);
 }

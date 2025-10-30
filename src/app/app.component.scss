@@ -1,48 +1,72 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
 
-// Mobile-first base styles (320px+)
+// Mobile-first base styles (320px+) with modern design
 .mat-sidenav {
-  width: 15.625rem;
-  border-top-right-radius: unset;
-  border-bottom-right-radius: unset;
-  border-right-color: map.get($map: mat.$cyan-palette, $key: 30);
-
-  @media (prefers-color-scheme: light) {
-    border-right-color: map.get($map: mat.$azure-palette, $key: 90);
-  }
+  width: 16rem;
+  border: none !important;
+  background: var(--app-sidebar-bg) !important;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.08);
 }
 
 .mat-toolbar {
-  padding: 0 0.5rem; // Mobile padding
+  padding: 0.75rem 1rem;
+  background: var(--app-toolbar-bg) !important;
+  color: white !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: none;
 
-  // Tablet and above
   @media (min-width: 768px) {
-    padding: 0 1rem;
+    padding: 1rem 1.5rem;
   }
 
   h1 {
-    font-size: 1.25rem; // Mobile font size
+    font-size: 1.25rem;
     margin: 0;
+    font-weight: 700;
+    letter-spacing: -0.5px;
 
-    // Tablet and above
     @media (min-width: 768px) {
-      font-size: 1.5rem;
+      font-size: 1.75rem;
     }
   }
 }
 
-.mat-toolbar,
 .background {
-  background-color: map.get($map: mat.$cyan-palette, $key: 30);
-
-  @media (prefers-color-scheme: light) {
-    background-color: map.get($map: mat.$azure-palette, $key: 90);
-  }
+  background: var(--app-sidebar-bg) !important;
+  padding: 1.5rem 1rem;
 }
 
 .navigation-container {
-  background-color: var(--mat-sidenav-content-background-color);
+  background: transparent !important;
+  padding: 1rem 0.5rem;
+  
+  a[mat-list-item] {
+    margin-bottom: 0.5rem;
+    border-radius: 12px;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    &:hover {
+      background: var(--app-nav-item-hover) !important;
+      transform: translateX(4px);
+    }
+    
+    &[activated="true"] {
+      background: var(--app-nav-item-active) !important;
+      color: white !important;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+  }
+}
+
+// Logo styling
+.logo-image {
+  max-width: 120px;
+  margin: 0 auto;
+  display: block;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
 // Spacer for toolbar
@@ -54,19 +78,44 @@
 button[mat-icon-button] {
   min-width: 44px;
   min-height: 44px;
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.25) !important;
+    transform: scale(1.05);
+  }
+  
+  mat-icon {
+    color: white !important;
+  }
 }
 
-// Responsive container
+// Responsive container with modern spacing
 .container-fluid {
-  padding: 0.75rem; // Mobile padding
+  padding: 1rem;
 
-  // Tablet and above
   @media (min-width: 768px) {
-    padding: 1rem;
-  }
-
-  // Desktop and above
-  @media (min-width: 1024px) {
     padding: 1.5rem;
   }
+
+  @media (min-width: 1024px) {
+    padding: 2rem;
+  }
+}
+
+// Language selector styling
+mat-form-field {
+  .mat-mdc-select {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 4px 8px;
+  }
+}
+
+// Copyright text
+small {
+  opacity: 0.7;
+  font-size: 0.75rem;
 }

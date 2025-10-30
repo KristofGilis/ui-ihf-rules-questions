@@ -1,0 +1,116 @@
+// Modern home page styling
+
+h4 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--app-text-primary);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.5px;
+}
+
+.mat-body {
+  color: var(--app-text-secondary);
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+// Modern alert styling
+.alert {
+  background: var(--app-card-bg);
+  border-left: 4px solid var(--app-warning-color);
+  
+  a {
+    color: var(--app-warning-color);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Enhanced card grid
+.row.g-4 {
+  margin-top: 1.5rem;
+}
+
+// Card customization
+mat-card {
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--app-accent-gradient);
+  }
+  
+  mat-card-header {
+    padding-bottom: 0.5rem;
+    
+    mat-card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--app-text-primary);
+      margin-bottom: 0.5rem;
+    }
+  }
+  
+  mat-card-content {
+    color: var(--app-text-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  mat-card-actions {
+    padding-top: 0.5rem;
+    
+    button {
+      background: var(--app-accent-gradient) !important;
+      color: white !important;
+      font-weight: 600;
+      padding: 10px 28px !important;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
+      
+      &:hover {
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
+      }
+    }
+  }
+}
+
+// Special styling for the first card (Rules)
+.col-12:first-child {
+  mat-card::before {
+    background: var(--app-success-color);
+  }
+}
+
+// Form field in card
+mat-form-field {
+  width: 100%;
+  
+  .mat-mdc-form-field {
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 8px;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 767px) {
+  h4 {
+    font-size: 1.5rem;
+  }
+  
+  mat-card-title {
+    font-size: 1.25rem !important;
+  }
+}
