@@ -1,6 +1,104 @@
-@use 'sass:map';
-@use '@angular/material' as mat;
+.score-container {
+  margin-top: 2rem;
+}
 
-.red {
-  color: map.get($map: mat.$red-palette, $key: 40);
+.score-card {
+  background-color: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 2rem;
+  border: 2px solid var(--color-primary);
+}
+
+.score-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.score-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.score-percentage {
+  font-size: 3rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-lg);
+  
+  &.high-score {
+    color: var(--color-success);
+    background-color: rgba(16, 185, 129, 0.1);
+  }
+  
+  &.low-score {
+    color: var(--color-error);
+    background-color: rgba(239, 68, 68, 0.1);
+  }
+}
+
+.score-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.score-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+}
+
+.score-label {
+  font-size: 1.125rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.score-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.wrong-questions-section {
+  padding: 1rem;
+  background-color: rgba(239, 68, 68, 0.05);
+  border-left: 4px solid var(--color-error);
+  border-radius: var(--radius-md);
+}
+
+.wrong-questions-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-error);
+  margin: 0 0 1rem 0;
+}
+
+.wrong-questions-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.wrong-question-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: white;
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-md);
+  color: var(--color-error);
+  font-weight: 600;
 }

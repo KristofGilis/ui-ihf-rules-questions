@@ -1,11 +1,18 @@
-@if (loading()) {
-  <div class="d-flex justify-content-center align-items-center">
-    <mat-progress-spinner mode="indeterminate" diameter="50" />
-  </div>
-} @else {
-  <mat-nav-list>
-    @for (rule of rules(); track rule.number) {
-      <a mat-list-item [routerLink]="rule.id"> {{ rule.number }} - {{ rule.name }} </a>
-    }
-  </mat-nav-list>
-}
+<div class="rules-view-container">
+  @if (loading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p class="loading-text">Loading rules...</p>
+    </div>
+  } @else {
+    <div class="rules-list">
+      @for (rule of rules(); track rule.number) {
+        <a [routerLink]="rule.id" class="rule-item">
+          <span class="rule-number">{{ rule.number }}</span>
+          <span class="rule-name">{{ rule.name }}</span>
+          <i class="fa-solid fa-chevron-right rule-icon"></i>
+        </a>
+      }
+    </div>
+  }
+</div>

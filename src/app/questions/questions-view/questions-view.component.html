@@ -1,40 +1,48 @@
-@for (question of questions(); track question.id) {
-  <div class="mb-4">
+<div class="questions-view-container">
+  @for (question of questions(); track question.id) {
     <app-question
       [question]="question"
+      [selectedAnswers]="selectedAnswers"
+      [showFeedback]="!!score()"
       (selectAnswer)="onSelectAnswer($event)"
       (deselectAnswer)="onDeselectAnswer($event)" />
-  </div>
-}
-@if (loading()) {
-  <div class="d-flex justify-content-center align-items-center">
-    <mat-progress-spinner mode="indeterminate" diameter="50" />
-  </div>
-}
-@if (!hasMoreQuestions() && !loading()) {
-  <div class="d-flex w-100">
-    <button
-      type="button"
-      class="ms-auto ms-md-0"
-      mat-flat-button
-      [disabled]="scoreLoading()"
-      (click)="onCalculateScore()">
-      <div class="d-flex align-items-center">
-        {{ 'questions.calculate_score' | translate }}
+  }
+  
+  @if (loading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p class="loading-text">Loading questions...</p>
+    </div>
+  }
+  
+  @if (!hasMoreQuestions() && !loading() && !score()) {
+    <div class="actions-container">
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="scoreLoading()"
+        (click)="onCalculateScore()">
         @if (scoreLoading()) {
-          <mat-progress-spinner class="ms-2" diameter="20" color="primary" mode="indeterminate" />
+          <div class="spinner-small"></div>
         }
-      </div>
-    </button>
-    @if (isRandom()) {
-      <button type="button" class="ms-2" mat-button [disabled]="scoreLoading()" (click)="newRandomQuestions.emit()">
-        {{ 'questions_random_new' | translate: { count: randomCount() } }}
+        {{ 'questions.calculate_score' | translate }}
+        <i class="fa-solid fa-calculator"></i>
       </button>
-    }
-  </div>
-}
-@if (score()) {
-  <div class="mt-4">
+      
+      @if (isRandom()) {
+        <button
+          type="button"
+          class="btn btn-secondary"
+          [disabled]="scoreLoading()"
+          (click)="newRandomQuestions.emit()">
+          <i class="fa-solid fa-rotate"></i>
+          {{ 'questions_random_new' | translate: { count: randomCount() } }}
+        </button>
+      }
+    </div>
+  }
+  
+  @if (score()) {
     <app-score-overview [score]="score()" [questions]="questions()" />
-  </div>
-}
+  }
+</div>

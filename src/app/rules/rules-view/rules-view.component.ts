@@ -1,12 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { MatListItem, MatNavList } from '@angular/material/list';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
 import { Rule } from '../../../../graphql/generated';
 
 @Component({
   selector: 'app-rules-view',
-  imports: [MatProgressSpinner, MatNavList, MatListItem, RouterLink],
+  imports: [CommonModule, RouterLink],
   templateUrl: './rules-view.component.html',
   styleUrl: './rules-view.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

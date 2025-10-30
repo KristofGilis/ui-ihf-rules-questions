@@ -1,27 +1,26 @@
-<div class="container-fluid p-0">
-  <div class="row">
-    <div class="col">
-      <span class="fw-500"> {{ question().number }}) </span>
-      <span class="fw-500" [innerHTML]="question().phrase"></span>
+<div class="question-container">
+  <div class="question-header">
+    <span class="question-number">{{ question().number }})</span>
+    <span class="question-text" [innerHTML]="question().phrase"></span>
+  </div>
 
-      <div class="container-fluid mt-2">
-        <div class="row">
-          <div class="col">
-            <div class="d-flex flex-column">
-              @for (answer of question().answers?.nodes; track answer?.id) {
-                <mat-checkbox
-                  class="mb-2"
-                  (change)="
-                    $event.checked ? selectAnswer.emit(answer?.id ?? '') : deselectAnswer.emit(answer?.id ?? '')
-                  ">
-                  <span class="fw-500">{{ answer?.number }})</span>
-                  {{ answer?.phrase }}
-                </mat-checkbox>
-              }
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="answers-container">
+    @for (answer of question().answers?.nodes; track answer?.id) {
+      <label class="answer-option" [class.selected]="selectedAnswers().includes(answer?.id ?? '')">
+        <input
+          type="checkbox"
+          class="answer-checkbox"
+          [checked]="selectedAnswers().includes(answer?.id ?? '')"
+          (change)="onAnswerChange($event, answer?.id ?? '')"
+          [disabled]="showFeedback()" />
+        <span class="answer-content">
+          <span class="answer-number">{{ answer?.number }})</span>
+          <span class="answer-text">{{ answer?.phrase }}</span>
+        </span>
+        @if (showFeedback() && selectedAnswers().includes(answer?.id ?? '')) {
+          <i class="fa-solid fa-check answer-icon"></i>
+        }
+      </label>
+    }
   </div>
 </div>
