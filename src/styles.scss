@@ -62,3 +62,9 @@
     color: var(--color-text);
   }
 }
+
+@layer utilities {
+  .flex-1 {
+    flex: 1;
+  }
+}

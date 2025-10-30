@@ -35,6 +35,30 @@
     "questions": "Питања",
     "rules": "Правила"
   },
+  "quiz": {
+    "complete": "Заврши квиз",
+    "next": "Следеће питање",
+    "previous": "Претходно питање",
+    "progress": "Питање {{current}} од {{total}}",
+    "select_answers": "Изаберите све тачне одговоре",
+    "start": "Покрени квиз",
+    "time_remaining": "Преостало време: {{time}}s",
+    "timed_mode": "Режим са временским ограничењем",
+    "timed_mode_description": "90 секунди по питању"
+  },
+  "quiz_results": {
+    "correct": "Тачно",
+    "correct_answers": "Тачни одговори",
+    "incorrect": "Нетачно",
+    "percentage": "Резултат",
+    "review": "Прегледајте своје одговоре",
+    "time_taken": "Утрошено време",
+    "title": "Резултати квиза",
+    "total_questions": "Укупно питања",
+    "wrong_answers": "Погрешни одговори",
+    "your_answer": "Ваш одговор",
+    "correct_answer": "Тачан одговор"
+  },
   "questions": {
     "calculate_score": "Прикажи бодове",
     "title": "Сва питања"

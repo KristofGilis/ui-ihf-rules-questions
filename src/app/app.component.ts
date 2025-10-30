@@ -15,6 +15,7 @@ import { routes } from './app.routes';
 import { getLanguage } from './language';
 import { LogoComponent } from './logo/logo.component';
 import { RandomStateService } from './questions/services/random-state.service';
+import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-root',
@@ -39,6 +40,7 @@ import { RandomStateService } from './questions/services/random-state.service';
     MatOption,
     FormsModule,
     LogoComponent,
+    ThemeToggleComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

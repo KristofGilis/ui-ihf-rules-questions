@@ -35,6 +35,30 @@
     "questions": "Questions",
     "rules": "Rules"
   },
+  "quiz": {
+    "complete": "Complete Quiz",
+    "next": "Next Question",
+    "previous": "Previous Question",
+    "progress": "Question {{current}} of {{total}}",
+    "select_answers": "Select all correct answers",
+    "start": "Start Quiz",
+    "time_remaining": "Time remaining: {{time}}s",
+    "timed_mode": "Timed Mode",
+    "timed_mode_description": "90 seconds per question"
+  },
+  "quiz_results": {
+    "correct": "Correct",
+    "correct_answers": "Correct Answers",
+    "incorrect": "Incorrect",
+    "percentage": "Score",
+    "review": "Review Your Answers",
+    "time_taken": "Time Taken",
+    "title": "Quiz Results",
+    "total_questions": "Total Questions",
+    "wrong_answers": "Wrong Answers",
+    "your_answer": "Your Answer",
+    "correct_answer": "Correct Answer"
+  },
   "questions": {
     "calculate_score": "Calculate score",
     "title": "All Questions"
