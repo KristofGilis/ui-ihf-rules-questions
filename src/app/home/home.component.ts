@@ -28,6 +28,7 @@ export class HomeComponent {
 
   randomStateService = inject(RandomStateService);
   questionCount = 10;
+  timedQuiz = false;
 
   private readonly _query = this._versionGQL.watch();
 

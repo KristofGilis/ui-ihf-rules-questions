@@ -2,16 +2,17 @@
   "home": {
     "alert": "I decided to not automatically add the other languages, because I do not have the time. But you can help. ;-) Special thanks for all collaborators.",
     "all_questions_card": {
-      "button": "Answer all questions",
-      "content": "Go to the list of all questions.",
-      "title": "All Questions"
+      "button": "Start Quiz (All)",
+      "content": "Take a quiz with all available questions.",
+      "title": "All Questions Quiz"
     },
     "collaborate": "Help to support other languages",
     "random_questions_card": {
-      "button": "Answer {{count}} questions",
-      "content": "Go to the list of random question",
+      "button": "Start Quiz ({{count}} questions)",
+      "content": "Take a quiz with a random selection of questions",
       "count": "# Questions",
-      "title": "Random Questions"
+      "title": "Random Questions Quiz",
+      "timed": "Timed Quiz (90s per question)"
     },
     "rules_card": {
       "button": "Go to rules",
@@ -41,6 +42,16 @@
     "title": "All Questions"
   },
   "questions_random_new": "{{count}} new questions",
+  "quiz": {
+    "complete": "Complete Quiz",
+    "next": "Next Question",
+    "previous": "Previous Question",
+    "progress": "Question {{current}} of {{total}}",
+    "review_answers": "Review Answers",
+    "time_left": "Time left: {{minutes}}:{{seconds}}",
+    "time_per_question": "Time per question: 90 seconds",
+    "title": "Quiz"
+  },
   "random_questions": {
     "title": "Random Questions"
   },
@@ -48,9 +59,16 @@
     "title": "Rules"
   },
   "score_overview": {
+    "correct": "Correct",
+    "correct_answers": "Correct answers:",
+    "incorrect": "Incorrect",
+    "percentage": "Score: {{percentage}}",
+    "review_title": "Review Answers",
     "score": "Your score:",
-    "title": "Result",
-    "wrong_questionNumbers": "The questions you answered <u>wrong</u>:"
+    "score_summary": "{{correct}} correct out of {{total}}",
+    "title": "Quiz Results",
+    "wrong_questionNumbers": "The questions you answered <u>wrong</u>:",
+    "your_answers": "Your answers:"
   },
   "theme": {
     "toggle": "Toggle theme"

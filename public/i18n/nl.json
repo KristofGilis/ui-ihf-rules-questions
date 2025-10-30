@@ -2,16 +2,17 @@
   "home": {
     "alert": "Ik heb besloten om de andere talen niet automatisch toe te voegen, omdat ik daar de tijd niet voor heb. Maar je kan helpen. ;-) Speciale dank aan alle medewerkers.",
     "all_questions_card": {
-      "button": "Alle vragen beantwoorden",
-      "content": "Ga naar de lijst met alle vragen.",
-      "title": "Alle vragen"
+      "button": "Start Quiz (Alle)",
+      "content": "Doe een quiz met alle beschikbare vragen.",
+      "title": "Alle Vragen Quiz"
     },
     "collaborate": "Help om andere talen te ondersteunen",
     "random_questions_card": {
-      "button": "Beantwoord {{count}} vragen",
-      "content": "Ga naar de lijst met willekeurige vragen",
+      "button": "Start Quiz ({{count}} vragen)",
+      "content": "Doe een quiz met een willekeurige selectie van vragen",
       "count": "# Vragen",
-      "title": "Willekeurige vragen"
+      "title": "Willekeurige Vragen Quiz",
+      "timed": "Getimede Quiz (90s per vraag)"
     },
     "rules_card": {
       "button": "Ga naar spelregels",
@@ -41,6 +42,16 @@
     "title": "Alle vragen"
   },
   "questions_random_new": "{{count}}} nieuwe vragen",
+  "quiz": {
+    "complete": "Quiz Voltooien",
+    "next": "Volgende Vraag",
+    "previous": "Vorige Vraag",
+    "progress": "Vraag {{current}} van {{total}}",
+    "review_answers": "Bekijk Antwoorden",
+    "time_left": "Tijd over: {{minutes}}:{{seconds}}",
+    "time_per_question": "Tijd per vraag: 90 seconden",
+    "title": "Quiz"
+  },
   "random_questions": {
     "title": "Willekeurige vragen"
   },
@@ -48,9 +59,16 @@
     "title": "Spelregels"
   },
   "score_overview": {
+    "correct": "Correct",
+    "correct_answers": "Correcte antwoorden:",
+    "incorrect": "Onjuist",
+    "percentage": "Score: {{percentage}}",
+    "review_title": "Bekijk Antwoorden",
     "score": "Uw score:",
-    "title": "Resultaat",
-    "wrong_questionNumbers": "De vragen die je <u>fout</u> hebt beantwoord:"
+    "score_summary": "{{correct}} correct van {{total}}",
+    "title": "Quiz Resultaten",
+    "wrong_questionNumbers": "De vragen die je <u>fout</u> hebt beantwoord:",
+    "your_answers": "Uw antwoorden:"
   },
   "theme": {
     "toggle": "Thema wisselen"
