@@ -1,42 +1,58 @@
-/* Tailwind CSS Base Styles */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind CSS v4 - Use base styles */
+@use "tailwindcss";
 
-/* Custom CSS Variables for Theme */
-@layer base {
-  :root {
-    --radius: 0.5rem;
-  }
-
-  body {
-    @apply antialiased transition-colors duration-300;
-  }
-
-  /* Light Theme (default) */
-  body.light-theme {
-    @apply bg-gray-50 text-gray-900;
-  }
-
-  /* Dark Theme */
-  body.dark-theme {
-    @apply bg-gray-900 text-gray-50;
-  }
+/* IHF Brand Colors - Tailwind v4 Theme Configuration */
+@theme {
+  /* IHF Official Blue (from logo) */
+  --color-ihf-blue-50: #eff6ff;
+  --color-ihf-blue-100: #dbeafe;
+  --color-ihf-blue-200: #bfdbfe;
+  --color-ihf-blue-300: #93bbfd;
+  --color-ihf-blue-400: #6097fa;
+  --color-ihf-blue-500: #3b73f6;
+  --color-ihf-blue-600: #2557eb;
+  --color-ihf-blue-700: #1d44d8;
+  --color-ihf-blue-800: #1e38af;
+  --color-ihf-blue-900: #1e338a;
+  
+  /* IHF Official Gold (from logo) */
+  --color-ihf-gold-50: #fffbeb;
+  --color-ihf-gold-100: #fef3c7;
+  --color-ihf-gold-200: #fde68a;
+  --color-ihf-gold-300: #fcd34d;
+  --color-ihf-gold-400: #fbbf24;
+  --color-ihf-gold-500: #f59e0b;
+  --color-ihf-gold-600: #d97706;
+  --color-ihf-gold-700: #b45309;
+  --color-ihf-gold-800: #92400e;
+  --color-ihf-gold-900: #78350f;
+  
+  /* IHF Accent Red (handball context) */
+  --color-ihf-red-50: #fef2f2;
+  --color-ihf-red-100: #fee2e2;
+  --color-ihf-red-200: #fecaca;
+  --color-ihf-red-300: #fca5a5;
+  --color-ihf-red-400: #f87171;
+  --color-ihf-red-500: #ef4444;
+  --color-ihf-red-600: #dc2626;
+  --color-ihf-red-700: #b91c1c;
+  --color-ihf-red-800: #991b1b;
+  --color-ihf-red-900: #7f1d1d;
 }
 
-/* Custom Components */
+/* Custom Component Styles */
 @layer components {
   /* IHF Gradient Backgrounds */
   .ihf-gradient-primary {
-    @apply bg-gradient-to-r from-ihf-blue-600 to-ihf-blue-500;
+    background: linear-gradient(to right, var(--color-ihf-blue-600), var(--color-ihf-blue-500));
   }
 
   .ihf-gradient-secondary {
-    @apply bg-gradient-to-r from-ihf-gold-600 to-ihf-gold-500;
+    background: linear-gradient(to right, var(--color-ihf-gold-600), var(--color-ihf-gold-500));
   }
 
   .ihf-gradient-hero {
-    @apply bg-gradient-to-br from-ihf-blue-600 via-ihf-blue-500 to-ihf-gold-500;
+    background: linear-gradient(to bottom right, var(--color-ihf-blue-600), var(--color-ihf-blue-500), var(--color-ihf-gold-500));
   }
 
   /* Custom Button Styles */
@@ -63,14 +79,34 @@
   }
 
   .icon-badge-blue {
-    @apply icon-badge bg-gradient-to-br from-ihf-blue-500 to-ihf-blue-600;
+    background: linear-gradient(to bottom right, var(--color-ihf-blue-500), var(--color-ihf-blue-600));
+    @apply icon-badge;
   }
 
   .icon-badge-gold {
-    @apply icon-badge bg-gradient-to-br from-ihf-gold-500 to-ihf-gold-600;
+    background: linear-gradient(to bottom right, var(--color-ihf-gold-500), var(--color-ihf-gold-600));
+    @apply icon-badge;
   }
 
   .icon-badge-red {
-    @apply icon-badge bg-gradient-to-br from-ihf-red-500 to-ihf-red-600;
+    background: linear-gradient(to bottom right, var(--color-ihf-red-500), var(--color-ihf-red-600));
+    @apply icon-badge;
+  }
+}
+
+/* Base Styles */
+@layer base {
+  body {
+    @apply antialiased transition-colors duration-300;
+  }
+
+  /* Light Theme (default) */
+  body.light-theme {
+    @apply bg-gray-50 text-gray-900;
+  }
+
+  /* Dark Theme */
+  body.dark-theme {
+    @apply bg-gray-900 text-gray-50;
   }
 }
