@@ -1,46 +1,91 @@
-@use '@angular/material' as mat;
+@import "tailwindcss";
 
-@include mat.elevation-classes();
-@include mat.app-background();
+/* Theme variables */
+:root {
+  /* Light theme (default) */
+  --color-primary: 25 118 210;
+  --color-primary-hover: 21 101 192;
+  --color-secondary: 156 39 176;
+  --color-accent: 255 152 0;
+  --color-success: 76 175 80;
+  --color-warning: 255 193 7;
+  --color-error: 244 67 54;
+  --color-background: 255 255 255;
+  --color-surface: 250 250 250;
+  --color-text: 33 33 33;
+  --color-text-secondary: 117 117 117;
+  --color-border: 224 224 224;
+  --color-hover: 245 245 245;
 
-$light-theme: mat.define-theme(
-  (
-    color: (
-      theme-type: light,
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-  )
-);
+  color-scheme: light;
+}
 
-$dark-theme: mat.define-theme(
-  (
-    color: (
-      theme-type: dark,
-      primary: mat.$cyan-palette,
-      tertiary: mat.$orange-palette,
-    ),
-  )
-);
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: 33 150 243;
+    --color-primary-hover: 66 165 245;
+    --color-secondary: 186 104 200;
+    --color-accent: 255 167 38;
+    --color-success: 102 187 106;
+    --color-warning: 255 202 40;
+    --color-error: 239 83 80;
+    --color-background: 18 18 18;
+    --color-surface: 30 30 30;
+    --color-text: 255 255 255;
+    --color-text-secondary: 189 189 189;
+    --color-border: 66 66 66;
+    --color-hover: 45 45 45;
 
-html {
-  @include mat.all-component-themes($dark-theme);
-  @include mat.checkbox-color($dark-theme, $color-variant: tertiary);
-
-  @media (prefers-color-scheme: light) {
-    @include mat.all-component-colors($light-theme);
+    color-scheme: dark;
   }
+}
+
+:root[data-theme="light"] {
+  --color-primary: 25 118 210;
+  --color-primary-hover: 21 101 192;
+  --color-secondary: 156 39 176;
+  --color-accent: 255 152 0;
+  --color-success: 76 175 80;
+  --color-warning: 255 193 7;
+  --color-error: 244 67 54;
+  --color-background: 255 255 255;
+  --color-surface: 250 250 250;
+  --color-text: 33 33 33;
+  --color-text-secondary: 117 117 117;
+  --color-border: 224 224 224;
+  --color-hover: 245 245 245;
+
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --color-primary: 33 150 243;
+  --color-primary-hover: 66 165 245;
+  --color-secondary: 186 104 200;
+  --color-accent: 255 167 38;
+  --color-success: 102 187 106;
+  --color-warning: 255 202 40;
+  --color-error: 239 83 80;
+  --color-background: 18 18 18;
+  --color-surface: 30 30 30;
+  --color-text: 255 255 255;
+  --color-text-secondary: 189 189 189;
+  --color-border: 66 66 66;
+  --color-hover: 45 45 45;
+
+  color-scheme: dark;
 }
 
 html,
 body {
   height: 100%;
-}
-body {
   margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: rgb(var(--color-background));
+  color: rgb(var(--color-text));
 }
 
-.fw-500 {
-  font-weight: 500;
+* {
+  box-sizing: border-box;
 }

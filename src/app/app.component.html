@@ -1,72 +1,13 @@
-@let isHandset = isHandset$ | async;
-<mat-sidenav-container fullscreen>
-  <mat-sidenav
-    #drawer
-    fixedInViewport
-    [mode]="!isHandset ? 'side' : 'over'"
-    [opened]="!isHandset"
-    [autoFocus]="false">
-    <div class="d-flex flex-column h-100">
-      <div class="d-flex justify-content-center background">
-        <app-logo class="logo-image py-4" />
-      </div>
-      <mat-nav-list class="pt-3 px-2 navigation-container">
-        @for (item of rootRoutes; track $index) {
-          <a
-            mat-list-item
-            [routerLink]="item.path"
-            #link="routerLinkActive"
-            routerLinkActive
-            [activated]="link.isActive"
-            class="mb-1"
-            (click)="onNavigationLinkClicked(drawer, item.path)">
-            {{ 'navigation.' + item.path | translate }}
-          </a>
-        }
-      </mat-nav-list>
-      <div class="mt-auto">
-        <div class="px-3 pt-2 pb-5 background">
-          <mat-form-field class="w-100 mt-3">
-            <mat-label>{{ 'languages.label' | translate }}</mat-label>
-            <mat-select
-              [(value)]="currentLang"
-              (selectionChange)="onChangeLanguage($event.value)"
-              [hideSingleSelectionIndicator]="true">
-              <mat-select-trigger>
-                {{ 'languages.' + currentLang | translate }}
-              </mat-select-trigger>
-              <mat-option value="en">
-                {{ 'languages.en' | translate }}
-              </mat-option>
-              <mat-option value="nl">
-                {{ 'languages.nl' | translate }}
-              </mat-option>
-              <mat-option value="srb">
-                {{ 'languages.srb' | translate }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+<app-header />
 
-          <small class="fw-bold">&copy; Copyright 2025, Kristof Gilis</small>
-        </div>
-      </div>
+<div class="flex min-h-screen pt-16 pb-16 md:pb-0">
+  <!-- Desktop Sidebar Navigation -->
+  <app-bottom-nav />
+  
+  <!-- Main Content -->
+  <main class="flex-1 md:ml-64">
+    <div class="container mx-auto px-4 py-6">
+      <router-outlet />
     </div>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <mat-toolbar class="sticky-top">
-      @if (isHandset$ | async) {
-        <button type="button" class="me-2" mat-icon-button (click)="drawer.toggle()" onclick="blur()">
-          <mat-icon>menu</mat-icon>
-        </button>
-      }
-      <h1 class="fw-bolder">{{ 'main.title' | translate }}</h1>
-    </mat-toolbar>
-    <div class="container-fluid py-4">
-      <div class="row">
-        <div class="col">
-          <router-outlet />
-        </div>
-      </div>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+  </main>
+</div>

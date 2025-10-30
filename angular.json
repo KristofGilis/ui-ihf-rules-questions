@@ -53,7 +53,7 @@
                 "input": "public"
               }
             ],
-            "styles": ["bootstrap/dist/css/bootstrap.min.css", "src/styles.scss"],
+            "styles": ["src/styles.scss"],
             "scripts": [],
             "optimization": {
               "fonts": false

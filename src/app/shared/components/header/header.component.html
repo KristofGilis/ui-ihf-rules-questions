@@ -1,0 +1,34 @@
+<header class="bg-[rgb(var(--color-surface))] border-b border-[rgb(var(--color-border))] sticky top-0 z-50">
+  <div class="container mx-auto px-4">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo/Title -->
+      <div class="flex items-center">
+        <h1 class="text-xl font-bold text-[rgb(var(--color-primary))]">
+          {{ 'main.title' | translate }}
+        </h1>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-4">
+        <!-- Language Selector -->
+        <select
+          [(ngModel)]="currentLang"
+          (change)="onChangeLanguage($event)"
+          class="px-3 py-2 rounded-lg border border-[rgb(var(--color-border))] bg-[rgb(var(--color-background))] text-[rgb(var(--color-text))] text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(var(--color-primary))]">
+          <option value="en">{{ 'languages.en' | translate }}</option>
+          <option value="nl">{{ 'languages.nl' | translate }}</option>
+          <option value="srb">{{ 'languages.srb' | translate }}</option>
+        </select>
+
+        <!-- Theme Toggle -->
+        <button
+          type="button"
+          (click)="onToggleTheme()"
+          class="p-2 rounded-lg hover:bg-[rgb(var(--color-hover))] transition-colors focus:outline-none focus:ring-2 focus:ring-[rgb(var(--color-primary))]"
+          [attr.aria-label]="'Toggle theme'">
+          <fa-icon [icon]="themeIcon" class="text-xl text-[rgb(var(--color-text))]" />
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

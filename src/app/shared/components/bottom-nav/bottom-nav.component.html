@@ -1,0 +1,45 @@
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-[rgb(var(--color-surface))] border-t border-[rgb(var(--color-border))] z-50">
+  <div class="flex justify-around items-center h-16">
+    @for (item of navItems; track item.path) {
+      <a
+        [routerLink]="item.path"
+        routerLinkActive="text-[rgb(var(--color-primary))] font-semibold"
+        [routerLinkActiveOptions]="{ exact: item.path === '/home' }"
+        class="flex flex-col items-center justify-center flex-1 h-full text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-primary))] transition-colors">
+        <fa-icon [icon]="item.icon" class="text-2xl mb-1" />
+        <span class="text-xs">{{ item.label | translate }}</span>
+      </a>
+    }
+  </div>
+</nav>
+
+<!-- Desktop Sidebar -->
+<aside class="hidden md:block fixed left-0 top-16 bottom-0 w-64 bg-[rgb(var(--color-surface))] border-r border-[rgb(var(--color-border))] overflow-y-auto">
+  <div class="flex flex-col h-full">
+    <!-- Logo -->
+    <div class="p-6 border-b border-[rgb(var(--color-border))]">
+      <app-logo class="w-24 h-24 mx-auto" />
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-1 p-4">
+      @for (item of navItems; track item.path) {
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="bg-[rgb(var(--color-primary))] text-white"
+          [routerLinkActiveOptions]="{ exact: item.path === '/home' }"
+          class="flex items-center gap-3 px-4 py-3 mb-2 rounded-lg text-[rgb(var(--color-text))] hover:bg-[rgb(var(--color-hover))] transition-colors">
+          <fa-icon [icon]="item.icon" class="text-xl" />
+          <span>{{ item.label | translate }}</span>
+        </a>
+      }
+    </nav>
+
+    <!-- Footer -->
+    <div class="p-4 border-t border-[rgb(var(--color-border))]">
+      <p class="text-xs text-[rgb(var(--color-text-secondary))] text-center">
+        &copy; Copyright 2025, Kristof Gilis
+      </p>
+    </div>
+  </div>
+</aside>
