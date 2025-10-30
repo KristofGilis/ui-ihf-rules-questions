@@ -1,5 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { Question, Answer } from '../../../graphql/generated';
+import { Question } from '../../../graphql/generated';
 
 export interface QuizConfig {
   timedMode: boolean;
@@ -41,7 +41,7 @@ export interface QuestionResult {
 export class QuizStateService {
   private readonly _session = signal<QuizSession | null>(null);
   private readonly _timeRemaining = signal<number>(0);
-  private _timer: any = null;
+  private _timer: ReturnType<typeof setInterval> | null = null;
 
   readonly session = this._session.asReadonly();
   readonly timeRemaining = this._timeRemaining.asReadonly();
