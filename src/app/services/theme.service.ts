@@ -1,5 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
-import { DestroyRef, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 
 export type Theme = 'light' | 'dark' | 'system';
 
@@ -7,40 +6,43 @@ export type Theme = 'light' | 'dark' | 'system';
   providedIn: 'root',
 })
 export class ThemeService {
-  private readonly _platformId = inject(PLATFORM_ID);
   private readonly _destroyRef = inject(DestroyRef);
-  private readonly _isBrowser = isPlatformBrowser(this._platformId);
 
   private readonly _currentTheme = signal<Theme>('system');
   readonly currentTheme = this._currentTheme.asReadonly();
 
+  // Get theme colors from CSS variables (defined in styles.css)
+  private getThemeColors() {
+    const styles = getComputedStyle(document.documentElement);
+    return {
+      light: styles.getPropertyValue('--color-bg-light').trim(),
+      dark: styles.getPropertyValue('--color-bg-dark').trim(),
+    };
+  }
+
   constructor() {
-    if (this._isBrowser) {
-      this.loadTheme();
-      this.applyTheme(this.currentTheme());
+    this.loadTheme();
+    this.applyTheme(this.currentTheme());
 
-      // Listen for system preference changes
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      const listener = () => {
-        if (this.currentTheme() === 'system') {
-          this.applyTheme('system');
-        }
-      };
-      mediaQuery.addEventListener('change', listener);
+    // Listen for system preference changes
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const listener = () => {
+      if (this.currentTheme() === 'system') {
+        this.applyTheme('system');
+      }
+    };
+    mediaQuery.addEventListener('change', listener);
 
-      // Cleanup listener on service destruction
-      this._destroyRef.onDestroy(() => {
-        mediaQuery.removeEventListener('change', listener);
-      });
-    }
+    // Cleanup listener on service destruction
+    this._destroyRef.onDestroy(() => {
+      mediaQuery.removeEventListener('change', listener);
+    });
   }
 
   setTheme(theme: Theme): void {
     this._currentTheme.set(theme);
-    if (this._isBrowser) {
-      localStorage.setItem('theme', theme);
-      this.applyTheme(theme);
-    }
+    localStorage.setItem('theme', theme);
+    this.applyTheme(theme);
   }
 
   private loadTheme(): void {
@@ -51,17 +53,18 @@ export class ThemeService {
   }
 
   private applyTheme(theme: Theme): void {
-    if (!this._isBrowser) return;
-
     const root = document.documentElement;
+    const colors = this.getThemeColors();
 
     if (theme === 'system') {
       root.removeAttribute('data-theme');
       const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       if (isDark) {
         root.classList.add('dark');
+        root.style.backgroundColor = colors.dark;
       } else {
         root.classList.remove('dark');
+        root.style.backgroundColor = colors.light;
       }
       return;
     }
@@ -69,14 +72,14 @@ export class ThemeService {
     root.setAttribute('data-theme', theme);
     if (theme === 'dark') {
       root.classList.add('dark');
+      root.style.backgroundColor = colors.dark;
     } else {
       root.classList.remove('dark');
+      root.style.backgroundColor = colors.light;
     }
   }
 
   getEffectiveTheme(): 'light' | 'dark' {
-    if (!this._isBrowser) return 'light';
-
     const theme = this.currentTheme();
     if (theme === 'system') {
       return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
