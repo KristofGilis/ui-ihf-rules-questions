@@ -1,11 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Question, Score } from '../../../../../../graphql/generated';
 
 @Component({
   selector: 'app-score-overview',
-  imports: [MatCard, MatCardHeader, MatCardTitle, MatCardContent, TranslatePipe],
+  imports: [CommonModule, TranslatePipe, FontAwesomeModule],
   templateUrl: './score-overview.component.html',
   styleUrl: './score-overview.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -13,6 +15,9 @@ import { Question, Score } from '../../../../../../graphql/generated';
 export class ScoreOverviewComponent {
   readonly score = input.required<Score | undefined>();
   readonly questions = input.required<Question[]>();
+
+  faCheckCircle = faCheckCircle;
+  faTimesCircle = faTimesCircle;
 
   get isBadResult(): boolean {
     const score = this.score();

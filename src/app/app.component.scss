@@ -1,26 +1,63 @@
-@use 'sass:map';
-@use '@angular/material' as mat;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
-.mat-sidenav {
-  width: 15.625rem;
-  border-top-right-radius: unset;
-  border-bottom-right-radius: unset;
-  border-right-color: map.get($map: mat.$cyan-palette, $key: 30);
+.app-container {
+  @apply flex flex-col min-h-screen pb-16;
+}
 
-  @media (prefers-color-scheme: light) {
-    border-right-color: map.get($map: mat.$azure-palette, $key: 90);
+.header {
+  @apply bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10;
+}
+
+.header-content {
+  @apply px-4 py-3 flex items-center justify-between;
+}
+
+.header-left {
+  @apply flex items-center gap-3;
+}
+
+.logo {
+  @apply h-8 w-8;
+}
+
+.title {
+  @apply text-lg font-bold text-gray-900 dark:text-white m-0;
+}
+
+.header-right {
+  @apply flex items-center gap-2;
+}
+
+.language-select {
+  @apply px-2 py-1 text-sm border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white;
+}
+
+.theme-toggle {
+  @apply p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors;
+}
+
+.main-content {
+  @apply flex-1 overflow-y-auto;
+}
+
+.bottom-nav {
+  @apply fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex justify-around py-2;
+  
+  @screen md {
+    @apply hidden;
   }
 }
 
-.mat-toolbar,
-.background {
-  background-color: map.get($map: mat.$cyan-palette, $key: 30);
+.nav-item {
+  @apply flex flex-col items-center gap-1 px-3 py-2 text-gray-600 dark:text-gray-400 transition-colors no-underline;
 
-  @media (prefers-color-scheme: light) {
-    background-color: map.get($map: mat.$azure-palette, $key: 90);
+  &.active {
+    @apply text-blue-600 dark:text-blue-400;
   }
-}
 
-.navigation-container {
-  background-color: var(--mat-sidenav-content-background-color);
+  span {
+    @apply text-xs;
+  }
 }

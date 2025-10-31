@@ -1,0 +1,39 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+.question-card {
+  @apply bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700;
+}
+
+.question-header {
+  @apply mb-3;
+}
+
+.question-number {
+  @apply font-semibold text-gray-900 dark:text-white;
+}
+
+.question-text {
+  @apply font-medium text-gray-900 dark:text-white;
+}
+
+.answers {
+  @apply space-y-2 mt-3;
+}
+
+.answer-label {
+  @apply flex items-start gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors hover:border-blue-400 dark:hover:border-blue-600 cursor-pointer;
+}
+
+.answer-checkbox {
+  @apply mt-1;
+}
+
+.answer-text {
+  @apply flex-1 text-gray-900 dark:text-white;
+}
+
+.answer-number {
+  @apply font-semibold;
+}

@@ -1,4 +1,4 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { Question } from '../../../graphql/generated';
 
 export interface Answer {
@@ -67,6 +67,7 @@ export class QuizService {
     timeRemaining: 0,
     isTimerActive: false,
   });
+  results = signal<QuizResult | null>(null);
 
   currentQuestion = computed(() => {
     const cfg = this.config();
@@ -208,7 +209,9 @@ export class QuizService {
     this.stopTimer();
     this.state.update((s) => ({ ...s, isComplete: true, isTimerActive: false }));
 
-    return this.calculateResults();
+    const result = this.calculateResults();
+    this.results.set(result);
+    return result;
   }
 
   calculateResults(): QuizResult {
@@ -268,6 +271,7 @@ export class QuizService {
       timeRemaining: 0,
       isTimerActive: false,
     });
+    this.results.set(null);
   }
 
   private startTimer(): void {

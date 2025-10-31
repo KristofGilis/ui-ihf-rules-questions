@@ -1,40 +1,31 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col">
-      <mat-card appearance="outlined">
-        <mat-card-header>
-          <mat-card-title>
-            <h4 class="fw-bold">{{ 'score_overview.title' | translate }}</h4>
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="container-fluid p-0">
-            <div class="row gy-3">
-              <div class="col-12">
-                <div class="d-flex">
-                  <div>
-                    {{ 'score_overview.score' | translate }}
-                    <span class="fw-bold"> {{ score()?.score }} / {{ score()?.total }} </span>
-                  </div>
-                  <div class="position-absolute top-0 end-0 fw-bold fs-3 pt-4 pe-4" [class.red]="isBadResult">
-                    {{ score()?.percentage }}
-                  </div>
-                </div>
-              </div>
-              <div class="col">
-                @if (score()?.wrongQuestionsIds?.length ?? 0 > 0) {
-                  <span [innerHTML]="'score_overview.wrong_questionNumbers' | translate"> </span>
-                }
-                @for (wrongQuestionId of score()?.wrongQuestionsIds; track wrongQuestionId) {
-                  <div class="my-2">
-                    {{ getQuestionNumber(wrongQuestionId) }}
-                  </div>
-                }
-              </div>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
+<div class="score-card">
+  <div class="score-header">
+    <h4 class="score-title">{{ 'score_overview.title' | translate }}</h4>
+  </div>
+  
+  <div class="score-content">
+    <div class="score-main">
+      <div class="score-text">
+        {{ 'score_overview.score' | translate }}
+        <span class="score-numbers">{{ score()?.score }} / {{ score()?.total }}</span>
+      </div>
+      <div class="score-percentage" [class.bad-result]="isBadResult">
+        {{ score()?.percentage }}
+      </div>
     </div>
+    
+    @if (score()?.wrongQuestionsIds?.length ?? 0 > 0) {
+      <div class="wrong-questions">
+        <span class="wrong-questions-label" [innerHTML]="'score_overview.wrong_questionNumbers' | translate"></span>
+        <div class="wrong-questions-list">
+          @for (wrongQuestionId of score()?.wrongQuestionsIds; track wrongQuestionId) {
+            <div class="wrong-question-item">
+              <fa-icon [icon]="faTimesCircle" class="text-red-600 dark:text-red-400"></fa-icon>
+              <span>{{ getQuestionNumber(wrongQuestionId) }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    }
   </div>
 </div>

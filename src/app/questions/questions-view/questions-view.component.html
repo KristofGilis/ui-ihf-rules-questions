@@ -7,34 +7,28 @@
   </div>
 }
 @if (loading()) {
-  <div class="d-flex justify-content-center align-items-center">
-    <mat-progress-spinner mode="indeterminate" diameter="50" />
+  <div class="loading">
+    <fa-icon [icon]="faSpinner" [spin]="true" size="2x"></fa-icon>
   </div>
 }
 @if (!hasMoreQuestions() && !loading()) {
-  <div class="d-flex w-100">
-    <button
-      type="button"
-      class="ms-auto ms-md-0"
-      mat-flat-button
-      [disabled]="scoreLoading()"
-      (click)="onCalculateScore()">
-      <div class="d-flex align-items-center">
-        {{ 'questions.calculate_score' | translate }}
-        @if (scoreLoading()) {
-          <mat-progress-spinner class="ms-2" diameter="20" color="primary" mode="indeterminate" />
-        }
-      </div>
+  <div class="actions">
+    <button type="button" class="btn btn-primary" [disabled]="scoreLoading()" (click)="onCalculateScore()">
+      {{ 'questions.calculate_score' | translate }}
+      @if (scoreLoading()) {
+        <fa-icon [icon]="faSpinner" [spin]="true" class="ml-2"></fa-icon>
+      }
     </button>
     @if (isRandom()) {
-      <button type="button" class="ms-2" mat-button [disabled]="scoreLoading()" (click)="newRandomQuestions.emit()">
+      <button type="button" class="btn btn-secondary" [disabled]="scoreLoading()" (click)="newRandomQuestions.emit()">
+        <fa-icon [icon]="faRedo"></fa-icon>
         {{ 'questions_random_new' | translate: { count: randomCount() } }}
       </button>
     }
   </div>
 }
 @if (score()) {
-  <div class="mt-4">
+  <div class="score-section">
     <app-score-overview [score]="score()" [questions]="questions()" />
   </div>
 }

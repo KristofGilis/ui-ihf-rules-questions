@@ -1,0 +1,71 @@
+<div class="quiz-container" *ngIf="!loading">
+  <div class="quiz-header">
+    <!-- Progress -->
+    <div class="progress-section">
+      <div class="progress-text">
+        {{
+          'quiz.progress' | translate: { current: quizService.progress().current, total: quizService.progress().total }
+        }}
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="quizService.progress().percentage"></div>
+      </div>
+    </div>
+
+    <!-- Timer -->
+    <div class="timer" *ngIf="quizService.state().isTimerActive">
+      <fa-icon [icon]="faClock" />
+      <span>{{ 'quiz.time_remaining' | translate }}: {{ formatTime(quizService.state().timeRemaining) }}</span>
+    </div>
+  </div>
+
+  <div class="quiz-content" *ngIf="quizService.currentQuestion() as question">
+    <!-- Question -->
+    <div class="question-card">
+      <h2 class="question-number">
+        {{
+          'quiz.progress' | translate: { current: quizService.progress().current, total: quizService.progress().total }
+        }}
+      </h2>
+      <p class="question-text">{{ question.phrase }}</p>
+      <p class="question-hint">{{ 'quiz.select_answers' | translate }}</p>
+    </div>
+
+    <!-- Answers -->
+    <div class="answers-list">
+      <div *ngFor="let answer of question.shuffledAnswers" class="answer-item">
+        <label class="answer-label">
+          <input
+            type="checkbox"
+            [checked]="selectedAnswers.has(answer.id)"
+            (change)="toggleAnswer(answer.id)"
+            class="answer-checkbox" />
+          <span class="answer-text">{{ answer.phrase }}</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="quiz-footer">
+    <button (click)="goToPrevious()" [disabled]="!quizService.canGoPrevious()" class="btn btn-secondary">
+      <fa-icon [icon]="faArrowLeft" />
+      {{ 'quiz.previous' | translate }}
+    </button>
+
+    <button *ngIf="quizService.canGoNext()" (click)="goToNext()" class="btn btn-primary">
+      {{ 'quiz.next' | translate }}
+      <fa-icon [icon]="faArrowRight" />
+    </button>
+
+    <button *ngIf="!quizService.canGoNext()" (click)="completeQuiz()" class="btn btn-success">
+      <fa-icon [icon]="faCheck" />
+      {{ 'quiz.complete' | translate }}
+    </button>
+  </div>
+</div>
+
+<div class="loading" *ngIf="loading">
+  <div class="spinner"></div>
+  <p>{{ 'Loading...' }}</p>
+</div>

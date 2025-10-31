@@ -1,0 +1,84 @@
+<div class="results-container">
+  @if (quizService.results(); as results) {
+    <div class="results-header">
+      <h1 class="results-title">{{ 'quiz_results.title' | translate }}</h1>
+
+      <div class="score-card">
+        <div class="score-main" [ngClass]="getScoreColor()">
+          <span class="score-number">{{ results.correctCount }}/{{ results.totalQuestions }}</span>
+          <span class="score-percentage">{{ results.percentage.toFixed(0) }}%</span>
+        </div>
+
+        <div class="score-details">
+          <div class="score-item correct">
+            <fa-icon [icon]="faCheckCircle"></fa-icon>
+            <span>{{ results.correctCount }} {{ 'quiz_results.correct' | translate }}</span>
+          </div>
+          <div class="score-item incorrect">
+            <fa-icon [icon]="faTimesCircle"></fa-icon>
+            <span>{{ results.wrongCount }} {{ 'quiz_results.wrong' | translate }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="results-actions">
+      <button class="btn btn-primary" (click)="retakeQuiz()" [routerLink]="['/']">
+        <fa-icon [icon]="faRedo"></fa-icon>
+        {{ 'quiz_results.retake' | translate }}
+      </button>
+      <button class="btn btn-secondary" [routerLink]="['/']">
+        <fa-icon [icon]="faHome"></fa-icon>
+        {{ 'quiz_results.home' | translate }}
+      </button>
+    </div>
+
+    <div class="results-review">
+      <h2 class="review-title">{{ 'quiz_results.review' | translate }}</h2>
+
+      @for (answer of results.answers; track $index) {
+        <div
+          class="question-review"
+          [ngClass]="{ 'correct-question': answer.isCorrect, 'incorrect-question': !answer.isCorrect }">
+          <div class="question-header">
+            <span class="question-number">{{ 'quiz_results.question' | translate }} {{ answer.questionNumber }}</span>
+            @if (answer.isCorrect) {
+              <fa-icon [icon]="faCheckCircle" class="status-icon correct"></fa-icon>
+            } @else {
+              <fa-icon [icon]="faTimesCircle" class="status-icon incorrect"></fa-icon>
+            }
+          </div>
+
+          <p class="question-text">{{ answer.question }}</p>
+
+          <div class="answers-review">
+            @for (ans of answer.allAnswers; track ans.id) {
+              @let wasSelected = answer.selectedAnswerIds.includes(ans.id);
+              @let isCorrect = ans.isCorrect;
+              <div
+                class="answer-review"
+                [ngClass]="{
+                  'answer-correct': isCorrect && wasSelected,
+                  'answer-incorrect': !isCorrect && wasSelected,
+                  'answer-missed': isCorrect && !wasSelected,
+                }">
+                <div class="answer-content">
+                  @if (isCorrect) {
+                    <fa-icon [icon]="faCheckCircle" class="answer-icon"></fa-icon>
+                  } @else {
+                    <fa-icon [icon]="faTimesCircle" class="answer-icon"></fa-icon>
+                  }
+                  <span class="answer-text">{{ ans.phrase }}</span>
+                </div>
+
+                @if (wasSelected) {
+                  <span class="your-answer">{{ 'quiz_results.your_answer' | translate }}</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,108 +1,61 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col">
-      <h4>{{ 'home.title' | translate }}</h4>
-      @if (version$ | async; as version) {
-        <div class="mat-body" [innerHTML]="'home.subtitle' | translate: { version }"></div>
-      }
-      <div class="alert alert-warning mt-3" role="alert">
-        {{ 'home.alert' | translate }}
-        <br />
-        <a
-          class="mat-mdc-button px-0"
-          href="https://github.com/KristofGilis/ihf_rules_questions"
-          target="_blank"
-          rel="noopener"
-          >{{ 'home.collaborate' | translate }}</a
-        >
+<div class="container">
+  <h2 class="page-title">{{ 'home.title' | translate }}</h2>
+  
+  @if (version$ | async; as version) {
+    <div class="subtitle" [innerHTML]="'home.subtitle' | translate: { version }"></div>
+  }
+
+  <div class="alert">
+    <p>{{ 'home.alert' | translate }}</p>
+    <a href="https://github.com/KristofGilis/ihf_rules_questions" target="_blank" rel="noopener" class="alert-link">
+      {{ 'home.collaborate' | translate }}
+    </a>
+  </div>
+
+  <div class="cards-grid">
+    <!-- Quiz Card -->
+    <div class="card">
+      <h3 class="card-title">{{ 'home.quiz_card.title' | translate }}</h3>
+      <p class="card-content">{{ 'home.quiz_card.content' | translate }}</p>
+      
+      <div class="form-group">
+        <label class="form-label">{{ 'home.quiz_card.count' | translate }}</label>
+        <select [(ngModel)]="questionCount" class="form-select">
+          <option [value]="10">10</option>
+          <option [value]="20">20</option>
+          <option [value]="30">30</option>
+          <option [value]="50">50</option>
+        </select>
       </div>
 
-      <div class="container-fluid p-0">
-        <div class="row g-4">
-          <div class="col-12">
-            <mat-card>
-              <mat-card-header>
-                <mat-card-title>
-                  {{ 'home.rules_card.title' | translate }}
-                </mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                {{ 'home.rules_card.content' | translate }}
-              </mat-card-content>
-              <mat-card-actions [align]="'end'">
-                <button type="button" mat-button routerLink="/rules">
-                  {{ 'home.rules_card.button' | translate }}
-                </button>
-              </mat-card-actions>
-            </mat-card>
-          </div>
-          <div class="col-12 col-md-6">
-            <mat-card class="h-100">
-              <mat-card-header>
-                <mat-card-title>
-                  {{ 'home.all_questions_card.title' | translate }}
-                </mat-card-title>
-              </mat-card-header>
-              <mat-card-content class="h-100">
-                {{ 'home.all_questions_card.content' | translate }}
-              </mat-card-content>
-              <mat-card-actions [align]="'end'">
-                <button
-                  type="button"
-                  mat-button
-                  routerLink="/questions"
-                  (click)="
-                    randomStateService.random.set({
-                      isRandom: false,
-                      count: 0,
-                    })
-                  ">
-                  {{ 'home.all_questions_card.button' | translate }}
-                </button>
-              </mat-card-actions>
-            </mat-card>
-          </div>
-          <div class="col-12 col-md-6">
-            <mat-card class="h-100">
-              <mat-card-header>
-                <mat-card-title>
-                  {{ 'home.random_questions_card.title' | translate }}
-                </mat-card-title>
-              </mat-card-header>
-              <mat-card-content class="h-100">
-                <div class="d-block">
-                  <div class="d-block">
-                    {{ 'home.random_questions_card.content' | translate }}
-                  </div>
-                  <mat-form-field class="mt-4">
-                    <mat-label>{{ 'home.random_questions_card.count' | translate }}</mat-label>
-                    <mat-select [(ngModel)]="questionCount">
-                      <mat-option [value]="10">10</mat-option>
-                      <mat-option [value]="20">20</mat-option>
-                      <mat-option [value]="30">30</mat-option>
-                      <mat-option [value]="50">50</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </mat-card-content>
-              <mat-card-actions [align]="'end'">
-                <button
-                  type="button"
-                  mat-button
-                  routerLink="/questions"
-                  (click)="
-                    randomStateService.random.set({
-                      isRandom: true,
-                      count: questionCount,
-                    })
-                  ">
-                  {{ 'home.random_questions_card.button' | translate: { count: questionCount } }}
-                </button>
-              </mat-card-actions>
-            </mat-card>
-          </div>
-        </div>
+      <div class="checkbox-group">
+        <input type="checkbox" id="timedMode" [(ngModel)]="timedMode" class="form-checkbox" />
+        <label for="timedMode" class="checkbox-label">{{ 'home.quiz_card.timed_mode' | translate }}</label>
       </div>
+
+      <button (click)="startQuiz()" class="btn btn-primary">
+        {{ 'home.quiz_card.button' | translate }}
+      </button>
+    </div>
+
+    <!-- All Questions Card -->
+    <div class="card">
+      <h3 class="card-title">{{ 'home.all_questions_card.title' | translate }}</h3>
+      <p class="card-content">{{ 'home.all_questions_card.content' | translate }}</p>
+      
+      <button routerLink="/questions" class="btn btn-secondary">
+        {{ 'home.all_questions_card.button' | translate }}
+      </button>
+    </div>
+
+    <!-- Rules Card (full width) -->
+    <div class="card card-full">
+      <h3 class="card-title">{{ 'home.rules_card.title' | translate }}</h3>
+      <p class="card-content">{{ 'home.rules_card.content' | translate }}</p>
+      
+      <button routerLink="/rules" class="btn btn-secondary">
+        {{ 'home.rules_card.button' | translate }}
+      </button>
     </div>
   </div>
 </div>
