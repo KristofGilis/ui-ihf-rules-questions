@@ -1,18 +1,18 @@
-<div class="app-container">
+<div class="flex flex-col min-h-screen pb-16">
   <!-- Header -->
-  <header class="header">
-    <div class="header-content">
-      <div class="header-left">
-        <app-logo class="logo" />
-        <h1 class="title">{{ 'main.title' | translate }}</h1>
+  <header class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10">
+    <div class="px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <app-logo class="h-8 w-8" />
+        <h1 class="text-lg font-bold text-gray-900 dark:text-white m-0">{{ 'main.title' | translate }}</h1>
       </div>
       
-      <div class="header-right">
+      <div class="flex items-center gap-2">
         <!-- Language selector -->
         <select
           [(ngModel)]="currentLang"
           (change)="onChangeLanguage(currentLang)"
-          class="language-select"
+          class="px-2 py-1 text-sm border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
           [attr.aria-label]="'languages.label' | translate">
           <option value="en">{{ 'languages.en' | translate }}</option>
           <option value="nl">{{ 'languages.nl' | translate }}</option>
@@ -22,7 +22,7 @@
         <!-- Theme toggle -->
         <button
           (click)="themeService.toggleTheme()"
-          class="theme-toggle"
+          class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           type="button"
           [attr.aria-label]="'theme.toggle' | translate"
           [attr.title]="'theme.toggle' | translate">
@@ -33,31 +33,31 @@
   </header>
 
   <!-- Main content -->
-  <main class="main-content">
+  <main class="flex-1 overflow-y-auto">
     <router-outlet />
   </main>
 
   <!-- Bottom navigation (mobile) -->
-  <nav class="bottom-nav">
-    <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
-       class="nav-item">
+  <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex justify-around py-2 md:hidden">
+    <a routerLink="/home" routerLinkActive="text-blue-600 dark:text-blue-400" [routerLinkActiveOptions]="{exact: true}"
+       class="flex flex-col items-center gap-1 px-3 py-2 text-gray-600 dark:text-gray-400 transition-colors no-underline">
       <fa-icon [icon]="faHome" />
-      <span>{{ 'navigation.home' | translate }}</span>
+      <span class="text-xs">{{ 'navigation.home' | translate }}</span>
     </a>
-    <a routerLink="/quiz" routerLinkActive="active"
-       class="nav-item">
+    <a routerLink="/quiz" routerLinkActive="text-blue-600 dark:text-blue-400"
+       class="flex flex-col items-center gap-1 px-3 py-2 text-gray-600 dark:text-gray-400 transition-colors no-underline">
       <fa-icon [icon]="faTrophy" />
-      <span>{{ 'navigation.quiz' | translate }}</span>
+      <span class="text-xs">{{ 'navigation.quiz' | translate }}</span>
     </a>
-    <a routerLink="/questions" routerLinkActive="active"
-       class="nav-item">
+    <a routerLink="/questions" routerLinkActive="text-blue-600 dark:text-blue-400"
+       class="flex flex-col items-center gap-1 px-3 py-2 text-gray-600 dark:text-gray-400 transition-colors no-underline">
       <fa-icon [icon]="faQuestionCircle" />
-      <span>{{ 'navigation.questions' | translate }}</span>
+      <span class="text-xs">{{ 'navigation.questions' | translate }}</span>
     </a>
-    <a routerLink="/rules" routerLinkActive="active"
-       class="nav-item">
+    <a routerLink="/rules" routerLinkActive="text-blue-600 dark:text-blue-400"
+       class="flex flex-col items-center gap-1 px-3 py-2 text-gray-600 dark:text-gray-400 transition-colors no-underline">
       <fa-icon [icon]="faBook" />
-      <span>{{ 'navigation.rules' | translate }}</span>
+      <span class="text-xs">{{ 'navigation.rules' | translate }}</span>
     </a>
   </nav>
 </div>
