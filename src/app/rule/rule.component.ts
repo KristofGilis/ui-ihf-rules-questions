@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -37,6 +37,21 @@ export class RuleComponent {
 
   get hasMoreQuestions(): boolean {
     return this._ruleService.hasNextPage;
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  onScroll(): void {
+    if (this.loading()) {
+      return;
+    }
+
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const documentHeight = document.documentElement.scrollHeight;
+    const threshold = 200; // pixels from bottom
+
+    if (scrollPosition >= documentHeight - threshold && this.hasMoreQuestions) {
+      this._ruleService.fetchMoreQuestions();
+    }
   }
 
   constructor() {

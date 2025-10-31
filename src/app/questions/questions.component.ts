@@ -1,9 +1,9 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, HostListener, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
-import { Observable, finalize, map, tap } from 'rxjs';
+import { finalize, map, Observable, tap } from 'rxjs';
 import { Question, Score } from '../../../graphql/generated';
 import { QuestionsViewComponent } from './questions-view/questions-view.component';
 import { QuestionsService } from './services/questions.service';
@@ -39,6 +39,21 @@ export class QuestionsComponent {
 
   get hasMoreQuestions(): boolean {
     return this._questionsService.hasNextPage;
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  onScroll(): void {
+    if (this.loading()) {
+      return;
+    }
+
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const documentHeight = document.documentElement.scrollHeight;
+    const threshold = 200; // pixels from bottom
+
+    if (scrollPosition >= documentHeight - threshold && this.hasMoreQuestions) {
+      this._questionsService.fetchMore();
+    }
   }
 
   constructor() {
