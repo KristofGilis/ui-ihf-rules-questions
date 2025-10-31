@@ -1,7 +1,7 @@
-<div class="flex flex-col min-h-screen pb-16">
+<div class="flex flex-col min-h-screen pb-16 bg-gray-50 dark:bg-gray-900">
   <!-- Header -->
-  <header class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10">
-    <div class="px-4 py-3 flex items-center justify-between">
+  <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10 shadow-sm">
+    <div class="px-4 py-3 flex items-center justify-between max-w-7xl mx-auto">
       <div class="flex items-center gap-3">
         <app-logo class="h-8 w-8" />
         <h1 class="text-lg font-bold text-gray-900 dark:text-white m-0">{{ 'main.title' | translate }}</h1>
@@ -38,9 +38,9 @@
   </main>
 
   <!-- Bottom navigation (mobile) -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex justify-around py-2 md:hidden">
-    <a routerLink="/home" routerLinkActive="text-blue-600 dark:text-blue-400" [routerLinkActiveOptions]="{exact: true}"
-       class="flex flex-col items-center gap-1 px-3 py-2 text-gray-600 dark:text-gray-400 transition-colors no-underline">
+  <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex justify-around py-2 md:hidden shadow-lg">
+    <a routerLink="/home" routerLinkActive="text-blue-600 dark:text-blue-400 font-semibold" [routerLinkActiveOptions]="{exact: true}"
+       class="flex flex-col items-center gap-1 px-3 py-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors no-underline">
       <fa-icon [icon]="faHome" />
       <span class="text-xs">{{ 'navigation.home' | translate }}</span>
     </a>
@@ -49,13 +49,13 @@
       <fa-icon [icon]="faTrophy" />
       <span class="text-xs">{{ 'navigation.quiz' | translate }}</span>
     </a>
-    <a routerLink="/questions" routerLinkActive="text-blue-600 dark:text-blue-400"
-       class="flex flex-col items-center gap-1 px-3 py-2 text-gray-600 dark:text-gray-400 transition-colors no-underline">
+    <a routerLink="/questions" routerLinkActive="text-blue-600 dark:text-blue-400 font-semibold"
+       class="flex flex-col items-center gap-1 px-3 py-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors no-underline">
       <fa-icon [icon]="faQuestionCircle" />
       <span class="text-xs">{{ 'navigation.questions' | translate }}</span>
     </a>
-    <a routerLink="/rules" routerLinkActive="text-blue-600 dark:text-blue-400"
-       class="flex flex-col items-center gap-1 px-3 py-2 text-gray-600 dark:text-gray-400 transition-colors no-underline">
+    <a routerLink="/rules" routerLinkActive="text-blue-600 dark:text-blue-400 font-semibold"
+       class="flex flex-col items-center gap-1 px-3 py-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors no-underline">
       <fa-icon [icon]="faBook" />
       <span class="text-xs">{{ 'navigation.rules' | translate }}</span>
     </a>

@@ -47,8 +47,25 @@ html, body {
 
 body {
   margin: 0;
-  background-color: light-dark(var(--color-background-light), var(--color-background-dark));
-  color: light-dark(var(--color-text-light), var(--color-text-dark));
+  background-color: #f9fafb; /* gray-50 */
+  color: #111827; /* gray-900 */
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #111827; /* gray-900 */
+    color: #f9fafb; /* gray-50 */
+  }
+}
+
+[data-theme="dark"] body {
+  background-color: #111827; /* gray-900 */
+  color: #f9fafb; /* gray-50 */
+}
+
+[data-theme="light"] body {
+  background-color: #f9fafb; /* gray-50 */
+  color: #111827; /* gray-900 */
 }
 
 /* Theme styles - system preference by default */
@@ -58,18 +75,10 @@ body {
 
 [data-theme="light"] {
   color-scheme: light;
-  --color-background: var(--color-background-light);
-  --color-surface: var(--color-surface-light);
-  --color-text: var(--color-text-light);
-  --color-text-secondary: var(--color-text-secondary-light);
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --color-background: var(--color-background-dark);
-  --color-surface: var(--color-surface-dark);
-  --color-text: var(--color-text-dark);
-  --color-text-secondary: var(--color-text-secondary-dark);
 }
 
 /* Utility classes */
@@ -116,14 +125,32 @@ button {
 }
 
 ::-webkit-scrollbar-track {
-  background: light-dark(var(--color-surface-light), var(--color-surface-dark));
+  background: #f9fafb;
+}
+
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar-track {
+    background: #1f2937;
+  }
 }
 
 ::-webkit-scrollbar-thumb {
-  background: light-dark(oklch(0.7 0 0), oklch(0.4 0 0));
+  background: #d1d5db;
   border-radius: 4px;
 }
 
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar-thumb {
+    background: #4b5563;
+  }
+}
+
 ::-webkit-scrollbar-thumb:hover {
-  background: light-dark(oklch(0.6 0 0), oklch(0.5 0 0));
+  background: #9ca3af;
+}
+
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+  }
 }
