@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Injectable, PLATFORM_ID, inject, signal } from '@angular/core';
+import { DestroyRef, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 
 export type Theme = 'light' | 'dark' | 'system';
 
@@ -8,9 +8,11 @@ export type Theme = 'light' | 'dark' | 'system';
 })
 export class ThemeService {
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
-  currentTheme = signal<Theme>('system');
+  private readonly _currentTheme = signal<Theme>('system');
+  readonly currentTheme = this._currentTheme.asReadonly();
 
   constructor() {
     if (this.isBrowser) {
@@ -18,33 +20,33 @@ export class ThemeService {
       this.applyTheme(this.currentTheme());
 
       // Listen for system preference changes
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const listener = () => {
         if (this.currentTheme() === 'system') {
           this.applyTheme('system');
         }
+      };
+      mediaQuery.addEventListener('change', listener);
+
+      // Cleanup listener on service destruction
+      this.destroyRef.onDestroy(() => {
+        mediaQuery.removeEventListener('change', listener);
       });
     }
   }
 
   setTheme(theme: Theme): void {
-    this.currentTheme.set(theme);
+    this._currentTheme.set(theme);
     if (this.isBrowser) {
       localStorage.setItem('theme', theme);
       this.applyTheme(theme);
     }
   }
 
-  toggleTheme(): void {
-    const themes: Theme[] = ['light', 'dark', 'system'];
-    const currentIndex = themes.indexOf(this.currentTheme());
-    const nextTheme = themes[(currentIndex + 1) % themes.length];
-    this.setTheme(nextTheme);
-  }
-
   private loadTheme(): void {
     const savedTheme = localStorage.getItem('theme') as Theme;
     if (savedTheme && ['light', 'dark', 'system'].includes(savedTheme)) {
-      this.currentTheme.set(savedTheme);
+      this._currentTheme.set(savedTheme);
     }
   }
 
