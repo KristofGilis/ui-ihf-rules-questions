@@ -1,15 +1,17 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { Router, RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
-import { map, shareReplay } from 'rxjs';
+import { finalize, map, shareReplay, tap } from 'rxjs';
 import { GetVersionGQL } from '../../../graphql/generated';
+import { LogoComponent } from '../logo/logo.component';
 
 @Component({
   selector: 'app-home',
-  imports: [FormsModule],
+  imports: [AsyncPipe, FormsModule, RouterLink, TranslatePipe, LogoComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,13 +23,16 @@ export class HomeComponent {
 
   questionCount = 10;
   timedMode = false;
+  loadingVersion = signal(false);
 
   private readonly _query = this._versionGQL.watch();
 
   version$ = this._query.valueChanges.pipe(
+    tap((x) => this.loadingVersion.set(x.loading)),
     onlyCompleteData(),
     map((x) => x.data.version),
-    shareReplay(1)
+    shareReplay(1),
+    finalize(() => this.loadingVersion.set(false))
   );
 
   constructor() {

@@ -74,6 +74,7 @@ export class AppComponent {
     localStorage?.setItem('language', lang);
     this._translateService.use(lang);
     this.currentLang.set(lang);
+    document.documentElement.lang = lang;
   }
 
   toggleLanguageMenu(): void {
@@ -84,7 +85,7 @@ export class AppComponent {
     }
   }
 
-  async showLanguageActionSheet(): Promise<void> {
+  private async showLanguageActionSheet(): Promise<void> {
     const result = await ActionSheet.showActions({
       title: this._translateService.instant('languages.label'),
       options: [
@@ -127,7 +128,7 @@ export class AppComponent {
     }
   }
 
-  async showThemeActionSheet(): Promise<void> {
+  private async showThemeActionSheet(): Promise<void> {
     const result = await ActionSheet.showActions({
       title: this._translateService.instant('theme.toggle'),
       options: [

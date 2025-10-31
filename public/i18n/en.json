@@ -1,10 +1,16 @@
 {
   "home": {
     "alert": "I decided to not automatically add the other languages, because I do not have the time. But you can help. ;-) Special thanks for all collaborators.",
+    "hero_description": "Test your knowledge of IHF handball rules with interactive quizzes",
+    "loading": "Loading...",
+    "version": "Version {{version}}",
+    "timed_mode_description": "Race against the clock",
+    "github_button": "View on GitHub",
     "quiz_card": {
       "button": "Start Quiz",
       "content": "Test your knowledge with a quiz. Choose the number of questions and optionally enable timed mode.",
       "count": "# Questions",
+      "questions": "questions",
       "timed_mode": "Timed Mode (90s per question)",
       "title": "Take a Quiz"
     },

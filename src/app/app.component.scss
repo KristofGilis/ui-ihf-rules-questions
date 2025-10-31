@@ -1,1 +1,14 @@
-/* Styling moved to inline Tailwind classes in HTML */
+footer a.active-nav {
+  color: #06b6d4;
+}
+
+.language-dropdown button.bg-cyan-500,
+.theme-dropdown button.bg-cyan-500 {
+  color: white;
+  background-color: #06b6d4;
+}
+
+.language-dropdown button.bg-cyan-500:hover,
+.theme-dropdown button.bg-cyan-500:hover {
+  background-color: #0891b2;
+}

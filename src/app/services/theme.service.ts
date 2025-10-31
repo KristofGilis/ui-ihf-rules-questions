@@ -57,10 +57,21 @@ export class ThemeService {
 
     if (theme === 'system') {
       root.removeAttribute('data-theme');
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (isDark) {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
       return;
     }
 
     root.setAttribute('data-theme', theme);
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
   }
 
   getEffectiveTheme(): 'light' | 'dark' {

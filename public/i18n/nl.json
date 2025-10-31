@@ -1,10 +1,16 @@
 {
   "home": {
-    "alert": "Ik heb besloten om de andere talen niet automatisch toe te voegen, omdat ik daar de tijd niet voor heb. Maar je kan helpen. ;-) Speciale dank aan alle medewerkers.",
+    "alert": "Ik heb besloten om de andere talen niet automatisch toe te voegen, omdat ik daar de tijd niet voor heb. Maar jij kunt helpen. ;-) Speciale dank aan alle medewerkers.",
+    "hero_description": "Test je kennis van de IHF handbalregels met interactieve quizzen",
+    "loading": "Laden...",
+    "version": "Versie {{version}}",
+    "timed_mode_description": "Race tegen de klok",
+    "github_button": "Bekijk op GitHub",
     "quiz_card": {
       "button": "Start Quiz",
       "content": "Test je kennis met een quiz. Kies het aantal vragen en schakel optioneel de tijdmodus in.",
       "count": "# Vragen",
+      "questions": "vragen",
       "timed_mode": "Tijdmodus (90s per vraag)",
       "title": "Neem een Quiz"
     },

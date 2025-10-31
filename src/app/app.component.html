@@ -1,10 +1,10 @@
 <!-- Header -->
-<header class="fixed top-0 left-0 right-0 z-50 bg-slate-900 border-b border-slate-800">
+<header class="fixed top-0 left-0 right-0 z-50 bg-slate-100 dark:bg-slate-900 border-b border-slate-300 dark:border-slate-800">
   <div class="h-16 flex items-center justify-between px-4">
     <!-- Logo -->
     <div class="flex items-center gap-3">
       <app-logo class="w-10 h-10" />
-      <span class="font-bold text-lg text-white">{{ 'main.title' | translate }}</span>
+      <span class="font-bold text-lg text-slate-900 dark:text-white">{{ 'main.title' | translate }}</span>
     </div>
 
     <!-- Actions -->
@@ -12,9 +12,10 @@
       <!-- Language Dropdown -->
       <div class="relative language-dropdown">
         <button
+          type="button"
           (click)="toggleLanguageMenu()"
           [attr.title]="'Select language'"
-          class="p-2 md:px-3 md:py-2 bg-slate-800 text-white text-sm font-medium rounded-lg border border-slate-700 hover:bg-slate-700 transition-colors flex items-center gap-2">
+          class="p-2 md:px-3 md:py-2 bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
           </svg>
@@ -22,26 +23,26 @@
         </button>
         
         @if (showLanguageMenu()) {
-          <div class="absolute right-0 mt-2 w-40 bg-slate-800 border border-slate-700 rounded-lg shadow-lg overflow-hidden z-50">
+          <div class="absolute right-0 mt-2 w-40 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg shadow-lg overflow-hidden z-50">
             <button
               type="button"
               (click)="selectLanguage('en')"
               [class.bg-cyan-500]="currentLang() === 'en'"
-              class="w-full px-4 py-2 text-left text-sm text-white hover:bg-slate-700 transition-colors">
+              class="w-full px-4 py-2 text-left text-sm text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
               {{ 'languages.en' | translate }}
             </button>
             <button
               type="button"
               (click)="selectLanguage('nl')"
               [class.bg-cyan-500]="currentLang() === 'nl'"
-              class="w-full px-4 py-2 text-left text-sm text-white hover:bg-slate-700 transition-colors">
+              class="w-full px-4 py-2 text-left text-sm text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
               {{ 'languages.nl' | translate }}
             </button>
             <button
               type="button"
               (click)="selectLanguage('srb')"
               [class.bg-cyan-500]="currentLang() === 'srb'"
-              class="w-full px-4 py-2 text-left text-sm text-white hover:bg-slate-700 transition-colors">
+              class="w-full px-4 py-2 text-left text-sm text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
               {{ 'languages.srb' | translate }}
             </button>
           </div>
@@ -55,18 +56,18 @@
           (click)="toggleThemeMenu()"
           [attr.aria-label]="'theme.toggle' | translate"
           [attr.title]="'theme.toggle' | translate"
-          class="p-2 md:px-3 md:py-2 bg-slate-800 text-white text-sm font-medium rounded-lg border border-slate-700 hover:bg-slate-700 transition-colors flex items-center gap-2">
+          class="p-2 md:px-3 md:py-2 bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
           <fa-icon [icon]="themeIcon()" />
           <span class="hidden md:inline">{{ themeLabel() | translate }}</span>
         </button>
 
         @if (showThemeMenu()) {
-          <div class="absolute right-0 mt-2 w-32 bg-slate-800 border border-slate-700 rounded-lg shadow-lg overflow-hidden z-50">
+          <div class="absolute right-0 mt-2 w-32 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg shadow-lg overflow-hidden z-50">
             <button
               type="button"
               (click)="selectTheme('light')"
               [class.bg-cyan-500]="currentTheme() === 'light'"
-              class="w-full px-4 py-2 text-left text-sm text-white hover:bg-slate-700 transition-colors flex items-center gap-2">
+              class="w-full px-4 py-2 text-left text-sm text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
               <fa-icon [icon]="faSun" class="w-4" />
               <span>{{ 'theme.light' | translate }}</span>
             </button>
@@ -74,7 +75,7 @@
               type="button"
               (click)="selectTheme('dark')"
               [class.bg-cyan-500]="currentTheme() === 'dark'"
-              class="w-full px-4 py-2 text-left text-sm text-white hover:bg-slate-700 transition-colors flex items-center gap-2">
+              class="w-full px-4 py-2 text-left text-sm text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
               <fa-icon [icon]="faMoon" class="w-4" />
               <span>{{ 'theme.dark' | translate }}</span>
             </button>
@@ -82,7 +83,7 @@
               type="button"
               (click)="selectTheme('system')"
               [class.bg-cyan-500]="currentTheme() === 'system'"
-              class="w-full px-4 py-2 text-left text-sm text-white hover:bg-slate-700 transition-colors flex items-center gap-2">
+              class="w-full px-4 py-2 text-left text-sm text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
               <fa-icon [icon]="faDesktop" class="w-4" />
               <span>{{ 'theme.system' | translate }}</span>
             </button>
@@ -99,30 +100,30 @@
 </main>
 
 <!-- Footer Navigation -->
-<footer class="fixed bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-800">
+<footer class="fixed bottom-0 left-0 right-0 bg-slate-100 dark:bg-slate-900 border-t border-slate-300 dark:border-slate-800 z-50">
   <nav class="h-16 flex items-center justify-around px-4">
     <a routerLink="/home" 
        routerLinkActive="active-nav" 
        [routerLinkActiveOptions]="{exact: true}"
-       class="flex flex-col items-center justify-center gap-0.5 text-slate-400 hover:text-white transition-colors min-w-[60px]">
+       class="flex flex-col items-center justify-center gap-0.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors min-w-[60px]">
       <fa-icon [icon]="faHome" size="lg" />
       <span class="text-xs font-medium">{{ 'navigation.home' | translate }}</span>
     </a>
     <a routerLink="/quiz" 
        routerLinkActive="active-nav"
-       class="flex flex-col items-center justify-center gap-0.5 text-slate-400 hover:text-white transition-colors min-w-[60px]">
+       class="flex flex-col items-center justify-center gap-0.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors min-w-[60px]">
       <fa-icon [icon]="faTrophy" size="lg" />
       <span class="text-xs font-medium">{{ 'navigation.quiz' | translate }}</span>
     </a>
     <a routerLink="/questions" 
        routerLinkActive="active-nav"
-       class="flex flex-col items-center justify-center gap-0.5 text-slate-400 hover:text-white transition-colors min-w-[60px]">
+       class="flex flex-col items-center justify-center gap-0.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors min-w-[60px]">
       <fa-icon [icon]="faQuestionCircle" size="lg" />
       <span class="text-xs font-medium">{{ 'navigation.questions' | translate }}</span>
     </a>
     <a routerLink="/rules" 
        routerLinkActive="active-nav"
-       class="flex flex-col items-center justify-center gap-0.5 text-slate-400 hover:text-white transition-colors min-w-[60px]">
+       class="flex flex-col items-center justify-center gap-0.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors min-w-[60px]">
       <fa-icon [icon]="faBook" size="lg" />
       <span class="text-xs font-medium">{{ 'navigation.rules' | translate }}</span>
     </a>
