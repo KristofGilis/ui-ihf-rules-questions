@@ -1,78 +1,103 @@
-<div class="mx-auto px-4 py-6 max-w-5xl">
-  <div class="mb-6">
-    <h2 class="text-3xl font-bold mb-3 text-gray-900 dark:text-white">{{ 'home.title' | translate }}</h2>
+<div class="py-8">
+  <!-- Hero Section -->
+  <div class="text-center mb-12">
+    <div class="inline-block mb-4">
+      <div class="w-20 h-20 bg-gradient-to-br from-purple-400 to-pink-400 rounded-3xl flex items-center justify-center mx-auto shadow-2xl">
+        <span class="text-4xl">Ìøê</span>
+      </div>
+    </div>
+    <h2 class="text-4xl md:text-5xl font-bold mb-4 text-white">{{ 'home.title' | translate }}</h2>
     
     @if (version$ | async; as version) {
-      <div class="text-lg text-gray-600 dark:text-gray-400 mb-4" [innerHTML]="'home.subtitle' | translate: { version }"></div>
+      <div class="text-xl text-white/80 mb-6 max-w-2xl mx-auto" [innerHTML]="'home.subtitle' | translate: { version }"></div>
     }
   </div>
 
-  <div class="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 rounded-r-lg p-4 mb-6">
-    <p class="text-sm mb-2 text-gray-800 dark:text-gray-200">{{ 'home.alert' | translate }}</p>
-    <a href="https://github.com/KristofGilis/ihf_rules_questions" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline">
-      {{ 'home.collaborate' | translate }}
-    </a>
+  <!-- Alert Banner -->
+  <div class="glass rounded-2xl p-6 mb-12 border border-white/20">
+    <div class="flex items-start gap-4">
+      <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-xl flex items-center justify-center flex-shrink-0">
+        <span class="text-xl">Ì≤°</span>
+      </div>
+      <div class="flex-1">
+        <p class="text-white mb-2 font-medium">{{ 'home.alert' | translate }}</p>
+        <a href="https://github.com/KristofGilis/ihf_rules_questions" target="_blank" rel="noopener" 
+           class="inline-flex items-center gap-2 text-cyan-300 hover:text-cyan-200 font-medium transition-colors">
+          <span>{{ 'home.collaborate' | translate }}</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
   </div>
 
-  <div class="grid gap-6 md:grid-cols-2">
+  <!-- Main Cards Grid -->
+  <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
     <!-- Quiz Card -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow p-6 border border-gray-200 dark:border-gray-700">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-          <span class="text-2xl">üèÜ</span>
+    <div class="modern-card p-8 border border-white/10">
+      <div class="mb-6">
+        <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
+          <span class="text-3xl">ÌøÜ</span>
         </div>
-        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">{{ 'home.quiz_card.title' | translate }}</h3>
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">{{ 'home.quiz_card.title' | translate }}</h3>
+        <p class="text-gray-600 dark:text-gray-300 leading-relaxed">{{ 'home.quiz_card.content' | translate }}</p>
       </div>
-      <p class="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">{{ 'home.quiz_card.content' | translate }}</p>
       
-      <div class="mb-4">
-        <label class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">{{ 'home.quiz_card.count' | translate }}</label>
-        <select [(ngModel)]="questionCount" 
-                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                [attr.aria-label]="'home.quiz_card.count' | translate">
-          <option [value]="10">10</option>
-          <option [value]="20">20</option>
-          <option [value]="30">30</option>
-          <option [value]="50">50</option>
-        </select>
-      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">{{ 'home.quiz_card.count' | translate }}</label>
+          <select [(ngModel)]="questionCount" 
+                  class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+                  [attr.aria-label]="'home.quiz_card.count' | translate">
+            <option [value]="10">10 {{ 'home.quiz_card.questions' | translate }}</option>
+            <option [value]="20">20 {{ 'home.quiz_card.questions' | translate }}</option>
+            <option [value]="30">30 {{ 'home.quiz_card.questions' | translate }}</option>
+            <option [value]="50">50 {{ 'home.quiz_card.questions' | translate }}</option>
+          </select>
+        </div>
 
-      <div class="mb-6 flex items-center p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
-        <input type="checkbox" id="timedMode" [(ngModel)]="timedMode" class="mr-3 w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500" />
-        <label for="timedMode" class="text-sm text-gray-700 dark:text-gray-300 cursor-pointer">{{ 'home.quiz_card.timed_mode' | translate }}</label>
-      </div>
+        <label class="flex items-center gap-3 p-4 glass rounded-xl cursor-pointer hover:bg-white/10 transition-all">
+          <input type="checkbox" id="timedMode" [(ngModel)]="timedMode" 
+                 class="w-5 h-5 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400" />
+          <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'home.quiz_card.timed_mode' | translate }}</span>
+        </label>
 
-      <button (click)="startQuiz()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-all hover:shadow-lg active:scale-95">
-        {{ 'home.quiz_card.button' | translate }}
-      </button>
+        <button (click)="startQuiz()" 
+                class="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-105 hover:shadow-2xl">
+          {{ 'home.quiz_card.button' | translate }}
+        </button>
+      </div>
     </div>
 
     <!-- All Questions Card -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow p-6 border border-gray-200 dark:border-gray-700">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-          <span class="text-2xl">üìù</span>
+    <div class="modern-card p-8 border border-white/10">
+      <div class="mb-6">
+        <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
+          <span class="text-3xl">Ì≥ù</span>
         </div>
-        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">{{ 'home.all_questions_card.title' | translate }}</h3>
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">{{ 'home.all_questions_card.title' | translate }}</h3>
+        <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-8">{{ 'home.all_questions_card.content' | translate }}</p>
       </div>
-      <p class="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">{{ 'home.all_questions_card.content' | translate }}</p>
       
-      <button routerLink="/questions" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition-all hover:shadow-lg active:scale-95">
+      <button routerLink="/questions" 
+              class="w-full bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-105 hover:shadow-2xl">
         {{ 'home.all_questions_card.button' | translate }}
       </button>
     </div>
 
-    <!-- Rules Card (full width) -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow p-6 border border-gray-200 dark:border-gray-700 md:col-span-2">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
-          <span class="text-2xl">üìñ</span>
+    <!-- Rules Card -->
+    <div class="modern-card p-8 border border-white/10 md:col-span-2 lg:col-span-1">
+      <div class="mb-6">
+        <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
+          <span class="text-3xl">Ì≥ñ</span>
         </div>
-        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">{{ 'home.rules_card.title' | translate }}</h3>
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">{{ 'home.rules_card.title' | translate }}</h3>
+        <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-8">{{ 'home.rules_card.content' | translate }}</p>
       </div>
-      <p class="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">{{ 'home.rules_card.content' | translate }}</p>
       
-      <button routerLink="/rules" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-4 rounded-lg transition-all hover:shadow-lg active:scale-95">
+      <button routerLink="/rules" 
+              class="w-full bg-gradient-to-r from-purple-400 to-indigo-500 hover:from-purple-500 hover:to-indigo-600 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-105 hover:shadow-2xl">
         {{ 'home.rules_card.button' | translate }}
       </button>
     </div>
