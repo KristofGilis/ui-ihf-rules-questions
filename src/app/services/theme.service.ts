@@ -7,15 +7,15 @@ export type Theme = 'light' | 'dark' | 'system';
   providedIn: 'root',
 })
 export class ThemeService {
-  private readonly platformId = inject(PLATFORM_ID);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly isBrowser = isPlatformBrowser(this.platformId);
+  private readonly _platformId = inject(PLATFORM_ID);
+  private readonly _destroyRef = inject(DestroyRef);
+  private readonly _isBrowser = isPlatformBrowser(this._platformId);
 
   private readonly _currentTheme = signal<Theme>('system');
   readonly currentTheme = this._currentTheme.asReadonly();
 
   constructor() {
-    if (this.isBrowser) {
+    if (this._isBrowser) {
       this.loadTheme();
       this.applyTheme(this.currentTheme());
 
@@ -29,7 +29,7 @@ export class ThemeService {
       mediaQuery.addEventListener('change', listener);
 
       // Cleanup listener on service destruction
-      this.destroyRef.onDestroy(() => {
+      this._destroyRef.onDestroy(() => {
         mediaQuery.removeEventListener('change', listener);
       });
     }
@@ -37,7 +37,7 @@ export class ThemeService {
 
   setTheme(theme: Theme): void {
     this._currentTheme.set(theme);
-    if (this.isBrowser) {
+    if (this._isBrowser) {
       localStorage.setItem('theme', theme);
       this.applyTheme(theme);
     }
@@ -51,7 +51,7 @@ export class ThemeService {
   }
 
   private applyTheme(theme: Theme): void {
-    if (!this.isBrowser) return;
+    if (!this._isBrowser) return;
 
     const root = document.documentElement;
 
@@ -64,7 +64,7 @@ export class ThemeService {
   }
 
   getEffectiveTheme(): 'light' | 'dark' {
-    if (!this.isBrowser) return 'light';
+    if (!this._isBrowser) return 'light';
 
     const theme = this.currentTheme();
     if (theme === 'system') {
