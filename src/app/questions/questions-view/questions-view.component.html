@@ -8,7 +8,7 @@
 }
 @if (loading()) {
   <div class="loading">
-    <fa-icon [icon]="faSpinner" [spin]="true" size="2x"></fa-icon>
+    <fa-icon [icon]="faSpinner" [animation]="'spin'" size="2x"></fa-icon>
   </div>
 }
 @if (!hasMoreQuestions() && !loading()) {
@@ -16,7 +16,7 @@
     <button type="button" class="btn btn-primary" [disabled]="scoreLoading()" (click)="onCalculateScore()">
       {{ 'questions.calculate_score' | translate }}
       @if (scoreLoading()) {
-        <fa-icon [icon]="faSpinner" [spin]="true" class="ml-2"></fa-icon>
+        <fa-icon [icon]="faSpinner" [animation]="'spin'" class="ml-2"></fa-icon>
       }
     </button>
     @if (isRandom()) {

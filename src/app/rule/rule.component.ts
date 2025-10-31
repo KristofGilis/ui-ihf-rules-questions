@@ -1,4 +1,3 @@
-import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -22,7 +21,6 @@ export class RuleComponent {
   private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _ruleService = inject(RuleService);
   private readonly _questionsService = inject(QuestionsService);
-  private readonly _scrollDispatcher = inject(ScrollDispatcher);
   private readonly _translateService = inject(TranslateService);
 
   loading = signal(false);
@@ -42,15 +40,6 @@ export class RuleComponent {
   }
 
   constructor() {
-    this._scrollDispatcher
-      .scrolled()
-      .pipe(takeUntilDestroyed())
-      .subscribe((res) => {
-        if ((res as CdkScrollable).measureScrollOffset('bottom') < 50) {
-          this._ruleService.fetchMoreQuestions();
-        }
-      });
-
     this._translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => this._ruleService.refetch());
   }
 
