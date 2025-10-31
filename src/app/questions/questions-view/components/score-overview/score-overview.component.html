@@ -1,25 +1,25 @@
-<div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md">
-  <div class="mb-4">
-    <h4 class="text-xl font-bold text-gray-900 dark:text-white">{{ 'score_overview.title' | translate }}</h4>
-  </div>
+<div class="card p-6">
+  <h4 class="text-xl font-bold mb-4">{{ 'score_overview.title' | translate }}</h4>
   
   <div>
     <div class="mb-4">
-      <div class="text-gray-700 dark:text-gray-300 mb-2">
+      <div class="text-white/80 mb-2">
         {{ 'score_overview.score' | translate }}
-        <span class="font-bold text-xl text-gray-900 dark:text-white ml-2">{{ score()?.score }} / {{ score()?.total }}</span>
+        <span class="font-bold text-xl text-white ml-2">{{ score()?.score }} / {{ score()?.total }}</span>
       </div>
-      <div class="text-3xl font-bold" [class.text-red-600]="isBadResult" [class.dark:text-red-400]="isBadResult" [class.text-green-600]="!isBadResult" [class.dark:text-green-400]="!isBadResult">
+      <div class="text-3xl font-bold" 
+           [class.text-red-400]="isBadResult" 
+           [class.text-green-400]="!isBadResult">
         {{ score()?.percentage }}
       </div>
     </div>
     
     @if (score()?.wrongQuestionsIds?.length ?? 0 > 0) {
-      <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-        <span class="text-gray-700 dark:text-gray-300 block mb-2" [innerHTML]="'score_overview.wrong_questionNumbers' | translate"></span>
+      <div class="mt-4 pt-4 border-t border-white/10">
+        <span class="text-white/80 block mb-2" [innerHTML]="'score_overview.wrong_questionNumbers' | translate"></span>
         <div class="flex flex-wrap gap-2">
           @for (wrongQuestionId of score()?.wrongQuestionsIds; track wrongQuestionId) {
-            <div class="flex items-center gap-1 px-2 py-1 bg-red-50 dark:bg-red-900/20 rounded text-red-600 dark:text-red-400">
+            <div class="flex items-center gap-1 px-2 py-1 bg-red-500/20 rounded text-red-400">
               <fa-icon [icon]="faTimesCircle"></fa-icon>
               <span>{{ getQuestionNumber(wrongQuestionId) }}</span>
             </div>

@@ -1,6 +1,6 @@
-<div class="max-w-5xl mx-auto p-4">
+<div class="max-w-4xl mx-auto">
   @if (rule$ | async; as rule) {
-    <h4 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">{{ getRuleName(rule) }}</h4>
+    <h2 class="text-2xl font-bold mb-6">{{ getRuleName(rule) }}</h2>
 
     <app-questions-view
       [questions]="getQuestions(rule)"

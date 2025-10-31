@@ -1,102 +1,130 @@
-<div class="min-h-screen pb-20 md:pb-0">
-  <!-- Modern Header with Glass Effect -->
-  <header class="fixed top-0 left-0 right-0 z-50 glass">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
-        <!-- Logo and Title -->
-        <div class="flex items-center gap-4">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
-              <app-logo class="h-6 w-6" />
-            </div>
-            <div>
-              <h1 class="text-lg font-bold text-white m-0 leading-tight">{{ 'main.title' | translate }}</h1>
-              <p class="text-xs text-white/70 hidden sm:block">International Handball Federation</p>
-            </div>
+<!-- Header -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-slate-900 border-b border-slate-800">
+  <div class="h-16 flex items-center justify-between px-4">
+    <!-- Logo -->
+    <div class="flex items-center gap-3">
+      <app-logo class="w-10 h-10" />
+      <span class="font-bold text-lg text-white">{{ 'main.title' | translate }}</span>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex items-center gap-2">
+      <!-- Language Dropdown -->
+      <div class="relative language-dropdown">
+        <button
+          (click)="toggleLanguageMenu()"
+          [attr.title]="'Select language'"
+          class="p-2 md:px-3 md:py-2 bg-slate-800 text-white text-sm font-medium rounded-lg border border-slate-700 hover:bg-slate-700 transition-colors flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+          </svg>
+          <span class="hidden md:inline">{{ currentLang().toUpperCase() }}</span>
+        </button>
+        
+        @if (showLanguageMenu()) {
+          <div class="absolute right-0 mt-2 w-40 bg-slate-800 border border-slate-700 rounded-lg shadow-lg overflow-hidden z-50">
+            <button
+              type="button"
+              (click)="selectLanguage('en')"
+              [class.bg-cyan-500]="currentLang() === 'en'"
+              class="w-full px-4 py-2 text-left text-sm text-white hover:bg-slate-700 transition-colors">
+              {{ 'languages.en' | translate }}
+            </button>
+            <button
+              type="button"
+              (click)="selectLanguage('nl')"
+              [class.bg-cyan-500]="currentLang() === 'nl'"
+              class="w-full px-4 py-2 text-left text-sm text-white hover:bg-slate-700 transition-colors">
+              {{ 'languages.nl' | translate }}
+            </button>
+            <button
+              type="button"
+              (click)="selectLanguage('srb')"
+              [class.bg-cyan-500]="currentLang() === 'srb'"
+              class="w-full px-4 py-2 text-left text-sm text-white hover:bg-slate-700 transition-colors">
+              {{ 'languages.srb' | translate }}
+            </button>
           </div>
-        </div>
-        
-        <!-- Desktop Navigation -->
-        <nav class="hidden md:flex items-center gap-2">
-          <a routerLink="/home" routerLinkActive="bg-white/20" [routerLinkActiveOptions]="{exact: true}"
-             class="px-4 py-2 rounded-lg text-white/90 hover:bg-white/10 hover:text-white transition-all font-medium flex items-center gap-2">
-            <fa-icon [icon]="faHome" />
-            <span>{{ 'navigation.home' | translate }}</span>
-          </a>
-          <a routerLink="/quiz" routerLinkActive="bg-white/20"
-             class="px-4 py-2 rounded-lg text-white/90 hover:bg-white/10 hover:text-white transition-all font-medium flex items-center gap-2">
-            <fa-icon [icon]="faTrophy" />
-            <span>{{ 'navigation.quiz' | translate }}</span>
-          </a>
-          <a routerLink="/questions" routerLinkActive="bg-white/20"
-             class="px-4 py-2 rounded-lg text-white/90 hover:bg-white/10 hover:text-white transition-all font-medium flex items-center gap-2">
-            <fa-icon [icon]="faQuestionCircle" />
-            <span>{{ 'navigation.questions' | translate }}</span>
-          </a>
-          <a routerLink="/rules" routerLinkActive="bg-white/20"
-             class="px-4 py-2 rounded-lg text-white/90 hover:bg-white/10 hover:text-white transition-all font-medium flex items-center gap-2">
-            <fa-icon [icon]="faBook" />
-            <span>{{ 'navigation.rules' | translate }}</span>
-          </a>
-        </nav>
-        
-        <!-- Controls -->
-        <div class="flex items-center gap-2">
-          <!-- Language selector -->
-          <select
-            [(ngModel)]="currentLang"
-            (change)="onChangeLanguage(currentLang)"
-            class="px-3 py-2 text-sm rounded-lg bg-white/10 border border-white/20 text-white backdrop-blur-sm hover:bg-white/15 transition-all cursor-pointer"
-            [attr.aria-label]="'languages.label' | translate">
-            <option value="en" class="bg-gray-800 text-white">{{ 'languages.en' | translate }}</option>
-            <option value="nl" class="bg-gray-800 text-white">{{ 'languages.nl' | translate }}</option>
-            <option value="srb" class="bg-gray-800 text-white">{{ 'languages.srb' | translate }}</option>
-          </select>
-          
-          <!-- Theme toggle -->
-          <button
-            (click)="themeService.toggleTheme()"
-            class="p-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 text-white transition-all"
-            type="button"
-            [attr.aria-label]="'theme.toggle' | translate"
-            [attr.title]="'theme.toggle' | translate">
-            <fa-icon [icon]="getThemeIcon()" />
-          </button>
-        </div>
+        }
+      </div>
+
+      <!-- Theme Dropdown -->
+      <div class="relative theme-dropdown">
+        <button
+          type="button"
+          (click)="toggleThemeMenu()"
+          [attr.aria-label]="'theme.toggle' | translate"
+          [attr.title]="'theme.toggle' | translate"
+          class="p-2 md:px-3 md:py-2 bg-slate-800 text-white text-sm font-medium rounded-lg border border-slate-700 hover:bg-slate-700 transition-colors flex items-center gap-2">
+          <fa-icon [icon]="themeIcon()" />
+          <span class="hidden md:inline">{{ themeLabel() | translate }}</span>
+        </button>
+
+        @if (showThemeMenu()) {
+          <div class="absolute right-0 mt-2 w-32 bg-slate-800 border border-slate-700 rounded-lg shadow-lg overflow-hidden z-50">
+            <button
+              type="button"
+              (click)="selectTheme('light')"
+              [class.bg-cyan-500]="currentTheme() === 'light'"
+              class="w-full px-4 py-2 text-left text-sm text-white hover:bg-slate-700 transition-colors flex items-center gap-2">
+              <fa-icon [icon]="faSun" class="w-4" />
+              <span>{{ 'theme.light' | translate }}</span>
+            </button>
+            <button
+              type="button"
+              (click)="selectTheme('dark')"
+              [class.bg-cyan-500]="currentTheme() === 'dark'"
+              class="w-full px-4 py-2 text-left text-sm text-white hover:bg-slate-700 transition-colors flex items-center gap-2">
+              <fa-icon [icon]="faMoon" class="w-4" />
+              <span>{{ 'theme.dark' | translate }}</span>
+            </button>
+            <button
+              type="button"
+              (click)="selectTheme('system')"
+              [class.bg-cyan-500]="currentTheme() === 'system'"
+              class="w-full px-4 py-2 text-left text-sm text-white hover:bg-slate-700 transition-colors flex items-center gap-2">
+              <fa-icon [icon]="faDesktop" class="w-4" />
+              <span>{{ 'theme.system' | translate }}</span>
+            </button>
+          </div>
+        }
       </div>
     </div>
-  </header>
+  </div>
+</header>
 
-  <!-- Main content with padding for header -->
-  <main class="pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-    <router-outlet />
-  </main>
+<!-- Main Content -->
+<main class="pt-16 min-h-screen">
+  <router-outlet />
+</main>
 
-  <!-- Modern Mobile Navigation -->
-  <nav class="fixed bottom-4 left-4 right-4 md:hidden z-40">
-    <div class="glass rounded-2xl shadow-2xl">
-      <div class="flex justify-around items-center py-2 px-2">
-        <a routerLink="/home" routerLinkActive="bg-white/20 scale-110" [routerLinkActiveOptions]="{exact: true}"
-           class="flex flex-col items-center gap-1 px-4 py-2 rounded-xl text-white/80 hover:text-white transition-all smooth-transition">
-          <fa-icon [icon]="faHome" size="lg" />
-          <span class="text-xs font-medium">{{ 'navigation.home' | translate }}</span>
-        </a>
-        <a routerLink="/quiz" routerLinkActive="bg-white/20 scale-110"
-           class="flex flex-col items-center gap-1 px-4 py-2 rounded-xl text-white/80 hover:text-white transition-all smooth-transition">
-          <fa-icon [icon]="faTrophy" size="lg" />
-          <span class="text-xs font-medium">{{ 'navigation.quiz' | translate }}</span>
-        </a>
-        <a routerLink="/questions" routerLinkActive="bg-white/20 scale-110"
-           class="flex flex-col items-center gap-1 px-4 py-2 rounded-xl text-white/80 hover:text-white transition-all smooth-transition">
-          <fa-icon [icon]="faQuestionCircle" size="lg" />
-          <span class="text-xs font-medium">{{ 'navigation.questions' | translate }}</span>
-        </a>
-        <a routerLink="/rules" routerLinkActive="bg-white/20 scale-110"
-           class="flex flex-col items-center gap-1 px-4 py-2 rounded-xl text-white/80 hover:text-white transition-all smooth-transition">
-          <fa-icon [icon]="faBook" size="lg" />
-          <span class="text-xs font-medium">{{ 'navigation.rules' | translate }}</span>
-        </a>
-      </div>
-    </div>
+<!-- Footer Navigation -->
+<footer class="fixed bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-800">
+  <nav class="h-16 flex items-center justify-around px-4">
+    <a routerLink="/home" 
+       routerLinkActive="active-nav" 
+       [routerLinkActiveOptions]="{exact: true}"
+       class="flex flex-col items-center justify-center gap-0.5 text-slate-400 hover:text-white transition-colors min-w-[60px]">
+      <fa-icon [icon]="faHome" size="lg" />
+      <span class="text-xs font-medium">{{ 'navigation.home' | translate }}</span>
+    </a>
+    <a routerLink="/quiz" 
+       routerLinkActive="active-nav"
+       class="flex flex-col items-center justify-center gap-0.5 text-slate-400 hover:text-white transition-colors min-w-[60px]">
+      <fa-icon [icon]="faTrophy" size="lg" />
+      <span class="text-xs font-medium">{{ 'navigation.quiz' | translate }}</span>
+    </a>
+    <a routerLink="/questions" 
+       routerLinkActive="active-nav"
+       class="flex flex-col items-center justify-center gap-0.5 text-slate-400 hover:text-white transition-colors min-w-[60px]">
+      <fa-icon [icon]="faQuestionCircle" size="lg" />
+      <span class="text-xs font-medium">{{ 'navigation.questions' | translate }}</span>
+    </a>
+    <a routerLink="/rules" 
+       routerLinkActive="active-nav"
+       class="flex flex-col items-center justify-center gap-0.5 text-slate-400 hover:text-white transition-colors min-w-[60px]">
+      <fa-icon [icon]="faBook" size="lg" />
+      <span class="text-xs font-medium">{{ 'navigation.rules' | translate }}</span>
+    </a>
   </nav>
-</div>
+</footer>

@@ -1,16 +1,15 @@
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
 import { map, shareReplay } from 'rxjs';
 import { GetVersionGQL } from '../../../graphql/generated';
 
 @Component({
   selector: 'app-home',
-  imports: [TranslatePipe, RouterLink, FormsModule, AsyncPipe],
+  imports: [FormsModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
