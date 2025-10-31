@@ -1,32 +1,26 @@
 {
   "home": {
     "alert": "Ik heb besloten om de andere talen niet automatisch toe te voegen, omdat ik daar de tijd niet voor heb. Maar jij kunt helpen. ;-) Speciale dank aan alle medewerkers.",
-    "hero_description": "Test je kennis van de IHF handbalregels met interactieve quizzen",
-    "loading": "Laden...",
-    "version": "Versie {{version}}",
-    "timed_mode_description": "Race tegen de klok",
-    "github_button": "Bekijk op GitHub",
-    "quiz_card": {
-      "button": "Start Quiz",
-      "content": "Test je kennis met een quiz. Kies het aantal vragen en schakel optioneel de tijdmodus in.",
-      "count": "# Vragen",
-      "questions": "vragen",
-      "timed_mode": "Tijdmodus (90s per vraag)",
-      "title": "Neem een Quiz"
-    },
     "all_questions_card": {
-      "button": "Bekijk alle vragen",
       "content": "Bekijk en bestudeer alle beschikbare vragen.",
       "title": "Alle vragen"
     },
     "collaborate": "Help om andere talen te ondersteunen",
+    "github_button": "Bekijk op GitHub",
+    "hero_description": "Test je kennis van de IHF handbalregels met interactieve quizzen",
+    "loading": "Laden...",
+    "quiz_card": {
+      "button": "Start Quiz",
+      "count": "# Vragen",
+      "timed_mode": "Tijdmodus (90s per vraag)",
+      "title": "Neem een Quiz"
+    },
     "rules_card": {
-      "button": "Ga naar spelregels",
       "content": "Ga naar de lijst met alle spelregels. Vanaf hier kun je alle vragen krijgen die betrekking hebben op de geselecteerde spelregel.",
       "title": "Spelregels"
     },
-    "subtitle": "Test je kennis van de spelregels. <br> Vragen over de IHF Spelregels geldig vanaf <b>{{version}}</b>",
-    "title": "Welkom"
+    "timed_mode_description": "Race tegen de klok",
+    "version": "Versie {{version}}"
   },
   "languages": {
     "en": "Engels",
@@ -39,35 +33,40 @@
   },
   "navigation": {
     "home": "Home",
-    "quiz": "Quiz",
     "questions": "Vragen",
+    "quiz": "Quiz",
     "rules": "Spelregels"
   },
+  "questions": {
+    "calculate_score": "Bereken score",
+    "title": "Alle vragen"
+  },
+  "questions_random_new": "Nieuwe willekeurige {{count}} vragen",
   "quiz": {
     "complete": "Voltooi Quiz",
     "next": "Volgende",
     "previous": "Vorige",
     "progress": "Vraag {{current}} van {{total}}",
     "select_answers": "Selecteer alle juiste antwoorden",
-    "time_remaining": "Resterende tijd",
-    "title": "Quiz"
+    "time_remaining": "Resterende tijd"
   },
   "quiz_results": {
     "correct": "Correct",
-    "correct_answers": "Juiste antwoorden",
-    "incorrect": "Onjuist",
-    "percentage": "Score: {{percentage}}%",
-    "restart": "Nieuwe Quiz Starten",
+    "home": "Home",
+    "question": "Vraag",
+    "retake": "Opnieuw Doen",
     "review": "Antwoorden Beoordelen",
-    "score": "Uw score: {{correct}} / {{total}}",
     "title": "Quiz Resultaten",
-    "your_answers": "Uw antwoorden"
+    "wrong": "Fout",
+    "your_answer": "Jouw Antwoord"
   },
-  "questions": {
-    "calculate_score": "Bereken score",
-    "title": "Alle vragen"
+  "random_questions": {
+    "title": "Willekeurige Vragen"
   },
   "rules": {
+    "description": "Blader door alle IHF handbalregels. Selecteer een regel om gerelateerde vragen te bekijken.",
+    "loading": "Regels laden...",
+    "no_rules": "Geen regels beschikbaar",
     "title": "Spelregels"
   },
   "score_overview": {

@@ -1,32 +1,26 @@
 {
   "home": {
     "alert": "I decided to not automatically add the other languages, because I do not have the time. But you can help. ;-) Special thanks for all collaborators.",
-    "hero_description": "Test your knowledge of IHF handball rules with interactive quizzes",
-    "loading": "Loading...",
-    "version": "Version {{version}}",
-    "timed_mode_description": "Race against the clock",
-    "github_button": "View on GitHub",
-    "quiz_card": {
-      "button": "Start Quiz",
-      "content": "Test your knowledge with a quiz. Choose the number of questions and optionally enable timed mode.",
-      "count": "# Questions",
-      "questions": "questions",
-      "timed_mode": "Timed Mode (90s per question)",
-      "title": "Take a Quiz"
-    },
     "all_questions_card": {
-      "button": "Browse all questions",
       "content": "View and study all available questions.",
       "title": "All Questions"
     },
     "collaborate": "Help to support other languages",
+    "github_button": "View on GitHub",
+    "hero_description": "Test your knowledge of IHF handball rules with interactive quizzes",
+    "loading": "Loading...",
+    "quiz_card": {
+      "button": "Start Quiz",
+      "count": "# Questions",
+      "timed_mode": "Timed Mode (90s per question)",
+      "title": "Take a Quiz"
+    },
     "rules_card": {
-      "button": "Go to rules",
       "content": "Go to the list of all rules. From here you can get all questions related to the selected rule.",
       "title": "Rules"
     },
-    "subtitle": "Test your knowledge of the rules of the game. <br> Questions about the IHF Rules of the Game valid as of the <b>{{version}}</b>",
-    "title": "Welcome"
+    "timed_mode_description": "Race against the clock",
+    "version": "Version {{version}}"
   },
   "languages": {
     "en": "English",
@@ -39,35 +33,40 @@
   },
   "navigation": {
     "home": "Home",
-    "quiz": "Quiz",
     "questions": "Questions",
+    "quiz": "Quiz",
     "rules": "Rules"
   },
+  "questions": {
+    "calculate_score": "Calculate score",
+    "title": "All Questions"
+  },
+  "questions_random_new": "New random {{count}} questions",
   "quiz": {
     "complete": "Complete Quiz",
     "next": "Next",
     "previous": "Previous",
     "progress": "Question {{current}} of {{total}}",
     "select_answers": "Select all correct answers",
-    "time_remaining": "Time Remaining",
-    "title": "Quiz"
+    "time_remaining": "Time Remaining"
   },
   "quiz_results": {
     "correct": "Correct",
-    "correct_answers": "Correct answers",
-    "incorrect": "Incorrect",
-    "percentage": "Score: {{percentage}}%",
-    "restart": "Start New Quiz",
+    "home": "Home",
+    "question": "Question",
+    "retake": "Retake Quiz",
     "review": "Review Answers",
-    "score": "Your score: {{correct}} / {{total}}",
     "title": "Quiz Results",
-    "your_answers": "Your answers"
+    "wrong": "Wrong",
+    "your_answer": "Your Answer"
   },
-  "questions": {
-    "calculate_score": "Calculate score",
-    "title": "All Questions"
+  "random_questions": {
+    "title": "Random Questions"
   },
   "rules": {
+    "description": "Browse all IHF handball rules. Select a rule to view related questions.",
+    "loading": "Loading rules...",
+    "no_rules": "No rules available",
     "title": "Rules"
   },
   "score_overview": {
