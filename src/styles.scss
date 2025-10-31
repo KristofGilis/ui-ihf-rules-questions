@@ -73,12 +73,6 @@ html[data-theme="light"] .theme-dropdown button.bg-cyan-500 * {
   color: #ffffff !important;
 }
 
-/* Prevent hover override on active items */
-html[data-theme="light"] .language-dropdown button.bg-cyan-500:hover,
-html[data-theme="light"] .theme-dropdown button.bg-cyan-500:hover {
-  background: #0891b2 !important; /* Slightly darker cyan for hover */
-}
-
 html[data-theme="light"] header button:hover {
   background: #cbd5e1 !important;
 }

@@ -30,6 +30,9 @@ export class AppComponent {
   private readonly _document = inject(DOCUMENT);
   private readonly _themeService = inject(ThemeService);
 
+  // Constants
+  private readonly LANGUAGES = ['en', 'nl', 'srb'] as const;
+
   // FontAwesome icons - readonly for immutability
   protected readonly faHome = faHome;
   protected readonly faTrophy = faTrophy;
@@ -62,8 +65,7 @@ export class AppComponent {
   });
 
   constructor() {
-    this._translateService.addLangs(['en', 'nl', 'srb']);
-
+    this._translateService.addLangs([...this.LANGUAGES]);
     this._translateService.use(this.currentLang());
   }
 
@@ -72,13 +74,6 @@ export class AppComponent {
     localStorage?.setItem('language', lang);
     this._translateService.use(lang);
     this.currentLang.set(lang);
-  }
-
-  toggleLanguage(): void {
-    const languages = ['en', 'nl', 'srb'];
-    const currentIndex = languages.indexOf(this.currentLang());
-    const nextLang = languages[(currentIndex + 1) % languages.length];
-    this.onChangeLanguage(nextLang);
   }
 
   toggleLanguageMenu(): void {
@@ -99,9 +94,8 @@ export class AppComponent {
       ],
     });
 
-    const languages = ['en', 'nl', 'srb'];
-    if (result.index >= 0 && result.index < languages.length) {
-      this.onChangeLanguage(languages[result.index]);
+    if (result.index >= 0 && result.index < this.LANGUAGES.length) {
+      this.onChangeLanguage(this.LANGUAGES[result.index]);
     }
   }
 
@@ -147,13 +141,13 @@ export class AppComponent {
     if (result.index >= 0 && result.index < themes.length) {
       const selectedTheme = themes[result.index];
       this._themeService.setTheme(selectedTheme);
-      // this.currentTheme.set(selectedTheme);
+      this.currentTheme.set(selectedTheme);
     }
   }
 
   selectTheme(theme: 'light' | 'dark' | 'system'): void {
     this._themeService.setTheme(theme);
     this.currentTheme.set(theme);
-    // this.showThemeMenu.set(false);
+    this.showThemeMenu.set(false);
   }
 }
