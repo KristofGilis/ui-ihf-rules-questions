@@ -1,20 +1,20 @@
-<div class="results-container">
+<div class="max-w-3xl mx-auto p-4">
   @if (quizService.results(); as results) {
-    <div class="results-header">
-      <h1 class="results-title">{{ 'quiz_results.title' | translate }}</h1>
+    <div class="mb-6">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">{{ 'quiz_results.title' | translate }}</h1>
 
-      <div class="score-card">
-        <div class="score-main" [ngClass]="getScoreColor()">
-          <span class="score-number">{{ results.correctCount }}/{{ results.totalQuestions }}</span>
-          <span class="score-percentage">{{ results.percentage.toFixed(0) }}%</span>
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md mb-6">
+        <div class="text-center mb-6" [ngClass]="getScoreColor()">
+          <span class="text-5xl font-bold block mb-2">{{ results.correctCount }}/{{ results.totalQuestions }}</span>
+          <span class="text-3xl font-semibold">{{ results.percentage.toFixed(0) }}%</span>
         </div>
 
-        <div class="score-details">
-          <div class="score-item correct">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex items-center gap-2 text-green-600 dark:text-green-400">
             <fa-icon [icon]="faCheckCircle"></fa-icon>
             <span>{{ results.correctCount }} {{ 'quiz_results.correct' | translate }}</span>
           </div>
-          <div class="score-item incorrect">
+          <div class="flex items-center gap-2 text-red-600 dark:text-red-400">
             <fa-icon [icon]="faTimesCircle"></fa-icon>
             <span>{{ results.wrongCount }} {{ 'quiz_results.wrong' | translate }}</span>
           </div>
@@ -22,57 +22,58 @@
       </div>
     </div>
 
-    <div class="results-actions">
-      <button class="btn btn-primary" (click)="retakeQuiz()" [routerLink]="['/']">
+    <div class="flex gap-3 mb-6">
+      <button class="flex-1 font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white" 
+              (click)="retakeQuiz()" [routerLink]="['/']">
         <fa-icon [icon]="faRedo"></fa-icon>
         {{ 'quiz_results.retake' | translate }}
       </button>
-      <button class="btn btn-secondary" [routerLink]="['/']">
+      <button class="flex-1 font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 bg-gray-600 hover:bg-gray-700 text-white" 
+              [routerLink]="['/']">
         <fa-icon [icon]="faHome"></fa-icon>
         {{ 'quiz_results.home' | translate }}
       </button>
     </div>
 
-    <div class="results-review">
-      <h2 class="review-title">{{ 'quiz_results.review' | translate }}</h2>
+    <div>
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">{{ 'quiz_results.review' | translate }}</h2>
 
       @for (answer of results.answers; track $index) {
-        <div
-          class="question-review"
-          [ngClass]="{ 'correct-question': answer.isCorrect, 'incorrect-question': !answer.isCorrect }">
-          <div class="question-header">
-            <span class="question-number">{{ 'quiz_results.question' | translate }} {{ answer.questionNumber }}</span>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md mb-4"
+          [ngClass]="{ 'border-l-4 border-green-500': answer.isCorrect, 'border-l-4 border-red-500': !answer.isCorrect }">
+          <div class="flex items-center justify-between mb-4">
+            <span class="font-semibold text-gray-900 dark:text-white">{{ 'quiz_results.question' | translate }} {{ answer.questionNumber }}</span>
             @if (answer.isCorrect) {
-              <fa-icon [icon]="faCheckCircle" class="status-icon correct"></fa-icon>
+              <fa-icon [icon]="faCheckCircle" class="text-green-600 dark:text-green-400 text-xl"></fa-icon>
             } @else {
-              <fa-icon [icon]="faTimesCircle" class="status-icon incorrect"></fa-icon>
+              <fa-icon [icon]="faTimesCircle" class="text-red-600 dark:text-red-400 text-xl"></fa-icon>
             }
           </div>
 
-          <p class="question-text">{{ answer.question }}</p>
+          <p class="text-gray-700 dark:text-gray-300 mb-4">{{ answer.question }}</p>
 
-          <div class="answers-review">
+          <div class="space-y-2">
             @for (ans of answer.allAnswers; track ans.id) {
               @let wasSelected = answer.selectedAnswerIds.includes(ans.id);
               @let isCorrect = ans.isCorrect;
-              <div
-                class="answer-review"
+              <div class="flex items-center justify-between p-3 rounded border"
                 [ngClass]="{
-                  'answer-correct': isCorrect && wasSelected,
-                  'answer-incorrect': !isCorrect && wasSelected,
-                  'answer-missed': isCorrect && !wasSelected,
+                  'bg-green-50 dark:bg-green-900/20 border-green-500': isCorrect && wasSelected,
+                  'bg-red-50 dark:bg-red-900/20 border-red-500': !isCorrect && wasSelected,
+                  'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700 opacity-60': isCorrect && !wasSelected,
+                  'border-gray-200 dark:border-gray-700': !wasSelected && !isCorrect
                 }">
-                <div class="answer-content">
+                <div class="flex items-center gap-2">
                   @if (isCorrect) {
-                    <fa-icon [icon]="faCheckCircle" class="answer-icon"></fa-icon>
+                    <fa-icon [icon]="faCheckCircle" class="text-green-600 dark:text-green-400"></fa-icon>
                   } @else {
-                    <fa-icon [icon]="faTimesCircle" class="answer-icon"></fa-icon>
+                    <fa-icon [icon]="faTimesCircle" class="text-red-600 dark:text-red-400"></fa-icon>
                   }
-                  <span class="answer-text">{{ ans.phrase }}</span>
+                  <span class="text-gray-900 dark:text-white">{{ ans.phrase }}</span>
                 </div>
 
                 @if (wasSelected) {
-                  <span class="your-answer">{{ 'quiz_results.your_answer' | translate }}</span>
+                  <span class="text-sm font-medium text-blue-600 dark:text-blue-400">{{ 'quiz_results.your_answer' | translate }}</span>
                 }
               </div>
             }

@@ -1,13 +1,13 @@
 @if (loading()) {
-  <div class="loading">
-    <fa-icon [icon]="faSpinner" [animation]="'spin'" size="2x"></fa-icon>
+  <div class="flex justify-center items-center py-8">
+    <fa-icon [icon]="faSpinner" [animation]="'spin'" size="2x" class="text-blue-600"></fa-icon>
   </div>
 } @else {
-  <div class="rules-list">
+  <div class="space-y-2">
     @for (rule of rules(); track rule.number) {
-      <a [routerLink]="rule.id" class="rule-item">
-        <span class="rule-text">{{ rule.number }} - {{ rule.name }}</span>
-        <fa-icon [icon]="faChevronRight" class="rule-icon"></fa-icon>
+      <a [routerLink]="rule.id" class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500">
+        <span class="text-gray-900 dark:text-white font-medium">{{ rule.number }} - {{ rule.name }}</span>
+        <fa-icon [icon]="faChevronRight" class="text-gray-400"></fa-icon>
       </a>
     }
   </div>

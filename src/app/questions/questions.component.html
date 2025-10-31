@@ -1,24 +1,20 @@
-<div class="container-fluid h-100">
-  <div class="row">
-    <div class="col">
-      <h4>
-        @if (random().isRandom) {
-          {{ 'random_questions.title' | translate }}
-        } @else {
-          {{ 'questions.title' | translate }}
-        }
-      </h4>
+<div class="max-w-5xl mx-auto p-4">
+  <h4 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+    @if (random().isRandom) {
+      {{ 'random_questions.title' | translate }}
+    } @else {
+      {{ 'questions.title' | translate }}
+    }
+  </h4>
 
-      <app-questions-view
-        [questions]="(questions$ | async) ?? []"
-        [loading]="loading()"
-        [hasMoreQuestions]="hasMoreQuestions"
-        [score]="(score$ | async) ?? undefined"
-        [scoreLoading]="scoreLoading()"
-        [isRandom]="random().isRandom"
-        [randomCount]="random().count"
-        (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)"
-        (newRandomQuestions)="onNewRandomQuestions()" />
-    </div>
-  </div>
+  <app-questions-view
+    [questions]="(questions$ | async) ?? []"
+    [loading]="loading()"
+    [hasMoreQuestions]="hasMoreQuestions"
+    [score]="(score$ | async) ?? undefined"
+    [scoreLoading]="scoreLoading()"
+    [isRandom]="random().isRandom"
+    [randomCount]="random().count"
+    (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)"
+    (newRandomQuestions)="onNewRandomQuestions()" />
 </div>

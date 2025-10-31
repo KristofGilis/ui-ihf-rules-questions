@@ -1,18 +1,18 @@
-<div class="question-card">
-  <div class="question-header">
-    <span class="question-number">{{ question().number }})</span>
-    <span class="question-text" [innerHTML]="question().phrase"></span>
+<div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md">
+  <div class="mb-4">
+    <span class="font-bold text-gray-900 dark:text-white mr-2">{{ question().number }})</span>
+    <span class="text-gray-700 dark:text-gray-300" [innerHTML]="question().phrase"></span>
   </div>
 
-  <div class="answers">
+  <div class="space-y-2">
     @for (answer of question().answers?.nodes; track answer?.id) {
-      <label class="answer-label">
+      <label class="flex items-start gap-2 p-3 rounded border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors">
         <input
           type="checkbox"
-          class="answer-checkbox"
+          class="mt-1"
           (change)="onCheckboxChange(answer?.id ?? '', $any($event.target).checked)" />
-        <span class="answer-text">
-          <span class="answer-number">{{ answer?.number }})</span>
+        <span class="text-gray-900 dark:text-white flex-1">
+          <span class="font-medium mr-2">{{ answer?.number }})</span>
           {{ answer?.phrase }}
         </span>
       </label>
