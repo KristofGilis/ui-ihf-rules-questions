@@ -1,18 +1,19 @@
 {
   "home": {
     "alert": "I decided to not automatically add the other languages, because I do not have the time. But you can help. ;-) Special thanks for all collaborators.",
+    "quiz_card": {
+      "button": "Start Quiz",
+      "content": "Test your knowledge with a quiz. Choose the number of questions and optionally enable timed mode.",
+      "count": "# Questions",
+      "timed_mode": "Timed Mode (90s per question)",
+      "title": "Take a Quiz"
+    },
     "all_questions_card": {
-      "button": "Answer all questions",
-      "content": "Go to the list of all questions.",
+      "button": "Browse all questions",
+      "content": "View and study all available questions.",
       "title": "All Questions"
     },
     "collaborate": "Help to support other languages",
-    "random_questions_card": {
-      "button": "Answer {{count}} questions",
-      "content": "Go to the list of random question",
-      "count": "# Questions",
-      "title": "Random Questions"
-    },
     "rules_card": {
       "button": "Go to rules",
       "content": "Go to the list of all rules. From here you can get all questions related to the selected rule.",
@@ -28,20 +29,37 @@
     "srb": "Serbian"
   },
   "main": {
-    "title": "IHF Rules Questions"
+    "title": "IHF Rules Quiz"
   },
   "navigation": {
     "home": "Home",
+    "quiz": "Quiz",
     "questions": "Questions",
     "rules": "Rules"
+  },
+  "quiz": {
+    "complete": "Complete Quiz",
+    "next": "Next",
+    "previous": "Previous",
+    "progress": "Question {{current}} of {{total}}",
+    "select_answers": "Select all correct answers",
+    "time_remaining": "Time Remaining",
+    "title": "Quiz"
+  },
+  "quiz_results": {
+    "correct": "Correct",
+    "correct_answers": "Correct answers",
+    "incorrect": "Incorrect",
+    "percentage": "Score: {{percentage}}%",
+    "restart": "Start New Quiz",
+    "review": "Review Answers",
+    "score": "Your score: {{correct}} / {{total}}",
+    "title": "Quiz Results",
+    "your_answers": "Your answers"
   },
   "questions": {
     "calculate_score": "Calculate score",
     "title": "All Questions"
-  },
-  "questions_random_new": "{{count}} new questions",
-  "random_questions": {
-    "title": "Random Questions"
   },
   "rules": {
     "title": "Rules"
@@ -50,5 +68,11 @@
     "score": "Your score:",
     "title": "Result",
     "wrong_questionNumbers": "The questions you answered <u>wrong</u>:"
+  },
+  "theme": {
+    "dark": "Dark",
+    "light": "Light",
+    "system": "System",
+    "toggle": "Toggle theme"
   }
 }
