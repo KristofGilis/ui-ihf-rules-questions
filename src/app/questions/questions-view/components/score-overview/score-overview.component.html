@@ -67,7 +67,7 @@
         (click)="recalculate.emit()"
         [disabled]="scoreLoading()">
         <fa-icon [icon]="scoreLoading() ? faSpinner : faRotateRight" [animation]="scoreLoading() ? 'spin' : undefined"></fa-icon>
-        <span class="text-sm">Recalculate Score</span>
+        <span class="text-sm">{{ 'questions.recalculate_score_full' | translate }}</span>
       </button>
     </div>
   }

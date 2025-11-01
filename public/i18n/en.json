@@ -40,6 +40,9 @@
   "questions": {
     "calculate_score": "Calculate Score",
     "description": "Browse and study all available questions at your own pace",
+    "recalculate_score": "Recalculate",
+    "recalculate_score_full": "Recalculate Score",
+    "show_score": "Show Score",
     "title": "All Questions"
   },
   "questions_random_new": "New random {{count}} questions",

@@ -40,6 +40,9 @@
   "questions": {
     "calculate_score": "Bereken score",
     "description": "Bekijk en bestudeer alle beschikbare vragen in je eigen tempo",
+    "recalculate_score": "Herbereken",
+    "recalculate_score_full": "Herbereken Score",
+    "show_score": "Toon Score",
     "title": "Alle vragen"
   },
   "questions_random_new": "Nieuwe willekeurige {{count}} vragen",
