@@ -53,6 +53,7 @@ export class QuestionsViewComponent {
     questionIds: string[];
     selectedAnswerIds: string[];
   }>();
+  readonly restart = output<void>();
 
   readonly questionComponents = viewChildren(QuestionComponent);
 
@@ -139,6 +140,20 @@ export class QuestionsViewComponent {
         selectedAnswerIds: this.selectedAnswers(),
       });
     }
+  }
+
+  onRestart(): void {
+    // Clear all selected answers
+    this.selectedAnswers.set([]);
+    // Uncheck all checkboxes
+    const checkboxElements = document.querySelectorAll('input[type="checkbox"]');
+    checkboxElements.forEach((checkbox: Element) => {
+      (checkbox as HTMLInputElement).checked = false;
+    });
+    // Close mobile dialog if open
+    this.showMobileScoreDialog.set(false);
+    // Emit restart event to parent to clear score
+    this.restart.emit();
   }
 
   isQuestionWrong(questionId: string): boolean {

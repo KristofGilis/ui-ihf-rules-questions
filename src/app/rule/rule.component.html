@@ -21,6 +21,7 @@
           [score]="score ?? undefined"
           [scoreLoading]="scoreLoading()"
           (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)"
+          (restart)="onRestart()"
           #questionsView />
       </div>
 
@@ -32,7 +33,8 @@
             [questions]="rule ? getQuestions(rule) : []"
             [scoreLoading]="scoreLoading()"
             (scrollToQuestion)="onScrollToQuestion($event)"
-            (recalculate)="questionsView.onCalculateScore()" />
+            (recalculate)="questionsView.onCalculateScore()"
+            (restart)="questionsView.onRestart()" />
         </div>
       }
     </div>

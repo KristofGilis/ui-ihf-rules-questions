@@ -20,6 +20,7 @@ export class ScoreOverviewComponent {
   readonly scoreLoading = input(false); // For recalculate button
   readonly scrollToQuestion = output<string>();
   readonly recalculate = output<void>();
+  readonly restart = output<void>();
 
   readonly faThumbsUp = faThumbsUp;
   readonly faTimesCircle = faTimesCircle;

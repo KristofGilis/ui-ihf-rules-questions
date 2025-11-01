@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, effect, HostListener, inject, signa
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
-import { finalize, map, Subject, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, finalize, map, merge, Subject, switchMap, tap } from 'rxjs';
 import { Question, Score } from '../../../graphql/generated';
 import { PageContainerComponent, PageHeroComponent } from '../shared/components';
 import { ScoreOverviewComponent } from './questions-view/components/score-overview/score-overview.component';
@@ -37,16 +37,20 @@ export class QuestionsComponent {
   );
 
   private _calculating$ = new Subject<{ questionIds: string[]; selectedAnswerIds: string[] }>();
+  private _reset$ = new BehaviorSubject<Score | undefined>(undefined);
 
-  score$ = this._calculating$.pipe(
-    switchMap(({ questionIds, selectedAnswerIds }) =>
-      this._questionsService.calculateScore(questionIds, selectedAnswerIds).pipe(
-        tap((x) => this.scoreLoading.set(x.loading)),
-        onlyCompleteData(),
-        map((x) => x.data.calculateScore as Score),
-        finalize(() => this.scoreLoading.set(false))
+  score$ = merge(
+    this._calculating$.pipe(
+      switchMap(({ questionIds, selectedAnswerIds }) =>
+        this._questionsService.calculateScore(questionIds, selectedAnswerIds).pipe(
+          tap((x) => this.scoreLoading.set(x.loading)),
+          onlyCompleteData(),
+          map((x) => x.data.calculateScore as Score),
+          finalize(() => this.scoreLoading.set(false))
+        )
       )
-    )
+    ),
+    this._reset$
   );
 
   scoreLoading = signal(false);
@@ -86,6 +90,12 @@ export class QuestionsComponent {
     // Set loading state immediately to show sidebar
     this.scoreLoading.set(true);
     this._calculating$.next({ questionIds, selectedAnswerIds });
+  }
+
+  onRestart(): void {
+    // Reset the score
+    this._reset$.next(undefined);
+    this.scoreLoading.set(false);
   }
 
   onScrollToQuestion(questionId: string): void {

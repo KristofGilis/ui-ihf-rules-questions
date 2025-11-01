@@ -18,6 +18,7 @@
           [score]="score ?? undefined"
           [scoreLoading]="scoreLoading()"
           (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)"
+          (restart)="onRestart()"
           #questionsView />
       </div>
 
@@ -29,7 +30,8 @@
             [questions]="questions ?? []"
             [scoreLoading]="scoreLoading()"
             (scrollToQuestion)="onScrollToQuestion($event)"
-            (recalculate)="questionsView.onCalculateScore()" />
+            (recalculate)="questionsView.onCalculateScore()"
+            (restart)="questionsView.onRestart()" />
         </div>
       }
     </div>

@@ -1,10 +1,10 @@
-import { AsyncPipe, DOCUMENT } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, HostListener, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
-import { Observable, finalize, map, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, Subject, finalize, map, merge, shareReplay, switchMap, tap } from 'rxjs';
 import { Question, Rule, Score } from '../../../graphql/generated';
 import { ScoreOverviewComponent } from '../questions/questions-view/components/score-overview/score-overview.component';
 import { QuestionsViewComponent } from '../questions/questions-view/questions-view.component';
@@ -31,10 +31,8 @@ export class RuleComponent {
   private readonly _ruleService = inject(RuleService);
   private readonly _questionsService = inject(QuestionsService);
   private readonly _translateService = inject(TranslateService);
-  private readonly _document = inject(DOCUMENT);
 
   loading = signal(false);
-  score$?: Observable<Score>;
   scoreLoading = signal(false);
 
   rule$ = this._ruleService.get(this._activatedRoute.snapshot.params['id']).pipe(
@@ -43,6 +41,23 @@ export class RuleComponent {
     map((x) => x.data.ruleById as Rule),
     finalize(() => this.loading.set(false)),
     shareReplay()
+  );
+
+  private _calculating$ = new Subject<{ questionIds: string[]; selectedAnswerIds: string[] }>();
+  private _reset$ = new BehaviorSubject<Score | undefined>(undefined);
+
+  score$ = merge(
+    this._calculating$.pipe(
+      switchMap(({ questionIds, selectedAnswerIds }) =>
+        this._questionsService.calculateScore(questionIds, selectedAnswerIds).pipe(
+          tap((x) => this.scoreLoading.set(x.loading)),
+          onlyCompleteData(),
+          map((x) => x.data.calculateScore as Score),
+          finalize(() => this.scoreLoading.set(false))
+        )
+      )
+    ),
+    this._reset$
   );
 
   get hasMoreQuestions(): boolean {
@@ -81,20 +96,25 @@ export class RuleComponent {
   }
 
   onCalculateScore(questionIds: string[], selectedAnswerIds: string[]): void {
-    this.score$ = this._questionsService.calculateScore(questionIds, selectedAnswerIds).pipe(
-      tap((x) => this.scoreLoading.set(x.loading)),
-      onlyCompleteData(),
-      map((x) => x.data.calculateScore as Score),
-      finalize(() => this.scoreLoading.set(false))
-    );
+    // Set loading state immediately to show sidebar
+    this.scoreLoading.set(true);
+    this._calculating$.next({ questionIds, selectedAnswerIds });
+  }
+
+  onRestart(): void {
+    // Reset the score
+    this._reset$.next(undefined);
+    this.scoreLoading.set(false);
   }
 
   onScrollToQuestion(questionId: string): void {
-    const element = this._document.getElementById(questionId);
-    if (element) {
-      const yOffset = -100; // Offset for fixed header
-      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
+    // Find the question element and scroll to it
+    const questionElement = document.querySelector(`[data-question-id="${questionId}"]`);
+    if (questionElement) {
+      questionElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
     }
   }
 }
