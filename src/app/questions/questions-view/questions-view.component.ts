@@ -47,6 +47,7 @@ export class QuestionsViewComponent {
 
   readonly selectedAnswers = signal<string[]>([]);
   readonly showMobileScoreDialog = signal(false);
+  private savedScrollY = 0;
 
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
@@ -70,30 +71,33 @@ export class QuestionsViewComponent {
     // Lock body scroll when mobile dialog is open (only on mobile/native, not desktop)
     effect(() => {
       if (this.showMobileScoreDialog() && this.score() && this.isMobile()) {
-        // Save current scroll position
-        const scrollY = window.scrollY;
+        // Save current scroll position before locking
+        this.savedScrollY = window.scrollY;
         this.document.body.style.position = 'fixed';
-        this.document.body.style.top = `-${scrollY}px`;
+        this.document.body.style.top = `-${this.savedScrollY}px`;
         this.document.body.style.width = '100%';
       } else {
         // Restore scroll position
-        const scrollY = this.document.body.style.top;
         this.document.body.style.position = '';
         this.document.body.style.top = '';
         this.document.body.style.width = '';
-        if (scrollY) {
-          window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        if (this.savedScrollY) {
+          window.scrollTo(0, this.savedScrollY);
+          this.savedScrollY = 0;
         }
       }
     });
 
-    // Auto-open dialog when score is calculated on mobile
+    // Auto-open dialog when score is calculated on mobile (with delay to avoid scroll jump)
     effect(() => {
       const score = this.score();
       const isMobile = this.isMobile();
 
       if (score && isMobile) {
-        this.showMobileScoreDialog.set(true);
+        // Delay opening to ensure scroll position is stable
+        setTimeout(() => {
+          this.showMobileScoreDialog.set(true);
+        }, 100);
       }
     });
   }

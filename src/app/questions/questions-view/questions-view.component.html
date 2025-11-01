@@ -1,19 +1,38 @@
-@if (score()) {
-  <!-- Questions List - Just the questions, no sidebar (sidebar is in parent) -->
-  <div class="w-full space-y-6" [class.pb-16]="isMobile()" [class.lg:pb-0]="isMobile()">
-    @for (question of questions(); track question.id) {
-      <div class="fade-in">
-        <app-question
-          [question]="question"
-          [isWrong]="isQuestionWrong(question.id)"
-          (selectAnswer)="onSelectAnswer($event)"
-          (deselectAnswer)="onDeselectAnswer($event)" />
-      </div>
-    }
-  </div>
+<!-- Questions List - Always rendered, no conditional destruction -->
+<div class="w-full space-y-6 questions-list" [class.pb-24]="isMobile()" [class.lg:pb-0]="isMobile()">
+  @for (question of questions(); track question.id) {
+    <div class="fade-in">
+      <app-question
+        [question]="question"
+        [isWrong]="isQuestionWrong(question.id)"
+        (selectAnswer)="onSelectAnswer($event)"
+        (deselectAnswer)="onDeselectAnswer($event)" />
+    </div>
+  }
 
-  <!-- Mobile: Fixed Bottom Bar -->
-  @if (isMobile() && !showMobileScoreDialog()) {
+  @if (loading()) {
+    <div class="flex items-center justify-center py-8">
+      <fa-icon [icon]="faSpinner" [animation]="'spin'" size="2x" class="text-cyan-500"></fa-icon>
+    </div>
+  }
+
+  @if (!hasMoreQuestions() && !loading()) {
+    <button
+      type="button"
+      class="group w-full flex items-center justify-center gap-2 rounded-xl bg-linear-to-br from-cyan-500 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
+      [class.hidden]="score()"
+      [disabled]="scoreLoading()"
+      (click)="onCalculateScore()">
+      {{ 'questions.calculate_score' | translate }}
+      @if (scoreLoading()) {
+        <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
+      }
+    </button>
+  }
+</div>
+
+<!-- Mobile: Fixed Bottom Bar (only when score exists) -->
+@if (score() && isMobile() && !showMobileScoreDialog()) {
     <div class="fixed bottom-16 left-0 right-0 z-40 bg-white p-4 shadow-2xl dark:bg-slate-900">
       @if (score()?.percentage !== '100%') {
         <!-- Show both buttons when there are wrong answers -->
@@ -87,36 +106,4 @@
       </div>
     </div>
   }
-} @else {
-  <!-- Normal View Before Score Calculation -->
-  <div class="space-y-6">
-    @for (question of questions(); track question.id) {
-      <div class="fade-in">
-        <app-question
-          [question]="question"
-          [isWrong]="isQuestionWrong(question.id)"
-          (selectAnswer)="onSelectAnswer($event)"
-          (deselectAnswer)="onDeselectAnswer($event)" />
-      </div>
-    }
 
-    @if (loading()) {
-      <div class="flex items-center justify-center py-8">
-        <fa-icon [icon]="faSpinner" [animation]="'spin'" size="2x" class="text-cyan-500"></fa-icon>
-      </div>
-    }
-
-    @if (!hasMoreQuestions() && !loading()) {
-      <button
-        type="button"
-        class="group w-full flex items-center justify-center gap-2 rounded-xl bg-linear-to-br from-cyan-500 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
-        [disabled]="scoreLoading()"
-        (click)="onCalculateScore()">
-        {{ 'questions.calculate_score' | translate }}
-        @if (scoreLoading()) {
-          <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
-        }
-      </button>
-    }
-  </div>
-}

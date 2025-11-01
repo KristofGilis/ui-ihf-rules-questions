@@ -1,5 +1,13 @@
 /* Styling moved to inline Tailwind classes in HTML */
 
+:host {
+  overflow-anchor: auto;
+}
+
+.questions-list {
+  overflow-anchor: auto;
+}
+
 @keyframes slide-up {
   from {
     opacity: 0;

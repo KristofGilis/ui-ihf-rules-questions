@@ -1,31 +1,36 @@
-<app-page-container [padding]="(score$ | async) ? 'pb-24' : 'py-12 pb-24'">
-  <!-- Always use split view layout structure -->
-  <div class="flex flex-col gap-6 lg:flex-row lg:gap-6">
-    <!-- Left side: Title and Questions -->
-    <div class="flex-1 lg:pt-12" [class.lg:mx-auto]="!(score$ | async)" [class.lg:max-w-4xl]="!(score$ | async)">
-      <app-page-hero 
-        [title]="'questions.title' | translate" 
-        [description]="'questions.description' | translate" />
+@let score = score$ | async;
+@let questions = questions$ | async;
+<app-page-container padding="pb-24">
+  <!-- Wrapper - full width container -->
+  <div class="lg:mx-auto">
+    <!-- Grid layout that changes based on score -->
+    <div class="layout-grid flex flex-col gap-6" 
+         [class.no-score]="!score" 
+         [class.has-score]="score">
+      <!-- Main content area -->
+      <div class="lg:max-w-4xl lg:pt-12">
+        <app-page-hero [title]="'questions.title' | translate" [description]="'questions.description' | translate" />
 
-      <app-questions-view
-        [questions]="(questions$ | async) ?? []"
-        [loading]="loading()"
-        [hasMoreQuestions]="hasMoreQuestions"
-        [score]="(score$ | async) ?? undefined"
-        [scoreLoading]="scoreLoading()"
-        (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)"
-        #questionsView />
-    </div>
-    
-    <!-- Right side: Score Overview Sidebar (hidden on mobile, shown on desktop when score exists) -->
-    <div class="hidden lg:sticky lg:top-24 lg:max-h-[calc(100vh-5rem)] lg:w-96 lg:shrink-0 lg:self-start lg:block" [class.lg:hidden]="!(score$ | async)">
-      @if ((score$ | async); as scoreValue) {
-        <app-score-overview 
-          [score]="scoreValue" 
-          [questions]="(questions$ | async) ?? []"
+        <app-questions-view
+          [questions]="questions ?? []"
+          [loading]="loading()"
+          [hasMoreQuestions]="hasMoreQuestions"
+          [score]="score ?? undefined"
           [scoreLoading]="scoreLoading()"
-          (scrollToQuestion)="onScrollToQuestion($event)"
-          (recalculate)="questionsView.onCalculateScore()" />
+          (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)"
+          #questionsView />
+      </div>
+
+      <!-- Right side: Score Overview Sidebar -->
+      @if (score) {
+        <div class="hidden lg:sticky lg:top-24 lg:block lg:h-fit lg:w-[384px] lg:shrink-0 lg:self-start lg:max-h-[calc(100vh-5rem)]">
+          <app-score-overview
+            [score]="score"
+            [questions]="questions ?? []"
+            [scoreLoading]="scoreLoading()"
+            (scrollToQuestion)="onScrollToQuestion($event)"
+            (recalculate)="questionsView.onCalculateScore()" />
+        </div>
       }
     </div>
   </div>

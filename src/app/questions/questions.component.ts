@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, effect, HostListener, inject, signa
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
-import { BehaviorSubject, finalize, map, Observable, tap } from 'rxjs';
+import { BehaviorSubject, finalize, map, tap } from 'rxjs';
 import { Question, Score } from '../../../graphql/generated';
 import { PageContainerComponent, PageHeroComponent } from '../shared/components';
 import { ScoreOverviewComponent } from './questions-view/components/score-overview/score-overview.component';
@@ -35,9 +35,9 @@ export class QuestionsComponent {
     map((x) => x.data.questions?.edges?.map((y) => y?.node as Question) ?? []),
     finalize(() => this.loading.set(false))
   );
-  score$?: Observable<Score>;
-  scoreLoading = signal(false);
   private _scoreSubject = new BehaviorSubject<Score | undefined>(undefined);
+  score$ = this._scoreSubject.asObservable();
+  scoreLoading = signal(false);
 
   get hasMoreQuestions(): boolean {
     return this._questionsService.hasNextPage;
@@ -72,11 +72,6 @@ export class QuestionsComponent {
 
     // Set loading state to true at the start
     this.scoreLoading.set(true);
-
-    // Set score$ to the BehaviorSubject observable so layout doesn't flash
-    if (!this.score$) {
-      this.score$ = this._scoreSubject.asObservable() as Observable<Score>;
-    }
 
     this._questionsService
       .calculateScore(questionIds, selectedAnswerIds)
