@@ -40,6 +40,7 @@
   "questions": {
     "calculate_score": "Calculate Score",
     "description": "Browse and study all available questions at your own pace",
+    "loading": "Loading questions...",
     "no_questions": "No questions available",
     "recalculate_score": "Recalculate",
     "recalculate_score_full": "Recalculate Score",

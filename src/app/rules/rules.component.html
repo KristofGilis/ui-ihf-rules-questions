@@ -1,8 +1,8 @@
-<app-page-container>
+<app-page-container [maxWidth]="'max-w-5xl'">
   <app-page-hero [title]="'rules.title' | translate" [description]="'rules.description' | translate" />
 
   <!-- Rules List -->
-  <div class="mx-auto max-w-4xl">
+  <div class="mx-auto max-w-5xl">
     <app-rules-view [rules]="(rules$ | async) ?? []" [loading]="(loading$ | async) ?? false" />
   </div>
 </app-page-container>

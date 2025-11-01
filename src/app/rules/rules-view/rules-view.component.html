@@ -1,10 +1,5 @@
 @if (loading()) {
-  <div class="flex justify-center items-center py-16">
-    <div class="flex flex-col items-center gap-4">
-      <app-loading-spinner [size]="'lg'" />
-      <p class="text-sm text-slate-600 dark:text-slate-400">{{ 'rules.loading' | translate }}</p>
-    </div>
-  </div>
+  <app-loading-spinner [size]="'lg'" [text]="'rules.loading' | translate" />
 } @else {
   <div class="space-y-3">
     @for (rule of rules(); track rule.number) {

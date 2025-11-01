@@ -1,6 +1,6 @@
 @let score = score$ | async;
 @let questions = questions$ | async;
-<app-page-container padding="pb-24">
+<app-page-container padding="pb-24" [maxWidth]="'max-w-5xl'">
   <!-- Wrapper - full width container -->
   <div class="lg:mx-auto">
     <!-- Grid layout that changes based on score -->
@@ -8,7 +8,7 @@
          [class.no-score]="!score && !scoreLoading()" 
          [class.has-score]="score || scoreLoading()">
       <!-- Main content area -->
-      <div class="lg:max-w-4xl pt-12">
+      <div class="lg:max-w-5xl pt-12">
         <app-page-hero [title]="'questions.title' | translate" [description]="'questions.description' | translate" />
 
         <app-questions-view

@@ -12,13 +12,14 @@ import {
   faExternalLinkAlt,
   faFileAlt,
   faQuestionCircle,
+  faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
 import { finalize, map, shareReplay, tap } from 'rxjs';
 import { GetVersionGQL } from '../../../graphql/generated';
 import { LogoComponent } from '../logo/logo.component';
-import { LoadingSpinnerComponent, PageHeroComponent } from '../shared/components';
+import { PageContainerComponent, PageHeroComponent } from '../shared/components';
 
 @Component({
   selector: 'app-home',
@@ -28,7 +29,7 @@ import { LoadingSpinnerComponent, PageHeroComponent } from '../shared/components
     RouterLink,
     TranslatePipe,
     LogoComponent,
-    LoadingSpinnerComponent,
+    PageContainerComponent,
     PageHeroComponent,
     FaIconComponent,
   ],
@@ -52,6 +53,7 @@ export class HomeComponent {
   readonly faQuestionCircle = faQuestionCircle;
   readonly faGithub = faGithub;
   readonly faExternalLinkAlt = faExternalLinkAlt;
+  readonly faSpinner = faSpinner;
 
   private readonly _query = this._versionGQL.watch();
 

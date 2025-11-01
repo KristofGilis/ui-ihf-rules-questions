@@ -17,9 +17,7 @@
   }
 
   @if (loading()) {
-    <div class="flex items-center justify-center py-8">
-      <app-loading-spinner [size]="'lg'" />
-    </div>
+    <app-loading-spinner [size]="'lg'" [text]="'questions.loading' | translate" />
   }
 
   @if (!hasMoreQuestions() && !loading()) {

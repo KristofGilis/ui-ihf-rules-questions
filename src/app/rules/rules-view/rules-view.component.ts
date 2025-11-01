@@ -8,7 +8,7 @@ import { EmptyStateComponent, LoadingSpinnerComponent } from '../../shared/compo
 
 @Component({
   selector: 'app-rules-view',
-  imports: [RouterLink, TranslatePipe, LoadingSpinnerComponent, EmptyStateComponent, FaIconComponent],
+  imports: [RouterLink, TranslatePipe, EmptyStateComponent, LoadingSpinnerComponent, FaIconComponent],
   templateUrl: './rules-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

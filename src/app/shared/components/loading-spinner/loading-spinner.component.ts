@@ -1,19 +1,24 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-loading-spinner',
+  imports: [FontAwesomeModule],
   templateUrl: './loading-spinner.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoadingSpinnerComponent {
   readonly size = input<'sm' | 'md' | 'lg' | 'xl'>('md');
+  readonly text = input<string>();
+  readonly faSpinner = faSpinner;
 
-  readonly sizeClass = computed(() => {
+  readonly iconSize = computed(() => {
     const sizes = {
-      sm: 'h-4 w-4',
-      md: 'h-8 w-8',
-      lg: 'h-12 w-12',
-      xl: 'h-16 w-16',
+      sm: 'lg' as const,
+      md: 'xl' as const,
+      lg: '2x' as const,
+      xl: '3x' as const,
     };
     return sizes[this.size()];
   });

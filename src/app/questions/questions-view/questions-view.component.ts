@@ -17,7 +17,12 @@ import { faChartBar, faQuestionCircle, faRotateRight, faSpinner } from '@fortawe
 import { TranslatePipe } from '@ngx-translate/core';
 import { fromEvent, map, of, startWith } from 'rxjs';
 import { Question, Score } from '../../../../graphql/generated';
-import { EmptyStateComponent, GradientButtonComponent, LoadingSpinnerComponent, MobileDialogComponent } from '../../shared/components';
+import {
+  EmptyStateComponent,
+  GradientButtonComponent,
+  LoadingSpinnerComponent,
+  MobileDialogComponent,
+} from '../../shared/components';
 import { QuestionComponent } from './components/question/question.component';
 import { ScoreOverviewComponent } from './components/score-overview/score-overview.component';
 
