@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-loading-spinner',
-  imports: [],
   templateUrl: './loading-spinner.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoadingSpinnerComponent {
-  size = input<'sm' | 'md' | 'lg' | 'xl'>('md');
+  readonly size = input<'sm' | 'md' | 'lg' | 'xl'>('md');
 
   sizeClass() {
     const sizes = {

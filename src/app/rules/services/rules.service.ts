@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { tap } from 'rxjs';
+import { map, tap } from 'rxjs';
 import { GetRulesGQL } from '../../../../graphql/generated';
 
 @Injectable({
@@ -18,6 +18,7 @@ export class RulesService {
   });
 
   rules$ = this._rulesQuery.valueChanges.pipe(tap((x) => (this._cursor = x.data?.rules?.pageInfo?.endCursor)));
+  loading$ = this._rulesQuery.valueChanges.pipe(map((x) => x.loading));
 
   fetchMore(): void {
     this._rulesQuery.fetchMore({

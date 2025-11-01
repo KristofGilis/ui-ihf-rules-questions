@@ -2,13 +2,12 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-page-hero',
-  imports: [],
   templateUrl: './page-hero.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageHeroComponent {
-  title = input<string>('');
-  description = input<string>('');
-  icon = input(false);
-  badge = input(false);
+  readonly title = input<string>('');
+  readonly description = input<string>('');
+  readonly icon = input(false);
+  readonly badge = input(false);
 }

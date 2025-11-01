@@ -3,6 +3,16 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
+import {
+  faArrowRight,
+  faChevronRight,
+  faClock,
+  faExternalLinkAlt,
+  faFileAlt,
+  faQuestionCircle,
+} from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
 import { finalize, map, shareReplay, tap } from 'rxjs';
@@ -20,6 +30,7 @@ import { LoadingSpinnerComponent, PageHeroComponent } from '../shared/components
     LogoComponent,
     LoadingSpinnerComponent,
     PageHeroComponent,
+    FaIconComponent,
   ],
   templateUrl: './home.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,6 +43,15 @@ export class HomeComponent {
   questionCount = 10;
   timedMode = false;
   loadingVersion = signal(false);
+
+  // Font Awesome icons
+  readonly faClock = faClock;
+  readonly faArrowRight = faArrowRight;
+  readonly faFileAlt = faFileAlt;
+  readonly faChevronRight = faChevronRight;
+  readonly faQuestionCircle = faQuestionCircle;
+  readonly faGithub = faGithub;
+  readonly faExternalLinkAlt = faExternalLinkAlt;
 
   private readonly _query = this._versionGQL.watch();
 

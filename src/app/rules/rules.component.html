@@ -3,6 +3,6 @@
 
   <!-- Rules List -->
   <div class="mx-auto max-w-4xl">
-    <app-rules-view [rules]="(rules$ | async) ?? []" [loading]="loading()" />
+    <app-rules-view [rules]="(rules$ | async) ?? []" [loading]="(loading$ | async) ?? false" />
   </div>
 </app-page-container>

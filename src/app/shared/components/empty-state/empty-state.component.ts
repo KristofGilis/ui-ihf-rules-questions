@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-empty-state',
-  imports: [],
   templateUrl: './empty-state.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmptyStateComponent {
-  message = input<string>('');
-  iconPath = input<string>('');
-  hasAction = input(false);
+  readonly message = input<string>('');
+  readonly iconPath = input<string>('');
+  readonly hasAction = input(false);
 }
