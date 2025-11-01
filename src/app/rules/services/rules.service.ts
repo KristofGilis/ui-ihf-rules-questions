@@ -15,6 +15,8 @@ export class RulesService {
       after: null,
     },
     notifyOnNetworkStatusChange: true,
+    refetchWritePolicy: 'overwrite',
+    nextFetchPolicy: 'cache-first',
   });
 
   rules$ = this._rulesQuery.valueChanges.pipe(tap((x) => (this._cursor = x.data?.rules?.pageInfo?.endCursor)));

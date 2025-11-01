@@ -28,7 +28,7 @@ export class QuestionsService {
     },
     notifyOnNetworkStatusChange: true,
     refetchWritePolicy: 'overwrite',
-    nextFetchPolicy: 'network-only',
+    nextFetchPolicy: 'cache-first',
   });
   private readonly _calculateScoreGQL = inject(CalculateScoreGQL);
 
