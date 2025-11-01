@@ -1,7 +1,7 @@
 <!-- Questions List - Always rendered, no conditional destruction -->
 <div class="w-full questions-list" [class.pb-8]="isMobile()" [class.lg:pb-0]="isMobile()">
   @for (question of questions(); track question.id; let last = $last) {
-    <div class="fade-in" [class.my-5]="!last || isMobile()" [class.mb-0]="last && !isMobile()">
+    <div class="fade-in" [class.mb-5]="!last || isMobile() || (!score() && !scoreLoading())">
       <app-question
         [question]="question"
         [isWrong]="isQuestionWrong(question.id)"
@@ -19,14 +19,10 @@
   @if (!hasMoreQuestions() && !loading()) {
     <button
       type="button"
-      class="group w-full flex items-center justify-center gap-2 rounded-xl bg-linear-to-br from-cyan-500 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
-      [class.hidden]="score()"
-      [disabled]="scoreLoading()"
+      class="group w-full flex items-center justify-center gap-2 rounded-xl bg-linear-to-br from-cyan-500 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl"
+      [class.hidden]="score() || scoreLoading()"
       (click)="onCalculateScore()">
       {{ 'questions.calculate_score' | translate }}
-      @if (scoreLoading()) {
-        <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
-      }
     </button>
   }
 </div>

@@ -73,6 +73,8 @@ export class QuestionsComponent {
   }
 
   onCalculateScore(questionIds: string[], selectedAnswerIds: string[]): void {
+    // Set loading state immediately to show sidebar
+    this.scoreLoading.set(true);
     this._calculating$.next({ questionIds, selectedAnswerIds });
   }
 

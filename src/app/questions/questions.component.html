@@ -5,8 +5,8 @@
   <div class="lg:mx-auto">
     <!-- Grid layout that changes based on score -->
     <div class="layout-grid flex flex-col gap-6" 
-         [class.no-score]="!score" 
-         [class.has-score]="score">
+         [class.no-score]="!score && !scoreLoading()" 
+         [class.has-score]="score || scoreLoading()">
       <!-- Main content area -->
       <div class="lg:max-w-4xl pt-12">
         <app-page-hero [title]="'questions.title' | translate" [description]="'questions.description' | translate" />
@@ -22,10 +22,10 @@
       </div>
 
       <!-- Right side: Score Overview Sidebar -->
-      @if (score) {
+      @if (score || scoreLoading()) {
         <div class="hidden lg:sticky lg:top-24 lg:block lg:h-fit lg:w-[384px] lg:shrink-0 lg:self-start lg:max-h-[calc(100vh-5rem)]">
           <app-score-overview
-            [score]="score"
+            [score]="score ?? undefined"
             [questions]="questions ?? []"
             [scoreLoading]="scoreLoading()"
             (scrollToQuestion)="onScrollToQuestion($event)"
