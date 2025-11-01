@@ -11,7 +11,8 @@
       <div class="lg:max-w-5xl pt-12 w-full">
         <app-page-hero 
           [title]="getRuleName(rule) ?? ''" 
-          [description]="'rule.description' | translate" />
+          [description]="'rule.description' | translate"
+          [size]="'small'" />
 
         <app-questions-view
           [questions]="rule ? getQuestions(rule) : []"

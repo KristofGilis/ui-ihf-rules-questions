@@ -10,4 +10,5 @@ export class PageHeroComponent {
   readonly description = input<string>('');
   readonly icon = input(false);
   readonly badge = input(false);
+  readonly size = input<'default' | 'small'>('default');
 }
