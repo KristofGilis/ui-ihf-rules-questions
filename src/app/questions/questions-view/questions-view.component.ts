@@ -64,6 +64,7 @@ export class QuestionsViewComponent {
   readonly selectedAnswers = signal<string[]>([]);
   readonly showMobileScoreDialog = signal(false);
   private savedScrollY = 0;
+  private isInitialLoad = true;
 
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
@@ -109,11 +110,17 @@ export class QuestionsViewComponent {
       const score = this.score();
       const isMobile = this.isMobile();
 
-      if (score && isMobile) {
+      // Don't auto-open on initial load (e.g., when navigating back with cached score)
+      if (score && isMobile && !this.isInitialLoad) {
         // Delay opening to ensure scroll position is stable
         setTimeout(() => {
           this.showMobileScoreDialog.set(true);
         }, 100);
+      }
+
+      // Clear initial load flag after first effect run
+      if (this.isInitialLoad) {
+        this.isInitialLoad = false;
       }
     });
   }

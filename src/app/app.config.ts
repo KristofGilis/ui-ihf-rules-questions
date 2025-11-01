@@ -1,4 +1,4 @@
-import { ApplicationConfig, isDevMode, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, inject, isDevMode, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 
 import { HttpInterceptorFn, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
@@ -8,6 +8,7 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { routes } from './app.routes';
 import { graphqlProvider } from './graphql.provider';
 import { getLanguage } from './language';
+import { ScrollRestorationService } from './services/scroll-restoration.service';
 
 export function getBaseUrl(): string {
   return document.getElementsByTagName('base')[0].href;
@@ -32,10 +33,14 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       routes,
       withInMemoryScrolling({
-        scrollPositionRestoration: 'enabled',
+        scrollPositionRestoration: 'disabled',
         anchorScrolling: 'enabled',
       })
     ),
+    provideAppInitializer(() => {
+      const scrollService = inject(ScrollRestorationService);
+      scrollService.initialize();
+    }),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',
