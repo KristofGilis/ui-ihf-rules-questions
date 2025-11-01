@@ -39,7 +39,7 @@
             type="checkbox"
             [checked]="selectedAnswers.has(answer.id)"
             (change)="toggleAnswer(answer.id)"
-            class="mt-0.5" />
+            class="mt-0.5 h-5 w-5 shrink-0 cursor-pointer appearance-none rounded border-2 border-slate-400 bg-white transition-all duration-200 checked:border-cyan-500 checked:bg-linear-to-br checked:from-cyan-500 checked:to-blue-500 hover:border-cyan-500 hover:bg-cyan-50 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:checked:border-cyan-400 dark:checked:from-cyan-400 dark:checked:to-blue-400 dark:hover:border-cyan-400 dark:hover:bg-cyan-950 dark:focus:ring-cyan-400 dark:focus:ring-offset-slate-900" />
           <span class="text-gray-900 dark:text-white flex-1">{{ answer.phrase }}</span>
         </label>
       </div>
