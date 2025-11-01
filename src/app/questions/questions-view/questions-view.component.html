@@ -1,7 +1,7 @@
 <!-- Questions List - Always rendered, no conditional destruction -->
 <div class="w-full questions-list" [class.pb-8]="isMobile()" [class.lg:pb-0]="isMobile()">
   @for (question of questions(); track question.id; let last = $last) {
-    <div class="w-full fade-in" [class.mb-5]="!last || isMobile() || (!score() && !scoreLoading())">>
+    <div class="w-full fade-in" [class.mb-5]="!last || isMobile() || (!score() && !scoreLoading())">
       <app-question
         [question]="question"
         [isWrong]="isQuestionWrong(question.id)"
@@ -36,8 +36,8 @@
 @if (score() && isMobile() && !showMobileScoreDialog()) {
     <div class="fixed bottom-16 left-0 right-0 z-40 bg-white p-4 shadow-2xl dark:bg-slate-900">
       @if (score()?.percentage !== '100%') {
-        <!-- Show both buttons when there are wrong answers -->
-        <div class="mx-auto flex max-w-md gap-3">
+        <!-- Show all three buttons when there are wrong answers -->
+        <div class="mx-auto flex max-w-md gap-2">
           <!-- Recalculate Button -->
           <app-gradient-button
             [title]="'questions.recalculate_score_full' | translate"
@@ -48,6 +48,15 @@
             [disabled]="scoreLoading()"
             (clicked)="onCalculateScore()">
             <span>{{ 'questions.recalculate_score' | translate }}</span>
+          </app-gradient-button>
+
+          <!-- Reset Button -->
+          <app-gradient-button
+            [title]="'questions.reset_answers_full' | translate"
+            [variant]="'primary'"
+            [icon]="faTrash"
+            (clicked)="onResetAnswers()">
+            <span>{{ 'questions.reset_answers' | translate }}</span>
           </app-gradient-button>
 
           <!-- Show Score Button -->

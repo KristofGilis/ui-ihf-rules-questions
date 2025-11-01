@@ -32,7 +32,8 @@
             [questions]="rule ? getQuestions(rule) : []"
             [scoreLoading]="scoreLoading()"
             (scrollToQuestion)="onScrollToQuestion($event)"
-            (recalculate)="questionsView.onCalculateScore()" />
+            (recalculate)="questionsView.onCalculateScore()"
+            (reset)="questionsView.onResetAnswers()" />
         </div>
       }
     </div>

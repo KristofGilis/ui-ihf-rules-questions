@@ -44,6 +44,8 @@
     "no_questions": "No questions available",
     "recalculate_score": "Recalculate",
     "recalculate_score_full": "Recalculate Score",
+    "reset_answers": "Reset",
+    "reset_answers_full": "Reset Answers",
     "show_score": "Show Score",
     "title": "All Questions"
   },

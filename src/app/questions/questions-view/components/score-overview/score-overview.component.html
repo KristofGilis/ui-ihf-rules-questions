@@ -65,7 +65,7 @@
 
     <!-- Recalculate Button (desktop only, only when there are wrong answers) -->
     @if (!compact() && score()?.percentage !== '100%') {
-      <div class="px-4 pb-3">
+      <div class="flex gap-2 px-4 pb-3">
         <app-gradient-button
           [fullWidth]="true"
           [size]="'sm'"
@@ -76,6 +76,15 @@
           [disabled]="scoreLoading()"
           (clicked)="recalculate.emit()">
           <span class="text-sm">{{ 'questions.recalculate_score_full' | translate }}</span>
+        </app-gradient-button>
+        
+        <app-gradient-button
+          [fullWidth]="true"
+          [size]="'sm'"
+          [variant]="'primary'"
+          [icon]="faTrash"
+          (clicked)="reset.emit()">
+          <span class="text-sm">{{ 'questions.reset_answers_full' | translate }}</span>
         </app-gradient-button>
       </div>
     }
