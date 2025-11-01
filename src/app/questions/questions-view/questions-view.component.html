@@ -1,5 +1,5 @@
 <!-- Questions List - Always rendered, no conditional destruction -->
-<div class="w-full space-y-6 questions-list" [class.pb-24]="isMobile()" [class.lg:pb-0]="isMobile()">
+<div class="w-full space-y-6 questions-list" [class.pb-8]="isMobile()" [class.lg:pb-0]="isMobile()">
   @for (question of questions(); track question.id) {
     <div class="fade-in">
       <app-question
