@@ -65,6 +65,9 @@
     "wrong": "Wrong",
     "your_answer": "Your Answer"
   },
+  "rule": {
+    "description": "Study questions related to this specific rule"
+  },
   "rules": {
     "description": "Browse all IHF handball rules. Select a rule to view related questions.",
     "loading": "Loading rules...",

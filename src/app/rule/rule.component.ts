@@ -2,17 +2,18 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, HostListener, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
 import { Observable, finalize, map, shareReplay, tap } from 'rxjs';
 import { Question, Rule, Score } from '../../../graphql/generated';
 import { QuestionsViewComponent } from '../questions/questions-view/questions-view.component';
 import { QuestionsService } from '../questions/services/questions.service';
+import { PageContainerComponent, PageHeroComponent } from '../shared/components';
 import { RuleService } from './services/rule.service';
 
 @Component({
   selector: 'app-rule',
-  imports: [AsyncPipe, QuestionsViewComponent],
+  imports: [AsyncPipe, TranslatePipe, QuestionsViewComponent, PageContainerComponent, PageHeroComponent],
   templateUrl: './rule.component.html',
   styleUrl: './rule.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

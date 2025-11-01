@@ -65,6 +65,9 @@
     "wrong": "Fout",
     "your_answer": "Jouw Antwoord"
   },
+  "rule": {
+    "description": "Bestudeer vragen gerelateerd aan deze specifieke regel"
+  },
   "rules": {
     "description": "Blader door alle IHF handbalregels. Selecteer een regel om gerelateerde vragen te bekijken.",
     "loading": "Regels laden...",

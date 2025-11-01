@@ -1,13 +1,17 @@
-<div class="max-w-5xl mx-auto">
+<app-page-container padding="pb-24" [maxWidth]="'max-w-5xl'">
   @if (rule$ | async; as rule) {
-    <h2 class="text-2xl font-bold mb-6">{{ getRuleName(rule) }}</h2>
+    <div class="pt-12">
+      <app-page-hero 
+        [title]="getRuleName(rule) || ''" 
+        [description]="'rule.description' | translate" />
 
-    <app-questions-view
-      [questions]="getQuestions(rule)"
-      [loading]="loading()"
-      [hasMoreQuestions]="hasMoreQuestions"
-      [score]="(score$ | async) ?? undefined"
-      [scoreLoading]="scoreLoading()"
-      (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)" />
+      <app-questions-view
+        [questions]="getQuestions(rule)"
+        [loading]="loading()"
+        [hasMoreQuestions]="hasMoreQuestions"
+        [score]="(score$ | async) ?? undefined"
+        [scoreLoading]="scoreLoading()"
+        (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)" />
+    </div>
   }
-</div>
+</app-page-container>
