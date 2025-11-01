@@ -1,44 +1,46 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, computed, inject, OnInit } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheckCircle, faHome, faRedo, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { QuizService } from '../../services/quiz.service';
 
 @Component({
   selector: 'app-quiz-results',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateModule, FontAwesomeModule],
+  imports: [CommonModule, RouterLink, TranslatePipe, FontAwesomeModule],
   templateUrl: './quiz-results.component.html',
   styleUrl: './quiz-results.component.scss',
 })
 export class QuizResultsComponent implements OnInit {
-  faCheckCircle = faCheckCircle;
-  faTimesCircle = faTimesCircle;
-  faRedo = faRedo;
-  faHome = faHome;
+  readonly quizService = inject(QuizService);
+  private readonly _router = inject(Router);
 
-  constructor(public quizService: QuizService) {}
+  readonly faCheckCircle = faCheckCircle;
+  readonly faTimesCircle = faTimesCircle;
+  readonly faRedo = faRedo;
+  readonly faHome = faHome;
 
-  ngOnInit() {
-    // If no results, navigate back to home
-    if (!this.quizService.results()) {
-      window.location.href = '/';
-    }
-  }
-
-  getScoreColor(): string {
+  readonly scoreColor = computed(() => {
     const results = this.quizService.results();
-    if (!results) return 'text-gray-900';
+    if (!results) return 'text-slate-900';
 
     const percentage = results.percentage;
     if (percentage >= 80) return 'text-green-600';
     if (percentage >= 60) return 'text-yellow-600';
     return 'text-red-600';
+  });
+
+  ngOnInit() {
+    // If no results, navigate back to home
+    if (!this.quizService.results()) {
+      this._router.navigate(['/']);
+    }
   }
 
   retakeQuiz() {
     this.quizService.resetQuiz();
   }
 }
+

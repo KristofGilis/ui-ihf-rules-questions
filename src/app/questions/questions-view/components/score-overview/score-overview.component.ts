@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -17,17 +17,16 @@ export class ScoreOverviewComponent {
   readonly questions = input.required<Question[]>();
   readonly scrollToQuestion = output<string>();
 
-  faCheckCircle = faCheckCircle;
-  faTimesCircle = faTimesCircle;
+  readonly faCheckCircle = faCheckCircle;
+  readonly faTimesCircle = faTimesCircle;
 
-  get isBadResult(): boolean {
+  readonly isBadResult = computed(() => {
     const score = this.score();
     if (score) {
       return (score.score ?? 0) / (score.total ?? 0) < 0.5;
     }
-
     return true;
-  }
+  });
 
   getQuestionNumber(id?: string | null): string | undefined {
     return this.questions().find((x) => x.id === id)?.number ?? undefined;
@@ -39,3 +38,4 @@ export class ScoreOverviewComponent {
     }
   }
 }
+

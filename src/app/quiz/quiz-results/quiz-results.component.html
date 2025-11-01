@@ -4,7 +4,7 @@
       <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">{{ 'quiz_results.title' | translate }}</h1>
 
       <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md mb-6">
-        <div class="text-center mb-6" [ngClass]="getScoreColor()">
+        <div class="text-center mb-6" [ngClass]="scoreColor()">
           <span class="text-5xl font-bold block mb-2">{{ results.correctCount }}/{{ results.totalQuestions }}</span>
           <span class="text-3xl font-semibold">{{ results.percentage.toFixed(0) }}%</span>
         </div>

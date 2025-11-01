@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 @Component({
   selector: 'app-loading-spinner',
@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 export class LoadingSpinnerComponent {
   readonly size = input<'sm' | 'md' | 'lg' | 'xl'>('md');
 
-  sizeClass() {
+  readonly sizeClass = computed(() => {
     const sizes = {
       sm: 'h-4 w-4',
       md: 'h-8 w-8',
@@ -16,5 +16,5 @@ export class LoadingSpinnerComponent {
       xl: 'h-16 w-16',
     };
     return sizes[this.size()];
-  }
+  });
 }

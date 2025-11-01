@@ -22,10 +22,10 @@ export class QuizComponent implements OnInit, OnDestroy {
   private readonly getQuestionsGQL = inject(GetQuestionsGQL);
   readonly quizService = inject(QuizService);
 
-  faClock = faClock;
-  faArrowLeft = faArrowLeft;
-  faArrowRight = faArrowRight;
-  faCheck = faCheck;
+  readonly faClock = faClock;
+  readonly faArrowLeft = faArrowLeft;
+  readonly faArrowRight = faArrowRight;
+  readonly faCheck = faCheck;
 
   loading = true;
   selectedAnswers: Set<string> = new Set();

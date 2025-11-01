@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, output, QueryList, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, signal, viewChildren } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faRedo, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -28,28 +28,26 @@ export class QuestionsViewComponent {
   }>();
   readonly newRandomQuestions = output();
 
-  @ViewChildren(QuestionComponent) questionComponents!: QueryList<QuestionComponent>;
+  readonly questionComponents = viewChildren(QuestionComponent);
 
-  faSpinner = faSpinner;
-  faRedo = faRedo;
+  readonly faSpinner = faSpinner;
+  readonly faRedo = faRedo;
 
-  selectedAnswers: string[] = [];
+  readonly selectedAnswers = signal<string[]>([]);
 
   onSelectAnswer(id: string): void {
-    this.selectedAnswers = [...this.selectedAnswers, id];
+    this.selectedAnswers.update((answers) => [...answers, id]);
   }
 
   onDeselectAnswer(id: string): void {
-    if (this.selectedAnswers.includes(id)) {
-      this.selectedAnswers.splice(this.selectedAnswers.indexOf(id), 1);
-    }
+    this.selectedAnswers.update((answers) => answers.filter((answerId) => answerId !== id));
   }
 
   onCalculateScore(): void {
     if (!this.hasMoreQuestions()) {
       this.calculareScore.emit({
         questionIds: this.questions().map((x) => x.id),
-        selectedAnswerIds: this.selectedAnswers,
+        selectedAnswerIds: this.selectedAnswers(),
       });
     }
   }
@@ -59,7 +57,7 @@ export class QuestionsViewComponent {
   }
 
   scrollToQuestion(questionId: string): void {
-    const questionComponent = this.questionComponents.find((comp) => comp.question().id === questionId);
+    const questionComponent = this.questionComponents().find((comp) => comp.question().id === questionId);
     if (questionComponent) {
       questionComponent.elementRef.nativeElement.scrollIntoView({
         behavior: 'smooth',

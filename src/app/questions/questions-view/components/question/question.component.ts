@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
@@ -18,9 +18,9 @@ export class QuestionComponent {
   readonly selectAnswer = output<string>();
   readonly deselectAnswer = output<string>();
 
-  faTimesCircle = faTimesCircle;
+  readonly elementRef = inject(ElementRef);
 
-  constructor(public elementRef: ElementRef) {}
+  readonly faTimesCircle = faTimesCircle;
 
   onCheckboxChange(answerId: string, checked: boolean) {
     if (checked) {
@@ -30,3 +30,4 @@ export class QuestionComponent {
     }
   }
 }
+
