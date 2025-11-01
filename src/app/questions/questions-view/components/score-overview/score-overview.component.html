@@ -1,8 +1,8 @@
 <div
   [class]="
     'relative flex flex-col rounded-2xl bg-white shadow-xl dark:bg-slate-900 ' +
-    (compact() ? 'h-full' : 'border border-slate-200 dark:border-slate-800 overflow-hidden') +
-    (scoreLoading() && !score() ? ' h-[calc(100vh-12rem)]' : ' max-h-[calc(100vh-12rem)]')
+    (compact() ? 'h-full overflow-hidden' : 'border border-slate-200 dark:border-slate-800 overflow-hidden max-h-[calc(100vh-12rem)]') +
+    (scoreLoading() && !score() && !compact() ? ' h-[calc(100vh-12rem)]' : '')
   ">
   <!-- Loading Overlay (full screen when no score yet) -->
   @if (scoreLoading() && !score()) {
