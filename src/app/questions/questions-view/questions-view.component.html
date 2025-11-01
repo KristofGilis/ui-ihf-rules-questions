@@ -1,7 +1,7 @@
 <!-- Questions List - Always rendered, no conditional destruction -->
 <div class="w-full questions-list" [class.pb-8]="isMobile()" [class.lg:pb-0]="isMobile()">
   @for (question of questions(); track question.id; let last = $last) {
-    <div class="fade-in" [class.my-5]="!last || isMobile() || (last && !isMobile())">
+    <div class="fade-in" [class.my-5]="!last || isMobile()" [class.mb-0]="last && !isMobile()">
       <app-question
         [question]="question"
         [isWrong]="isQuestionWrong(question.id)"
