@@ -1,18 +1,29 @@
-<app-page-container>
-  <app-page-hero 
-    [title]="(random().isRandom ? 'random_questions.title' : 'questions.title') | translate" 
-    [description]="(random().isRandom ? 'random_questions.description' : 'questions.description') | translate" />
+<app-page-container [padding]="(score$ | async) ? 'pb-24' : 'py-12 pb-24'">
+  <!-- Always use split view layout structure -->
+  <div class="flex flex-col gap-6 lg:flex-row lg:gap-6">
+    <!-- Left side: Title and Questions -->
+    <div class="flex-1 lg:pt-12" [class.lg:mx-auto]="!(score$ | async)" [class.lg:max-w-4xl]="!(score$ | async)">
+      <app-page-hero 
+        [title]="'questions.title' | translate" 
+        [description]="'questions.description' | translate" />
 
-  <div class="mx-auto max-w-4xl">
-    <app-questions-view
-      [questions]="(questions$ | async) ?? []"
-      [loading]="loading()"
-      [hasMoreQuestions]="hasMoreQuestions"
-      [score]="(score$ | async) ?? undefined"
-      [scoreLoading]="scoreLoading()"
-      [isRandom]="random().isRandom"
-      [randomCount]="random().count"
-      (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)"
-      (newRandomQuestions)="onNewRandomQuestions()" />
+      <app-questions-view
+        [questions]="(questions$ | async) ?? []"
+        [loading]="loading()"
+        [hasMoreQuestions]="hasMoreQuestions"
+        [score]="(score$ | async) ?? undefined"
+        [scoreLoading]="scoreLoading()"
+        (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)" />
+    </div>
+    
+    <!-- Right side: Score Overview Sidebar (hidden on mobile, shown on desktop when score exists) -->
+    <div class="hidden lg:sticky lg:top-24 lg:max-h-[calc(100vh-5rem)] lg:w-96 lg:shrink-0 lg:self-start lg:block" [class.lg:hidden]="!(score$ | async)">
+      @if ((score$ | async); as scoreValue) {
+        <app-score-overview 
+          [score]="scoreValue" 
+          [questions]="(questions$ | async) ?? []"
+          (scrollToQuestion)="onScrollToQuestion($event)" />
+      }
+    </div>
   </div>
 </app-page-container>

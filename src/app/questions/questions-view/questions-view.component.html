@@ -1,25 +1,100 @@
-<div class="space-y-6">
-  @for (question of questions(); track question.id) {
-    <div class="fade-in">
-      <app-question
-        [question]="question"
-        [isWrong]="isQuestionWrong(question.id)"
-        (selectAnswer)="onSelectAnswer($event)"
-        (deselectAnswer)="onDeselectAnswer($event)" />
+@if (score()) {
+  <!-- Questions List - Just the questions, no sidebar (sidebar is in parent) -->
+  <div class="w-full space-y-6" [class.pb-16]="isMobile()" [class.lg:pb-0]="isMobile()">
+    @for (question of questions(); track question.id) {
+      <div class="fade-in">
+        <app-question
+          [question]="question"
+          [isWrong]="isQuestionWrong(question.id)"
+          (selectAnswer)="onSelectAnswer($event)"
+          (deselectAnswer)="onDeselectAnswer($event)" />
+      </div>
+    }
+  </div>
+
+  <!-- Mobile: Fixed Bottom Bar -->
+  @if (isMobile() && !showMobileScoreDialog()) {
+    <div class="fixed bottom-16 left-0 right-0 z-40 bg-white p-4 shadow-2xl dark:bg-slate-900">
+      <div class="mx-auto flex max-w-md gap-3">
+        <!-- Recalculate Button -->
+        <button
+          type="button"
+          title="Recalculate score"
+          class="flex flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-br from-cyan-500 to-blue-600 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+          (click)="onCalculateScore()"
+          [disabled]="scoreLoading()">
+          <fa-icon [icon]="scoreLoading() ? faSpinner : faRotateRight" [animation]="scoreLoading() ? 'spin' : undefined"></fa-icon>
+          <span>Recalculate</span>
+        </button>
+
+        <!-- Show Score Button -->
+        <button
+          type="button"
+          title="Show score overview"
+          class="flex flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-br from-purple-500 to-pink-600 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
+          (click)="showMobileScoreDialog.set(true)">
+          <fa-icon [icon]="faChartBar"></fa-icon>
+          <span>Show Score</span>
+        </button>
+      </div>
     </div>
   }
 
-  @if (loading()) {
-    <div class="flex items-center justify-center py-8">
-      <fa-icon [icon]="faSpinner" [animation]="'spin'" size="2x" class="text-cyan-500"></fa-icon>
+  <!-- Mobile: Score Overview Dialog -->
+  @if (isMobile() && showMobileScoreDialog()) {
+    <div class="fixed inset-0 z-60 lg:hidden">
+      <!-- Backdrop -->
+      <div 
+        class="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        (click)="closeMobileScoreDialog()"></div>
+      
+      <!-- Dialog Content -->
+      <div class="absolute inset-4 top-16 bottom-20 flex animate-slide-up flex-col sm:inset-8">
+        <div class="relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-slate-900">
+          <!-- Close Button -->
+          <button
+            type="button"
+            title="Close score overview"
+            class="absolute right-2 top-2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-slate-800 text-white shadow-lg transition-all duration-200 hover:scale-110 hover:bg-slate-700 active:scale-95 dark:bg-slate-200 dark:text-slate-900 dark:hover:bg-slate-300"
+            (click)="closeMobileScoreDialog()">
+            <fa-icon [icon]="faTimes" size="lg"></fa-icon>
+          </button>
+          
+          <!-- Score Overview Content -->
+          <div class="h-full">
+            <app-score-overview 
+              [score]="score()" 
+              [questions]="questions()"
+              [compact]="true"
+              (scrollToQuestion)="scrollToQuestion($event)" />
+          </div>
+        </div>
+      </div>
     </div>
   }
+} @else {
+  <!-- Normal View Before Score Calculation -->
+  <div class="space-y-6">
+    @for (question of questions(); track question.id) {
+      <div class="fade-in">
+        <app-question
+          [question]="question"
+          [isWrong]="isQuestionWrong(question.id)"
+          (selectAnswer)="onSelectAnswer($event)"
+          (deselectAnswer)="onDeselectAnswer($event)" />
+      </div>
+    }
 
-  @if (!hasMoreQuestions() && !loading()) {
-    <div class="flex flex-col gap-3 sm:flex-row">
+    @if (loading()) {
+      <div class="flex items-center justify-center py-8">
+        <fa-icon [icon]="faSpinner" [animation]="'spin'" size="2x" class="text-cyan-500"></fa-icon>
+      </div>
+    }
+
+    @if (!hasMoreQuestions() && !loading()) {
       <button
         type="button"
-        class="group flex flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-br from-cyan-500 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
+        class="group w-full flex items-center justify-center gap-2 rounded-xl bg-linear-to-br from-cyan-500 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
         [disabled]="scoreLoading()"
         (click)="onCalculateScore()">
         {{ 'questions.calculate_score' | translate }}
@@ -27,25 +102,6 @@
           <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
         }
       </button>
-      @if (isRandom()) {
-        <button
-          type="button"
-          class="group flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-cyan-500 bg-transparent px-6 py-3 font-semibold text-cyan-600 transition-all duration-200 hover:bg-cyan-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 dark:text-cyan-400 dark:hover:text-white"
-          [disabled]="scoreLoading()"
-          (click)="newRandomQuestions.emit()">
-          <fa-icon [icon]="faRedo"></fa-icon>
-          {{ 'questions_random_new' | translate: { count: randomCount() } }}
-        </button>
-      }
-    </div>
-  }
-
-  @if (score()) {
-    <div class="fade-in">
-      <app-score-overview 
-        [score]="score()" 
-        [questions]="questions()"
-        (scrollToQuestion)="scrollToQuestion($event)" />
-    </div>
-  }
-</div>
+    }
+  </div>
+}

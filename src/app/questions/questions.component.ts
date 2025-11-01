@@ -3,40 +3,41 @@ import { ChangeDetectionStrategy, Component, effect, HostListener, inject, signa
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
-import { finalize, map, Observable, tap } from 'rxjs';
+import { BehaviorSubject, finalize, map, Observable, tap } from 'rxjs';
 import { Question, Score } from '../../../graphql/generated';
 import { PageContainerComponent, PageHeroComponent } from '../shared/components';
+import { ScoreOverviewComponent } from './questions-view/components/score-overview/score-overview.component';
 import { QuestionsViewComponent } from './questions-view/questions-view.component';
 import { QuestionsService } from './services/questions.service';
-import { RandomStateService } from './services/random-state.service';
 
 @Component({
   selector: 'app-questions',
-  imports: [TranslatePipe, AsyncPipe, QuestionsViewComponent, PageContainerComponent, PageHeroComponent],
+  imports: [
+    TranslatePipe,
+    AsyncPipe,
+    QuestionsViewComponent,
+    PageContainerComponent,
+    PageHeroComponent,
+    ScoreOverviewComponent,
+  ],
   templateUrl: './questions.component.html',
   styleUrl: './questions.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuestionsComponent {
   private readonly _questionsService = inject(QuestionsService);
-  private readonly _randomStateService = inject(RandomStateService);
   private readonly _translateService = inject(TranslateService);
 
-  random = this._randomStateService.random;
   loading = signal(false);
   questions$ = this._questionsService.questions$.pipe(
     tap((x) => this.loading.set(x.loading)),
     onlyCompleteData(),
-    map((x) => {
-      if (x.loading && this._randomStateService.random().isRandom) {
-        return [];
-      }
-      return x.data.questions?.edges?.map((y) => y?.node as Question) ?? [];
-    }),
+    map((x) => x.data.questions?.edges?.map((y) => y?.node as Question) ?? []),
     finalize(() => this.loading.set(false))
   );
   score$?: Observable<Score>;
   scoreLoading = signal(false);
+  private _scoreSubject = new BehaviorSubject<Score | undefined>(undefined);
 
   get hasMoreQuestions(): boolean {
     return this._questionsService.hasNextPage;
@@ -66,21 +67,44 @@ export class QuestionsComponent {
   }
 
   onCalculateScore(questionIds: string[], selectedAnswerIds: string[]): void {
-    this.score$ = this._questionsService.calculateScore(questionIds, selectedAnswerIds).pipe(
-      tap((x) => this.scoreLoading.set(x.loading)),
-      onlyCompleteData(),
-      map((x) => x.data.calculateScore as Score),
-      finalize(() => this.scoreLoading.set(false))
-    );
+    const startTime = Date.now();
+    const minLoadingTime = 300; // Minimum 300ms to show spinner
+
+    // Set loading state to true at the start
+    this.scoreLoading.set(true);
+
+    // Set score$ to the BehaviorSubject observable so layout doesn't flash
+    if (!this.score$) {
+      this.score$ = this._scoreSubject.asObservable() as Observable<Score>;
+    }
+
+    this._questionsService
+      .calculateScore(questionIds, selectedAnswerIds)
+      .pipe(
+        onlyCompleteData(),
+        map((x) => x.data.calculateScore as Score)
+      )
+      .subscribe((score) => {
+        // Calculate remaining time for minimum spinner visibility
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(0, minLoadingTime - elapsed);
+
+        setTimeout(() => {
+          // Update both together
+          this._scoreSubject.next(score);
+          this.scoreLoading.set(false);
+        }, remaining);
+      });
   }
 
-  onNewRandomQuestions(): void {
-    if (this._randomStateService.random().isRandom) {
-      this._randomStateService.random.set({
-        isRandom: true,
-        count: this._randomStateService.random().count,
+  onScrollToQuestion(questionId: string): void {
+    // Find the question element and scroll to it
+    const questionElement = document.querySelector(`[data-question-id="${questionId}"]`);
+    if (questionElement) {
+      questionElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
       });
-      this.score$ = undefined;
     }
   }
 }

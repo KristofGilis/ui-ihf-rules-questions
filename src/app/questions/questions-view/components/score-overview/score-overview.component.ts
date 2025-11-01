@@ -15,6 +15,7 @@ import { Question, Score } from '../../../../../../graphql/generated';
 export class ScoreOverviewComponent {
   readonly score = input.required<Score | undefined>();
   readonly questions = input.required<Question[]>();
+  readonly compact = input(false); // For mobile dialog
   readonly scrollToQuestion = output<string>();
 
   readonly faCheckCircle = faCheckCircle;
