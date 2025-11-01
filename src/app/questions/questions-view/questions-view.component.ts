@@ -13,7 +13,7 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Capacitor } from '@capacitor/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faChartBar, faQuestionCircle, faRotateRight, faSpinner, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faChartBar, faQuestionCircle, faRotateRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
 import { fromEvent, map, of, startWith } from 'rxjs';
 import { Question, Score } from '../../../../graphql/generated';
@@ -60,7 +60,6 @@ export class QuestionsViewComponent {
   readonly faChartBar = faChartBar;
   readonly faRotateRight = faRotateRight;
   readonly faQuestionCircle = faQuestionCircle;
-  readonly faTrash = faTrash;
 
   readonly selectedAnswers = signal<string[]>([]);
   readonly showMobileScoreDialog = signal(false);
@@ -140,13 +139,6 @@ export class QuestionsViewComponent {
         selectedAnswerIds: this.selectedAnswers(),
       });
     }
-  }
-
-  onResetAnswers(): void {
-    // Clear all selected answers
-    this.selectedAnswers.set([]);
-    // Deselect all questions
-    this.questionComponents().forEach((comp) => comp.reset());
   }
 
   isQuestionWrong(questionId: string): boolean {

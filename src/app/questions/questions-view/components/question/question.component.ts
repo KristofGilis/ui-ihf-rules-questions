@@ -29,13 +29,5 @@ export class QuestionComponent {
       this.deselectAnswer.emit(answerId);
     }
   }
-
-  reset() {
-    // Uncheck all checkboxes
-    const checkboxElements = this.elementRef.nativeElement.querySelectorAll('input[type="checkbox"]');
-    checkboxElements.forEach((checkbox: HTMLInputElement) => {
-      checkbox.checked = false;
-    });
-  }
 }
 

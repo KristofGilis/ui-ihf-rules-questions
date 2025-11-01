@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faRotateRight, faSpinner, faThumbsUp, faTimesCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faRotateRight, faSpinner, faThumbsUp, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Question, Score } from '../../../../../../graphql/generated';
 import { GradientButtonComponent, LoadingSpinnerComponent } from '../../../../shared/components';
@@ -20,13 +20,11 @@ export class ScoreOverviewComponent {
   readonly scoreLoading = input(false); // For recalculate button
   readonly scrollToQuestion = output<string>();
   readonly recalculate = output<void>();
-  readonly reset = output<void>();
 
   readonly faThumbsUp = faThumbsUp;
   readonly faTimesCircle = faTimesCircle;
   readonly faRotateRight = faRotateRight;
   readonly faSpinner = faSpinner;
-  readonly faTrash = faTrash;
 
   readonly isBadResult = computed(() => {
     const score = this.score();

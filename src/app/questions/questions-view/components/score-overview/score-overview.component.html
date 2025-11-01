@@ -63,30 +63,36 @@
       </div>
     </div>
 
-    <!-- Recalculate Button (desktop only, only when there are wrong answers) -->
-    @if (!compact() && score()?.percentage !== '100%') {
-      <div class="flex gap-2 px-4 pb-3">
-        <app-gradient-button
-          [fullWidth]="true"
-          [size]="'sm'"
-          [variant]="'primary'"
-          [icon]="faRotateRight"
-          [loadingIcon]="faSpinner"
-          [loading]="scoreLoading()"
-          [disabled]="scoreLoading()"
-          (clicked)="recalculate.emit()">
-          <span class="text-sm">{{ 'questions.recalculate_score_full' | translate }}</span>
-        </app-gradient-button>
-        
-        <app-gradient-button
-          [fullWidth]="true"
-          [size]="'sm'"
-          [variant]="'primary'"
-          [icon]="faTrash"
-          (clicked)="reset.emit()">
-          <span class="text-sm">{{ 'questions.reset_answers_full' | translate }}</span>
-        </app-gradient-button>
-      </div>
+    <!-- Action Buttons (desktop only) -->
+    @if (!compact()) {
+      @if (score()?.percentage !== '100%') {
+        <!-- Recalculate Button when there are wrong answers -->
+        <div class="px-4 pb-3">
+          <app-gradient-button
+            [fullWidth]="true"
+            [size]="'sm'"
+            [variant]="'primary'"
+            [icon]="faRotateRight"
+            [loadingIcon]="faSpinner"
+            [loading]="scoreLoading()"
+            [disabled]="scoreLoading()"
+            (clicked)="recalculate.emit()">
+            <span class="text-sm">{{ 'questions.recalculate_score_full' | translate }}</span>
+          </app-gradient-button>
+        </div>
+      } @else {
+        <!-- Restart Button when score is 100% -->
+        <div class="px-4 pb-3">
+          <app-gradient-button
+            [fullWidth]="true"
+            [size]="'sm'"
+            [variant]="'success'"
+            [icon]="faRotateRight"
+            (clicked)="recalculate.emit()">
+            <span class="text-sm">{{ 'questions.restart' | translate }}</span>
+          </app-gradient-button>
+        </div>
+      }
     }
 
     <!-- Wrong Questions -->

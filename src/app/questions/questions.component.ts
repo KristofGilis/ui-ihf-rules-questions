@@ -36,22 +36,17 @@ export class QuestionsComponent {
     finalize(() => this.loading.set(false))
   );
 
-  private _calculating$ = new Subject<{ questionIds: string[]; selectedAnswerIds: string[] } | null>();
+  private _calculating$ = new Subject<{ questionIds: string[]; selectedAnswerIds: string[] }>();
 
   score$ = this._calculating$.pipe(
-    switchMap((params) => {
-      // If params is null, emit undefined to reset score
-      if (!params) {
-        return [undefined];
-      }
-      const { questionIds, selectedAnswerIds } = params;
-      return this._questionsService.calculateScore(questionIds, selectedAnswerIds).pipe(
+    switchMap(({ questionIds, selectedAnswerIds }) =>
+      this._questionsService.calculateScore(questionIds, selectedAnswerIds).pipe(
         tap((x) => this.scoreLoading.set(x.loading)),
         onlyCompleteData(),
         map((x) => x.data.calculateScore as Score),
         finalize(() => this.scoreLoading.set(false))
-      );
-    })
+      )
+    )
   );
 
   scoreLoading = signal(false);
@@ -91,12 +86,6 @@ export class QuestionsComponent {
     // Set loading state immediately to show sidebar
     this.scoreLoading.set(true);
     this._calculating$.next({ questionIds, selectedAnswerIds });
-  }
-
-  onResetScore(): void {
-    // Reset the score by emitting null
-    this._calculating$.next(null);
-    this.scoreLoading.set(false);
   }
 
   onScrollToQuestion(questionId: string): void {
