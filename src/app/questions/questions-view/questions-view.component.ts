@@ -121,12 +121,16 @@ export class QuestionsViewComponent {
   scrollToQuestion(questionId: string): void {
     const questionComponent = this.questionComponents().find((comp) => comp.question().id === questionId);
     if (questionComponent) {
-      questionComponent.elementRef.nativeElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-      // Close mobile dialog after navigation
+      // Close mobile dialog first to unlock scroll
       this.showMobileScoreDialog.set(false);
+
+      // Wait for dialog to close and body scroll to unlock before scrolling
+      setTimeout(() => {
+        questionComponent.elementRef.nativeElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }, 100);
     }
   }
 
