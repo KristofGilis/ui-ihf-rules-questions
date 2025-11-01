@@ -15,28 +15,43 @@
   <!-- Mobile: Fixed Bottom Bar -->
   @if (isMobile() && !showMobileScoreDialog()) {
     <div class="fixed bottom-16 left-0 right-0 z-40 bg-white p-4 shadow-2xl dark:bg-slate-900">
-      <div class="mx-auto flex max-w-md gap-3">
-        <!-- Recalculate Button -->
-        <button
-          type="button"
-          title="Recalculate score"
-          class="flex flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-br from-cyan-500 to-blue-600 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
-          (click)="onCalculateScore()"
-          [disabled]="scoreLoading()">
-          <fa-icon [icon]="scoreLoading() ? faSpinner : faRotateRight" [animation]="scoreLoading() ? 'spin' : undefined"></fa-icon>
-          <span>Recalculate</span>
-        </button>
+      @if (score()?.percentage !== '100%') {
+        <!-- Show both buttons when there are wrong answers -->
+        <div class="mx-auto flex max-w-md gap-3">
+          <!-- Recalculate Button -->
+          <button
+            type="button"
+            title="Recalculate score"
+            class="flex flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-br from-cyan-500 to-blue-600 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+            (click)="onCalculateScore()"
+            [disabled]="scoreLoading()">
+            <fa-icon [icon]="scoreLoading() ? faSpinner : faRotateRight" [animation]="scoreLoading() ? 'spin' : undefined"></fa-icon>
+            <span>Recalculate</span>
+          </button>
 
-        <!-- Show Score Button -->
-        <button
-          type="button"
-          title="Show score overview"
-          class="flex flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-br from-purple-500 to-pink-600 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
-          (click)="showMobileScoreDialog.set(true)">
-          <fa-icon [icon]="faChartBar"></fa-icon>
-          <span>Show Score</span>
-        </button>
-      </div>
+          <!-- Show Score Button -->
+          <button
+            type="button"
+            title="Show score overview"
+            class="flex flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-br from-purple-500 to-pink-600 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
+            (click)="showMobileScoreDialog.set(true)">
+            <fa-icon [icon]="faChartBar"></fa-icon>
+            <span>Show Score</span>
+          </button>
+        </div>
+      } @else {
+        <!-- Show only Show Score button when perfect score -->
+        <div class="mx-auto flex max-w-md">
+          <button
+            type="button"
+            title="Show score overview"
+            class="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-br from-purple-500 to-pink-600 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
+            (click)="showMobileScoreDialog.set(true)">
+            <fa-icon [icon]="faChartBar"></fa-icon>
+            <span>Show Score</span>
+          </button>
+        </div>
+      }
     </div>
   }
 

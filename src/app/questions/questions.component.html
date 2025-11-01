@@ -13,7 +13,8 @@
         [hasMoreQuestions]="hasMoreQuestions"
         [score]="(score$ | async) ?? undefined"
         [scoreLoading]="scoreLoading()"
-        (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)" />
+        (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)"
+        #questionsView />
     </div>
     
     <!-- Right side: Score Overview Sidebar (hidden on mobile, shown on desktop when score exists) -->
@@ -22,7 +23,9 @@
         <app-score-overview 
           [score]="scoreValue" 
           [questions]="(questions$ | async) ?? []"
-          (scrollToQuestion)="onScrollToQuestion($event)" />
+          [scoreLoading]="scoreLoading()"
+          (scrollToQuestion)="onScrollToQuestion($event)"
+          (recalculate)="questionsView.onCalculateScore()" />
       }
     </div>
   </div>

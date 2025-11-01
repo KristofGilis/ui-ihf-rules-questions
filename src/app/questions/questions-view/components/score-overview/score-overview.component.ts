@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faRotateRight, faSpinner, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Question, Score } from '../../../../../../graphql/generated';
 
@@ -16,10 +16,14 @@ export class ScoreOverviewComponent {
   readonly score = input.required<Score | undefined>();
   readonly questions = input.required<Question[]>();
   readonly compact = input(false); // For mobile dialog
+  readonly scoreLoading = input(false); // For recalculate button
   readonly scrollToQuestion = output<string>();
+  readonly recalculate = output<void>();
 
   readonly faCheckCircle = faCheckCircle;
   readonly faTimesCircle = faTimesCircle;
+  readonly faRotateRight = faRotateRight;
+  readonly faSpinner = faSpinner;
 
   readonly isBadResult = computed(() => {
     const score = this.score();
