@@ -1,0 +1,20 @@
+<div class="mb-12 text-center">
+  @if (icon()) {
+    <div class="mb-6 inline-flex items-center justify-center rounded-2xl bg-cyan-500 p-4 shadow-lg shadow-cyan-500/30">
+      <ng-content select="[icon]" />
+    </div>
+  }
+
+  <h1 class="mb-3 text-5xl font-black tracking-tight text-slate-900 dark:text-white md:text-6xl">
+    {{ title() }}
+  </h1>
+
+  @if (badge()) {
+    <ng-content select="[badge]" />
+  }
+
+  <p class="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-400">
+    {{ description() }}
+  </p>
+</div>
+

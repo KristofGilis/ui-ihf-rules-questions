@@ -1,18 +1,18 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
 import { finalize, map, tap } from 'rxjs';
 import { Rule } from '../../../graphql/generated';
+import { PageContainerComponent, PageHeroComponent } from '../shared/components';
 import { RulesViewComponent } from './rules-view/rules-view.component';
 import { RulesService } from './services/rules.service';
 
 @Component({
   selector: 'app-rules',
-  imports: [AsyncPipe, RulesViewComponent, TranslateModule],
+  imports: [AsyncPipe, TranslatePipe, RulesViewComponent, PageContainerComponent, PageHeroComponent],
   templateUrl: './rules.component.html',
-  styleUrl: './rules.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RulesComponent {

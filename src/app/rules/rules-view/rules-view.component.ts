@@ -1,14 +1,13 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Rule } from '../../../../graphql/generated';
+import { EmptyStateComponent, LoadingSpinnerComponent } from '../../shared/components';
 
 @Component({
   selector: 'app-rules-view',
-  imports: [CommonModule, RouterLink, TranslateModule],
+  imports: [RouterLink, TranslatePipe, LoadingSpinnerComponent, EmptyStateComponent],
   templateUrl: './rules-view.component.html',
-  styleUrl: './rules-view.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RulesViewComponent {

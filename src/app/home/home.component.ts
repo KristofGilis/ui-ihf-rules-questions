@@ -8,12 +8,20 @@ import { onlyCompleteData } from 'apollo-angular';
 import { finalize, map, shareReplay, tap } from 'rxjs';
 import { GetVersionGQL } from '../../../graphql/generated';
 import { LogoComponent } from '../logo/logo.component';
+import { LoadingSpinnerComponent, PageHeroComponent } from '../shared/components';
 
 @Component({
   selector: 'app-home',
-  imports: [AsyncPipe, FormsModule, RouterLink, TranslatePipe, LogoComponent],
+  imports: [
+    AsyncPipe,
+    FormsModule,
+    RouterLink,
+    TranslatePipe,
+    LogoComponent,
+    LoadingSpinnerComponent,
+    PageHeroComponent,
+  ],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
