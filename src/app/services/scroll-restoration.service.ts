@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Event, NavigationEnd, NavigationStart, Router } from '@angular/router';
-import { asyncScheduler, filter, observeOn } from 'rxjs';
+import { filter } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -28,18 +28,22 @@ export class ScrollRestorationService {
     this._router.events
       .pipe(
         takeUntilDestroyed(),
-        filter((event: Event) => event instanceof NavigationEnd),
-        observeOn(asyncScheduler)
+        filter((event: Event) => event instanceof NavigationEnd)
       )
       .subscribe((event: NavigationEnd) => {
         this._currentUrl = event.urlAfterRedirects;
         const savedPosition = this._scrollPositions.get(this._currentUrl);
 
-        if (savedPosition !== undefined && savedPosition > 0) {
-          window.scrollTo(0, savedPosition);
-        } else {
-          window.scrollTo(0, 0);
-        }
+        // Use double requestAnimationFrame for better timing
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            if (savedPosition !== undefined && savedPosition > 0) {
+              window.scrollTo(0, savedPosition);
+            } else {
+              window.scrollTo(0, 0);
+            }
+          });
+        });
       });
   }
 }
