@@ -1,47 +1,45 @@
 import { Injectable, inject } from '@angular/core';
-import { NavigationEnd, NavigationStart, Router } from '@angular/router';
-import { distinctUntilChanged, filter, map } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Event, NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { asyncScheduler, filter, observeOn } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ScrollRestorationService {
-  private readonly _router = inject(Router);
-  private readonly _scrollPositions = new Map<string, number>();
+  private _router = inject(Router);
+  private _scrollPositions = new Map<string, number>();
   private _currentUrl = '';
 
   constructor() {
-    this.initialize();
-  }
-
-  public initialize(): void {
     // Save scroll position before navigation
-    this._router.events.pipe(filter((event) => event instanceof NavigationStart)).subscribe(() => {
-      if (this._currentUrl) {
-        this._scrollPositions.set(this._currentUrl, window.scrollY);
-      }
-    });
-
-    // Restore scroll position after navigation - only once per unique URL
     this._router.events
       .pipe(
-        filter((event) => event instanceof NavigationEnd),
-        map((event) => event.urlAfterRedirects),
-        distinctUntilChanged() // Only emit when URL actually changes
+        takeUntilDestroyed(),
+        filter((event: Event) => event instanceof NavigationStart)
       )
-      .subscribe((url: string) => {
-        this._currentUrl = url;
+      .subscribe(() => {
+        if (this._currentUrl) {
+          this._scrollPositions.set(this._currentUrl, window.scrollY);
+        }
+      });
 
+    // Restore scroll position after navigation
+    this._router.events
+      .pipe(
+        takeUntilDestroyed(),
+        filter((event: Event) => event instanceof NavigationEnd),
+        observeOn(asyncScheduler)
+      )
+      .subscribe((event: NavigationEnd) => {
+        this._currentUrl = event.urlAfterRedirects;
         const savedPosition = this._scrollPositions.get(this._currentUrl);
 
-        // Use requestAnimationFrame to wait for next paint cycle
-        requestAnimationFrame(() => {
-          if (savedPosition !== undefined && savedPosition > 0) {
-            window.scrollTo(0, savedPosition);
-          } else {
-            window.scrollTo(0, 0);
-          }
-        });
+        if (savedPosition !== undefined && savedPosition > 0) {
+          window.scrollTo(0, savedPosition);
+        } else {
+          window.scrollTo(0, 0);
+        }
       });
   }
 }

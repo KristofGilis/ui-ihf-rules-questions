@@ -38,8 +38,7 @@ export const appConfig: ApplicationConfig = {
       })
     ),
     provideAppInitializer(() => {
-      const scrollService = inject(ScrollRestorationService);
-      scrollService.initialize();
+      inject(ScrollRestorationService);
     }),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
