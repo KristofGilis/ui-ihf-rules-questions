@@ -1,1 +1,12 @@
-/* Styling moved to inline Tailwind classes in HTML */
+/* Custom checkmark for checked checkboxes */
+input[type='checkbox']:checked::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0.35rem;
+  height: 0.65rem;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: translate(-50%, -60%) rotate(45deg);
+}
