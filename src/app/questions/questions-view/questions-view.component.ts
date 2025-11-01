@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, QueryList, ViewChildren } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faRedo, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -28,6 +28,8 @@ export class QuestionsViewComponent {
   }>();
   readonly newRandomQuestions = output();
 
+  @ViewChildren(QuestionComponent) questionComponents!: QueryList<QuestionComponent>;
+
   faSpinner = faSpinner;
   faRedo = faRedo;
 
@@ -48,6 +50,20 @@ export class QuestionsViewComponent {
       this.calculareScore.emit({
         questionIds: this.questions().map((x) => x.id),
         selectedAnswerIds: this.selectedAnswers,
+      });
+    }
+  }
+
+  isQuestionWrong(questionId: string): boolean {
+    return this.score()?.wrongQuestionsIds?.includes(questionId) ?? false;
+  }
+
+  scrollToQuestion(questionId: string): void {
+    const questionComponent = this.questionComponents.find((comp) => comp.question().id === questionId);
+    if (questionComponent) {
+      questionComponent.elementRef.nativeElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
       });
     }
   }

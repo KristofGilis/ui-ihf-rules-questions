@@ -3,6 +3,7 @@
     <div class="fade-in">
       <app-question
         [question]="question"
+        [isWrong]="isQuestionWrong(question.id)"
         (selectAnswer)="onSelectAnswer($event)"
         (deselectAnswer)="onDeselectAnswer($event)" />
     </div>
@@ -41,7 +42,10 @@
 
   @if (score()) {
     <div class="fade-in">
-      <app-score-overview [score]="score()" [questions]="questions()" />
+      <app-score-overview 
+        [score]="score()" 
+        [questions]="questions()"
+        (scrollToQuestion)="scrollToQuestion($event)" />
     </div>
   }
 </div>
