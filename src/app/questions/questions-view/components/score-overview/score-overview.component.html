@@ -1,4 +1,11 @@
-<div [class]="'flex flex-col rounded-2xl bg-white shadow-xl dark:bg-slate-900 ' + (compact() ? 'h-full' : 'max-h-[calc(100vh-12rem)] border border-slate-200 dark:border-slate-800 overflow-hidden')">
+<div [class]="'relative flex flex-col rounded-2xl bg-white shadow-xl dark:bg-slate-900 ' + (compact() ? 'h-full' : 'max-h-[calc(100vh-12rem)] border border-slate-200 dark:border-slate-800 overflow-hidden')">
+  <!-- Loading Overlay -->
+  @if (scoreLoading()) {
+    <div class="absolute inset-0 z-10 flex items-center justify-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
+      <fa-icon [icon]="faSpinner" [animation]="'spin'" size="2x" class="text-cyan-500"></fa-icon>
+    </div>
+  }
+  
   <!-- Header -->
   <div [class]="'bg-linear-to-br from-cyan-500 to-blue-500 text-center text-white ' + (compact() ? 'p-4 rounded-t-2xl' : 'p-4')">
     <h4 [class]="'font-semibold opacity-90 ' + (compact() ? 'mb-1 text-base' : 'mb-1.5 text-base')">{{ 'score_overview.title' | translate }}</h4>

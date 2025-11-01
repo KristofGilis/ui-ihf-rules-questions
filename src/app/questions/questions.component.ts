@@ -1,9 +1,9 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, HostListener, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
-import { BehaviorSubject, finalize, map, tap } from 'rxjs';
+import { finalize, map, Subject, switchMap, tap } from 'rxjs';
 import { Question, Score } from '../../../graphql/generated';
 import { PageContainerComponent, PageHeroComponent } from '../shared/components';
 import { ScoreOverviewComponent } from './questions-view/components/score-overview/score-overview.component';
@@ -35,8 +35,18 @@ export class QuestionsComponent {
     map((x) => x.data.questions?.edges?.map((y) => y?.node as Question) ?? []),
     finalize(() => this.loading.set(false))
   );
-  private _scoreSubject = new BehaviorSubject<Score | undefined>(undefined);
-  score$ = this._scoreSubject.asObservable();
+
+  private _calculating$ = new Subject<{ questionIds: string[]; selectedAnswerIds: string[] }>();
+  score$ = this._calculating$.pipe(
+    switchMap(({ questionIds, selectedAnswerIds }) =>
+      this._questionsService.calculateScore(questionIds, selectedAnswerIds).pipe(
+        tap((x) => this.scoreLoading.set(x.loading)),
+        onlyCompleteData(),
+        map((x) => x.data.calculateScore as Score),
+        finalize(() => this.scoreLoading.set(false))
+      )
+    )
+  );
   scoreLoading = signal(false);
 
   get hasMoreQuestions(): boolean {
@@ -59,37 +69,11 @@ export class QuestionsComponent {
   }
 
   constructor() {
-    effect(() => {
-      this._questionsService.refetch();
-    });
-
     this._translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => this._questionsService.refetch());
   }
 
   onCalculateScore(questionIds: string[], selectedAnswerIds: string[]): void {
-    const startTime = Date.now();
-    const minLoadingTime = 300; // Minimum 300ms to show spinner
-
-    // Set loading state to true at the start
-    this.scoreLoading.set(true);
-
-    this._questionsService
-      .calculateScore(questionIds, selectedAnswerIds)
-      .pipe(
-        onlyCompleteData(),
-        map((x) => x.data.calculateScore as Score)
-      )
-      .subscribe((score) => {
-        // Calculate remaining time for minimum spinner visibility
-        const elapsed = Date.now() - startTime;
-        const remaining = Math.max(0, minLoadingTime - elapsed);
-
-        setTimeout(() => {
-          // Update both together
-          this._scoreSubject.next(score);
-          this.scoreLoading.set(false);
-        }, remaining);
-      });
+    this._calculating$.next({ questionIds, selectedAnswerIds });
   }
 
   onScrollToQuestion(questionId: string): void {
