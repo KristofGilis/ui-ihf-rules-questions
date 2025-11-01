@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, HostListener, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, effect, HostListener, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
 import { finalize, map, Subject, switchMap, tap } from 'rxjs';
@@ -49,6 +49,9 @@ export class QuestionsComponent {
   );
   scoreLoading = signal(false);
 
+  // Track current language to trigger refetch when it changes
+  private readonly _currentLang = toSignal(this._translateService.onLangChange);
+
   get hasMoreQuestions(): boolean {
     return this._questionsService.hasNextPage;
   }
@@ -69,7 +72,12 @@ export class QuestionsComponent {
   }
 
   constructor() {
-    this._translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => this._questionsService.refetch());
+    // Refetch questions when language changes
+    effect(() => {
+      if (this._currentLang()) {
+        this._questionsService.refetch();
+      }
+    });
   }
 
   onCalculateScore(questionIds: string[], selectedAnswerIds: string[]): void {

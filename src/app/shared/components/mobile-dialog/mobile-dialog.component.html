@@ -1,0 +1,27 @@
+@if (open()) {
+  <div class="fixed inset-0 z-60 lg:hidden">
+    <!-- Backdrop -->
+    <div 
+      class="absolute inset-0 bg-black/50 backdrop-blur-sm"
+      (click)="onBackdropClick()"></div>
+    
+    <!-- Dialog Content -->
+    <div class="absolute inset-4 top-16 bottom-20 flex animate-slide-up flex-col sm:inset-8">
+      <div class="relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-slate-900">
+        <!-- Close Button -->
+        <button
+          type="button"
+          title="{{closeTitle()}}"
+          class="absolute right-2 top-2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-slate-800 text-white shadow-lg transition-all duration-200 hover:scale-110 hover:bg-slate-700 active:scale-95 dark:bg-slate-200 dark:text-slate-900 dark:hover:bg-slate-300"
+          (click)="onCloseClick()">
+          <fa-icon [icon]="faTimes" size="lg"></fa-icon>
+        </button>
+        
+        <!-- Content -->
+        <div class="h-full">
+          <ng-content></ng-content>
+        </div>
+      </div>
+    </div>
+  </div>
+}

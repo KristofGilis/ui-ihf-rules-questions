@@ -13,17 +13,26 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Capacitor } from '@capacitor/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faChartBar, faQuestionCircle, faRotateRight, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faChartBar, faQuestionCircle, faRotateRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
 import { fromEvent, map, of, startWith } from 'rxjs';
 import { Question, Score } from '../../../../graphql/generated';
-import { EmptyStateComponent } from '../../shared/components';
+import { EmptyStateComponent, GradientButtonComponent, MobileDialogComponent } from '../../shared/components';
 import { QuestionComponent } from './components/question/question.component';
 import { ScoreOverviewComponent } from './components/score-overview/score-overview.component';
 
 @Component({
   selector: 'app-questions-view',
-  imports: [CommonModule, QuestionComponent, TranslatePipe, ScoreOverviewComponent, FontAwesomeModule, EmptyStateComponent],
+  imports: [
+    CommonModule,
+    QuestionComponent,
+    TranslatePipe,
+    ScoreOverviewComponent,
+    FontAwesomeModule,
+    EmptyStateComponent,
+    GradientButtonComponent,
+    MobileDialogComponent,
+  ],
   templateUrl: './questions-view.component.html',
   styleUrl: './questions-view.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,7 +51,6 @@ export class QuestionsViewComponent {
   readonly questionComponents = viewChildren(QuestionComponent);
 
   readonly faSpinner = faSpinner;
-  readonly faTimes = faTimes;
   readonly faChartBar = faChartBar;
   readonly faRotateRight = faRotateRight;
   readonly faQuestionCircle = faQuestionCircle;

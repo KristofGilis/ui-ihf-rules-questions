@@ -4,10 +4,11 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faRotateRight, faSpinner, faThumbsUp, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Question, Score } from '../../../../../../graphql/generated';
+import { GradientButtonComponent } from '../../../../shared/components';
 
 @Component({
   selector: 'app-score-overview',
-  imports: [CommonModule, TranslatePipe, FontAwesomeModule],
+  imports: [CommonModule, TranslatePipe, FontAwesomeModule, GradientButtonComponent],
   templateUrl: './score-overview.component.html',
   styleUrl: './score-overview.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

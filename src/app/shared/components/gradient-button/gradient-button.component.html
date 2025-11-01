@@ -1,0 +1,24 @@
+<button
+type="{{type()}}"
+  [title]="title()"
+  [disabled]="disabled() || loading()"
+  (click)="onClick()"
+  [class]="
+    'flex items-center justify-center gap-2 rounded-xl font-semibold text-white shadow-lg transition-all duration-200 ' +
+    (fullWidth() ? 'w-full ' : 'flex-1 ') +
+    (size() === 'sm' ? 'px-4 py-2 text-sm ' : size() === 'lg' ? 'px-8 py-4 text-lg ' : 'px-6 py-3 ') +
+    (variant() === 'success' 
+      ? 'bg-linear-to-br from-emerald-500 to-teal-600 ' 
+      : 'bg-linear-to-br from-cyan-500 to-blue-600 ') +
+    (disabled() || loading() 
+      ? 'cursor-not-allowed opacity-50 ' 
+      : 'hover:scale-105 active:scale-95 hover:shadow-xl ')
+  ">
+  @if (icon() || loadingIcon()) {
+    <fa-icon 
+      [icon]="loading() && loadingIcon() ? loadingIcon()! : icon()!" 
+      [animation]="loading() && loadingIcon() ? 'spin' : undefined">
+    </fa-icon>
+  }
+  <ng-content></ng-content>
+</button>
