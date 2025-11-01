@@ -29,6 +29,7 @@ export class RuleService {
         after: null,
       },
       notifyOnNetworkStatusChange: true,
+      refetchWritePolicy: 'overwrite',
       nextFetchPolicy: 'cache-first',
     });
 
