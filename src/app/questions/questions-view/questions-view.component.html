@@ -35,7 +35,7 @@
 <!-- Mobile: Fixed Bottom Bar (only when score exists) -->
 @if (score() && isMobile() && !showMobileScoreDialog()) {
     <div class="fixed bottom-16 left-0 right-0 z-40 bg-white p-4 shadow-2xl dark:bg-slate-900">
-      @if (score()?.percentage !== '100%') {
+      @if (score()?.percentage !== '100.00 %') {
         <!-- Show both buttons when there are wrong answers -->
         <div class="mx-auto flex max-w-md gap-3">
           <!-- Recalculate Button -->

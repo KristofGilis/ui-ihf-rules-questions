@@ -152,6 +152,8 @@ export class QuestionsViewComponent {
     });
     // Close mobile dialog if open
     this.showMobileScoreDialog.set(false);
+    // Scroll to top of page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     // Emit restart event to parent to clear score
     this.restart.emit();
   }
