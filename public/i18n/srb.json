@@ -40,6 +40,7 @@
   "questions": {
     "calculate_score": "Прикажи бодове",
     "description": "Прегледајте и проучите сва доступна питања у свом темпу",
+    "no_questions": "Нема доступних питања",
     "recalculate_score": "Поново израчунај",
     "recalculate_score_full": "Поново израчунај бодове",
     "show_score": "Прикажи бодове",

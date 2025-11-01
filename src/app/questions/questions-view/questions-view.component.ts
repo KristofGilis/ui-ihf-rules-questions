@@ -13,16 +13,17 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Capacitor } from '@capacitor/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faChartBar, faRotateRight, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faChartBar, faQuestionCircle, faRotateRight, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
 import { fromEvent, map, of, startWith } from 'rxjs';
 import { Question, Score } from '../../../../graphql/generated';
+import { EmptyStateComponent } from '../../shared/components';
 import { QuestionComponent } from './components/question/question.component';
 import { ScoreOverviewComponent } from './components/score-overview/score-overview.component';
 
 @Component({
   selector: 'app-questions-view',
-  imports: [CommonModule, QuestionComponent, TranslatePipe, ScoreOverviewComponent, FontAwesomeModule],
+  imports: [CommonModule, QuestionComponent, TranslatePipe, ScoreOverviewComponent, FontAwesomeModule, EmptyStateComponent],
   templateUrl: './questions-view.component.html',
   styleUrl: './questions-view.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,6 +45,7 @@ export class QuestionsViewComponent {
   readonly faTimes = faTimes;
   readonly faChartBar = faChartBar;
   readonly faRotateRight = faRotateRight;
+  readonly faQuestionCircle = faQuestionCircle;
 
   readonly selectedAnswers = signal<string[]>([]);
   readonly showMobileScoreDialog = signal(false);
