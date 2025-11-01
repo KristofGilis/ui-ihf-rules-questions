@@ -1,4 +1,13 @@
 <div class="space-y-6">
+  @if (score()) {
+    <div class="fade-in sticky top-4 z-10" #scoreOverview>
+      <app-score-overview 
+        [score]="score()" 
+        [questions]="questions()"
+        (scrollToQuestion)="scrollToQuestion($event)" />
+    </div>
+  }
+
   @for (question of questions(); track question.id) {
     <div class="fade-in">
       <app-question
@@ -37,15 +46,6 @@
           {{ 'questions_random_new' | translate: { count: randomCount() } }}
         </button>
       }
-    </div>
-  }
-
-  @if (score()) {
-    <div class="fade-in">
-      <app-score-overview 
-        [score]="score()" 
-        [questions]="questions()"
-        (scrollToQuestion)="scrollToQuestion($event)" />
     </div>
   }
 </div>
