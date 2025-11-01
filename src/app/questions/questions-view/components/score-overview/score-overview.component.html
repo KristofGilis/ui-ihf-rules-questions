@@ -7,7 +7,7 @@
   <!-- Loading Overlay (full screen when no score yet) -->
   @if (scoreLoading() && !score()) {
     <div class="absolute inset-0 z-10 flex items-center justify-center bg-white dark:bg-slate-900">
-      <fa-icon [icon]="faSpinner" [animation]="'spin'" size="2x" class="text-cyan-500"></fa-icon>
+      <app-loading-spinner [size]="'lg'" />
     </div>
   }
 
@@ -15,7 +15,7 @@
   @if (scoreLoading() && score()) {
     <div
       class="absolute inset-0 z-10 flex items-center justify-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
-      <fa-icon [icon]="faSpinner" [animation]="'spin'" size="2x" class="text-cyan-500"></fa-icon>
+      <app-loading-spinner [size]="'lg'" />
     </div>
   }
 
