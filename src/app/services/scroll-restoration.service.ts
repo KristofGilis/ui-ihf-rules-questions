@@ -34,14 +34,14 @@ export class ScrollRestorationService {
 
         const savedPosition = this._scrollPositions.get(this._currentUrl);
 
-        // Use setTimeout to wait for rendering
-        setTimeout(() => {
+        // Use requestAnimationFrame to wait for next paint cycle
+        requestAnimationFrame(() => {
           if (savedPosition !== undefined && savedPosition > 0) {
             window.scrollTo(0, savedPosition);
           } else {
             window.scrollTo(0, 0);
           }
-        }, 0);
+        });
       });
   }
 }
