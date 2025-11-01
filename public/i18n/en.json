@@ -46,7 +46,6 @@
     "show_score": "Show Score",
     "title": "All Questions"
   },
-  "questions_random_new": "New random {{count}} questions",
   "quiz": {
     "complete": "Complete Quiz",
     "next": "Next",
@@ -65,10 +64,6 @@
     "wrong": "Wrong",
     "your_answer": "Your Answer"
   },
-  "random_questions": {
-    "description": "Practice with a random selection of questions",
-    "title": "Random Questions"
-  },
   "rules": {
     "description": "Browse all IHF handball rules. Select a rule to view related questions.",
     "loading": "Loading rules...",
@@ -76,9 +71,7 @@
     "title": "Rules"
   },
   "score_overview": {
-    "score": "Your score:",
-    "title": "Result",
-    "wrong_questionNumbers": "The questions you answered <u>wrong</u>:"
+    "title": "Result"
   },
   "theme": {
     "dark": "Dark",

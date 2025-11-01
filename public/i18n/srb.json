@@ -46,7 +46,6 @@
     "show_score": "Прикажи бодове",
     "title": "Сва питања"
   },
-  "questions_random_new": "Нових {{count}} насумичних питања",
   "quiz": {
     "complete": "Заврши Квиз",
     "next": "Следеће",
@@ -65,10 +64,6 @@
     "wrong": "Погрешно",
     "your_answer": "Ваш Одговор"
   },
-  "random_questions": {
-    "description": "Vežbajte sa nasumičnim izborom pitanja",
-    "title": "Slučajna pitanja"
-  },
   "rules": {
     "description": "Прегледајте сва ИХФ правила рукомета. Изаберите правило да бисте видели повезана питања.",
     "loading": "Учитавање правила...",
@@ -76,9 +71,7 @@
     "title": "Правила"
   },
   "score_overview": {
-    "score": "Ваши бодови:",
-    "title": "Резултат",
-    "wrong_questionNumbers": "Питања на која сте одговорили <u>погрешно</u>:"
+    "title": "Резултат"
   },
   "theme": {
     "dark": "Тамна",

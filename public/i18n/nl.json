@@ -46,7 +46,6 @@
     "show_score": "Toon Score",
     "title": "Alle vragen"
   },
-  "questions_random_new": "Nieuwe willekeurige {{count}} vragen",
   "quiz": {
     "complete": "Voltooi Quiz",
     "next": "Volgende",
@@ -65,10 +64,6 @@
     "wrong": "Fout",
     "your_answer": "Jouw Antwoord"
   },
-  "random_questions": {
-    "description": "Oefen met een willekeurige selectie van vragen",
-    "title": "Willekeurige vragen"
-  },
   "rules": {
     "description": "Blader door alle IHF handbalregels. Selecteer een regel om gerelateerde vragen te bekijken.",
     "loading": "Regels laden...",
@@ -76,9 +71,7 @@
     "title": "Spelregels"
   },
   "score_overview": {
-    "score": "Uw score:",
-    "title": "Resultaat",
-    "wrong_questionNumbers": "De vragen die je <u>fout</u> hebt beantwoord:"
+    "title": "Resultaat"
   },
   "theme": {
     "dark": "Donker",
