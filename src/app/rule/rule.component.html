@@ -1,17 +1,41 @@
+@let score = score$ | async;
+@let rule = rule$ | async;
 <app-page-container padding="pb-24" [maxWidth]="'max-w-5xl'">
-  @if (rule$ | async; as rule) {
-    <div class="pt-12">
-      <app-page-hero 
-        [title]="getRuleName(rule) || ''" 
-        [description]="'rule.description' | translate" />
+  @if (rule) {
+    <!-- Wrapper - full width container -->
+    <div class="lg:mx-auto">
+      <!-- Grid layout that changes based on score -->
+      <div class="layout-grid flex flex-col gap-6" 
+           [class.no-score]="!score && !scoreLoading()" 
+           [class.has-score]="score || scoreLoading()">
+        <!-- Main content area -->
+        <div class="lg:max-w-5xl pt-12">
+          <app-page-hero 
+            [title]="getRuleName(rule) ?? ''" 
+            [description]="'rule.description' | translate" />
 
-      <app-questions-view
-        [questions]="getQuestions(rule)"
-        [loading]="loading()"
-        [hasMoreQuestions]="hasMoreQuestions"
-        [score]="(score$ | async) ?? undefined"
-        [scoreLoading]="scoreLoading()"
-        (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)" />
+          <app-questions-view
+            [questions]="getQuestions(rule)"
+            [loading]="loading()"
+            [hasMoreQuestions]="hasMoreQuestions"
+            [score]="score ?? undefined"
+            [scoreLoading]="scoreLoading()"
+            (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)"
+            #questionsView />
+        </div>
+
+        <!-- Right side: Score Overview Sidebar -->
+        @if (score || scoreLoading()) {
+          <div class="hidden lg:sticky lg:top-24 lg:block lg:h-fit lg:w-[384px] lg:shrink-0 lg:self-start lg:max-h-[calc(100vh-5rem)]">
+            <app-score-overview
+              [score]="score ?? undefined"
+              [questions]="getQuestions(rule)"
+              [scoreLoading]="scoreLoading()"
+              (scrollToQuestion)="onScrollToQuestion($event)"
+              (recalculate)="questionsView.onCalculateScore()" />
+          </div>
+        }
+      </div>
     </div>
   }
 </app-page-container>
