@@ -33,7 +33,7 @@
             [scoreLoading]="scoreLoading()"
             (scrollToQuestion)="onScrollToQuestion($event)"
             (recalculate)="questionsView.onCalculateScore()"
-            (reset)="questionsView.onResetAnswers()" />
+            (reset)="questionsView.onResetAnswers(); onResetScore()" />
         </div>
       }
     </div>

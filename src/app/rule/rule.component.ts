@@ -89,6 +89,12 @@ export class RuleComponent {
     );
   }
 
+  onResetScore(): void {
+    // Reset the score by setting it to undefined
+    this.score$ = undefined;
+    this.scoreLoading.set(false);
+  }
+
   onScrollToQuestion(questionId: string): void {
     const element = this._document.getElementById(questionId);
     if (element) {
