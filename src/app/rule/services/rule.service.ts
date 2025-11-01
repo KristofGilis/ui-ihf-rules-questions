@@ -29,6 +29,7 @@ export class RuleService {
         after: null,
       },
       notifyOnNetworkStatusChange: true,
+      nextFetchPolicy: 'cache-first',
     });
 
     this.rule$ = this._ruleQuery.valueChanges.pipe(
