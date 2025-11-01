@@ -71,7 +71,15 @@
     "title": "Spelregels"
   },
   "score_overview": {
-    "title": "Resultaat"
+    "all_correct": "Alle antwoorden correct!",
+    "click_to_review": "Klik om te springen en te bekijken",
+    "correct": "Correct",
+    "of_total_correct": "/ {{total}} correct",
+    "perfect": "Perfect!",
+    "question_number": "Vraag {{number}}",
+    "review_mistakes": "Fouten Bekijken",
+    "title": "Resultaat",
+    "wrong": "Fout"
   },
   "theme": {
     "dark": "Donker",

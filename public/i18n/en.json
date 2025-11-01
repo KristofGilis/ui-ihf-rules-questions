@@ -71,7 +71,15 @@
     "title": "Rules"
   },
   "score_overview": {
-    "title": "Result"
+    "all_correct": "All answers correct!",
+    "click_to_review": "Click to jump and review",
+    "correct": "Correct",
+    "of_total_correct": "/ {{total}} correct",
+    "perfect": "Perfect!",
+    "question_number": "Question {{number}}",
+    "review_mistakes": "Review Mistakes",
+    "title": "Result",
+    "wrong": "Wrong"
   },
   "theme": {
     "dark": "Dark",

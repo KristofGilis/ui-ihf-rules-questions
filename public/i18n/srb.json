@@ -71,7 +71,15 @@
     "title": "Правила"
   },
   "score_overview": {
-    "title": "Резултат"
+    "all_correct": "Сви одговори тачни!",
+    "click_to_review": "Кликните да прегледате",
+    "correct": "Тачно",
+    "of_total_correct": "/ {{total}} тачно",
+    "perfect": "Савршено!",
+    "question_number": "Питање {{number}}",
+    "review_mistakes": "Прегледај Грешке",
+    "title": "Резултат",
+    "wrong": "Погрешно"
   },
   "theme": {
     "dark": "Тамна",
