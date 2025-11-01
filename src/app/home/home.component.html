@@ -4,7 +4,7 @@
     
     <!-- Hero -->
     <app-page-hero [title]="'main.title' | translate" [description]="'home.hero_description' | translate" [icon]="true" [badge]="true">
-      <app-logo icon class="h-14 w-14 text-white" />
+      <app-logo icon class="h-16 w-16 md:h-20 md:w-20 text-white [&_path]:fill-white!" />
       
       <div badge>
         @if (loadingVersion()) {
