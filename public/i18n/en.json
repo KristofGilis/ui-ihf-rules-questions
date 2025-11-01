@@ -38,7 +38,8 @@
     "rules": "Rules"
   },
   "questions": {
-    "calculate_score": "Calculate score",
+    "calculate_score": "Calculate Score",
+    "description": "Browse and study all available questions at your own pace",
     "title": "All Questions"
   },
   "questions_random_new": "New random {{count}} questions",
@@ -61,6 +62,7 @@
     "your_answer": "Your Answer"
   },
   "random_questions": {
+    "description": "Practice with a random selection of questions",
     "title": "Random Questions"
   },
   "rules": {

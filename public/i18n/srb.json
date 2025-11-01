@@ -39,6 +39,7 @@
   },
   "questions": {
     "calculate_score": "Прикажи бодове",
+    "description": "Прегледајте и проучите сва доступна питања у свом темпу",
     "title": "Сва питања"
   },
   "questions_random_new": "Нових {{count}} насумичних питања",
@@ -61,7 +62,8 @@
     "your_answer": "Ваш Одговор"
   },
   "random_questions": {
-    "title": "Насумична Питања"
+    "description": "Vežbajte sa nasumičnim izborom pitanja",
+    "title": "Slučajna pitanja"
   },
   "rules": {
     "description": "Прегледајте сва ИХФ правила рукомета. Изаберите правило да бисте видели повезана питања.",

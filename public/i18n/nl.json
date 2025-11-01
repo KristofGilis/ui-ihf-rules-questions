@@ -39,6 +39,7 @@
   },
   "questions": {
     "calculate_score": "Bereken score",
+    "description": "Bekijk en bestudeer alle beschikbare vragen in je eigen tempo",
     "title": "Alle vragen"
   },
   "questions_random_new": "Nieuwe willekeurige {{count}} vragen",
@@ -61,7 +62,8 @@
     "your_answer": "Jouw Antwoord"
   },
   "random_questions": {
-    "title": "Willekeurige Vragen"
+    "description": "Oefen met een willekeurige selectie van vragen",
+    "title": "Willekeurige vragen"
   },
   "rules": {
     "description": "Blader door alle IHF handbalregels. Selecteer een regel om gerelateerde vragen te bekijken.",

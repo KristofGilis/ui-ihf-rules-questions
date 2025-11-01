@@ -5,13 +5,14 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
 import { finalize, map, Observable, tap } from 'rxjs';
 import { Question, Score } from '../../../graphql/generated';
+import { PageContainerComponent, PageHeroComponent } from '../shared/components';
 import { QuestionsViewComponent } from './questions-view/questions-view.component';
 import { QuestionsService } from './services/questions.service';
 import { RandomStateService } from './services/random-state.service';
 
 @Component({
   selector: 'app-questions',
-  imports: [TranslatePipe, AsyncPipe, QuestionsViewComponent],
+  imports: [TranslatePipe, AsyncPipe, QuestionsViewComponent, PageContainerComponent, PageHeroComponent],
   templateUrl: './questions.component.html',
   styleUrl: './questions.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
