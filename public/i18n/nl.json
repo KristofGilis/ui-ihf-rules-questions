@@ -1,4 +1,7 @@
 {
+  "accessibility": {
+    "skip_to_main": "Spring naar hoofdinhoud"
+  },
   "errors": {
     "client_error": "Er is een onverwachte fout opgetreden. Ververs de pagina.",
     "data_loading": "Er is een fout opgetreden bij het laden van gegevens. Probeer het opnieuw.",

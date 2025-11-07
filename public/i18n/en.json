@@ -1,4 +1,7 @@
 {
+  "accessibility": {
+    "skip_to_main": "Skip to main content"
+  },
   "errors": {
     "client_error": "An unexpected error occurred. Please refresh the page.",
     "data_loading": "An error occurred while loading data. Please try again.",
