@@ -58,11 +58,13 @@
     "recalculate_score_full": "Recalculate Score",
     "restart": "Restart",
     "show_score": "Show Score",
-    "title": "All Questions"
+    "title": "All Questions",
+    "wrong": "Wrong"
   },
   "quiz": {
     "calculating_score": "Calculating your score...",
     "complete": "Complete Quiz",
+    "configure": "Configure Quiz",
     "leave_cancel": "Stay",
     "leave_confirm": "Leave",
     "leave_title": "Leave Quiz?",
@@ -71,6 +73,7 @@
     "previous": "Previous",
     "progress": "Question {{current}} of {{total}}",
     "select_answers": "Select all correct answers",
+    "select_answers_for_question": "Select all correct answers for question {{current}}",
     "setup_description": "Configure your quiz settings to get started",
     "time_remaining": "Time Remaining"
   },

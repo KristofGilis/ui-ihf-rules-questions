@@ -1,15 +1,14 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, inject, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Question } from '../../../../../../graphql/generated';
 
 @Component({
   selector: 'app-question',
-  imports: [CommonModule, FormsModule, FontAwesomeModule],
+  imports: [FormsModule, FaIconComponent, TranslatePipe],
   templateUrl: './question.component.html',
-  styleUrl: './question.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuestionComponent {
@@ -30,4 +29,3 @@ export class QuestionComponent {
     }
   }
 }
-

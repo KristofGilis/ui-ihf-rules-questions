@@ -46,6 +46,9 @@ export class ConfirmationDialogService {
     const domElem = this._dialogRef.location.nativeElement as HTMLElement;
     document.body.appendChild(domElem);
 
+    // Prevent body scroll on mobile
+    document.body.style.overflow = 'hidden';
+
     return subject.asObservable();
   }
 
@@ -54,6 +57,9 @@ export class ConfirmationDialogService {
       this._appRef.detachView(this._dialogRef.hostView);
       this._dialogRef.destroy();
       this._dialogRef = null;
+
+      // Restore body scroll
+      document.body.style.overflow = '';
     }
   }
 }

@@ -58,11 +58,13 @@
     "recalculate_score_full": "Поново израчунај бодове",
     "restart": "Поново покрени",
     "show_score": "Прикажи бодове",
-    "title": "Сва питања"
+    "title": "Сва питања",
+    "wrong": "Погрешно"
   },
   "quiz": {
     "calculating_score": "Израчунавање ваших бодова...",
     "complete": "Заврши Квиз",
+    "configure": "Подеси Квиз",
     "leave_cancel": "Остани",
     "leave_confirm": "Напусти",
     "leave_title": "Напустити Квиз?",
@@ -71,6 +73,7 @@
     "previous": "Претходно",
     "progress": "Питање {{current}} од {{total}}",
     "select_answers": "Изаберите све тачне одговоре",
+    "select_answers_for_question": "Изаберите све тачне одговоре за питање {{current}}",
     "setup_description": "Конфигуришите подешавања квиза да бисте почели",
     "time_remaining": "Преостало време"
   },

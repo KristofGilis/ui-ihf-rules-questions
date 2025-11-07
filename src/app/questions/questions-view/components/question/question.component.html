@@ -17,7 +17,7 @@
     @if (isWrong()) {
       <div class="ml-2 flex items-center gap-1.5 rounded-full bg-red-500 px-3 py-1 text-sm font-semibold text-white">
         <fa-icon [icon]="faTimesCircle"></fa-icon>
-        <span>Wrong</span>
+        <span>{{ 'questions.wrong' | translate }}</span>
       </div>
     }
   </div>

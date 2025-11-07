@@ -58,11 +58,13 @@
     "recalculate_score_full": "Herbereken Score",
     "restart": "Opnieuw",
     "show_score": "Toon Score",
-    "title": "Alle vragen"
+    "title": "Alle vragen",
+    "wrong": "Fout"
   },
   "quiz": {
     "calculating_score": "Je score berekenen...",
     "complete": "Voltooi Quiz",
+    "configure": "Quiz Configureren",
     "leave_cancel": "Blijven",
     "leave_confirm": "Verlaten",
     "leave_title": "Quiz Verlaten?",
@@ -71,6 +73,7 @@
     "previous": "Vorige",
     "progress": "Vraag {{current}} van {{total}}",
     "select_answers": "Selecteer alle juiste antwoorden",
+    "select_answers_for_question": "Selecteer alle juiste antwoorden voor vraag {{current}}",
     "setup_description": "Configureer je quiz-instellingen om te beginnen",
     "time_remaining": "Resterende tijd"
   },
