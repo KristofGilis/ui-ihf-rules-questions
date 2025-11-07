@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faCheckCircle, faHome, faRedo, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
 import { QuizService } from '../../services/quiz.service';
+import { GradientButtonComponent, PageContainerComponent } from '../../shared/components';
 
 @Component({
   selector: 'app-quiz-results',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslatePipe, FontAwesomeModule],
+  imports: [CommonModule, RouterLink, TranslatePipe, FaIconComponent, PageContainerComponent, GradientButtonComponent],
   templateUrl: './quiz-results.component.html',
   styleUrl: './quiz-results.component.scss',
 })
