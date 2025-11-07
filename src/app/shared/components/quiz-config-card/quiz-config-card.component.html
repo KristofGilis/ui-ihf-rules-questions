@@ -11,7 +11,7 @@
         {{ 'home.quiz_card.count' | translate }}
       </label>
       <div class="grid grid-cols-4 gap-3">
-        @for (count of [2, 10, 15, 20, 30]; track count) {
+        @for (count of [10, 15, 20, 30]; track count) {
           <button
             type="button"
             (click)="questionCount = count"

@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ErrorHandler, Injectable, isDevMode } from '@angular/core';
+import { ErrorHandler, inject, Injectable, isDevMode } from '@angular/core';
+import { ToastService } from './toast.service';
 
 /**
  * GraphQL error object from Apollo Client
@@ -55,7 +56,8 @@ interface WrappedError {
  */
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
-  private readonly isDevelopment = isDevMode();
+  private readonly _isDevelopment = isDevMode();
+  private readonly _toastService = inject(ToastService);
 
   handleError(error: unknown): void {
     // Extract the actual error if wrapped
@@ -65,7 +67,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     const errorInfo = this.categorizeError(actualError);
 
     // Log to console in development (but skip Apollo errors as they're already logged by ErrorLink)
-    if (this.isDevelopment && !this.isApolloError(actualError)) {
+    if (this._isDevelopment && !this.isApolloError(actualError)) {
       console.group(`❌ ${errorInfo.category} Error`);
       console.error('Message:', errorInfo.userMessage);
       console.error('Technical:', errorInfo.technicalMessage);
@@ -224,7 +226,7 @@ export class GlobalErrorHandler implements ErrorHandler {
   }
 
   /**
-   * Show error notification to user
+   * Show error notification to user using toast service
    */
   private notifyUser(errorInfo: ErrorInfo): void {
     // Don't show notifications for ignored errors
@@ -233,88 +235,10 @@ export class GlobalErrorHandler implements ErrorHandler {
     }
 
     // Show notifications for high severity errors or all errors in development
-    if (this.isDevelopment || errorInfo.severity === 'high') {
-      this.showInlineNotification(errorInfo);
+    if (this._isDevelopment || errorInfo.severity === 'high') {
+      const toastType = errorInfo.severity === 'high' ? 'error' : 'warning';
+      this._toastService.show(errorInfo.userMessage, { type: toastType, duration: 5000 });
     }
-  }
-
-  /**
-   * Display a simple inline notification to the user
-   * Uses a styled div that auto-dismisses after 5 seconds
-   */
-  private showInlineNotification(errorInfo: ErrorInfo): void {
-    const notification = document.createElement('div');
-    notification.setAttribute('role', 'alert');
-    notification.setAttribute('aria-live', 'assertive');
-    
-    // Style based on severity
-    const bgColor = errorInfo.severity === 'high' ? '#dc2626' : '#f59e0b';
-    const icon = errorInfo.severity === 'high' ? '❌' : '⚠️';
-    
-    notification.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      max-width: 400px;
-      padding: 16px 20px;
-      background-color: ${bgColor};
-      color: white;
-      border-radius: 8px;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-      z-index: 10000;
-      font-family: system-ui, -apple-system, sans-serif;
-      font-size: 14px;
-      line-height: 1.5;
-      animation: slideIn 0.3s ease-out;
-    `;
-
-    notification.innerHTML = `
-      <div style="display: flex; gap: 12px; align-items: start;">
-        <span style="font-size: 20px; flex-shrink: 0;">${icon}</span>
-        <div style="flex: 1;">
-          <div style="font-weight: 600; margin-bottom: 4px;">Error</div>
-          <div>${this.escapeHtml(errorInfo.userMessage)}</div>
-        </div>
-        <button 
-          onclick="this.parentElement.parentElement.remove()" 
-          style="background: none; border: none; color: white; cursor: pointer; font-size: 20px; line-height: 1; padding: 0; flex-shrink: 0;"
-          aria-label="Close notification"
-        >×</button>
-      </div>
-    `;
-
-    // Add animation
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes slideIn {
-        from {
-          transform: translateX(400px);
-          opacity: 0;
-        }
-        to {
-          transform: translateX(0);
-          opacity: 1;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-
-    document.body.appendChild(notification);
-
-    // Auto-dismiss after 5 seconds
-    setTimeout(() => {
-      notification.style.animation = 'slideIn 0.3s ease-out reverse';
-      setTimeout(() => notification.remove(), 300);
-    }, 5000);
-  }
-
-  /**
-   * Escape HTML to prevent XSS
-   */
-  private escapeHtml(text: string): string {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
   }
 
   /**
