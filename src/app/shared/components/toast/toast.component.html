@@ -6,10 +6,12 @@
         role="alert"
         [attr.aria-live]="toast.type === 'error' ? 'assertive' : 'polite'">
         <div class="toast-content">
-          <span class="toast-icon">{{ getIcon(toast.type) }}</span>
+          <fa-icon class="toast-icon" [icon]="getIcon(toast.type)" [fixedWidth]="true"></fa-icon>
           <div class="toast-message">{{ toast.message }}</div>
           @if (toast.dismissible) {
-            <button class="toast-close" (click)="dismiss(toast.id)" aria-label="Close notification">×</button>
+            <button type="button" class="toast-close" (click)="dismiss(toast.id)" aria-label="Close notification">
+              <fa-icon [icon]="faXmark"></fa-icon>
+            </button>
           }
         </div>
       </div>

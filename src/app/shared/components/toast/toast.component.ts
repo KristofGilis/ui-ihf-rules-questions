@@ -1,4 +1,13 @@
 import { Component, signal } from '@angular/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {
+  faCircleCheck,
+  faCircleExclamation,
+  faCircleInfo,
+  faCircleXmark,
+  faXmark,
+  IconDefinition,
+} from '@fortawesome/free-solid-svg-icons';
 
 export interface Toast {
   id: number;
@@ -13,11 +22,15 @@ export interface Toast {
  */
 @Component({
   selector: 'app-toast',
+  imports: [FontAwesomeModule],
   templateUrl: './toast.component.html',
-  styleUrl: './toast.component.scss',
+  styleUrls: ['./toast.component.scss'],
 })
 export class ToastComponent {
   toasts = signal<Toast[]>([]);
+
+  // Font Awesome icons
+  readonly faXmark = faXmark;
 
   /**
    * Add a new toast notification
@@ -36,14 +49,14 @@ export class ToastComponent {
   }
 
   /**
-   * Get icon for toast type
+   * Get Font Awesome icon for toast type
    */
-  getIcon(type: Toast['type']): string {
+  getIcon(type: Toast['type']): IconDefinition {
     const icons = {
-      error: '❌',
-      warning: '⚠️',
-      success: '✓',
-      info: 'ℹ️',
+      error: faCircleXmark,
+      warning: faCircleExclamation,
+      success: faCircleCheck,
+      info: faCircleInfo,
     };
     return icons[type];
   }
