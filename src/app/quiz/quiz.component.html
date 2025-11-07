@@ -67,7 +67,7 @@
           </app-gradient-button>
 
           @if (quizService.canGoNext()) {
-            <app-gradient-button [variant]="'primary'" [icon]="faArrowRight" [iconPosition]="'right'" (clicked)="goToNext()">
+            <app-gradient-button [variant]="'primary'" [icon]="faArrowRight" (clicked)="goToNext()">
               <span>{{ 'quiz.next' | translate }}</span>
             </app-gradient-button>
           } @else {

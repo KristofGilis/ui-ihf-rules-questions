@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -10,7 +10,7 @@ import { GradientButtonComponent, PageContainerComponent } from '../../shared/co
 @Component({
   selector: 'app-quiz-results',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslatePipe, FaIconComponent, PageContainerComponent, GradientButtonComponent],
+  imports: [NgClass, RouterLink, TranslatePipe, FaIconComponent, PageContainerComponent, GradientButtonComponent],
   templateUrl: './quiz-results.component.html',
   styleUrl: './quiz-results.component.scss',
 })
@@ -44,4 +44,3 @@ export class QuizResultsComponent implements OnInit {
     this.quizService.resetQuiz();
   }
 }
-

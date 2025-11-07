@@ -64,7 +64,7 @@ export class RuleComponent {
     return this._ruleService.hasNextPage;
   }
 
-  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:scroll')
   onScroll(): void {
     if (this.loading()) {
       return;
