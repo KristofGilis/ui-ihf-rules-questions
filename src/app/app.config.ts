@@ -1,4 +1,11 @@
-import { ApplicationConfig, inject, isDevMode, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  ErrorHandler,
+  inject,
+  isDevMode,
+  provideAppInitializer,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { HttpInterceptorFn, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
@@ -8,6 +15,7 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { routes } from './app.routes';
 import { graphqlProvider } from './graphql.provider';
 import { getLanguage } from './language';
+import { GlobalErrorHandler } from './services/global-error-handler.service';
 import { ScrollRestorationService } from './shared/services/scroll-restoration.service';
 
 export function getBaseUrl(): string {
@@ -45,5 +53,6 @@ export const appConfig: ApplicationConfig = {
       fallbackLang: 'en',
     }),
     { provide: 'BASE_URL', useFactory: getBaseUrl, deps: [] },
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
   ],
 };
