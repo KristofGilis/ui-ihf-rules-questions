@@ -39,11 +39,18 @@ interface WrappedError {
  * - Console logging in development
  * - Integration point for error monitoring services (Sentry, etc.)
  *
+ * Architecture:
+ * - Apollo errors are first handled by ErrorLink in graphql.provider.ts
+ * - ErrorLink logs Apollo errors at the link level
+ * - If components don't handle Apollo errors, they bubble up here
+ * - This handler provides user notifications for all unhandled errors
+ * - Apollo errors skip duplicate console logging (already logged by ErrorLink)
+ *
  * @example
  * // Automatically handles all errors, including:
  * // - Component errors
  * // - Service errors
- * // - HTTP/GraphQL errors
+ * // - HTTP/GraphQL errors (if unhandled by components)
  * // - Promise rejections
  */
 @Injectable()
@@ -57,8 +64,8 @@ export class GlobalErrorHandler implements ErrorHandler {
     // Categorize the error
     const errorInfo = this.categorizeError(actualError);
 
-    // Log to console in development
-    if (this.isDevelopment) {
+    // Log to console in development (but skip Apollo errors as they're already logged by ErrorLink)
+    if (this.isDevelopment && !this.isApolloError(actualError)) {
       console.group(`❌ ${errorInfo.category} Error`);
       console.error('Message:', errorInfo.userMessage);
       console.error('Technical:', errorInfo.technicalMessage);

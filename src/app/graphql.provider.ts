@@ -17,22 +17,24 @@ export function apolloOptionsFactory(): ApolloClient.Options {
   // Error link for centralized Apollo error handling
   // Based on Apollo Client 4.0 API:
   // https://the-guild.dev/graphql/apollo-angular/docs/data/error-handling
+  // 
+  // This ErrorLink handles Apollo-level errors and logs them.
+  // Since errorPolicy is 'all', errors are still available to components.
+  // Unhandled errors that escape components will be caught by GlobalErrorHandler.
   const errorLink = new ErrorLink(({ error, operation }) => {
     if (CombinedGraphQLErrors.is(error)) {
       // GraphQL errors - errors returned from the server
       error.errors.forEach(({ message, locations, path }) => {
-        console.error(
-          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-          { operation: operation.operationName }
-        );
+        console.error(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`, {
+          operation: operation.operationName,
+        });
       });
     } else if (CombinedProtocolErrors.is(error)) {
       // Protocol errors - errors in the GraphQL response protocol
       error.errors.forEach(({ message, extensions }) => {
-        console.error(
-          `[Protocol error]: Message: ${message}, Extensions: ${JSON.stringify(extensions)}`,
-          { operation: operation.operationName }
-        );
+        console.error(`[Protocol error]: Message: ${message}, Extensions: ${JSON.stringify(extensions)}`, {
+          operation: operation.operationName,
+        });
       });
     } else {
       // Network errors - connection issues, server errors, etc.
@@ -40,6 +42,11 @@ export function apolloOptionsFactory(): ApolloClient.Options {
         operation: operation.operationName,
       });
     }
+    
+    // Note: We don't return anything here, which means:
+    // - The error continues to propagate to the component
+    // - Components can handle it via error handling in their queries
+    // - If components don't handle it, GlobalErrorHandler will catch it
   });
 
   // Create the HTTP link
