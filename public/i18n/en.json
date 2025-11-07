@@ -1,4 +1,13 @@
 {
+  "errors": {
+    "client_error": "An unexpected error occurred. Please refresh the page.",
+    "data_loading": "An error occurred while loading data. Please try again.",
+    "http_error": "An error occurred while communicating with the server.",
+    "network_connection": "Unable to connect to the server. Please check your internet connection.",
+    "not_found": "The requested resource was not found.",
+    "server_error": "The server encountered an error. Please try again later.",
+    "unknown_error": "Something went wrong. Please try again."
+  },
   "home": {
     "alert": "I decided to not automatically add the other languages, because I do not have the time. But you can help. ;-) Special thanks for all collaborators.",
     "all_questions_card": {

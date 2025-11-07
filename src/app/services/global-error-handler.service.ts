@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, inject, Injectable, isDevMode } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { ToastService } from './toast.service';
 
 /**
@@ -58,6 +59,7 @@ interface WrappedError {
 export class GlobalErrorHandler implements ErrorHandler {
   private readonly _isDevelopment = isDevMode();
   private readonly _toastService = inject(ToastService);
+  private readonly _translate = inject(TranslateService);
 
   handleError(error: unknown): void {
     // Extract the actual error if wrapped
@@ -113,7 +115,7 @@ export class GlobalErrorHandler implements ErrorHandler {
       if (error.status === 0) {
         return {
           category: 'Network',
-          userMessage: 'Unable to connect to the server. Please check your internet connection.',
+          userMessage: this._translate.instant('errors.network_connection'),
           technicalMessage: 'Network connection failed',
           severity: 'high',
         };
@@ -121,7 +123,7 @@ export class GlobalErrorHandler implements ErrorHandler {
       if (error.status >= 500) {
         return {
           category: 'Server',
-          userMessage: 'The server encountered an error. Please try again later.',
+          userMessage: this._translate.instant('errors.server_error'),
           technicalMessage: `HTTP ${error.status}: ${error.message}`,
           severity: 'high',
         };
@@ -129,14 +131,14 @@ export class GlobalErrorHandler implements ErrorHandler {
       if (error.status === 404) {
         return {
           category: 'Client',
-          userMessage: 'The requested resource was not found.',
+          userMessage: this._translate.instant('errors.not_found'),
           technicalMessage: `HTTP 404: ${error.url}`,
           severity: 'medium',
         };
       }
       return {
         category: 'HTTP',
-        userMessage: 'An error occurred while communicating with the server.',
+        userMessage: this._translate.instant('errors.http_error'),
         technicalMessage: `HTTP ${error.status}: ${error.message}`,
         severity: 'medium',
       };
@@ -147,7 +149,7 @@ export class GlobalErrorHandler implements ErrorHandler {
       if (error.networkError) {
         return {
           category: 'Network',
-          userMessage: 'Unable to reach the server. Please check your connection.',
+          userMessage: this._translate.instant('errors.network_connection'),
           technicalMessage: error.message || 'GraphQL network error',
           severity: 'high',
         };
@@ -156,14 +158,14 @@ export class GlobalErrorHandler implements ErrorHandler {
         const firstError = error.graphQLErrors[0];
         return {
           category: 'GraphQL',
-          userMessage: 'An error occurred while loading data. Please try again.',
+          userMessage: this._translate.instant('errors.data_loading'),
           technicalMessage: firstError.message || error.message || 'GraphQL error',
           severity: 'medium',
         };
       }
       return {
         category: 'GraphQL',
-        userMessage: 'An error occurred while loading data. Please try again.',
+        userMessage: this._translate.instant('errors.data_loading'),
         technicalMessage: error.message || 'GraphQL error',
         severity: 'medium',
       };
@@ -183,7 +185,7 @@ export class GlobalErrorHandler implements ErrorHandler {
 
       return {
         category: 'Client',
-        userMessage: 'An unexpected error occurred. Please refresh the page.',
+        userMessage: this._translate.instant('errors.client_error'),
         technicalMessage: error.message,
         severity: 'high',
       };
@@ -192,7 +194,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     // Unknown error type
     return {
       category: 'Unknown',
-      userMessage: 'Something went wrong. Please try again.',
+      userMessage: this._translate.instant('errors.unknown_error'),
       technicalMessage: String(error),
       severity: 'medium',
     };

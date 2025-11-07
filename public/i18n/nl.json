@@ -1,4 +1,13 @@
 {
+  "errors": {
+    "client_error": "Er is een onverwachte fout opgetreden. Ververs de pagina.",
+    "data_loading": "Er is een fout opgetreden bij het laden van gegevens. Probeer het opnieuw.",
+    "http_error": "Er is een fout opgetreden tijdens communicatie met de server.",
+    "network_connection": "Kan geen verbinding maken met de server. Controleer uw internetverbinding.",
+    "not_found": "De gevraagde bron is niet gevonden.",
+    "server_error": "De server heeft een fout aangetroffen. Probeer het later opnieuw.",
+    "unknown_error": "Er is iets misgegaan. Probeer het opnieuw."
+  },
   "home": {
     "alert": "Ik heb besloten om de andere talen niet automatisch toe te voegen, omdat ik daar de tijd niet voor heb. Maar jij kunt helpen. ;-) Speciale dank aan alle medewerkers.",
     "all_questions_card": {
