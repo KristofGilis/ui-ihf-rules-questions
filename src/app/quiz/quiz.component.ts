@@ -1,18 +1,26 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft, faArrowRight, faCheck, faClock } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
 import { map } from 'rxjs';
 import { GetQuestionsGQL, Question } from '../../../graphql/generated';
 import { QuizService } from '../services/quiz.service';
+import { GradientButtonComponent, LoadingSpinnerComponent, PageContainerComponent } from '../shared/components';
 
 @Component({
   selector: 'app-quiz',
   standalone: true,
-  imports: [CommonModule, TranslatePipe, FontAwesomeModule],
+  imports: [
+    CommonModule,
+    TranslatePipe,
+    FaIconComponent,
+    PageContainerComponent,
+    GradientButtonComponent,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './quiz.component.html',
   styleUrls: ['./quiz.component.scss'],
 })
