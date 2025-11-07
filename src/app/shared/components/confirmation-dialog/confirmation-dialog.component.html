@@ -1,20 +1,25 @@
 <div
   class="dialog-backdrop fixed inset-0 flex items-center justify-center bg-black/50 p-4"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-labelledby]="'dialog-title'"
+  [attr.aria-describedby]="'dialog-description'"
   (click)="onBackdropClick($event)">
   <div
     class="dialog-content w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-700 dark:bg-slate-900"
+    tabindex="-1"
     (click)="$event.stopPropagation()">
-    <h2 class="mb-4 text-xl font-bold text-slate-900 dark:text-white">
+    <h2 id="dialog-title" class="mb-4 text-xl font-bold text-slate-900 dark:text-white">
       {{ data.title }}
     </h2>
-    <p class="mb-6 text-slate-700 dark:text-slate-300">
+    <p id="dialog-description" class="mb-6 text-slate-700 dark:text-slate-300">
       {{ data.message }}
     </p>
-    <div class="dialog-buttons flex gap-3">
-      <app-gradient-button [variant]="'primary'" class="flex-1" (clicked)="handleConfirm()">
+    <div class="dialog-buttons flex gap-3" role="group" aria-label="Dialog actions">
+      <app-gradient-button [variant]="'primary'" [title]="data.confirmText" class="flex-1" (clicked)="handleConfirm()">
         <span>{{ data.confirmText }}</span>
       </app-gradient-button>
-      <app-gradient-button [variant]="'success'" class="flex-1" (clicked)="handleCancel()">
+      <app-gradient-button [variant]="'success'" [title]="data.cancelText" class="flex-1" (clicked)="handleCancel()">
         <span>{{ data.cancelText }}</span>
       </app-gradient-button>
     </div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { GradientButtonComponent } from '../gradient-button/gradient-button.component';
 
 export interface ConfirmationDialogData {
@@ -14,7 +14,7 @@ export interface ConfirmationDialogData {
   templateUrl: './confirmation-dialog.component.html',
   styleUrls: ['./confirmation-dialog.component.scss'],
 })
-export class ConfirmationDialogComponent {
+export class ConfirmationDialogComponent implements OnInit {
   data: ConfirmationDialogData = {
     title: '',
     message: '',
@@ -24,6 +24,19 @@ export class ConfirmationDialogComponent {
 
   onConfirm?: () => void;
   onCancel?: () => void;
+
+  ngOnInit() {
+    // Focus the dialog when it opens for keyboard accessibility
+    setTimeout(() => {
+      const dialogElement = document.querySelector('.dialog-content') as HTMLElement;
+      dialogElement?.focus();
+    }, 0);
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey() {
+    this.handleCancel();
+  }
 
   onBackdropClick(event: MouseEvent) {
     if (event.target === event.currentTarget) {

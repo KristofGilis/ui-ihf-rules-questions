@@ -1,7 +1,7 @@
 <app-page-container [padding]="'pt-12 pb-24'">
   @if (completingQuiz$ | async; as completingState) {
     @if (completingState.loading) {
-      <div class="flex flex-col items-center justify-center py-20">
+      <div class="flex flex-col items-center justify-center py-20" role="status" aria-live="polite">
         <app-loading-spinner />
         <p class="mt-4 text-lg font-semibold text-slate-700 dark:text-slate-300">{{ 'quiz.calculating_score' | translate }}</p>
       </div>
@@ -10,14 +10,19 @@
     @if (questions.length > 0) {
       <div class="mb-8">
         <!-- Progress -->
-        <div class="mb-6">
+        <div class="mb-6" role="status" aria-live="polite" aria-atomic="true">
           <div class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-300">
             {{
               'quiz.progress'
                 | translate: { current: quizService.progress().current, total: quizService.progress().total }
             }}
           </div>
-          <div class="h-3 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+          <div class="h-3 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700" role="progressbar" 
+               [attr.aria-valuenow]="quizService.progress().current"
+               [attr.aria-valuemin]="0"
+               [attr.aria-valuemax]="quizService.progress().total"
+               [attr.title]="'Quiz progress: question ' + quizService.progress().current + ' of ' + quizService.progress().total"
+               [attr.aria-label]="'Quiz progress: question ' + quizService.progress().current + ' of ' + quizService.progress().total">
             <div
               class="h-full bg-linear-to-r from-cyan-500 to-blue-500 transition-all duration-300"
               [style.width.%]="quizService.progress().percentage"></div>
@@ -26,8 +31,8 @@
 
         <!-- Timer -->
         @if (quizService.state().isTimerActive) {
-          <div class="flex items-center gap-2 rounded-lg bg-orange-100 px-4 py-3 font-semibold text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
-            <fa-icon [icon]="faClock" />
+          <div class="flex items-center gap-2 rounded-lg bg-orange-100 px-4 py-3 font-semibold text-orange-700 dark:bg-orange-900/30 dark:text-orange-400" role="timer" aria-live="polite" aria-atomic="true">
+            <fa-icon [icon]="faClock" aria-hidden="true" />
             <span>{{ 'quiz.time_remaining' | translate }}: {{ formatTime(quizService.state().timeRemaining) }}</span>
           </div>
         }
@@ -36,56 +41,70 @@
       @if (quizService.currentQuestion(); as question) {
         <div class="mb-8">
           <!-- Question Card -->
-          <div class="mb-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-lg dark:border-slate-800 dark:bg-slate-900">
-            <h2 class="mb-2 text-sm font-medium text-slate-500 dark:text-slate-400">
+          <div class="mb-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-lg dark:border-slate-800 dark:bg-slate-900" role="region" aria-label="Current question">
+            <h2 class="mb-2 text-sm font-medium text-slate-500 dark:text-slate-400" aria-live="polite">
               {{
                 'quiz.progress'
                   | translate: { current: quizService.progress().current, total: quizService.progress().total }
               }}
             </h2>
-            <p class="mb-3 text-xl font-bold text-slate-900 dark:text-white" [innerHTML]="question.phrase"></p>
+            <p class="mb-3 text-xl font-bold text-slate-900 dark:text-white" [innerHTML]="question.phrase" id="question-text"></p>
             <p class="text-sm italic text-slate-600 dark:text-slate-400">{{ 'quiz.select_answers' | translate }}</p>
           </div>
 
           <!-- Answers -->
-          <div class="space-y-3">
+          <fieldset class="space-y-3" aria-labelledby="question-text" aria-describedby="answer-instruction">
+            <legend class="sr-only">Select all correct answers for question {{ quizService.progress().current }}</legend>
+            <div id="answer-instruction" class="sr-only">{{ 'quiz.select_answers' | translate }}</div>
             @for (answer of question.shuffledAnswers; track answer?.id) {
               <label
-                class="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 p-4 transition-all duration-200 hover:border-cyan-400 hover:bg-cyan-50 dark:border-slate-700 dark:bg-slate-800 dark:hover:border-cyan-500 dark:hover:bg-slate-700">
+                class="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 p-4 transition-all duration-200 hover:border-cyan-400 hover:bg-cyan-50 focus-within:ring-2 focus-within:ring-cyan-500 focus-within:ring-offset-2 dark:border-slate-700 dark:bg-slate-800 dark:hover:border-cyan-500 dark:hover:bg-slate-700">
                 <input
                   type="checkbox"
                   [checked]="selectedAnswers.has(answer?.id ?? '')"
                   (change)="toggleAnswer(answer?.id ?? '')"
+                  [attr.aria-label]="'Answer ' + answer?.number + ': ' + answer?.phrase"
                   class="relative mt-0.5 h-5 w-5 shrink-0 cursor-pointer appearance-none rounded border-2 border-slate-400 bg-white transition-all duration-200 checked:border-cyan-500 checked:bg-linear-to-br checked:from-cyan-500 checked:to-blue-500 hover:border-cyan-500 hover:bg-cyan-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:checked:border-cyan-400 dark:checked:from-cyan-400 dark:checked:to-blue-400 dark:hover:border-cyan-400 dark:hover:bg-cyan-950 dark:focus-visible:ring-cyan-400" />
                 <span class="flex-1 text-slate-700 dark:text-slate-300">{{ answer?.phrase }}</span>
               </label>
             }
-          </div>
+          </fieldset>
         </div>
 
         <!-- Navigation -->
-        <div class="flex justify-between gap-3">
+        <nav class="flex justify-between gap-3" role="navigation" aria-label="Quiz navigation">
           <app-gradient-button
             [variant]="'primary'"
             [icon]="faArrowLeft"
             [disabled]="!quizService.canGoPrevious()"
+            [title]="'Go to previous question'"
             (clicked)="goToPrevious()">
             <span>{{ 'quiz.previous' | translate }}</span>
           </app-gradient-button>
 
           @if (quizService.canGoNext()) {
-            <app-gradient-button [variant]="'primary'" [icon]="faArrowRight" (clicked)="goToNext()">
+            <app-gradient-button 
+              [variant]="'primary'" 
+              [icon]="faArrowRight" 
+              [title]="'Go to next question'"
+              (clicked)="goToNext()">
               <span>{{ 'quiz.next' | translate }}</span>
             </app-gradient-button>
           } @else {
-            <app-gradient-button [variant]="'success'" [icon]="faCheck" (clicked)="completeQuiz()">
+            <app-gradient-button 
+              [variant]="'success'" 
+              [icon]="faCheck" 
+              [title]="'Complete and submit quiz'"
+              (clicked)="completeQuiz()">
               <span>{{ 'quiz.complete' | translate }}</span>
             </app-gradient-button>
           }
-        </div>
+        </nav>
       }
     } @else {
-      <app-loading-spinner />
+      <div role="status" aria-live="polite" aria-label="Loading quiz questions">
+        <app-loading-spinner />
+      </div>
     }
   }
 </app-page-container>

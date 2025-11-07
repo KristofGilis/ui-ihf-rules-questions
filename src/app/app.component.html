@@ -1,10 +1,20 @@
+<!-- Skip to main content link for keyboard users -->
+<a 
+  href="#main-content" 
+  class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-60 focus:rounded-lg focus:bg-cyan-500 focus:px-4 focus:py-2 focus:text-white focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-cyan-600"
+  tabindex="0">
+  Skip to main content
+</a>
+
 <!-- Header -->
-<header class="fixed top-0 left-0 right-0 z-50 bg-slate-100 dark:bg-slate-900 border-b border-slate-300 dark:border-slate-800">
-  <div class="h-16 flex items-center justify-between px-4">
+<header class="fixed top-0 left-0 right-0 z-50 bg-slate-100 dark:bg-slate-900 border-b border-slate-300 dark:border-slate-800" role="banner">
+  <nav class="h-16 flex items-center justify-between px-4" role="navigation" aria-label="Main navigation">
     <!-- Logo -->
     <div class="flex items-center gap-3">
-      <app-logo class="w-10 h-10" />
-      <span class="font-bold text-lg text-slate-900 dark:text-white">{{ 'main.title' | translate }}</span>
+      <a href="/" class="flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 rounded-lg" aria-label="IHF Rules Quiz - Home">
+        <app-logo class="w-10 h-10" aria-hidden="true" />
+        <span class="font-bold text-lg text-slate-900 dark:text-white">{{ 'main.title' | translate }}</span>
+      </a>
     </div>
 
     <!-- Actions -->
@@ -14,35 +24,50 @@
         <button
           type="button"
           (click)="toggleLanguageMenu()"
-          [attr.title]="'Select language'"
-          class="p-2 md:px-3 md:py-2 bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          [attr.aria-label]="'languages.label' | translate"
+          [attr.aria-expanded]="showLanguageMenu()"
+          [attr.aria-controls]="'language-menu'"
+          class="p-2 md:px-3 md:py-2 bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
           </svg>
           <span class="hidden md:inline">{{ currentLang().toUpperCase() }}</span>
         </button>
         
         @if (showLanguageMenu()) {
-          <div class="absolute right-0 mt-2 w-40 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg shadow-lg overflow-hidden z-50">
+          <div 
+            id="language-menu"
+            role="menu"
+            aria-label="Language selection"
+            class="absolute right-0 mt-2 w-40 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg shadow-lg overflow-hidden z-50">
             <button
               type="button"
+              role="menuitem"
+              [attr.title]="'languages.en' | translate"
               (click)="selectLanguage('en')"
+              [attr.aria-current]="currentLang() === 'en' ? 'true' : null"
               [class.bg-cyan-500]="currentLang() === 'en'"
-              class="w-full px-4 py-2 text-left text-sm text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+              class="w-full px-4 py-2 text-left text-sm text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors focus:outline-none focus:bg-slate-200 dark:focus:bg-slate-700">
               {{ 'languages.en' | translate }}
             </button>
             <button
               type="button"
+              role="menuitem"
+              [attr.title]="'languages.nl' | translate"
               (click)="selectLanguage('nl')"
+              [attr.aria-current]="currentLang() === 'nl' ? 'true' : null"
               [class.bg-cyan-500]="currentLang() === 'nl'"
-              class="w-full px-4 py-2 text-left text-sm text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+              class="w-full px-4 py-2 text-left text-sm text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors focus:outline-none focus:bg-slate-200 dark:focus:bg-slate-700">
               {{ 'languages.nl' | translate }}
             </button>
             <button
               type="button"
+              role="menuitem"
+              [attr.title]="'languages.srb' | translate"
               (click)="selectLanguage('srb')"
+              [attr.aria-current]="currentLang() === 'srb' ? 'true' : null"
               [class.bg-cyan-500]="currentLang() === 'srb'"
-              class="w-full px-4 py-2 text-left text-sm text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+              class="w-full px-4 py-2 text-left text-sm text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors focus:outline-none focus:bg-slate-200 dark:focus:bg-slate-700">
               {{ 'languages.srb' | translate }}
             </button>
           </div>
@@ -56,46 +81,61 @@
           (click)="toggleThemeMenu()"
           [attr.aria-label]="'theme.toggle' | translate"
           [attr.title]="'theme.toggle' | translate"
-          class="p-2 md:px-3 md:py-2 bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
-          <fa-icon [icon]="themeIcon()" />
+          [attr.aria-expanded]="showThemeMenu()"
+          [attr.aria-controls]="'theme-menu'"
+          class="p-2 md:px-3 md:py-2 bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+          <fa-icon [icon]="themeIcon()" aria-hidden="true" />
           <span class="hidden md:inline">{{ themeLabel() | translate }}</span>
         </button>
 
         @if (showThemeMenu()) {
-          <div class="absolute right-0 mt-2 w-32 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg shadow-lg overflow-hidden z-50">
+          <div 
+            id="theme-menu"
+            role="menu"
+            aria-label="Theme selection"
+            class="absolute right-0 mt-2 w-32 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg shadow-lg overflow-hidden z-50">
             <button
               type="button"
+              role="menuitem"
+              [attr.title]="'theme.light' | translate"
               (click)="selectTheme('light')"
+              [attr.aria-current]="currentTheme() === 'light' ? 'true' : null"
               [class.bg-cyan-500]="currentTheme() === 'light'"
-              class="w-full px-4 py-2 text-left text-sm text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
-              <fa-icon [icon]="faSun" class="w-4" />
+              class="w-full px-4 py-2 text-left text-sm text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 focus:outline-none focus:bg-slate-200 dark:focus:bg-slate-700">
+              <fa-icon [icon]="faSun" class="w-4" aria-hidden="true" />
               <span>{{ 'theme.light' | translate }}</span>
             </button>
             <button
               type="button"
+              role="menuitem"
+              [attr.title]="'theme.dark' | translate"
               (click)="selectTheme('dark')"
+              [attr.aria-current]="currentTheme() === 'dark' ? 'true' : null"
               [class.bg-cyan-500]="currentTheme() === 'dark'"
-              class="w-full px-4 py-2 text-left text-sm text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
-              <fa-icon [icon]="faMoon" class="w-4" />
+              class="w-full px-4 py-2 text-left text-sm text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 focus:outline-none focus:bg-slate-200 dark:focus:bg-slate-700">
+              <fa-icon [icon]="faMoon" class="w-4" aria-hidden="true" />
               <span>{{ 'theme.dark' | translate }}</span>
             </button>
             <button
               type="button"
+              role="menuitem"
+              [attr.title]="'theme.system' | translate"
               (click)="selectTheme('system')"
+              [attr.aria-current]="currentTheme() === 'system' ? 'true' : null"
               [class.bg-cyan-500]="currentTheme() === 'system'"
-              class="w-full px-4 py-2 text-left text-sm text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
-              <fa-icon [icon]="faDesktop" class="w-4" />
+              class="w-full px-4 py-2 text-left text-sm text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 focus:outline-none focus:bg-slate-200 dark:focus:bg-slate-700">
+              <fa-icon [icon]="faDesktop" class="w-4" aria-hidden="true" />
               <span>{{ 'theme.system' | translate }}</span>
             </button>
           </div>
         }
       </div>
     </div>
-  </div>
+  </nav>
 </header>
 
 <!-- Main Content -->
-<main class="pt-16 min-h-screen">
+<main id="main-content" class="pt-16 min-h-screen" role="main" tabindex="-1">
   <router-outlet />
 </main>
 
