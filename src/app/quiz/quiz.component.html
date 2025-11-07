@@ -21,7 +21,7 @@
                [attr.aria-valuenow]="quizService.progress().current"
                [attr.aria-valuemin]="0"
                [attr.aria-valuemax]="quizService.progress().total"
-               [attr.title]="'Quiz progress: question ' + quizService.progress().current + ' of ' + quizService.progress().total"
+               title="{{ 'Quiz progress: question ' + quizService.progress().current + ' of ' + quizService.progress().total }}"
                [attr.aria-label]="'Quiz progress: question ' + quizService.progress().current + ' of ' + quizService.progress().total">
             <div
               class="h-full bg-linear-to-r from-cyan-500 to-blue-500 transition-all duration-300"
