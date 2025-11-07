@@ -2,11 +2,23 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, Injectable, isDevMode } from '@angular/core';
 
 /**
- * Interface for GraphQL errors from Apollo Client
+ * GraphQL error object from Apollo Client
+ * Based on: https://the-guild.dev/graphql/apollo-angular/docs/data/error-handling
  */
-interface GraphQLError {
+interface GraphQLErrorDetail {
+  message: string;
+  locations?: ReadonlyArray<{ line: number; column: number }>;
+  path?: ReadonlyArray<string | number>;
+  extensions?: Record<string, unknown>;
+}
+
+/**
+ * Apollo Client error structure
+ * Contains both GraphQL errors and network errors
+ */
+interface ApolloClientError {
+  graphQLErrors?: ReadonlyArray<GraphQLErrorDetail>;
   networkError?: Error | null;
-  graphQLErrors?: ReadonlyArray<unknown>;
   message: string;
 }
 
@@ -80,11 +92,7 @@ export class GlobalErrorHandler implements ErrorHandler {
    * Type guard for wrapped errors
    */
   private isWrappedError(error: unknown): error is WrappedError {
-    return (
-      typeof error === 'object' &&
-      error !== null &&
-      ('rejection' in error || 'error' in error)
-    );
+    return typeof error === 'object' && error !== null && ('rejection' in error || 'error' in error);
   }
 
   /**
@@ -125,14 +133,23 @@ export class GlobalErrorHandler implements ErrorHandler {
       };
     }
 
-    // GraphQL errors
-    if (this.isGraphQLError(error)) {
+    // Apollo Client / GraphQL errors
+    if (this.isApolloError(error)) {
       if (error.networkError) {
         return {
           category: 'Network',
           userMessage: 'Unable to reach the server. Please check your connection.',
           technicalMessage: error.message || 'GraphQL network error',
           severity: 'high',
+        };
+      }
+      if (error.graphQLErrors && error.graphQLErrors.length > 0) {
+        const firstError = error.graphQLErrors[0];
+        return {
+          category: 'GraphQL',
+          userMessage: 'An error occurred while loading data. Please try again.',
+          technicalMessage: firstError.message || error.message || 'GraphQL error',
+          severity: 'medium',
         };
       }
       return {
@@ -173,9 +190,11 @@ export class GlobalErrorHandler implements ErrorHandler {
   }
 
   /**
-   * Check if error is from Apollo/GraphQL
+   * Check if error is from Apollo Client
+   * Based on the structure documented at:
+   * https://the-guild.dev/graphql/apollo-angular/docs/data/error-handling
    */
-  private isGraphQLError(error: unknown): error is GraphQLError {
+  private isApolloError(error: unknown): error is ApolloClientError {
     return (
       typeof error === 'object' &&
       error !== null &&
