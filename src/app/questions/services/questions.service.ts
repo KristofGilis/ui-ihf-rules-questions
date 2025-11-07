@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ObservableQuery } from '@apollo/client/core';
 import { Observable, tap } from 'rxjs';
 import {

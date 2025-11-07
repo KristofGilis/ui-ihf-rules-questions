@@ -3,29 +3,19 @@ import { Injectable } from '@angular/core';
 import * as Apollo from 'apollo-angular';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> =
-  | T
-  | {
-      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
-    };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string };
-  String: { input: string; output: string };
-  Boolean: { input: boolean; output: boolean };
-  Int: { input: number; output: number };
-  Float: { input: number; output: number };
-  UUID: { input: any; output: any };
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  UUID: { input: any; output: any; }
 };
 
 /** IHF rule */
@@ -147,9 +137,11 @@ export type Query = {
   version?: Maybe<Scalars['String']['output']>;
 };
 
+
 export type QueryAnswerByIdArgs = {
   id: Scalars['ID']['input'];
 };
+
 
 export type QueryAnswersArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
@@ -161,26 +153,32 @@ export type QueryAnswersArgs = {
   where?: InputMaybe<AnswerFilterInput>;
 };
 
+
 export type QueryAnswersByIdArgs = {
   ids: Array<Scalars['ID']['input']>;
 };
+
 
 export type QueryCalculateScoreArgs = {
   questionIds?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   selectedAnswerIds?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
 };
 
+
 export type QueryNodeArgs = {
   id: Scalars['ID']['input'];
 };
+
 
 export type QueryNodesArgs = {
   ids: Array<Scalars['ID']['input']>;
 };
 
+
 export type QueryQuestionByIdArgs = {
   id: Scalars['ID']['input'];
 };
+
 
 export type QueryQuestionsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
@@ -192,13 +190,16 @@ export type QueryQuestionsArgs = {
   where?: InputMaybe<QuestionFilterInput>;
 };
 
+
 export type QueryQuestionsByIdArgs = {
   ids: Array<Scalars['ID']['input']>;
 };
 
+
 export type QueryRuleByIdArgs = {
   id: Scalars['ID']['input'];
 };
+
 
 export type QueryRulesArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
@@ -209,6 +210,7 @@ export type QueryRulesArgs = {
   random?: Scalars['Boolean']['input'];
   where?: InputMaybe<RuleFilterInput>;
 };
+
 
 export type QueryRulesByIdArgs = {
   ids: Array<Scalars['ID']['input']>;
@@ -230,6 +232,7 @@ export type Question = Node & {
   /** The id the the rule */
   ruleId: Scalars['ID']['output'];
 };
+
 
 /** IHF question */
 export type QuestionAnswersArgs = {
@@ -294,6 +297,7 @@ export type Rule = Node & {
   /** Rule questions */
   questions?: Maybe<QuestionsConnection>;
 };
+
 
 /** IHF rule */
 export type RuleQuestionsArgs = {
@@ -369,7 +373,7 @@ export type Score = {
 
 export enum SortEnumType {
   Asc = 'ASC',
-  Desc = 'DESC',
+  Desc = 'DESC'
 }
 
 export type StringOperationFilterInput = {
@@ -407,16 +411,8 @@ export type CalculateScoreQueryVariables = Exact<{
   selectedAnswerIds?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>> | InputMaybe<Scalars['ID']['input']>>;
 }>;
 
-export type CalculateScoreQuery = {
-  __typename?: 'Query';
-  calculateScore?: {
-    __typename?: 'Score';
-    score?: number | null;
-    total?: number | null;
-    percentage?: string | null;
-    wrongQuestionsIds: Array<string>;
-  } | null;
-};
+
+export type CalculateScoreQuery = { __typename?: 'Query', calculateScore?: { __typename?: 'Score', score?: number | null, total?: number | null, percentage?: string | null, wrongQuestionsIds: Array<string> } | null };
 
 export type GetQuestionsQueryVariables = Exact<{
   first: Scalars['Int']['input'];
@@ -425,36 +421,8 @@ export type GetQuestionsQueryVariables = Exact<{
   random?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
-export type GetQuestionsQuery = {
-  __typename?: 'Query';
-  questions?: {
-    __typename?: 'QuestionsConnection';
-    edges?: Array<{
-      __typename?: 'QuestionsEdge';
-      cursor: string;
-      node?: {
-        __typename?: 'Question';
-        id: string;
-        number?: string | null;
-        phrase?: string | null;
-        answers?: {
-          __typename?: 'AnswersConnection';
-          nodes?: Array<{
-            __typename?: 'Answer';
-            id: string;
-            number?: string | null;
-            phrase?: string | null;
-          } | null> | null;
-        } | null;
-      } | null;
-    }> | null;
-    pageInfo: {
-      __typename?: 'PageInfo';
-      endCursor?: string | null;
-      hasNextPage: boolean;
-    };
-  } | null;
-};
+
+export type GetQuestionsQuery = { __typename?: 'Query', questions?: { __typename?: 'QuestionsConnection', edges?: Array<{ __typename?: 'QuestionsEdge', cursor: string, node?: { __typename?: 'Question', id: string, number?: string | null, phrase?: string | null, answers?: { __typename?: 'AnswersConnection', nodes?: Array<{ __typename?: 'Answer', id: string, number?: string | null, phrase?: string | null } | null> | null } | null } | null }> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null };
 
 export type GetRuleQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -462,101 +430,93 @@ export type GetRuleQueryVariables = Exact<{
   after?: InputMaybe<Scalars['String']['input']>;
 }>;
 
-export type GetRuleQuery = {
-  __typename?: 'Query';
-  ruleById?: {
-    __typename?: 'Rule';
-    id: string;
-    number?: string | null;
-    name?: string | null;
-    questions?: {
-      __typename?: 'QuestionsConnection';
-      edges?: Array<{
-        __typename?: 'QuestionsEdge';
-        cursor: string;
-        node?: {
-          __typename?: 'Question';
-          id: string;
-          number?: string | null;
-          phrase?: string | null;
-          answers?: {
-            __typename?: 'AnswersConnection';
-            nodes?: Array<{
-              __typename?: 'Answer';
-              id: string;
-              number?: string | null;
-              phrase?: string | null;
-            } | null> | null;
-          } | null;
-        } | null;
-      }> | null;
-      pageInfo: {
-        __typename?: 'PageInfo';
-        endCursor?: string | null;
-        hasNextPage: boolean;
-      };
-    } | null;
-  } | null;
-};
+
+export type GetRuleQuery = { __typename?: 'Query', ruleById?: { __typename?: 'Rule', id: string, number?: string | null, name?: string | null, questions?: { __typename?: 'QuestionsConnection', edges?: Array<{ __typename?: 'QuestionsEdge', cursor: string, node?: { __typename?: 'Question', id: string, number?: string | null, phrase?: string | null, answers?: { __typename?: 'AnswersConnection', nodes?: Array<{ __typename?: 'Answer', id: string, number?: string | null, phrase?: string | null } | null> | null } | null } | null }> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null } | null };
 
 export type GetRulesQueryVariables = Exact<{
   first: Scalars['Int']['input'];
   after?: InputMaybe<Scalars['String']['input']>;
 }>;
 
-export type GetRulesQuery = {
-  __typename?: 'Query';
-  rules?: {
-    __typename?: 'RulesConnection';
-    edges?: Array<{
-      __typename?: 'RulesEdge';
-      cursor: string;
-      node?: {
-        __typename?: 'Rule';
-        id: string;
-        number?: string | null;
-        name?: string | null;
-      } | null;
-    }> | null;
-    pageInfo: { __typename?: 'PageInfo'; endCursor?: string | null };
-  } | null;
-};
 
-export type GetVersionQueryVariables = Exact<{ [key: string]: never }>;
+export type GetRulesQuery = { __typename?: 'Query', rules?: { __typename?: 'RulesConnection', edges?: Array<{ __typename?: 'RulesEdge', cursor: string, node?: { __typename?: 'Rule', id: string, number?: string | null, name?: string | null } | null }> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null } } | null };
 
-export type GetVersionQuery = { __typename?: 'Query'; version?: string | null };
+export type GetVersionQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetVersionQuery = { __typename?: 'Query', version?: string | null };
 
 export const CalculateScoreDocument = gql`
-  query calculateScore($questionIds: [ID], $selectedAnswerIds: [ID]) {
-    calculateScore(questionIds: $questionIds, selectedAnswerIds: $selectedAnswerIds) {
-      score
-      total
-      percentage
-      wrongQuestionsIds
-    }
-  }
-`;
-
-@Injectable({
-  providedIn: 'root',
-})
-export class CalculateScoreGQL extends Apollo.Query<CalculateScoreQuery, CalculateScoreQueryVariables> {
-  document = CalculateScoreDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+    query calculateScore($questionIds: [ID], $selectedAnswerIds: [ID]) {
+  calculateScore(questionIds: $questionIds, selectedAnswerIds: $selectedAnswerIds) {
+    score
+    total
+    percentage
+    wrongQuestionsIds
   }
 }
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CalculateScoreGQL extends Apollo.Query<CalculateScoreQuery, CalculateScoreQueryVariables> {
+    document = CalculateScoreDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const GetQuestionsDocument = gql`
-  query getQuestions($first: Int!, $after: String, $order: [QuestionSortInput!], $random: Boolean = false) {
-    questions(first: $first, after: $after, order: $order, random: $random) {
+    query getQuestions($first: Int!, $after: String, $order: [QuestionSortInput!], $random: Boolean = false) {
+  questions(first: $first, after: $after, order: $order, random: $random) {
+    edges {
+      cursor
+      node {
+        id
+        number
+        phrase
+        answers(order: {number: ASC}) {
+          nodes {
+            id
+            number
+            phrase
+          }
+        }
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetQuestionsGQL extends Apollo.Query<GetQuestionsQuery, GetQuestionsQueryVariables> {
+    document = GetQuestionsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetRuleDocument = gql`
+    query getRule($id: ID!, $first: Int!, $after: String) {
+  ruleById(id: $id) {
+    id
+    number
+    name
+    questions(first: $first, after: $after, order: [{number: ASC}]) {
       edges {
         cursor
         node {
           id
           number
           phrase
-          answers(order: [{ number: ASC }]) {
+          answers(order: [{number: ASC}]) {
             nodes {
               id
               number
@@ -571,100 +531,60 @@ export const GetQuestionsDocument = gql`
       }
     }
   }
-`;
-
-@Injectable({
-  providedIn: 'root',
-})
-export class GetQuestionsGQL extends Apollo.Query<GetQuestionsQuery, GetQuestionsQueryVariables> {
-  document = GetQuestionsDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
-  }
 }
-export const GetRuleDocument = gql`
-  query getRule($id: ID!, $first: Int!, $after: String) {
-    ruleById(id: $id) {
-      id
-      number
-      name
-      questions(first: $first, after: $after, order: [{ number: ASC }]) {
-        edges {
-          cursor
-          node {
-            id
-            number
-            phrase
-            answers(order: [{ number: ASC }]) {
-              nodes {
-                id
-                number
-                phrase
-              }
-            }
-          }
-        }
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-      }
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetRuleGQL extends Apollo.Query<GetRuleQuery, GetRuleQueryVariables> {
+    document = GetRuleDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
     }
   }
-`;
-
-@Injectable({
-  providedIn: 'root',
-})
-export class GetRuleGQL extends Apollo.Query<GetRuleQuery, GetRuleQueryVariables> {
-  document = GetRuleDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
-  }
-}
 export const GetRulesDocument = gql`
-  query getRules($first: Int!, $after: String) {
-    rules(first: $first, after: $after, order: { number: ASC }) {
-      edges {
-        cursor
-        node {
-          id
-          number
-          name
-        }
-      }
-      pageInfo {
-        endCursor
+    query getRules($first: Int!, $after: String) {
+  rules(first: $first, after: $after, order: {number: ASC}) {
+    edges {
+      cursor
+      node {
+        id
+        number
+        name
       }
     }
-  }
-`;
-
-@Injectable({
-  providedIn: 'root',
-})
-export class GetRulesGQL extends Apollo.Query<GetRulesQuery, GetRulesQueryVariables> {
-  document = GetRulesDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+    pageInfo {
+      endCursor
+    }
   }
 }
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetRulesGQL extends Apollo.Query<GetRulesQuery, GetRulesQueryVariables> {
+    document = GetRulesDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const GetVersionDocument = gql`
-  query getVersion {
-    version
-  }
-`;
-
-@Injectable({
-  providedIn: 'root',
-})
-export class GetVersionGQL extends Apollo.Query<GetVersionQuery, GetVersionQueryVariables> {
-  document = GetVersionDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
-  }
+    query getVersion {
+  version
 }
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetVersionGQL extends Apollo.Query<GetVersionQuery, GetVersionQueryVariables> {
+    document = GetVersionDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }

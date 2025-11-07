@@ -1,14 +1,11 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import {
-  faArrowRight,
   faChevronRight,
-  faClock,
   faExternalLinkAlt,
   faFileAlt,
   faQuestionCircle,
@@ -19,18 +16,18 @@ import { onlyCompleteData } from 'apollo-angular';
 import { finalize, map, shareReplay, tap } from 'rxjs';
 import { GetVersionGQL } from '../../../graphql/generated';
 import { LogoComponent } from '../logo/logo.component';
-import { PageContainerComponent, PageHeroComponent } from '../shared/components';
+import { PageContainerComponent, PageHeroComponent, QuizConfigCardComponent } from '../shared/components';
 
 @Component({
   selector: 'app-home',
   imports: [
     AsyncPipe,
-    FormsModule,
     RouterLink,
     TranslatePipe,
     LogoComponent,
     PageContainerComponent,
     PageHeroComponent,
+    QuizConfigCardComponent,
     FaIconComponent,
   ],
   templateUrl: './home.component.html',
@@ -41,13 +38,9 @@ export class HomeComponent {
   private readonly _translateService = inject(TranslateService);
   private readonly _router = inject(Router);
 
-  questionCount = 10;
-  timedMode = false;
   loadingVersion = signal(false);
 
   // Font Awesome icons
-  readonly faClock = faClock;
-  readonly faArrowRight = faArrowRight;
   readonly faFileAlt = faFileAlt;
   readonly faChevronRight = faChevronRight;
   readonly faQuestionCircle = faQuestionCircle;
@@ -69,11 +62,11 @@ export class HomeComponent {
     this._translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => this._query.refetch());
   }
 
-  startQuiz(): void {
-    this._router.navigate(['/quiz'], {
-      queryParams: {
-        count: this.questionCount,
-        timed: this.timedMode,
+  onStartQuiz(config: { questionCount: number; timedMode: boolean }): void {
+    this._router.navigate(['/quiz/view'], {
+      state: {
+        count: config.questionCount,
+        timed: config.timedMode,
       },
     });
   }

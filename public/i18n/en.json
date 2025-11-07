@@ -49,14 +49,21 @@
     "title": "All Questions"
   },
   "quiz": {
+    "calculating_score": "Calculating your score...",
     "complete": "Complete Quiz",
+    "leave_cancel": "Stay",
+    "leave_confirm": "Leave",
+    "leave_title": "Leave Quiz?",
+    "leave_warning": "Your progress will be lost if you leave now. Are you sure?",
     "next": "Next",
     "previous": "Previous",
     "progress": "Question {{current}} of {{total}}",
     "select_answers": "Select all correct answers",
+    "setup_description": "Configure your quiz settings to get started",
     "time_remaining": "Time Remaining"
   },
   "quiz_results": {
+    "completion_time": "Completion Time",
     "correct": "Correct",
     "home": "Home",
     "question": "Question",

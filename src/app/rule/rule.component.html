@@ -8,7 +8,7 @@
          [class.no-score]="!score && !scoreLoading()" 
          [class.has-score]="score || scoreLoading()">
       <!-- Main content area -->
-      <div class="lg:max-w-5xl pt-12 w-full">
+      <div class="pt-12 w-full">
         <app-page-hero 
           [title]="getRuleName(rule) ?? ''" 
           [description]="'rule.description' | translate"

@@ -1,33 +1,54 @@
 <app-page-container [padding]="'pt-12 pb-24'">
   @if (quizService.results(); as results) {
-    <div class="mx-auto max-w-3xl">
-      <!-- Page Hero -->
-      <div class="mb-12 text-center">
+    <!-- Page Hero -->
+    <div class="mb-12 text-center">
         <h1 class="mb-6 text-5xl font-black tracking-tight text-slate-900 dark:text-white">
           {{ 'quiz_results.title' | translate }}
         </h1>
 
         <!-- Score Card -->
-        <div class="mb-6 overflow-hidden rounded-3xl bg-white shadow-xl ring-1 ring-slate-900/5 dark:bg-slate-900 dark:ring-slate-100/10">
-          <div class="bg-linear-to-r from-cyan-500 to-blue-500 px-6 py-8">
-            <div class="text-center" [ngClass]="scoreColor()">
-              <span class="mb-2 block text-6xl font-black text-white">
-                {{ results.correctCount }}/{{ results.totalQuestions }}
-              </span>
-              <span class="text-4xl font-bold text-white">{{ results.percentage.toFixed(0) }}%</span>
+        <div class="mb-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl dark:border-slate-800 dark:bg-slate-900">
+          <div class="bg-linear-to-br from-cyan-500 to-blue-500 p-6 text-center text-white">
+            <h4 class="mb-1.5 text-base font-semibold opacity-90">
+              {{ 'quiz_results.title' | translate }}
+            </h4>
+            <div class="mb-2 text-5xl font-bold drop-shadow-lg">
+              {{ results.percentage.toFixed(0) }}%
+            </div>
+            <div class="text-sm opacity-90">
+              <span class="font-semibold">{{ results.correctCount }}</span> {{ 'score_overview.of_total_correct' | translate: {total: results.totalQuestions} }}
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-6 p-6">
-            <div class="flex items-center justify-center gap-2 text-green-600 dark:text-green-400">
-              <fa-icon [icon]="faCheckCircle" size="lg"></fa-icon>
-              <span class="font-semibold">{{ results.correctCount }} {{ 'quiz_results.correct' | translate }}</span>
+          <div class="grid grid-cols-2 gap-3 p-4">
+            <div class="rounded-lg bg-green-100 p-4 text-center dark:bg-green-950">
+              <div class="text-3xl font-bold text-green-600 dark:text-green-400">
+                {{ results.correctCount }}
+              </div>
+              <div class="text-xs font-medium text-green-700 dark:text-green-300">
+                {{ 'quiz_results.correct' | translate }}
+              </div>
             </div>
-            <div class="flex items-center justify-center gap-2 text-red-600 dark:text-red-400">
-              <fa-icon [icon]="faTimesCircle" size="lg"></fa-icon>
-              <span class="font-semibold">{{ results.wrongCount }} {{ 'quiz_results.wrong' | translate }}</span>
+            <div class="rounded-lg bg-red-100 p-4 text-center dark:bg-red-950">
+              <div class="text-3xl font-bold text-red-600 dark:text-red-400">
+                {{ results.wrongCount }}
+              </div>
+              <div class="text-xs font-medium text-red-700 dark:text-red-300">
+                {{ 'quiz_results.wrong' | translate }}
+              </div>
             </div>
           </div>
+
+          @if (results.completionTimeSeconds) {
+            <div class="border-t border-slate-200 px-4 py-3 text-center dark:border-slate-800">
+              <div class="text-sm text-slate-600 dark:text-slate-400">
+                {{ 'quiz_results.completion_time' | translate }}
+              </div>
+              <div class="text-lg font-bold text-slate-900 dark:text-white">
+                {{ quizService.formatCompletionTime(results.completionTimeSeconds) }}
+              </div>
+            </div>
+          }
         </div>
 
         <!-- Action Buttons -->
@@ -36,7 +57,7 @@
             [fullWidth]="true"
             [variant]="'primary'"
             [icon]="faRedo"
-            [routerLink]="['/']"
+            [routerLink]="['/quiz']"
             (clicked)="retakeQuiz()">
             <span>{{ 'quiz_results.retake' | translate }}</span>
           </app-gradient-button>
@@ -74,12 +95,12 @@
               @if (answer.isCorrect) {
                 <div class="flex items-center gap-2 rounded-full bg-green-500 px-3 py-1 text-sm font-semibold text-white">
                   <fa-icon [icon]="faCheckCircle"></fa-icon>
-                  <span>Correct</span>
+                  <span>{{ 'quiz_results.correct' | translate }}</span>
                 </div>
               } @else {
                 <div class="flex items-center gap-2 rounded-full bg-red-500 px-3 py-1 text-sm font-semibold text-white">
                   <fa-icon [icon]="faTimesCircle"></fa-icon>
-                  <span>Wrong</span>
+                  <span>{{ 'quiz_results.wrong' | translate }}</span>
                 </div>
               }
             </div>
@@ -92,33 +113,20 @@
               <div class="space-y-3">
                 @for (ans of answer.allAnswers; track ans.id) {
                   @let wasSelected = answer.selectedAnswerIds.includes(ans.id);
-                  @let isCorrect = ans.isCorrect;
                   <div
-                    class="flex items-center justify-between rounded-lg border p-4 transition-all"
-                    [class.border-green-500]="isCorrect && wasSelected"
-                    [class.bg-green-100]="isCorrect && wasSelected"
-                    [class.dark:bg-green-900/30]="isCorrect && wasSelected"
-                    [class.border-red-500]="!isCorrect && wasSelected"
-                    [class.bg-red-100]="!isCorrect && wasSelected"
-                    [class.dark:bg-red-900/30]="!isCorrect && wasSelected"
-                    [class.border-green-300]="isCorrect && !wasSelected"
-                    [class.bg-green-50]="isCorrect && !wasSelected"
-                    [class.dark:bg-green-900/10]="isCorrect && !wasSelected"
-                    [class.dark:border-green-700]="isCorrect && !wasSelected"
-                    [class.opacity-60]="isCorrect && !wasSelected"
-                    [class.border-slate-200]="!wasSelected && !isCorrect"
-                    [class.dark:border-slate-700]="!wasSelected && !isCorrect">
-                    <div class="flex items-center gap-3">
-                      @if (isCorrect) {
-                        <fa-icon [icon]="faCheckCircle" class="text-green-600 dark:text-green-400"></fa-icon>
-                      } @else {
-                        <fa-icon [icon]="faTimesCircle" class="text-red-600 dark:text-red-400"></fa-icon>
-                      }
+                    class="flex flex-col gap-3 rounded-lg border p-4 transition-all sm:flex-row sm:items-center sm:justify-between"
+                    [class.border-cyan-500]="wasSelected"
+                    [class.bg-cyan-50]="wasSelected"
+                    [class.dark:bg-cyan-900/30]="wasSelected"
+                    [class.border-slate-200]="!wasSelected"
+                    [class.dark:border-slate-700]="!wasSelected">
+                    <div class="flex items-start gap-2">
+                      <span class="font-semibold text-slate-900 dark:text-white">{{ ans.number }})</span>
                       <span class="text-slate-900 dark:text-white">{{ ans.phrase }}</span>
                     </div>
 
                     @if (wasSelected) {
-                      <span class="rounded-full bg-cyan-500 px-3 py-1 text-xs font-semibold text-white">
+                      <span class="whitespace-nowrap self-start rounded-full bg-cyan-500 px-3 py-1 text-center text-xs font-semibold text-white sm:self-center">
                         {{ 'quiz_results.your_answer' | translate }}
                       </span>
                     }
@@ -129,6 +137,5 @@
           </div>
         }
       </div>
-    </div>
   }
 </app-page-container>

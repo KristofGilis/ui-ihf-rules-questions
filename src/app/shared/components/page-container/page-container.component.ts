@@ -7,6 +7,6 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 })
 export class PageContainerComponent {
   readonly gradient = input(true);
-  readonly maxWidth = input('max-w-7xl');
+  readonly maxWidth = input('max-w-5xl');
   readonly padding = input('py-12 pb-24');
 }

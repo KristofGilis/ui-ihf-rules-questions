@@ -1,20 +1,20 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft, faArrowRight, faCheck, faClock } from '@fortawesome/free-solid-svg-icons';
-import { TranslatePipe } from '@ngx-translate/core';
-import { onlyCompleteData } from 'apollo-angular';
-import { map } from 'rxjs';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { map, Observable } from 'rxjs';
 import { GetQuestionsGQL, Question } from '../../../graphql/generated';
-import { QuizService } from '../services/quiz.service';
 import { GradientButtonComponent, LoadingSpinnerComponent, PageContainerComponent } from '../shared/components';
+import { ConfirmationDialogService } from '../shared/services/confirmation-dialog.service';
+import { QuizService } from './services/quiz.service';
 
 @Component({
   selector: 'app-quiz',
   standalone: true,
   imports: [
-    CommonModule,
+    AsyncPipe,
     TranslatePipe,
     FaIconComponent,
     PageContainerComponent,
@@ -24,10 +24,11 @@ import { GradientButtonComponent, LoadingSpinnerComponent, PageContainerComponen
   templateUrl: './quiz.component.html',
   styleUrls: ['./quiz.component.scss'],
 })
-export class QuizComponent implements OnInit, OnDestroy {
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
-  private readonly getQuestionsGQL = inject(GetQuestionsGQL);
+export class QuizComponent {
+  private readonly _router = inject(Router);
+  private readonly _getQuestionsGQL = inject(GetQuestionsGQL);
+  private readonly _confirmationDialog = inject(ConfirmationDialogService);
+  private readonly _translate = inject(TranslateService);
   readonly quizService = inject(QuizService);
 
   readonly faClock = faClock;
@@ -35,35 +36,49 @@ export class QuizComponent implements OnInit, OnDestroy {
   readonly faArrowRight = faArrowRight;
   readonly faCheck = faCheck;
 
-  loading = true;
+  completingQuiz$?: Observable<{ loading: boolean }>;
+
+  private readonly _navigationState = this._router.currentNavigation()?.extras.state;
+  private readonly _count = this._navigationState?.['count'] || 10;
+  private readonly _timed = this._navigationState?.['timed'] === true;
+
+  readonly questions$: Observable<Question[]> = this._getQuestionsGQL
+    .watch({
+      variables: {
+        first: this._count,
+        random: true,
+      },
+      fetchPolicy: 'no-cache',
+    })
+    .valueChanges.pipe(
+      map((result) => {
+        if (!result.data) {
+          return [];
+        }
+        const questions = result.data.questions?.edges?.map((edge) => edge?.node as Question) || [];
+        if (questions.length > 0 && !this.quizService.config()) {
+          this.quizService.initializeQuiz(questions, this._timed);
+        }
+        return questions;
+      })
+    );
+
   selectedAnswers: Set<string> = new Set();
 
-  ngOnInit() {
-    const count = Number(this.route.snapshot.queryParams['count']) || 10;
-    const timed = this.route.snapshot.queryParams['timed'] === 'true';
+  canDeactivate(): Observable<boolean> | boolean {
+    const state = this.quizService.state();
+    // Allow navigation if quiz is complete, not initialized, or on the first question
+    if (state.isComplete || !this.quizService.config() || state.currentQuestionIndex === 0) {
+      return true;
+    }
 
-    // Fetch random questions
-    this.getQuestionsGQL
-      .watch({
-        variables: {
-          first: count,
-          random: true,
-        },
-      })
-      .valueChanges.pipe(
-        onlyCompleteData(),
-        map((result) => result.data.questions?.edges?.map((edge) => edge?.node as Question) || [])
-      )
-      .subscribe((questions) => {
-        if (questions.length > 0) {
-          this.quizService.initializeQuiz(questions, timed);
-          this.loading = false;
-        }
-      });
-  }
-
-  ngOnDestroy() {
-    this.quizService.resetQuiz();
+    // Show confirmation dialog with translated text
+    return this._confirmationDialog.confirm({
+      title: this._translate.instant('quiz.leave_title'),
+      message: this._translate.instant('quiz.leave_warning'),
+      confirmText: this._translate.instant('quiz.leave_confirm'),
+      cancelText: this._translate.instant('quiz.leave_cancel'),
+    });
   }
 
   toggleAnswer(answerId: string) {
@@ -86,16 +101,15 @@ export class QuizComponent implements OnInit, OnDestroy {
   }
 
   completeQuiz() {
-    const result = this.quizService.completeQuiz();
-    this.router.navigate(['/quiz/results'], { state: { result } });
+    this.completingQuiz$ = this.quizService.completeQuiz().pipe(map((state) => ({ loading: state.loading })));
+  }
+
+  formatTime(seconds: number): string {
+    return this.quizService.formatTime(seconds);
   }
 
   private loadCurrentAnswers() {
     const currentAnswers = this.quizService.getCurrentAnswerIds();
     this.selectedAnswers = new Set(currentAnswers);
-  }
-
-  formatTime(seconds: number): string {
-    return this.quizService.formatTime(seconds);
   }
 }

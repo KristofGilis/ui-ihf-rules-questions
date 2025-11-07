@@ -49,14 +49,21 @@
     "title": "Alle vragen"
   },
   "quiz": {
+    "calculating_score": "Je score berekenen...",
     "complete": "Voltooi Quiz",
+    "leave_cancel": "Blijven",
+    "leave_confirm": "Verlaten",
+    "leave_title": "Quiz Verlaten?",
+    "leave_warning": "Je voortgang gaat verloren als je nu vertrekt. Weet je het zeker?",
     "next": "Volgende",
     "previous": "Vorige",
     "progress": "Vraag {{current}} van {{total}}",
     "select_answers": "Selecteer alle juiste antwoorden",
+    "setup_description": "Configureer je quiz-instellingen om te beginnen",
     "time_remaining": "Resterende tijd"
   },
   "quiz_results": {
+    "completion_time": "Voltooiingstijd",
     "correct": "Correct",
     "home": "Home",
     "question": "Vraag",

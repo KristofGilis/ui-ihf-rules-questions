@@ -1,6 +1,13 @@
 <app-page-container [padding]="'pt-12 pb-24'">
-  @if (!loading) {
-    <div class="mx-auto max-w-3xl">
+  @if (completingQuiz$ | async; as completingState) {
+    @if (completingState.loading) {
+      <div class="flex flex-col items-center justify-center py-20">
+        <app-loading-spinner />
+        <p class="mt-4 text-lg font-semibold text-slate-700 dark:text-slate-300">{{ 'quiz.calculating_score' | translate }}</p>
+      </div>
+    }
+  } @else if (questions$ | async; as questions) {
+    @if (questions.length > 0) {
       <div class="mb-8">
         <!-- Progress -->
         <div class="mb-6">
@@ -77,8 +84,8 @@
           }
         </div>
       }
-    </div>
-  } @else {
-    <app-loading-spinner />
+    } @else {
+      <app-loading-spinner />
+    }
   }
 </app-page-container>
