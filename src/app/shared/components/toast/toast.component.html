@@ -1,0 +1,18 @@
+@if (toasts().length > 0) {
+  <div class="toast-container">
+    @for (toast of toasts(); track toast.id) {
+      <div
+        class="toast toast-{{ toast.type }}"
+        role="alert"
+        [attr.aria-live]="toast.type === 'error' ? 'assertive' : 'polite'">
+        <div class="toast-content">
+          <span class="toast-icon">{{ getIcon(toast.type) }}</span>
+          <div class="toast-message">{{ toast.message }}</div>
+          @if (toast.dismissible) {
+            <button class="toast-close" (click)="dismiss(toast.id)" aria-label="Close notification">×</button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+}
