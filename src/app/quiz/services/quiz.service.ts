@@ -2,6 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { map, Observable, tap } from 'rxjs';
 import { CalculateScoreGQL, Question } from '../../../../graphql/generated';
+import { QUIZ_CONFIG } from '../../constants';
 
 /**
  * Internal types - not exported as they're only used within this service
@@ -149,9 +150,13 @@ export class QuizService {
    *
    * @param questions - Array of questions from GraphQL API
    * @param timedMode - Whether to enable countdown timer
-   * @param timePerQuestion - Seconds allowed per question (default: 90)
+   * @param timePerQuestion - Seconds allowed per question (default from QUIZ_CONFIG)
    */
-  initializeQuiz(questions: Question[], timedMode: boolean, timePerQuestion: number = 90): void {
+  initializeQuiz(
+    questions: Question[],
+    timedMode: boolean,
+    timePerQuestion: number = QUIZ_CONFIG.TIME_PER_QUESTION
+  ): void {
     // Clear any previous results when starting a new quiz
     this.results.set(null);
 

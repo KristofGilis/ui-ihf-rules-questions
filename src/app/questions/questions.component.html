@@ -4,9 +4,9 @@
   <!-- Wrapper - full width container -->
   <div class="lg:mx-auto">
     <!-- Grid layout that changes based on score -->
-    <div class="layout-grid flex flex-col gap-6" 
-         [class.no-score]="!score && !scoreLoading()" 
-         [class.has-score]="score || scoreLoading()">
+    <div class="flex flex-col gap-6 lg:grid lg:gap-6" 
+         [class.lg:justify-items-center]="!score && !scoreLoading()" 
+         [class.lg:grid-cols-[1fr_auto]]="score || scoreLoading()">
       <!-- Main content area -->
       <div class="pt-12">
         <app-page-hero [title]="'questions.title' | translate" [description]="'questions.description' | translate" />

@@ -1,14 +1,14 @@
 import { HttpHeaders } from '@angular/common/http';
-import { ApplicationConfig, inject, InjectionToken } from '@angular/core';
+import { ApplicationConfig, inject, InjectionToken, isDevMode } from '@angular/core';
 import { ApolloClient, ApolloLink, InMemoryCache } from '@apollo/client/core';
 import { CombinedGraphQLErrors, CombinedProtocolErrors } from '@apollo/client/errors';
 import { ErrorLink } from '@apollo/client/link/error';
 import { relayStylePagination } from '@apollo/client/utilities';
 import { Apollo, APOLLO_FLAGS, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
+import { environment } from '../environments/environment';
 
 const APOLLO_CACHE = new InjectionToken<InMemoryCache>('apollo-cache');
-const uri = 'https://api-ihf-rules-questions.azurewebsites.net/graphql';
 
 export function apolloOptionsFactory(): ApolloClient.Options {
   const httpLink = inject(HttpLink);
@@ -17,11 +17,16 @@ export function apolloOptionsFactory(): ApolloClient.Options {
   // Error link for centralized Apollo error handling
   // Based on Apollo Client 4.0 API:
   // https://the-guild.dev/graphql/apollo-angular/docs/data/error-handling
-  // 
+  //
   // This ErrorLink handles Apollo-level errors and logs them.
   // Since errorPolicy is 'all', errors are still available to components.
   // Unhandled errors that escape components will be caught by GlobalErrorHandler.
   const errorLink = new ErrorLink(({ error, operation }) => {
+    // Only log errors in development mode
+    if (!isDevMode()) {
+      return;
+    }
+
     if (CombinedGraphQLErrors.is(error)) {
       // GraphQL errors - errors returned from the server
       error.errors.forEach(({ message, locations, path }) => {
@@ -42,7 +47,7 @@ export function apolloOptionsFactory(): ApolloClient.Options {
         operation: operation.operationName,
       });
     }
-    
+
     // Note: We don't return anything here, which means:
     // - The error continues to propagate to the component
     // - Components can handle it via error handling in their queries
@@ -51,7 +56,7 @@ export function apolloOptionsFactory(): ApolloClient.Options {
 
   // Create the HTTP link
   const http = httpLink.create({
-    uri,
+    uri: environment.apiUrl,
     headers: new HttpHeaders().append('graphql-preflight', '1'),
   });
 

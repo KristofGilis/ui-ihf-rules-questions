@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-export const RULES_ROUTES: Routes = [
+export default [
   {
     path: '',
     loadComponent: () => import('./rules.component').then((m) => m.RulesComponent),
@@ -9,4 +9,4 @@ export const RULES_ROUTES: Routes = [
     path: ':id',
     loadComponent: () => import('../rule/rule.component').then((m) => m.RuleComponent),
   },
-];
+] satisfies Routes;

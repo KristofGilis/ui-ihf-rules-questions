@@ -1,4 +1,5 @@
 import { ApplicationRef, ComponentRef, createComponent, EnvironmentInjector, Injectable } from '@angular/core';
+import { TOAST_DURATION } from '../constants';
 import { ToastComponent } from '../shared/components/toast/toast.component';
 
 export type ToastType = 'error' | 'warning' | 'success' | 'info';
@@ -28,28 +29,28 @@ export class ToastService {
   /**
    * Show an error toast
    */
-  error(message: string, duration: ToastDuration = 5000): void {
+  error(message: string, duration: ToastDuration = TOAST_DURATION.ERROR): void {
     this.show(message, { type: 'error', duration });
   }
 
   /**
    * Show a warning toast
    */
-  warning(message: string, duration: ToastDuration = 5000): void {
+  warning(message: string, duration: ToastDuration = TOAST_DURATION.WARNING): void {
     this.show(message, { type: 'warning', duration });
   }
 
   /**
    * Show a success toast
    */
-  success(message: string, duration: ToastDuration = 3000): void {
+  success(message: string, duration: ToastDuration = TOAST_DURATION.SUCCESS): void {
     this.show(message, { type: 'success', duration });
   }
 
   /**
    * Show an info toast
    */
-  info(message: string, duration: ToastDuration = 3000): void {
+  info(message: string, duration: ToastDuration = TOAST_DURATION.INFO): void {
     this.show(message, { type: 'info', duration });
   }
 
@@ -57,7 +58,7 @@ export class ToastService {
    * Show a toast notification
    */
   show(message: string, options: ToastOptions = {}): void {
-    const { type = 'info', duration = 3000, dismissible = true } = options;
+    const { type = 'info', duration = TOAST_DURATION.INFO, dismissible = true } = options;
 
     // Create component if it doesn't exist
     if (!this.toastComponentRef) {

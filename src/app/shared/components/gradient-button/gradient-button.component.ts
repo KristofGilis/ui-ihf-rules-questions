@@ -7,8 +7,10 @@ import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
   selector: 'app-gradient-button',
   imports: [CommonModule, FontAwesomeModule],
   templateUrl: './gradient-button.component.html',
-  styleUrl: './gradient-button.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    style: 'display: contents',
+  },
 })
 export class GradientButtonComponent {
   readonly variant = input<'primary' | 'success'>('primary');
@@ -20,7 +22,7 @@ export class GradientButtonComponent {
   readonly title = input<string>();
   readonly icon = input<IconDefinition>();
   readonly loadingIcon = input<IconDefinition>();
-  
+
   readonly clicked = output<void>();
 
   onClick(): void {

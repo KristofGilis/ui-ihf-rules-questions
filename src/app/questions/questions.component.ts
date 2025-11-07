@@ -21,8 +21,10 @@ import { QuestionsService } from './services/questions.service';
     ScoreOverviewComponent,
   ],
   templateUrl: './questions.component.html',
-  styleUrl: './questions.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    style: 'overflow-anchor: auto',
+  },
 })
 export class QuestionsComponent {
   private readonly _questionsService = inject(QuestionsService);

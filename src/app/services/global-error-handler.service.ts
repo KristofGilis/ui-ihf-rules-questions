@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, inject, Injectable, isDevMode } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { TOAST_DURATION } from '../constants';
 import { ToastService } from './toast.service';
 
 /**
@@ -239,7 +240,8 @@ export class GlobalErrorHandler implements ErrorHandler {
     // Show notifications for high severity errors or all errors in development
     if (this._isDevelopment || errorInfo.severity === 'high') {
       const toastType = errorInfo.severity === 'high' ? 'error' : 'warning';
-      this._toastService.show(errorInfo.userMessage, { type: toastType, duration: 5000 });
+      const duration = errorInfo.severity === 'high' ? TOAST_DURATION.ERROR : TOAST_DURATION.WARNING;
+      this._toastService.show(errorInfo.userMessage, { type: toastType, duration });
     }
   }
 

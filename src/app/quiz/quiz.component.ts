@@ -22,7 +22,6 @@ import { QuizService } from './services/quiz.service';
     LoadingSpinnerComponent,
   ],
   templateUrl: './quiz.component.html',
-  styleUrls: ['./quiz.component.scss'],
 })
 export class QuizComponent {
   private readonly _router = inject(Router);

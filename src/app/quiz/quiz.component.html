@@ -59,12 +59,22 @@
             @for (answer of question.shuffledAnswers; track answer?.id) {
               <label
                 class="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 p-4 transition-all duration-200 hover:border-cyan-400 hover:bg-cyan-50 focus-within:ring-2 focus-within:ring-cyan-500 focus-within:ring-offset-2 dark:border-slate-700 dark:bg-slate-800 dark:hover:border-cyan-500 dark:hover:bg-slate-700">
-                <input
-                  type="checkbox"
-                  [checked]="selectedAnswers.has(answer?.id ?? '')"
-                  (change)="toggleAnswer(answer?.id ?? '')"
-                  [attr.aria-label]="'Answer ' + answer?.number + ': ' + answer?.phrase"
-                  class="relative mt-0.5 h-5 w-5 shrink-0 cursor-pointer appearance-none rounded border-2 border-slate-400 bg-white transition-all duration-200 checked:border-cyan-500 checked:bg-linear-to-br checked:from-cyan-500 checked:to-blue-500 hover:border-cyan-500 hover:bg-cyan-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:checked:border-cyan-400 dark:checked:from-cyan-400 dark:checked:to-blue-400 dark:hover:border-cyan-400 dark:hover:bg-cyan-950 dark:focus-visible:ring-cyan-400" />
+                <div class="relative mt-0.5 h-5 w-5 shrink-0">
+                  <input
+                    type="checkbox"
+                    [checked]="selectedAnswers.has(answer?.id ?? '')"
+                    (change)="toggleAnswer(answer?.id ?? '')"
+                    [attr.aria-label]="'Answer ' + answer?.number + ': ' + answer?.phrase"
+                    class="peer h-5 w-5 cursor-pointer appearance-none rounded border-2 border-slate-400 bg-white transition-all duration-200 checked:border-cyan-500 checked:bg-linear-to-br checked:from-cyan-500 checked:to-blue-500 hover:border-cyan-500 hover:bg-cyan-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:checked:border-cyan-400 dark:checked:from-cyan-400 dark:checked:to-blue-400 dark:hover:border-cyan-400 dark:hover:bg-cyan-950 dark:focus-visible:ring-cyan-400" />
+                  <svg
+                    class="pointer-events-none absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 stroke-white stroke-2 opacity-0 transition-opacity duration-200 peer-checked:opacity-100"
+                    viewBox="0 0 12 10"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true">
+                    <path d="M1 5L4.5 8.5L11 1.5" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </div>
                 <span class="flex-1 text-slate-700 dark:text-slate-300">{{ answer?.phrase }}</span>
               </label>
             }

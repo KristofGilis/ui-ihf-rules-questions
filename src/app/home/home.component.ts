@@ -15,6 +15,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
 import { finalize, map, shareReplay, tap } from 'rxjs';
 import { GetVersionGQL } from '../../../graphql/generated';
+import { environment } from '../../environments/environment';
 import { LogoComponent } from '../logo/logo.component';
 import { PageContainerComponent, PageHeroComponent, QuizConfigCardComponent } from '../shared/components';
 
@@ -39,6 +40,9 @@ export class HomeComponent {
   private readonly _router = inject(Router);
 
   loadingVersion = signal(false);
+
+  // Environment configuration
+  readonly githubUrl = environment.githubUrl;
 
   // Font Awesome icons
   readonly faFileAlt = faFileAlt;
