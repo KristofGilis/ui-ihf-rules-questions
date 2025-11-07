@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faCircleCheck,
   faCircleExclamation,
@@ -22,9 +22,8 @@ export interface Toast {
  */
 @Component({
   selector: 'app-toast',
-  imports: [FontAwesomeModule],
+  imports: [FaIconComponent],
   templateUrl: './toast.component.html',
-  styleUrls: ['./toast.component.scss'],
 })
 export class ToastComponent {
   toasts = signal<Toast[]>([]);
