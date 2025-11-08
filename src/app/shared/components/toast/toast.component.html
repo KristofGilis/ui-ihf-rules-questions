@@ -7,8 +7,8 @@
         role="alert"
         [attr.aria-live]="toast.type === 'error' ? 'assertive' : 'polite'"
       >
-        <div class="flex gap-3 items-start p-4">
-          <fa-icon class="text-lg shrink-0 flex items-center" [icon]="getIcon(toast.type)" [fixedWidth]="true"></fa-icon>
+        <div class="flex gap-3 items-center p-4">
+          <fa-icon class="text-lg shrink-0" [icon]="getIcon(toast.type)" [fixedWidth]="true"></fa-icon>
           <div class="flex-1 font-medium">{{ toast.message }}</div>
           @if (toast.dismissible) {
             <button

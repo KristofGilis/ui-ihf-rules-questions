@@ -65,10 +65,10 @@ export class ToastComponent {
    */
   getToastClasses(type: Toast['type']): string {
     const classes = {
-      error: 'bg-red-600 text-white',
-      warning: 'bg-amber-500 text-white',
-      success: 'bg-green-600 text-white',
-      info: 'bg-blue-600 text-white',
+      error: 'bg-gradient-to-br from-red-500 to-rose-600 text-white',
+      warning: 'bg-gradient-to-br from-amber-500 to-orange-600 text-white',
+      success: 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white',
+      info: 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white',
     };
     return classes[type];
   }
