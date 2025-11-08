@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { TranslateService } from '@ngx-translate/core';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { GlobalErrorHandler } from './global-error-handler.service';
 import { ToastService } from './toast.service';
 
@@ -17,16 +17,8 @@ describe('GlobalErrorHandler', () => {
       info: jest.fn(),
     };
 
-    const translateServiceMock = {
-      instant: jest.fn((key: string) => key),
-    };
-
     TestBed.configureTestingModule({
-      providers: [
-        GlobalErrorHandler,
-        { provide: ToastService, useValue: toastServiceMock },
-        { provide: TranslateService, useValue: translateServiceMock },
-      ],
+      providers: [GlobalErrorHandler, { provide: ToastService, useValue: toastServiceMock }, provideTranslateService()],
     });
 
     handler = TestBed.inject(GlobalErrorHandler);
