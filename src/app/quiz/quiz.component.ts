@@ -1,9 +1,10 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, HostListener, inject } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft, faArrowRight, faCheck, faClock } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import * as Hammer from 'hammerjs';
 import { map, Observable } from 'rxjs';
 import { GetQuestionsGQL, Question } from '../../../graphql/generated';
 import { GradientButtonComponent, LoadingSpinnerComponent, PageContainerComponent } from '../shared/components';
@@ -23,12 +24,15 @@ import { QuizService } from './services/quiz.service';
   ],
   templateUrl: './quiz.component.html',
 })
-export class QuizComponent {
+export class QuizComponent implements OnInit, OnDestroy {
   private readonly _router = inject(Router);
   private readonly _getQuestionsGQL = inject(GetQuestionsGQL);
   private readonly _confirmationDialog = inject(ConfirmationDialogService);
   private readonly _translate = inject(TranslateService);
+  private readonly _elementRef = inject(ElementRef);
   readonly quizService = inject(QuizService);
+
+  private _hammer?: HammerManager;
 
   readonly faClock = faClock;
   readonly faArrowLeft = faArrowLeft;
@@ -63,6 +67,36 @@ export class QuizComponent {
     );
 
   selectedAnswers: Set<string> = new Set();
+
+  ngOnInit(): void {
+    // Initialize Hammer.js for swipe gestures
+    const element = this._elementRef.nativeElement;
+    this._hammer = new Hammer.Manager(element);
+
+    // Configure swipe recognizer
+    const swipe = new Hammer.Swipe({ direction: Hammer.DIRECTION_HORIZONTAL });
+    this._hammer.add(swipe);
+
+    // Listen for swipe events
+    this._hammer.on('swipeleft', () => {
+      if (this.quizService.canGoNext()) {
+        this.goToNext();
+      }
+    });
+
+    this._hammer.on('swiperight', () => {
+      if (this.quizService.canGoPrevious()) {
+        this.goToPrevious();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Clean up Hammer.js instance
+    if (this._hammer) {
+      this._hammer.destroy();
+    }
+  }
 
   canDeactivate(): Observable<boolean> | boolean {
     const state = this.quizService.state();

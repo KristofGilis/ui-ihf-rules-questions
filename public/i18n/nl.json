@@ -49,6 +49,9 @@
     "quiz": "Quiz",
     "rules": "Spelregels"
   },
+  "offline": {
+    "message": "Je bent momenteel offline. Sommige functies zijn mogelijk niet beschikbaar."
+  },
   "questions": {
     "calculate_score": "Bereken score",
     "description": "Bekijk en bestudeer alle beschikbare vragen in je eigen tempo",

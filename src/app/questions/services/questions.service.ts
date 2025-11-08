@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { ObservableQuery } from '@apollo/client/core';
-import { Observable, tap } from 'rxjs';
+import { debounceTime, Observable, Subject, switchMap, tap } from 'rxjs';
 import {
   CalculateScoreGQL,
   CalculateScoreQuery,
@@ -31,6 +31,19 @@ export class QuestionsService {
     nextFetchPolicy: 'cache-first',
   });
   private readonly _calculateScoreGQL = inject(CalculateScoreGQL);
+
+  // Debounced score calculation to prevent rapid-fire requests
+  private readonly _scoreSubject = new Subject<{ questionIds: string[]; selectedAnswerIds: string[] }>();
+  readonly debouncedScore$ = this._scoreSubject.pipe(
+    debounceTime(300),
+    switchMap(
+      ({ questionIds, selectedAnswerIds }) =>
+        this._calculateScoreGQL.watch({
+          variables: { questionIds, selectedAnswerIds },
+          fetchPolicy: 'no-cache',
+        }).valueChanges
+    )
+  );
 
   get hasNextPage(): boolean {
     return this._hasNextPage;
@@ -74,5 +87,13 @@ export class QuestionsService {
       },
       fetchPolicy: 'no-cache',
     }).valueChanges;
+  }
+
+  /**
+   * Trigger debounced score calculation
+   * Use this instead of calculateScore() for real-time updates
+   */
+  requestScore(questionIds: string[], selectedAnswerIds: string[]): void {
+    this._scoreSubject.next({ questionIds, selectedAnswerIds });
   }
 }

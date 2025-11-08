@@ -32,6 +32,12 @@ jobs:
       - name: Run tests
         run: npm test -- --coverage --silent
 
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+
       - name: Build app (production)
         run: npm run build -- --configuration=production
 
@@ -52,6 +58,52 @@ jobs:
         with:
           name: dist
           path: dist/ui-ihf-rules-questions
+
+  # Preview deployment for pull requests
+  preview:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: dist
+          path: ${{ github.workspace }}/dist
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy to Azure Web App Preview Slot
+        id: deploy-preview
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          slot-name: pr-${{ github.event.pull_request.number }}
+          package: ${{ github.workspace }}/dist/browser
+          clean: true
+
+      - name: Comment PR with preview URL
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const previewUrl = `https://${{ env.AZURE_WEBAPP_NAME }}-pr-${prNumber}.azurewebsites.net`;
+            
+            github.rest.issues.createComment({
+              issue_number: prNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `🚀 Preview deployment ready!\n\n📱 **Preview URL**: ${previewUrl}\n\n_This preview will be automatically deleted when the PR is closed._`
+            });
 
   deploy:
     needs: build

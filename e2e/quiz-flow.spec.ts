@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
 /**
@@ -83,5 +84,34 @@ test.describe('Quiz Flow', () => {
     await page.keyboard.press('Tab');
     const focusedElement = page.locator(':focus');
     await expect(focusedElement).toBeVisible();
+  });
+
+  test('should pass automated accessibility tests (axe)', async ({ page }) => {
+    await page.goto('/');
+
+    // Run axe accessibility tests
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze();
+
+    expect(accessibilityScanResults.violations).toEqual([]);
+  });
+
+  test('should have accessible quiz page', async ({ page }) => {
+    await page.goto('/quiz');
+
+    // Run axe on quiz setup page
+    const accessibilityScanResults = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+
+    expect(accessibilityScanResults.violations).toEqual([]);
+  });
+
+  test('should have accessible questions page', async ({ page }) => {
+    await page.goto('/questions');
+
+    // Run axe on questions page
+    const accessibilityScanResults = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+
+    expect(accessibilityScanResults.violations).toEqual([]);
   });
 });

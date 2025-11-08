@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, HostListener, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { ActionSheet } from '@capacitor/action-sheet';
@@ -14,8 +14,10 @@ import {
   faQuestionCircle,
   faSun,
   faTrophy,
+  faWifi,
 } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { fromEvent, map, merge, of } from 'rxjs';
 import { getLanguage } from './language';
 import { LogoComponent } from './logo/logo.component';
 import { ThemeService } from './services/theme.service';
@@ -44,6 +46,7 @@ export class AppComponent {
   protected readonly faSun = faSun;
   protected readonly faMoon = faMoon;
   protected readonly faDesktop = faDesktop;
+  protected readonly faWifi = faWifi;
 
   // State signals
   protected readonly currentLang = signal(getLanguage());
@@ -51,6 +54,16 @@ export class AppComponent {
   protected readonly showLanguageMenu = signal(false);
   protected readonly showThemeMenu = signal(false);
   protected readonly isNativePlatform = Capacitor.isNativePlatform();
+
+  // Online/offline state
+  protected readonly isOnline = toSignal(
+    merge(
+      of(navigator.onLine),
+      fromEvent(window, 'online').pipe(map(() => true)),
+      fromEvent(window, 'offline').pipe(map(() => false))
+    ),
+    { initialValue: navigator.onLine }
+  );
 
   // Computed signals for theme icon and label
   protected readonly themeIcon = computed(() => {

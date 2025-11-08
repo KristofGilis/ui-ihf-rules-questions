@@ -204,6 +204,11 @@ export class QuizService {
       startTime: timedMode ? Date.now() : undefined,
     });
 
+    // Performance mark: Quiz started
+    if (typeof performance !== 'undefined') {
+      performance.mark('quiz-start');
+    }
+
     if (timedMode) {
       this.startTimer();
     }
@@ -372,6 +377,12 @@ export class QuizService {
             completionTimeSeconds,
             answers: results,
           };
+
+          // Performance mark: Quiz completed
+          if (typeof performance !== 'undefined') {
+            performance.mark('quiz-complete');
+            performance.measure('quiz-duration', 'quiz-start', 'quiz-complete');
+          }
 
           this.results.set(result);
           return { loading: response.loading, result };
