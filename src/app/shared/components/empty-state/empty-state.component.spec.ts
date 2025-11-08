@@ -50,53 +50,12 @@ describe('EmptyStateComponent', () => {
     });
   });
 
-  describe('Icon Path Input', () => {
-    it('should default to empty string', () => {
-      expect(component.iconPath()).toBe('');
-    });
-
-    it('should render SVG when iconPath is provided', () => {
-      const pathData = 'M12 4v16m8-8H4';
-      fixture.componentRef.setInput('iconPath', pathData);
-      fixture.detectChanges();
-
-      const compiled = fixture.nativeElement as HTMLElement;
-      const svg = compiled.querySelector('svg');
-      const path = svg?.querySelector('path');
-
-      expect(svg).toBeTruthy();
-      expect(path?.getAttribute('d')).toBe(pathData);
-    });
-
-    it('should not render SVG when iconPath is empty', () => {
-      fixture.componentRef.setInput('iconPath', '');
-      fixture.detectChanges();
-
-      const compiled = fixture.nativeElement as HTMLElement;
-      const svg = compiled.querySelector('svg');
-      expect(svg).toBeNull();
-    });
-
-    it('should apply correct SVG classes', () => {
-      fixture.componentRef.setInput('iconPath', 'M12 4v16m8-8H4');
-      fixture.detectChanges();
-
-      const compiled = fixture.nativeElement as HTMLElement;
-      const svg = compiled.querySelector('svg');
-
-      expect(svg?.classList.contains('mb-4')).toBe(true);
-      expect(svg?.classList.contains('h-16')).toBe(true);
-      expect(svg?.classList.contains('w-16')).toBe(true);
-    });
-  });
-
   describe('Has Action Input', () => {
     it('should default to false', () => {
       expect(component.hasAction()).toBe(false);
     });
 
     it('should not render action slot by default', () => {
-      const compiled = fixture.nativeElement as HTMLElement;
       // Action content slot should not be rendered
       expect(component.hasAction()).toBe(false);
     });
@@ -163,20 +122,6 @@ describe('EmptyStateComponent', () => {
       const compiled = hostFixture.nativeElement as HTMLElement;
       const actionButton = compiled.querySelector('.custom-action');
       expect(actionButton?.textContent?.trim()).toBe('Take Action');
-    });
-  });
-
-  describe('SVG Path Attributes', () => {
-    it('should apply stroke attributes to path', () => {
-      fixture.componentRef.setInput('iconPath', 'M12 4v16');
-      fixture.detectChanges();
-
-      const compiled = fixture.nativeElement as HTMLElement;
-      const path = compiled.querySelector('path');
-
-      expect(path?.getAttribute('stroke-linecap')).toBe('round');
-      expect(path?.getAttribute('stroke-linejoin')).toBe('round');
-      expect(path?.getAttribute('stroke-width')).toBe('2');
     });
   });
 });

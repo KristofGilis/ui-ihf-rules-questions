@@ -7,6 +7,5 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 })
 export class EmptyStateComponent {
   readonly message = input<string>('');
-  readonly iconPath = input<string>('');
   readonly hasAction = input(false);
 }
