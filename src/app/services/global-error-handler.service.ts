@@ -1,6 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, inject, Injectable, isDevMode } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import * as Sentry from '@sentry/angular';
+import { environment } from '../../environments/environment';
 import { TOAST_DURATION } from '../constants';
 import { ToastService } from './toast.service';
 
@@ -81,8 +83,46 @@ export class GlobalErrorHandler implements ErrorHandler {
     // Show user-friendly notification
     this.notifyUser(errorInfo);
 
-    // TODO: Send to error monitoring service (Sentry, Azure Application Insights, etc.)
-    // this.sendToMonitoring(errorInfo, actualError);
+    // Send to Sentry if enabled
+    if (environment.sentry.enabled) {
+      this.sendToSentry(errorInfo, actualError);
+    }
+  }
+
+  /**
+   * Send error to Sentry with additional context
+   */
+  private sendToSentry(errorInfo: ErrorInfo, error: unknown): void {
+    Sentry.captureException(error, {
+      level: this.getSentryLevel(errorInfo.category),
+      tags: {
+        errorCategory: errorInfo.category,
+      },
+      contexts: {
+        errorInfo: {
+          userMessage: errorInfo.userMessage,
+          technicalMessage: errorInfo.technicalMessage,
+          category: errorInfo.category,
+        },
+      },
+    });
+  }
+
+  /**
+   * Map error category to Sentry severity level
+   */
+  private getSentryLevel(category: string): Sentry.SeverityLevel {
+    switch (category) {
+      case 'Network':
+        return 'warning';
+      case 'HTTP':
+      case 'GraphQL':
+        return 'error';
+      case 'Client':
+        return 'warning';
+      default:
+        return 'error';
+    }
   }
 
   /**
