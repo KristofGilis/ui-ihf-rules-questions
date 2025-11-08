@@ -1,5 +1,6 @@
 import { ViewportScroller } from '@angular/common';
 import { Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
@@ -14,7 +15,10 @@ export class ScrollRestorationService {
   constructor() {
     // Save scroll position before navigation
     this.router.events
-      .pipe(filter((event): event is NavigationStart => event instanceof NavigationStart))
+      .pipe(
+        filter((event): event is NavigationStart => event instanceof NavigationStart),
+        takeUntilDestroyed()
+      )
       .subscribe(() => {
         const currentUrl = this.router.url;
         const position = this.viewportScroller.getScrollPosition();
@@ -23,7 +27,10 @@ export class ScrollRestorationService {
 
     // Restore scroll position after navigation
     this.router.events
-      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .pipe(
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+        takeUntilDestroyed()
+      )
       .subscribe((event) => {
         const url = event.urlAfterRedirects || event.url;
         const savedPosition = this.scrollPositions.get(url);

@@ -24,13 +24,27 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Lint code
+        run: npm run lint
 
       - name: Run tests
         run: npm test -- --coverage --silent
 
       - name: Build app (production)
         run: npm run build -- --configuration=production
+
+      - name: Check bundle size
+        run: |
+          MAIN_SIZE=$(find dist/ui-ihf-rules-questions/browser -name 'main*.js' -exec wc -c {} \; | awk '{print $1}')
+          MAX_SIZE=350000
+          echo "Main bundle size: $MAIN_SIZE bytes (max: $MAX_SIZE bytes)"
+          if [ $MAIN_SIZE -gt $MAX_SIZE ]; then
+            echo "❌ Bundle size exceeds limit!"
+            exit 1
+          fi
+          echo "✅ Bundle size is within limits"
 
       - name: Upload artifact
         if: github.ref == 'refs/heads/main'
