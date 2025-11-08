@@ -1,11 +1,14 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { GetRulesGQL } from '../../../../graphql/generated';
 import { RulesService } from './rules.service';
 
 describe('RulesService', () => {
   let service: RulesService;
   let getRulesGQL: jest.Mocked<GetRulesGQL>;
+  let rulesSubject: BehaviorSubject<any>;
+  let fetchMoreMock: jest.Mock;
+  let refetchMock: jest.Mock;
 
   const mockRulesResponse = {
     loading: false,
@@ -37,12 +40,13 @@ describe('RulesService', () => {
   };
 
   beforeEach(() => {
-    const fetchMoreMock = jest.fn();
-    const refetchMock = jest.fn();
+    rulesSubject = new BehaviorSubject(mockRulesResponse);
+    fetchMoreMock = jest.fn();
+    refetchMock = jest.fn();
 
     const getRulesGQLMock = {
       watch: jest.fn().mockReturnValue({
-        valueChanges: of(mockRulesResponse),
+        valueChanges: rulesSubject.asObservable(),
         fetchMore: fetchMoreMock,
         refetch: refetchMock,
       }),
@@ -86,13 +90,6 @@ describe('RulesService', () => {
       service.rules$.subscribe(() => {
         // Cursor should be updated internally (private field)
         // We can verify this by checking if fetchMore uses the cursor
-        const fetchMoreMock = jest.fn();
-        getRulesGQL.watch.mockReturnValue({
-          valueChanges: of(mockRulesResponse),
-          fetchMore: fetchMoreMock,
-          refetch: jest.fn(),
-        } as any);
-
         service.fetchMore();
         expect(fetchMoreMock).toHaveBeenCalledWith({
           variables: {
@@ -112,11 +109,8 @@ describe('RulesService', () => {
         loading: true,
       };
 
-      getRulesGQL.watch.mockReturnValue({
-        valueChanges: of(loadingResponse),
-        fetchMore: jest.fn(),
-        refetch: jest.fn(),
-      } as any);
+      // Emit loading response
+      rulesSubject.next(loadingResponse);
 
       service.loading$.subscribe((loading) => {
         expect(loading).toBe(true);
@@ -133,17 +127,6 @@ describe('RulesService', () => {
   });
 
   describe('Pagination', () => {
-    let fetchMoreMock: jest.Mock;
-
-    beforeEach(() => {
-      fetchMoreMock = jest.fn();
-      getRulesGQL.watch.mockReturnValue({
-        valueChanges: of(mockRulesResponse),
-        fetchMore: fetchMoreMock,
-        refetch: jest.fn(),
-      } as any);
-    });
-
     it('should fetch more rules with correct cursor', (done) => {
       service.rules$.subscribe(() => {
         service.fetchMore();
@@ -161,13 +144,6 @@ describe('RulesService', () => {
 
   describe('Refetch', () => {
     it('should reset cursor and refetch rules', () => {
-      const refetchMock = jest.fn();
-      getRulesGQL.watch.mockReturnValue({
-        valueChanges: of(mockRulesResponse),
-        fetchMore: jest.fn(),
-        refetch: refetchMock,
-      } as any);
-
       service.refetch();
 
       expect(refetchMock).toHaveBeenCalledWith({

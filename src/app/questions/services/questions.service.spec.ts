@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { CalculateScoreGQL, GetQuestionsGQL } from '../../../../graphql/generated';
 import { QuestionsService } from './questions.service';
 
@@ -7,6 +7,9 @@ describe('QuestionsService', () => {
   let service: QuestionsService;
   let getQuestionsGQL: jest.Mocked<GetQuestionsGQL>;
   let calculateScoreGQL: jest.Mocked<CalculateScoreGQL>;
+  let questionsSubject: BehaviorSubject<any>;
+  let fetchMoreMock: jest.Mock;
+  let refetchMock: jest.Mock;
 
   const mockQuestionsResponse = {
     loading: false,
@@ -51,12 +54,13 @@ describe('QuestionsService', () => {
   };
 
   beforeEach(() => {
-    const fetchMoreMock = jest.fn();
-    const refetchMock = jest.fn();
+    questionsSubject = new BehaviorSubject(mockQuestionsResponse);
+    fetchMoreMock = jest.fn();
+    refetchMock = jest.fn();
 
     const getQuestionsGQLMock = {
       watch: jest.fn().mockReturnValue({
-        valueChanges: of(mockQuestionsResponse),
+        valueChanges: questionsSubject.asObservable(),
         fetchMore: fetchMoreMock,
         refetch: refetchMock,
       }),
@@ -127,11 +131,8 @@ describe('QuestionsService', () => {
         },
       };
 
-      getQuestionsGQL.watch.mockReturnValue({
-        valueChanges: of(responseWithoutNextPage),
-        fetchMore: jest.fn(),
-        refetch: jest.fn(),
-      } as any);
+      // Emit new response
+      questionsSubject.next(responseWithoutNextPage);
 
       service.questions$.subscribe(() => {
         expect(service.hasNextPage).toBe(false);
@@ -141,17 +142,6 @@ describe('QuestionsService', () => {
   });
 
   describe('Pagination', () => {
-    let fetchMoreMock: jest.Mock;
-
-    beforeEach(() => {
-      fetchMoreMock = jest.fn();
-      getQuestionsGQL.watch.mockReturnValue({
-        valueChanges: of(mockQuestionsResponse),
-        fetchMore: fetchMoreMock,
-        refetch: jest.fn(),
-      } as any);
-    });
-
     it('should fetch more questions when hasNextPage is true', (done) => {
       service.questions$.subscribe(() => {
         service.fetchMore();
@@ -178,11 +168,8 @@ describe('QuestionsService', () => {
         },
       };
 
-      getQuestionsGQL.watch.mockReturnValue({
-        valueChanges: of(responseWithoutNextPage),
-        fetchMore: fetchMoreMock,
-        refetch: jest.fn(),
-      } as any);
+      // Emit response without next page
+      questionsSubject.next(responseWithoutNextPage);
 
       service.questions$.subscribe(() => {
         service.fetchMore();
@@ -194,13 +181,6 @@ describe('QuestionsService', () => {
 
   describe('Refetch', () => {
     it('should reset cursor and refetch questions', (done) => {
-      const refetchMock = jest.fn();
-      getQuestionsGQL.watch.mockReturnValue({
-        valueChanges: of(mockQuestionsResponse),
-        fetchMore: jest.fn(),
-        refetch: refetchMock,
-      } as any);
-
       service.questions$.subscribe(() => {
         service.refetch();
 
