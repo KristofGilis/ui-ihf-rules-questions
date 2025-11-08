@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Run tests
+        run: npm test -- --coverage --silent
+
       - name: Build app (production)
         run: npm run build -- --configuration=production
 
