@@ -435,4 +435,129 @@ describe('QuizService', () => {
       expect(service.state().isTimerActive).toBe(false);
     });
   });
+
+  describe('Edge Cases and Error Handling', () => {
+    it('should return null for currentQuestion when quiz not initialized', () => {
+      expect(service.currentQuestion()).toBeNull();
+    });
+
+    it('should handle loading state from GraphQL', (done) => {
+      const queryRef = {
+        valueChanges: of({
+          data: undefined,
+          loading: true,
+          networkStatus: 1,
+        }),
+      } as any;
+
+      calculateScoreGQL.watch.mockReturnValue(queryRef);
+
+      service.initializeQuiz(mockQuestions, false);
+      service.answerCurrentQuestion(['a1']);
+
+      service.completeQuiz().subscribe((result) => {
+        expect(result.loading).toBe(true);
+        expect(result.result).toBeUndefined();
+        done();
+      });
+    });
+
+    it('should handle GraphQL response with no data', (done) => {
+      const queryRef = {
+        valueChanges: of({
+          data: undefined,
+          loading: false,
+          networkStatus: 7,
+        }),
+      } as any;
+
+      calculateScoreGQL.watch.mockReturnValue(queryRef);
+
+      service.initializeQuiz(mockQuestions, false);
+      service.answerCurrentQuestion(['a1']);
+      service.nextQuestion();
+      service.answerCurrentQuestion(['a3']);
+
+      service.completeQuiz().subscribe((result) => {
+        expect(result.loading).toBe(false);
+        expect(result.result).toEqual({
+          totalQuestions: 0,
+          correctCount: 0,
+          wrongCount: 0,
+          percentage: 0,
+          answers: [],
+        });
+        done();
+      });
+    });
+
+    it('should handle missing config when completing quiz', (done) => {
+      const queryRef = {
+        valueChanges: of({
+          data: {
+            calculateScore: {
+              totalQuestions: 2,
+              correctCount: 1,
+              wrongCount: 1,
+              percentage: 50,
+              answers: [],
+            },
+          },
+          loading: false,
+          networkStatus: 7,
+        }),
+      } as any;
+
+      calculateScoreGQL.watch.mockReturnValue(queryRef);
+
+      service.completeQuiz().subscribe(() => {
+        expect(service.results()).toEqual({
+          totalQuestions: 0,
+          correctCount: 0,
+          wrongCount: 0,
+          percentage: 0,
+          answers: [],
+        });
+        done();
+      });
+    });
+
+    it('should auto-complete quiz when timer reaches 0', (done) => {
+      const mockScoreResponse = {
+        loading: false,
+        data: {
+          calculateScore: {
+            score: 0,
+            total: 2,
+            percentage: '0',
+            wrongQuestionsIds: ['q1', 'q2'],
+            wrongAnswerIds: [],
+          },
+        },
+      };
+
+      calculateScoreGQL.watch.mockReturnValue({
+        valueChanges: of(mockScoreResponse),
+      } as any);
+
+      // Initialize with very short time (2 seconds total)
+      service.initializeQuiz(mockQuestions, true, 1);
+
+      // With 2 questions and 1 second per question, total time is 2 seconds
+      expect(service.state().timeRemaining).toBe(2);
+      expect(service.state().isTimerActive).toBe(true);
+
+      // Wait for the timer to naturally complete (2 seconds + buffer)
+      setTimeout(() => {
+        const state = service.state();
+        expect(state.timeRemaining).toBe(0);
+        expect(state.isTimerActive).toBe(false);
+
+        // The quiz completion should have been triggered
+        // Check that navigation to results was called
+        expect(router.navigate).toHaveBeenCalledWith(['/quiz/results']);
+        done();
+      }, 2500);
+    }, 10000);
+  });
 });
