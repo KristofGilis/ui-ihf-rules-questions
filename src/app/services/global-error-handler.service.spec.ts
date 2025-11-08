@@ -74,8 +74,9 @@ describe('GlobalErrorHandler', () => {
   });
 
   it('should call translateService for error messages', () => {
+    const instantSpy = jest.spyOn(translateService, 'instant');
     const error = new Error('Test');
     handler.handleError(error);
-    expect(translateService.instant).toHaveBeenCalled();
+    expect(instantSpy).toHaveBeenCalled();
   });
 });
