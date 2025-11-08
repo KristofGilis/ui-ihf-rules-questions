@@ -1,6 +1,7 @@
+import { EventEmitter } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
-import { provideTranslateService } from '@ngx-translate/core';
+import { LangChangeEvent, provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { GetVersionGQL } from '../../../graphql/generated';
 import { HomeComponent } from './home.component';
@@ -197,6 +198,45 @@ describe('HomeComponent', () => {
           timed: true,
         },
       });
+    });
+  });
+
+  describe('Language Change Handling', () => {
+    it('should refetch version when language changes', async () => {
+      // Create a new language change emitter
+      const langChangeEmitter = new EventEmitter<LangChangeEvent>();
+
+      // Create a fresh TestBed with custom TranslateService setup
+      TestBed.resetTestingModule();
+
+      await TestBed.configureTestingModule({
+        imports: [HomeComponent],
+        providers: [{ provide: GetVersionGQL, useValue: getVersionGQL }, provideTranslateService(), provideRouter([])],
+      }).compileComponents();
+
+      // Get translateService and override onLangChange BEFORE creating component
+      const translateService = TestBed.inject(TranslateService);
+      Object.defineProperty(translateService, 'onLangChange', {
+        value: langChangeEmitter,
+        writable: true,
+        configurable: true,
+      });
+
+      // NOW create the component - it will subscribe to our emitter in constructor
+      const newFixture = TestBed.createComponent(HomeComponent);
+      newFixture.detectChanges();
+
+      // Get the mock query and set up spy AFTER component creation
+      const mockQuery = getVersionGQL.watch();
+      const refetchSpy = jest.spyOn(mockQuery, 'refetch');
+
+      // Emit a language change event
+      langChangeEmitter.emit({
+        lang: 'nl',
+        translations: {},
+      });
+
+      expect(refetchSpy).toHaveBeenCalled();
     });
   });
 });
