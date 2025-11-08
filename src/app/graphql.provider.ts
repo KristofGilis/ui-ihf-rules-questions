@@ -8,7 +8,7 @@ import { Apollo, APOLLO_FLAGS, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { environment } from '../environments/environment';
 
-const APOLLO_CACHE = new InjectionToken<InMemoryCache>('apollo-cache');
+export const APOLLO_CACHE = new InjectionToken<InMemoryCache>('apollo-cache');
 
 export function apolloOptionsFactory(): ApolloClient.Options {
   const httpLink = inject(HttpLink);

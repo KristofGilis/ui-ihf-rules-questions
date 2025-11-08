@@ -64,24 +64,29 @@ describe('ScrollRestorationService', () => {
       router.url = '/page2';
       routerEventsSubject.next(new NavigationEnd(1, '/page2', '/page2'));
 
-      setTimeout(() => {
-        // Clear previous calls - page2 was scrolled to [0, 0] since it's a new page
-        viewportScroller.scrollToPosition.mockClear();
+      // Wait for first navigation's scroll restoration (2 animation frames)
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          // Clear previous calls - page2 was scrolled to [0, 0] since it's a new page
+          viewportScroller.scrollToPosition.mockClear();
 
-        // At page2, scroll down more
-        viewportScroller.getScrollPosition.mockReturnValue([0, 300]);
-        routerEventsSubject.next(new NavigationStart(2, '/page1'));
+          // At page2, scroll down more
+          viewportScroller.getScrollPosition.mockReturnValue([0, 300]);
+          routerEventsSubject.next(new NavigationStart(2, '/page1'));
 
-        // Return to page1 - should restore position 100
-        router.url = '/page1';
-        routerEventsSubject.next(new NavigationEnd(2, '/page1', '/page1'));
+          // Return to page1 - should restore position 100
+          router.url = '/page1';
+          routerEventsSubject.next(new NavigationEnd(2, '/page1', '/page1'));
 
-        // Wait for async scroll restoration
-        setTimeout(() => {
-          expect(viewportScroller.scrollToPosition).toHaveBeenCalledWith([0, 100]);
-          done();
-        }, 50);
-      }, 50);
+          // Wait for second navigation's scroll restoration (2 animation frames)
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              expect(viewportScroller.scrollToPosition).toHaveBeenCalledWith([0, 100]);
+              done();
+            });
+          });
+        });
+      });
     });
   });
 
@@ -95,20 +100,25 @@ describe('ScrollRestorationService', () => {
       // Navigate back to /page1
       routerEventsSubject.next(new NavigationEnd(2, '/page1', '/page1'));
 
-      // Wait for async scroll restoration
-      setTimeout(() => {
-        expect(viewportScroller.scrollToPosition).toHaveBeenCalledWith([0, 500]);
-        done();
-      }, 50);
+      // Wait for async scroll restoration (2 animation frames)
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          expect(viewportScroller.scrollToPosition).toHaveBeenCalledWith([0, 500]);
+          done();
+        });
+      });
     });
 
     it('should scroll to top if no saved position exists', (done) => {
       routerEventsSubject.next(new NavigationEnd(1, '/new-page', '/new-page'));
 
-      setTimeout(() => {
-        expect(viewportScroller.scrollToPosition).toHaveBeenCalledWith([0, 0]);
-        done();
-      }, 50);
+      // Wait for async scroll restoration (2 animation frames)
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          expect(viewportScroller.scrollToPosition).toHaveBeenCalledWith([0, 0]);
+          done();
+        });
+      });
     });
 
     it('should use urlAfterRedirects when available', (done) => {
@@ -121,10 +131,13 @@ describe('ScrollRestorationService', () => {
       const navEnd = new NavigationEnd(2, '/old-url', '/page1');
       routerEventsSubject.next(navEnd);
 
-      setTimeout(() => {
-        expect(viewportScroller.scrollToPosition).toHaveBeenCalledWith([0, 200]);
-        done();
-      }, 50);
+      // Wait for async scroll restoration (2 animation frames)
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          expect(viewportScroller.scrollToPosition).toHaveBeenCalledWith([0, 200]);
+          done();
+        });
+      });
     });
   });
 
@@ -150,33 +163,42 @@ describe('ScrollRestorationService', () => {
       router.url = '/page2';
       routerEventsSubject.next(new NavigationEnd(1, '/page2', '/page2'));
 
-      setTimeout(() => {
-        // Page 2 -> scroll to 200, navigate to page3
-        viewportScroller.getScrollPosition.mockReturnValue([0, 200]);
-        routerEventsSubject.next(new NavigationStart(2, '/page3'));
+      // Wait for first navigation's scroll restoration
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          // Page 2 -> scroll to 200, navigate to page3
+          viewportScroller.getScrollPosition.mockReturnValue([0, 200]);
+          routerEventsSubject.next(new NavigationStart(2, '/page3'));
 
-        // Complete navigation to page3
-        router.url = '/page3';
-        routerEventsSubject.next(new NavigationEnd(2, '/page3', '/page3'));
+          // Complete navigation to page3
+          router.url = '/page3';
+          routerEventsSubject.next(new NavigationEnd(2, '/page3', '/page3'));
 
-        setTimeout(() => {
-          // Clear previous calls before final navigation
-          viewportScroller.scrollToPosition.mockClear();
+          // Wait for second navigation's scroll restoration
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              // Page 3 -> scroll to 300, navigate back to page2
+              viewportScroller.getScrollPosition.mockReturnValue([0, 300]);
+              routerEventsSubject.next(new NavigationStart(3, '/page2'));
 
-          // Page 3 -> scroll to 300, navigate back to page2
-          viewportScroller.getScrollPosition.mockReturnValue([0, 300]);
-          routerEventsSubject.next(new NavigationStart(3, '/page2'));
+              // Clear previous calls before final navigation
+              viewportScroller.scrollToPosition.mockClear();
 
-          // Complete navigation to page2 - should restore 200
-          router.url = '/page2';
-          routerEventsSubject.next(new NavigationEnd(3, '/page2', '/page2'));
+              // Complete navigation to page2 - should restore 200
+              router.url = '/page2';
+              routerEventsSubject.next(new NavigationEnd(3, '/page2', '/page2'));
 
-          setTimeout(() => {
-            expect(viewportScroller.scrollToPosition).toHaveBeenCalledWith([0, 200]);
-            done();
-          }, 50);
-        }, 50);
-      }, 50);
+              // Wait for final navigation's scroll restoration
+              requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                  expect(viewportScroller.scrollToPosition).toHaveBeenCalledWith([0, 200]);
+                  done();
+                });
+              });
+            });
+          });
+        });
+      });
     });
   });
 
@@ -190,22 +212,28 @@ describe('ScrollRestorationService', () => {
       router.url = '/other';
       routerEventsSubject.next(new NavigationEnd(1, '/other', '/other'));
 
-      setTimeout(() => {
-        // Clear previous scrollToPosition calls from navigation to /other
-        viewportScroller.scrollToPosition.mockClear();
+      // Wait for first navigation's scroll restoration
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          // Clear previous scrollToPosition calls from navigation to /other
+          viewportScroller.scrollToPosition.mockClear();
 
-        // Navigate back to /wide-page
-        viewportScroller.getScrollPosition.mockReturnValue([0, 0]);
-        routerEventsSubject.next(new NavigationStart(2, '/wide-page'));
+          // Navigate back to /wide-page
+          viewportScroller.getScrollPosition.mockReturnValue([0, 0]);
+          routerEventsSubject.next(new NavigationStart(2, '/wide-page'));
 
-        router.url = '/wide-page';
-        routerEventsSubject.next(new NavigationEnd(2, '/wide-page', '/wide-page'));
+          router.url = '/wide-page';
+          routerEventsSubject.next(new NavigationEnd(2, '/wide-page', '/wide-page'));
 
-        setTimeout(() => {
-          expect(viewportScroller.scrollToPosition).toHaveBeenCalledWith([150, 250]);
-          done();
-        }, 50);
-      }, 50);
+          // Wait for second navigation's scroll restoration
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              expect(viewportScroller.scrollToPosition).toHaveBeenCalledWith([150, 250]);
+              done();
+            });
+          });
+        });
+      });
     });
   });
 });

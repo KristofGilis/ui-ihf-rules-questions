@@ -12,7 +12,7 @@ const config: Config = {
     '!src/**/*.spec.ts',
     '!src/main.ts',
     '!src/environments/**',
-    '!src/**/*.module.ts',
+    '!src/**/*.routes.ts',
   ],
   moduleNameMapper: {
     '^@app/(.*)$': '<rootDir>/src/app/$1',
