@@ -180,14 +180,22 @@ describe('ScrollRestorationService', () => {
       viewportScroller.getScrollPosition.mockReturnValue([150, 250]);
       routerEventsSubject.next(new NavigationStart(1, '/other'));
 
+      // Complete navigation to /other
       router.url = '/other';
-      routerEventsSubject.next(new NavigationStart(2, '/wide-page'));
-
-      routerEventsSubject.next(new NavigationEnd(3, '/wide-page', '/wide-page'));
+      routerEventsSubject.next(new NavigationEnd(1, '/other', '/other'));
 
       setTimeout(() => {
-        expect(viewportScroller.scrollToPosition).toHaveBeenCalledWith([150, 250]);
-        done();
+        // Navigate back to /wide-page
+        viewportScroller.getScrollPosition.mockReturnValue([0, 0]);
+        routerEventsSubject.next(new NavigationStart(2, '/wide-page'));
+
+        router.url = '/wide-page';
+        routerEventsSubject.next(new NavigationEnd(2, '/wide-page', '/wide-page'));
+
+        setTimeout(() => {
+          expect(viewportScroller.scrollToPosition).toHaveBeenCalledWith([150, 250]);
+          done();
+        }, 50);
       }, 50);
     });
   });
