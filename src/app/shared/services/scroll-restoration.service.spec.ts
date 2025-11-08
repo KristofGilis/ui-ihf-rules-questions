@@ -65,12 +65,12 @@ describe('ScrollRestorationService', () => {
       routerEventsSubject.next(new NavigationEnd(1, '/page2', '/page2'));
 
       setTimeout(() => {
-        // Navigate to page2 and scroll
+        // At page2, scroll down more
         viewportScroller.getScrollPosition.mockReturnValue([0, 300]);
-        routerEventsSubject.next(new NavigationStart(2, '/page3'));
+        routerEventsSubject.next(new NavigationStart(2, '/page1'));
 
         // Return to page1 - should restore position 100
-        router.url = '/page3';
+        router.url = '/page1';
         routerEventsSubject.next(new NavigationEnd(2, '/page1', '/page1'));
 
         // Wait for async scroll restoration
