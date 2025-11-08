@@ -54,6 +54,7 @@
               }
             ],
             "styles": ["src/styles.css"],
+            "allowedCommonJsDependencies": ["hammerjs"],
             "scripts": [],
             "optimization": {
               "fonts": false

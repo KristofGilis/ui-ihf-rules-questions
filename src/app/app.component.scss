@@ -1,5 +1,9 @@
 footer a.active-nav {
-  color: #06b6d4;
+  color: #0e7490; /* cyan-700 for better contrast (WCAG AA compliant) */
+}
+
+footer a.active-nav:is(.dark *) {
+  color: #22d3ee; /* cyan-400 for dark mode */
 }
 
 .language-dropdown button.bg-cyan-500,

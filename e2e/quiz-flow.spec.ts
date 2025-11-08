@@ -14,8 +14,8 @@ test.describe('Quiz Flow', () => {
     // Verify home page loaded
     await expect(page).toHaveTitle(/IHF Rules Quiz/);
 
-    // Click on quiz setup button
-    await page.getByRole('link', { name: /quiz/i }).click();
+    // Click on quiz setup button (in footer navigation)
+    await page.locator('footer a[routerLink="/quiz"]').click();
 
     // Verify we're on quiz setup page
     await expect(page).toHaveURL(/\/quiz/);
@@ -46,8 +46,8 @@ test.describe('Quiz Flow', () => {
   test('should navigate to questions page', async ({ page }) => {
     await page.goto('/');
 
-    // Click on questions link
-    await page.getByRole('link', { name: /questions/i }).click();
+    // Click on questions link (in footer navigation)
+    await page.locator('footer a[routerLink="/questions"]').click();
 
     // Verify we're on questions page
     await expect(page).toHaveURL(/\/questions/);
@@ -59,8 +59,8 @@ test.describe('Quiz Flow', () => {
   test('should navigate to rules page', async ({ page }) => {
     await page.goto('/');
 
-    // Click on rules link
-    await page.getByRole('link', { name: /rules/i }).click();
+    // Click on rules link (in footer navigation)
+    await page.locator('footer a[routerLink="/rules"]').click();
 
     // Verify we're on rules page
     await expect(page).toHaveURL(/\/rules/);
@@ -76,8 +76,8 @@ test.describe('Quiz Flow', () => {
     const main = page.locator('main');
     await expect(main).toBeVisible();
 
-    // Check for navigation
-    const nav = page.locator('nav');
+    // Check for navigation (header navigation specifically)
+    const nav = page.locator('header nav[role="navigation"]');
     await expect(nav).toBeVisible();
 
     // Verify keyboard navigation works
@@ -94,6 +94,11 @@ test.describe('Quiz Flow', () => {
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
       .analyze();
 
+    // Log violations for debugging
+    if (accessibilityScanResults.violations.length > 0) {
+      console.log('Accessibility violations:', JSON.stringify(accessibilityScanResults.violations, null, 2));
+    }
+
     expect(accessibilityScanResults.violations).toEqual([]);
   });
 
@@ -103,6 +108,11 @@ test.describe('Quiz Flow', () => {
     // Run axe on quiz setup page
     const accessibilityScanResults = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
 
+    // Log violations for debugging
+    if (accessibilityScanResults.violations.length > 0) {
+      console.log('Quiz page accessibility violations:', JSON.stringify(accessibilityScanResults.violations, null, 2));
+    }
+
     expect(accessibilityScanResults.violations).toEqual([]);
   });
 
@@ -111,6 +121,14 @@ test.describe('Quiz Flow', () => {
 
     // Run axe on questions page
     const accessibilityScanResults = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+
+    // Log violations for debugging
+    if (accessibilityScanResults.violations.length > 0) {
+      console.log(
+        'Questions page accessibility violations:',
+        JSON.stringify(accessibilityScanResults.violations, null, 2)
+      );
+    }
 
     expect(accessibilityScanResults.violations).toEqual([]);
   });
