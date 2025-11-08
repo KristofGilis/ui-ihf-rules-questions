@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { provideTranslateService } from '@ngx-translate/core';
-import { of } from 'rxjs';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
+import { of, Subject } from 'rxjs';
 import { Rule } from '../../../graphql/generated';
 import { RulesComponent } from './rules.component';
 import { RulesService } from './services/rules.service';
@@ -10,6 +10,8 @@ describe('RulesComponent', () => {
   let component: RulesComponent;
   let fixture: ComponentFixture<RulesComponent>;
   let rulesService: jest.Mocked<RulesService>;
+  let translateService: TranslateService;
+  let langChangeSubject: Subject<any>;
 
   const mockRules: Rule[] = [
     {
@@ -25,6 +27,8 @@ describe('RulesComponent', () => {
   ];
 
   beforeEach(async () => {
+    langChangeSubject = new Subject();
+
     const rulesServiceMock = {
       loading$: of(false),
       rules$: of({
@@ -45,6 +49,9 @@ describe('RulesComponent', () => {
       imports: [RulesComponent],
       providers: [provideTranslateService(), provideRouter([]), { provide: RulesService, useValue: rulesServiceMock }],
     }).compileComponents();
+
+    translateService = TestBed.inject(TranslateService);
+    jest.spyOn(translateService, 'onLangChange', 'get').mockReturnValue(langChangeSubject.asObservable());
 
     rulesService = TestBed.inject(RulesService) as jest.Mocked<RulesService>;
     fixture = TestBed.createComponent(RulesComponent);
@@ -78,6 +85,24 @@ describe('RulesComponent', () => {
         expect(rules.every((rule) => rule.id && rule.number)).toBe(true);
         done();
       });
+    });
+  });
+
+  describe('Language Change', () => {
+    it('should refetch rules when language changes', () => {
+      expect(rulesService.refetch).not.toHaveBeenCalled();
+
+      langChangeSubject.next({ lang: 'nl', translations: {} });
+
+      expect(rulesService.refetch).toHaveBeenCalledTimes(1);
+    });
+
+    it('should refetch rules on multiple language changes', () => {
+      langChangeSubject.next({ lang: 'nl', translations: {} });
+      langChangeSubject.next({ lang: 'en', translations: {} });
+      langChangeSubject.next({ lang: 'srb', translations: {} });
+
+      expect(rulesService.refetch).toHaveBeenCalledTimes(3);
     });
   });
 });
