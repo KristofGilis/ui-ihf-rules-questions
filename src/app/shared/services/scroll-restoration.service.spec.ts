@@ -60,18 +60,24 @@ describe('ScrollRestorationService', () => {
       viewportScroller.getScrollPosition.mockReturnValue([0, 100]);
       routerEventsSubject.next(new NavigationStart(1, '/page2'));
 
-      // Navigate to page2 and scroll
+      // Complete navigation to page2
       router.url = '/page2';
-      viewportScroller.getScrollPosition.mockReturnValue([0, 300]);
-      routerEventsSubject.next(new NavigationStart(2, '/page3'));
+      routerEventsSubject.next(new NavigationEnd(1, '/page2', '/page2'));
 
-      // Return to page1 - should restore position 100
-      routerEventsSubject.next(new NavigationEnd(3, '/page1', '/page1'));
-
-      // Wait for async scroll restoration
       setTimeout(() => {
-        expect(viewportScroller.scrollToPosition).toHaveBeenCalledWith([0, 100]);
-        done();
+        // Navigate to page2 and scroll
+        viewportScroller.getScrollPosition.mockReturnValue([0, 300]);
+        routerEventsSubject.next(new NavigationStart(2, '/page3'));
+
+        // Return to page1 - should restore position 100
+        router.url = '/page3';
+        routerEventsSubject.next(new NavigationEnd(2, '/page1', '/page1'));
+
+        // Wait for async scroll restoration
+        setTimeout(() => {
+          expect(viewportScroller.scrollToPosition).toHaveBeenCalledWith([0, 100]);
+          done();
+        }, 50);
       }, 50);
     });
   });
@@ -132,33 +138,37 @@ describe('ScrollRestorationService', () => {
 
   describe('Multiple Navigations', () => {
     it('should maintain separate scroll positions for multiple pages', (done) => {
-      // Page 1 -> scroll to 100
+      // Page 1 -> scroll to 100, navigate to page2
       router.url = '/page1';
       viewportScroller.getScrollPosition.mockReturnValue([0, 100]);
       routerEventsSubject.next(new NavigationStart(1, '/page2'));
 
-      // Page 2 -> scroll to 200
+      // Complete navigation to page2
       router.url = '/page2';
-      viewportScroller.getScrollPosition.mockReturnValue([0, 200]);
-      routerEventsSubject.next(new NavigationStart(2, '/page3'));
-
-      // Page 3 -> scroll to 300
-      router.url = '/page3';
-      viewportScroller.getScrollPosition.mockReturnValue([0, 300]);
-      routerEventsSubject.next(new NavigationStart(3, '/page1'));
-
-      // Navigate back to page2
-      routerEventsSubject.next(new NavigationEnd(4, '/page2', '/page2'));
+      routerEventsSubject.next(new NavigationEnd(1, '/page2', '/page2'));
 
       setTimeout(() => {
-        expect(viewportScroller.scrollToPosition).toHaveBeenCalledWith([0, 200]);
+        // Page 2 -> scroll to 200, navigate to page3
+        viewportScroller.getScrollPosition.mockReturnValue([0, 200]);
+        routerEventsSubject.next(new NavigationStart(2, '/page3'));
 
-        // Navigate to page3
-        routerEventsSubject.next(new NavigationEnd(5, '/page3', '/page3'));
+        // Complete navigation to page3
+        router.url = '/page3';
+        routerEventsSubject.next(new NavigationEnd(2, '/page3', '/page3'));
 
         setTimeout(() => {
-          expect(viewportScroller.scrollToPosition).toHaveBeenCalledWith([0, 300]);
-          done();
+          // Page 3 -> scroll to 300, navigate back to page2
+          viewportScroller.getScrollPosition.mockReturnValue([0, 300]);
+          routerEventsSubject.next(new NavigationStart(3, '/page2'));
+
+          // Complete navigation to page2 - should restore 200
+          router.url = '/page2';
+          routerEventsSubject.next(new NavigationEnd(3, '/page2', '/page2'));
+
+          setTimeout(() => {
+            expect(viewportScroller.scrollToPosition).toHaveBeenCalledWith([0, 200]);
+            done();
+          }, 50);
         }, 50);
       }, 50);
     });

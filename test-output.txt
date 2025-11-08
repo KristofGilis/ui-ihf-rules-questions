@@ -1,4 +1,0 @@
-
-> ui-ihf-rules-questions@0.0.0 test
-> jest
-
