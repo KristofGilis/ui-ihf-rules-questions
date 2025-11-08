@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft, faArrowRight, faCheck, faClock } from '@fortawesome/free-solid-svg-icons';
@@ -105,6 +105,63 @@ export class QuizComponent {
 
   formatTime(seconds: number): string {
     return this.quizService.formatTime(seconds);
+  }
+
+  /**
+   * Keyboard shortcuts for quiz navigation
+   * Arrow Left: Previous question
+   * Arrow Right: Next question
+   * Enter: Complete quiz (if on last question)
+   */
+  @HostListener('document:keydown.arrowleft', ['$event'])
+  onArrowLeft(event: Event) {
+    const keyEvent = event as KeyboardEvent;
+    // Only handle if not in an input field
+    if (this.isInputElement(keyEvent.target)) return;
+
+    if (this.quizService.canGoPrevious()) {
+      keyEvent.preventDefault();
+      this.goToPrevious();
+    }
+  }
+
+  @HostListener('document:keydown.arrowright', ['$event'])
+  onArrowRight(event: Event) {
+    const keyEvent = event as KeyboardEvent;
+    // Only handle if not in an input field
+    if (this.isInputElement(keyEvent.target)) return;
+
+    if (this.quizService.canGoNext()) {
+      keyEvent.preventDefault();
+      this.goToNext();
+    }
+  }
+
+  @HostListener('document:keydown.enter', ['$event'])
+  onEnter(event: Event) {
+    const keyEvent = event as KeyboardEvent;
+    // Only handle if not in an input/button/link
+    if (this.isInteractiveElement(keyEvent.target)) return;
+
+    if (!this.quizService.canGoNext()) {
+      keyEvent.preventDefault();
+      this.completeQuiz();
+    }
+  }
+
+  private isInputElement(target: EventTarget | null): boolean {
+    const element = target as HTMLElement;
+    return element?.tagName === 'INPUT' || element?.tagName === 'TEXTAREA';
+  }
+
+  private isInteractiveElement(target: EventTarget | null): boolean {
+    const element = target as HTMLElement;
+    return (
+      element?.tagName === 'INPUT' ||
+      element?.tagName === 'TEXTAREA' ||
+      element?.tagName === 'BUTTON' ||
+      element?.tagName === 'A'
+    );
   }
 
   private loadCurrentAnswers() {
