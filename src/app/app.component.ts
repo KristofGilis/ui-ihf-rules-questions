@@ -1,5 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, HostListener, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Title } from '@angular/platform-browser';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { ActionSheet } from '@capacitor/action-sheet';
 import { Capacitor } from '@capacitor/core';
@@ -29,6 +31,7 @@ export class AppComponent {
   private readonly _translateService = inject(TranslateService);
   private readonly _document = inject(DOCUMENT);
   private readonly _themeService = inject(ThemeService);
+  private readonly _titleService = inject(Title);
 
   // Constants
   private readonly LANGUAGES = ['en', 'nl', 'srb'] as const;
@@ -67,6 +70,11 @@ export class AppComponent {
   constructor() {
     this._translateService.addLangs([...this.LANGUAGES]);
     this._translateService.use(this.currentLang());
+
+    this._translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => {
+      // Update document title on language change
+      this._titleService.setTitle(this._translateService.instant('main.title'));
+    });
   }
 
   onChangeLanguage(lang: string): void {
