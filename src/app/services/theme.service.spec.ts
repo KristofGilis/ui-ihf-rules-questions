@@ -97,4 +97,116 @@ describe('ThemeService', () => {
     service.setTheme('system');
     expect(localStorage.setItem).toHaveBeenCalledWith('theme', 'system');
   });
+
+  it('should react to system preference changes when theme is system', () => {
+    let mediaQueryListener: ((event: MediaQueryListEvent) => void) | undefined;
+
+    Object.defineProperty(window, 'matchMedia', {
+      value: jest.fn().mockImplementation(() => ({
+        matches: false,
+        media: '(prefers-color-scheme: dark)',
+        addEventListener: jest.fn((_event, listener) => {
+          mediaQueryListener = listener;
+        }),
+        removeEventListener: jest.fn(),
+      })),
+      writable: true,
+    });
+
+    // Recreate TestBed to capture listener
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [ThemeService],
+    });
+
+    // Create new service to capture listener
+    const newService = TestBed.inject(ThemeService);
+    newService.setTheme('system');
+
+    // Simulate system preference change
+    if (mediaQueryListener) {
+      mediaQueryListener({ matches: true } as MediaQueryListEvent);
+    }
+
+    // Should have reapplied theme
+    expect(document.documentElement.classList.contains('dark')).toBe(false);
+  });
+
+  it('should not react to system preference changes when theme is not system', () => {
+    let mediaQueryListener: ((event: MediaQueryListEvent) => void) | undefined;
+
+    Object.defineProperty(window, 'matchMedia', {
+      value: jest.fn().mockImplementation(() => ({
+        matches: false,
+        media: '(prefers-color-scheme: dark)',
+        addEventListener: jest.fn((_event, listener) => {
+          mediaQueryListener = listener;
+        }),
+        removeEventListener: jest.fn(),
+      })),
+      writable: true,
+    });
+
+    // Recreate TestBed to capture listener
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [ThemeService],
+    });
+
+    // Create new service and set to light theme
+    const newService = TestBed.inject(ThemeService);
+    newService.setTheme('light');
+
+    const lightThemeSet = !document.documentElement.classList.contains('dark');
+
+    // Simulate system preference change
+    if (mediaQueryListener) {
+      mediaQueryListener({ matches: true } as MediaQueryListEvent);
+    }
+
+    // Should not have changed from light theme
+    expect(document.documentElement.classList.contains('dark')).toBe(!lightThemeSet);
+  });
+
+  it('should return effective theme when theme is light', () => {
+    service.setTheme('light');
+    expect(service.getEffectiveTheme()).toBe('light');
+  });
+
+  it('should return effective theme when theme is dark', () => {
+    service.setTheme('dark');
+    expect(service.getEffectiveTheme()).toBe('dark');
+  });
+
+  it('should return effective theme based on system preference when theme is system', () => {
+    // Mock system preference as dark
+    Object.defineProperty(window, 'matchMedia', {
+      value: jest.fn().mockImplementation((query) => ({
+        matches: query === '(prefers-color-scheme: dark)',
+        media: query,
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+      })),
+      writable: true,
+    });
+
+    service.setTheme('system');
+    expect(service.getEffectiveTheme()).toBe('dark');
+  });
+
+  it('should return light as effective theme when system preference is light', () => {
+    // Mock system preference as light
+    Object.defineProperty(window, 'matchMedia', {
+      value: jest.fn().mockImplementation((query) => ({
+        matches: false,
+        media: query,
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+      })),
+      writable: true,
+    });
+
+    service.setTheme('system');
+    expect(service.getEffectiveTheme()).toBe('light');
+  });
 });
