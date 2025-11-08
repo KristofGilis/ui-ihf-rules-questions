@@ -65,6 +65,9 @@ describe('ScrollRestorationService', () => {
       routerEventsSubject.next(new NavigationEnd(1, '/page2', '/page2'));
 
       setTimeout(() => {
+        // Clear previous calls - page2 was scrolled to [0, 0] since it's a new page
+        viewportScroller.scrollToPosition.mockClear();
+
         // At page2, scroll down more
         viewportScroller.getScrollPosition.mockReturnValue([0, 300]);
         routerEventsSubject.next(new NavigationStart(2, '/page1'));
