@@ -160,6 +160,9 @@ describe('ScrollRestorationService', () => {
         routerEventsSubject.next(new NavigationEnd(2, '/page3', '/page3'));
 
         setTimeout(() => {
+          // Clear previous calls before final navigation
+          viewportScroller.scrollToPosition.mockClear();
+
           // Page 3 -> scroll to 300, navigate back to page2
           viewportScroller.getScrollPosition.mockReturnValue([0, 300]);
           routerEventsSubject.next(new NavigationStart(3, '/page2'));
@@ -188,6 +191,9 @@ describe('ScrollRestorationService', () => {
       routerEventsSubject.next(new NavigationEnd(1, '/other', '/other'));
 
       setTimeout(() => {
+        // Clear previous scrollToPosition calls from navigation to /other
+        viewportScroller.scrollToPosition.mockClear();
+
         // Navigate back to /wide-page
         viewportScroller.getScrollPosition.mockReturnValue([0, 0]);
         routerEventsSubject.next(new NavigationStart(2, '/wide-page'));
