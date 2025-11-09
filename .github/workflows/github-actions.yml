@@ -78,6 +78,15 @@ jobs:
           name: dist
           path: ${{ github.workspace }}/dist
 
+      - name: Debug artifact structure
+        run: |
+          echo "=== Workspace structure ==="
+          ls -la ${{ github.workspace }}
+          echo "=== Dist structure ==="
+          ls -la ${{ github.workspace }}/dist
+          echo "=== Looking for browser folder ==="
+          find ${{ github.workspace }}/dist -name "browser" -type d
+
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
 
