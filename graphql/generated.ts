@@ -461,7 +461,7 @@ export const CalculateScoreDocument = gql`
     providedIn: 'root'
   })
   export class CalculateScoreGQL extends Apollo.Query<CalculateScoreQuery, CalculateScoreQueryVariables> {
-    document = CalculateScoreDocument;
+    override document = CalculateScoreDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -497,7 +497,7 @@ export const GetQuestionsDocument = gql`
     providedIn: 'root'
   })
   export class GetQuestionsGQL extends Apollo.Query<GetQuestionsQuery, GetQuestionsQueryVariables> {
-    document = GetQuestionsDocument;
+    override document = GetQuestionsDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -538,7 +538,7 @@ export const GetRuleDocument = gql`
     providedIn: 'root'
   })
   export class GetRuleGQL extends Apollo.Query<GetRuleQuery, GetRuleQueryVariables> {
-    document = GetRuleDocument;
+    override document = GetRuleDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -566,7 +566,7 @@ export const GetRulesDocument = gql`
     providedIn: 'root'
   })
   export class GetRulesGQL extends Apollo.Query<GetRulesQuery, GetRulesQueryVariables> {
-    document = GetRulesDocument;
+    override document = GetRulesDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -582,7 +582,7 @@ export const GetVersionDocument = gql`
     providedIn: 'root'
   })
   export class GetVersionGQL extends Apollo.Query<GetVersionQuery, GetVersionQueryVariables> {
-    document = GetVersionDocument;
+    override document = GetVersionDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

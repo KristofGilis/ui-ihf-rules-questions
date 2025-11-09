@@ -10,6 +10,7 @@ const config: CodegenConfig = {
         scalars: {
           UUID: 'string',
         },
+        addExplicitOverride: true,
       },
     },
   },
