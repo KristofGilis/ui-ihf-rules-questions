@@ -86,13 +86,16 @@
                   "minify": true,
                   "inlineCritical": true
                 },
-                "fonts": true
+                "fonts": {
+                  "inline": false
+                }
               },
               "sourceMap": {
-                "scripts": true,
+                "scripts": false,
                 "styles": false,
                 "vendor": false
-              }
+              },
+              "progress": false
             },
             "development": {
               "optimization": false,
