@@ -78,15 +78,6 @@ jobs:
           name: dist
           path: ${{ github.workspace }}/dist
 
-      - name: Debug artifact structure
-        run: |
-          echo "=== Workspace structure ==="
-          ls -la ${{ github.workspace }}
-          echo "=== Dist structure ==="
-          ls -la ${{ github.workspace }}/dist
-          echo "=== Looking for browser folder ==="
-          find ${{ github.workspace }}/dist -name "browser" -type d
-
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
 
@@ -97,7 +88,7 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          cd dist/ui-ihf-rules-questions/browser
+          cd dist/browser
           PREVIEW_URL=$(vercel deploy --token=$VERCEL_TOKEN --scope=$VERCEL_ORG_ID --yes)
           echo "preview-url=$PREVIEW_URL" >> $GITHUB_OUTPUT
 
@@ -190,6 +181,6 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: ${{ github.workspace }}/dist/ui-ihf-rules-questions/browser
+          package: ${{ github.workspace }}/dist/browser
           clean: true
           startup-command: pm2 serve /home/site/wwwroot --no-daemon --spa
