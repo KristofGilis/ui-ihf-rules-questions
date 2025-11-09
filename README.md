@@ -68,7 +68,7 @@ src/app/
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ and npm
+- Node.js 22+ and npm
 - Angular CLI 20+ (optional, but recommended)
 
 ### Installation
