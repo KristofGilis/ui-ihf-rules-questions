@@ -93,10 +93,8 @@ jobs:
           # Create .vercelignore to prevent source file detection
           echo "**/node_modules" > .vercelignore
           echo "**/.git" >> .vercelignore
-          # Link to existing Vercel project
-          vercel link --yes --token=${{ secrets.VERCEL_TOKEN }}
-          # Deploy to preview (not production)
-          PREVIEW_URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --target=preview)
+          # Deploy to preview without linking
+          PREVIEW_URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }} --yes)
           echo "preview-url=$PREVIEW_URL" >> $GITHUB_OUTPUT
 
       - name: Comment PR with preview URL
