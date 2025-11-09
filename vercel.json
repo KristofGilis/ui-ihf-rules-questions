@@ -4,9 +4,10 @@
   "github": {
     "enabled": false
   },
-  "buildCommand": null,
+  "buildCommand": "",
+  "outputDirectory": ".",
   "devCommand": null,
-  "installCommand": null,
+  "installCommand": "",
   "framework": null,
   "rewrites": [
     {
