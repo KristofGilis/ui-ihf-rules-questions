@@ -59,50 +59,45 @@ jobs:
           name: dist
           path: dist/ui-ihf-rules-questions
 
-  # Preview deployment for pull requests
+  # Preview deployment for pull requests (Vercel - Free)
   preview:
     needs: build
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     permissions:
-      id-token: write
       contents: read
       pull-requests: write
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
       - name: Download build artifact
         uses: actions/download-artifact@v6
         with:
           name: dist
           path: ${{ github.workspace }}/dist
 
-      - name: Azure Login
-        uses: azure/login@v2
+      - name: Deploy to Vercel
+        id: deploy-vercel
+        uses: amondnet/vercel-action@v25
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Deploy to Azure Web App Preview Slot
-        id: deploy-preview
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          slot-name: pr-${{ github.event.pull_request.number }}
-          package: ${{ github.workspace }}/dist/ui-ihf-rules-questions/browser
-          clean: true
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./dist/ui-ihf-rules-questions/browser
+          scope: ${{ secrets.VERCEL_ORG_ID }}
 
       - name: Comment PR with preview URL
         uses: actions/github-script@v7
         with:
           script: |
-            const prNumber = context.payload.pull_request.number;
-            const previewUrl = `https://${{ env.AZURE_WEBAPP_NAME }}-pr-${prNumber}.azurewebsites.net`;
+            const previewUrl = '${{ steps.deploy-vercel.outputs.preview-url }}';
             
             github.rest.issues.createComment({
-              issue_number: prNumber,
+              issue_number: context.payload.pull_request.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `🚀 Preview deployment ready!\n\n📱 **Preview URL**: ${previewUrl}\n\n_This preview will be automatically deleted when the PR is closed._`
+              body: `🚀 Preview deployment ready!\n\n📱 **Preview URL**: ${previewUrl}\n\n✨ Deployed with Vercel (free tier)\n\n_This preview will be automatically deleted when the PR is closed._`
             });
 
   deploy:
