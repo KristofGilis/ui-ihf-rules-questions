@@ -88,7 +88,7 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           slot-name: pr-${{ github.event.pull_request.number }}
-          package: ${{ github.workspace }}/dist/browser
+          package: ${{ github.workspace }}/dist/ui-ihf-rules-questions/browser
           clean: true
 
       - name: Comment PR with preview URL
@@ -130,6 +130,6 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: ${{ github.workspace }}/dist/browser
+          package: ${{ github.workspace }}/dist/ui-ihf-rules-questions/browser
           clean: true
           startup-command: pm2 serve /home/site/wwwroot --no-daemon --spa
