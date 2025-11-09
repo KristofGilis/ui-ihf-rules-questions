@@ -102,13 +102,37 @@ jobs:
         with:
           script: |
             const previewUrl = '${{ steps.deploy-vercel.outputs.preview-url }}';
+            const commentBody = `🚀 Preview deployment ready!\n\n📱 **Preview URL**: ${previewUrl}\n\n✨ Deployed with Vercel (free tier)\n\n_This preview will be automatically deleted when the PR is closed._`;
             
-            github.rest.issues.createComment({
+            // Find existing comment
+            const comments = await github.rest.issues.listComments({
               issue_number: context.payload.pull_request.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `🚀 Preview deployment ready!\n\n📱 **Preview URL**: ${previewUrl}\n\n✨ Deployed with Vercel (free tier)\n\n_This preview will be automatically deleted when the PR is closed._`
             });
+            
+            const botComment = comments.data.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('🚀 Preview deployment ready!')
+            );
+            
+            if (botComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: commentBody
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                issue_number: context.payload.pull_request.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: commentBody
+              });
+            }
 
   cleanup-preview:
     runs-on: ubuntu-latest
