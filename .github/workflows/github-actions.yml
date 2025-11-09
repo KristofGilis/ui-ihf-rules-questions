@@ -88,6 +88,11 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           cd dist/browser
+          # Copy vercel.json to deployment directory
+          cp ../../vercel.json .
+          # Create .vercelignore to prevent source file detection
+          echo "**/node_modules" > .vercelignore
+          echo "**/.git" >> .vercelignore
           # Link to existing Vercel project
           vercel link --yes --token=${{ secrets.VERCEL_TOKEN }}
           # Deploy to preview (not production)
