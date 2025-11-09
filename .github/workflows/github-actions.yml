@@ -78,15 +78,19 @@ jobs:
           name: dist
           path: ${{ github.workspace }}/dist
 
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
       - name: Deploy to Vercel
         id: deploy-vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: ./dist/ui-ihf-rules-questions/browser
-          scope: ${{ secrets.VERCEL_ORG_ID }}
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          cd dist/ui-ihf-rules-questions/browser
+          PREVIEW_URL=$(vercel deploy --token=$VERCEL_TOKEN --scope=$VERCEL_ORG_ID --yes)
+          echo "preview-url=$PREVIEW_URL" >> $GITHUB_OUTPUT
 
       - name: Comment PR with preview URL
         uses: actions/github-script@v7
