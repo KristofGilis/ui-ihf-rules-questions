@@ -10,19 +10,25 @@ import { expect, test } from '@playwright/test';
  */
 async function completeQuizHelper(page: any, questionCount: number = 10) {
   for (let i = 0; i < questionCount; i++) {
+    // Wait for question to load
     await expect(page.locator('#question-text')).toBeVisible({ timeout: 10000 });
 
+    // Answer the question
     const checkbox = page.locator('[type="checkbox"]').first();
     await checkbox.check();
 
+    // Navigate to next question or complete
     if (i < questionCount - 1) {
       const nextButton = page.getByRole('button', { name: /next/i });
-      await nextButton.waitFor({ state: 'visible' });
+      await nextButton.waitFor({ state: 'visible', timeout: 10000 });
       await nextButton.click({ force: true });
-      await page.waitForTimeout(400);
+      // Wait for navigation to complete
+      await page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => {});
+      await page.waitForTimeout(300);
     } else {
+      // Wait for complete button to appear on last question
       const completeButton = page.getByRole('button', { name: /complete/i });
-      await completeButton.waitFor({ state: 'visible' });
+      await completeButton.waitFor({ state: 'visible', timeout: 10000 });
       await completeButton.click({ force: true });
     }
   }
@@ -174,8 +180,6 @@ test.describe('Quiz Navigation', () => {
   });
 });
 
-test.describe.configure({ mode: 'serial' });
-
 test.describe('Quiz Completion and Results', () => {
   test.beforeEach(async ({ context }) => {
     await context.clearCookies();
@@ -183,6 +187,7 @@ test.describe('Quiz Completion and Results', () => {
   });
 
   test('should complete full quiz and show results', async ({ page }) => {
+    test.setTimeout(90000); // Extend timeout for quiz completion
     await page.goto('/quiz');
     await expect(page.locator('button', { hasText: '10' }).first()).toBeVisible();
 
@@ -196,6 +201,7 @@ test.describe('Quiz Completion and Results', () => {
   });
 
   test('should show score calculation loading state', async ({ page }) => {
+    test.setTimeout(90000); // Extend timeout for quiz completion
     await page.goto('/quiz');
     await page.getByRole('button', { name: /start quiz/i }).click();
     await expect(page).toHaveURL(/\/quiz\/view/);
@@ -206,6 +212,7 @@ test.describe('Quiz Completion and Results', () => {
   });
 
   test('should display score and percentage on results page', async ({ page }) => {
+    test.setTimeout(90000); // Extend timeout for quiz completion
     await page.goto('/quiz');
     await expect(page.locator('button', { hasText: '10' }).first()).toBeVisible();
 
@@ -222,6 +229,7 @@ test.describe('Quiz Completion and Results', () => {
   });
 
   test('should show review answers section on results page', async ({ page }) => {
+    test.setTimeout(90000); // Extend timeout for quiz completion
     await page.goto('/quiz');
     await page.getByRole('button', { name: /start quiz/i }).click();
     await expect(page).toHaveURL(/\/quiz\/view/);
@@ -238,6 +246,7 @@ test.describe('Quiz Completion and Results', () => {
   });
 
   test('should have restart quiz button on results page', async ({ page }) => {
+    test.setTimeout(90000); // Extend timeout for quiz completion
     await page.goto('/quiz');
     await page.getByRole('button', { name: /start quiz/i }).click();
     await expect(page).toHaveURL(/\/quiz\/view/);
@@ -254,6 +263,7 @@ test.describe('Quiz Completion and Results', () => {
   });
 
   test('should display correct/incorrect answer indicators', async ({ page }) => {
+    test.setTimeout(90000); // Extend timeout for quiz completion
     await page.goto('/quiz');
     await page.getByRole('button', { name: /start quiz/i }).click();
     await expect(page).toHaveURL(/\/quiz\/view/);

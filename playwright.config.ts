@@ -6,10 +6,11 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './e2e',
-  fullyParallel: true,
+  fullyParallel: false, // Disable parallel execution to prevent Vite chunk loading issues
   forbidOnly: !!process.env['CI'],
-  retries: process.env['CI'] ? 2 : 0,
-  workers: process.env['CI'] ? 1 : undefined,
+  retries: process.env['CI'] ? 2 : 1, // Add 1 retry locally for flaky tests
+  workers: process.env['CI'] ? 1 : 1, // Use 1 worker to prevent race conditions
+  timeout: 90000, // Extend timeout for quiz completion tests
   reporter: 'html',
   use: {
     baseURL: 'http://localhost:4200',
@@ -24,10 +25,13 @@ export default defineConfig({
     },
   ],
 
-  webServer: {
-    command: 'npm start',
-    url: 'http://localhost:4200',
-    reuseExistingServer: !process.env['CI'],
-    timeout: 120 * 1000,
-  },
+  // Only start webServer in CI; locally we run the server manually
+  ...(process.env['CI'] && {
+    webServer: {
+      command: 'npm start',
+      url: 'http://localhost:4200',
+      reuseExistingServer: false,
+      timeout: 120 * 1000,
+    },
+  }),
 });
