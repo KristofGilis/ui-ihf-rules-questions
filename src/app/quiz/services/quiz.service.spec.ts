@@ -65,6 +65,11 @@ describe('QuizService', () => {
       navigate: jest.fn(),
     };
 
+    // Mock performance API for testing
+    global.performance = global.performance || ({} as Performance);
+    global.performance.mark = jest.fn();
+    global.performance.measure = jest.fn();
+
     TestBed.configureTestingModule({
       providers: [
         QuizService,
@@ -371,6 +376,10 @@ describe('QuizService', () => {
   describe('Timer Management', () => {
     beforeEach(() => {
       jest.useFakeTimers();
+      // Mock performance API for testing
+      global.performance = global.performance || ({} as Performance);
+      global.performance.mark = jest.fn();
+      global.performance.measure = jest.fn();
     });
 
     afterEach(() => {
