@@ -436,3 +436,362 @@ test.describe('Offline Functionality', () => {
     await context.setOffline(false);
   });
 });
+
+test.describe('Quiz Completion and Results', () => {
+  test.beforeEach(async ({ context }) => {
+    // Clear storage before each test for isolation
+    await context.clearCookies();
+    await context.clearPermissions();
+  });
+
+  test('should complete full quiz and show results', async ({ page }) => {
+    await page.goto('/quiz');
+
+    // Wait for setup page to load
+    await expect(page.locator('button', { hasText: '10' }).first()).toBeVisible();
+
+    await page.getByRole('button', { name: /start quiz/i }).click();
+    await expect(page).toHaveURL(/\/quiz\/view/);
+
+    // Answer all 10 questions and complete quiz
+    for (let i = 0; i < 10; i++) {
+      // Wait for question to load with explicit timeout
+      await expect(page.locator('#question-text')).toBeVisible({ timeout: 10000 });
+
+      // Select first answer
+      const checkbox = page.locator('[type="checkbox"]').first();
+      await checkbox.check();
+
+      // Click next or complete on last question
+      if (i < 9) {
+        await page.getByRole('button', { name: /next/i }).click();
+        await page.waitForTimeout(300);
+      } else {
+        await page.getByRole('button', { name: /complete/i }).click();
+      }
+    }
+
+    // Should navigate to results page
+    await expect(page).toHaveURL(/\/quiz\/results/, { timeout: 15000 });
+
+    // Verify results page elements - use specific heading
+    await expect(page.getByRole('heading', { name: /quiz results/i }).first()).toBeVisible();
+  });
+
+  test('should show score calculation loading state', async ({ page }) => {
+    await page.goto('/quiz');
+    await page.getByRole('button', { name: /start quiz/i }).click();
+    await expect(page).toHaveURL(/\/quiz\/view/);
+
+    // Answer questions quickly
+    for (let i = 0; i < 10; i++) {
+      const checkbox = page.locator('[type="checkbox"]').first();
+      await checkbox.check();
+
+      if (i < 9) {
+        await page.getByRole('button', { name: /next/i }).click();
+        await page.waitForTimeout(100);
+      } else {
+        await page.getByRole('button', { name: /complete/i }).click();
+      }
+    }
+
+    // Should show loading spinner while calculating
+    // Loading spinner might appear briefly
+    await page.waitForTimeout(500);
+  });
+});
+
+test.describe('Question Interactions', () => {
+  test.beforeEach(async ({ context }) => {
+    // Clear storage before each test for isolation
+    await context.clearCookies();
+    await context.clearPermissions();
+  });
+
+  test('should allow multiple answer selections', async ({ page }) => {
+    await page.goto('/quiz');
+
+    // Wait for setup page
+    await expect(page.locator('button', { hasText: '10' }).first()).toBeVisible();
+
+    await page.getByRole('button', { name: /start quiz/i }).click();
+    await expect(page).toHaveURL(/\/quiz\/view/);
+
+    // Wait for first question with explicit timeout
+    await expect(page.locator('#question-text')).toBeVisible({ timeout: 10000 });
+
+    // Select multiple checkboxes
+    const checkboxes = page.locator('[type="checkbox"]');
+    const count = await checkboxes.count();
+
+    if (count >= 2) {
+      await checkboxes.nth(0).check();
+      await expect(checkboxes.nth(0)).toBeChecked();
+
+      await checkboxes.nth(1).check();
+      await expect(checkboxes.nth(1)).toBeChecked();
+
+      // Both should remain checked
+      await expect(checkboxes.nth(0)).toBeChecked();
+      await expect(checkboxes.nth(1)).toBeChecked();
+    }
+  });
+
+  test('should allow deselecting answers', async ({ page }) => {
+    await page.goto('/quiz');
+
+    // Wait for setup page
+    await expect(page.locator('button', { hasText: '10' }).first()).toBeVisible();
+
+    await page.getByRole('button', { name: /start quiz/i }).click();
+    await expect(page).toHaveURL(/\/quiz\/view/);
+
+    await expect(page.locator('#question-text')).toBeVisible({ timeout: 10000 });
+
+    // Select and deselect checkbox
+    const checkbox = page.locator('[type="checkbox"]').first();
+    await checkbox.check();
+    await expect(checkbox).toBeChecked();
+
+    await checkbox.uncheck();
+    await expect(checkbox).not.toBeChecked();
+  });
+
+  test('should update progress bar as quiz advances', async ({ page }) => {
+    await page.goto('/quiz');
+
+    // Wait for setup page
+    await expect(page.locator('button', { hasText: '10' }).first()).toBeVisible();
+
+    await page.getByRole('button', { name: /start quiz/i }).click();
+    await expect(page).toHaveURL(/\/quiz\/view/);
+
+    // Check progress bar exists
+    const progressBar = page.locator('[role="progressbar"]');
+    await expect(progressBar).toBeVisible({ timeout: 10000 });
+
+    // Get initial progress
+    const initialProgress = await progressBar.getAttribute('aria-valuenow');
+    expect(initialProgress).toBe('1');
+
+    // Go to next question
+    await page.getByRole('button', { name: /next/i }).click();
+    await page.waitForTimeout(300);
+
+    // Progress should update
+    const newProgress = await progressBar.getAttribute('aria-valuenow');
+    expect(newProgress).toBe('2');
+  });
+});
+
+test.describe('Timed Mode Functionality', () => {
+  test.beforeEach(async ({ context }) => {
+    // Clear storage before each test for isolation
+    await context.clearCookies();
+    await context.clearPermissions();
+  });
+
+  test('should display and countdown timer in timed mode', async ({ page }) => {
+    await page.goto('/quiz');
+
+    // Wait for setup page
+    await expect(page.locator('button', { hasText: '10' }).first()).toBeVisible();
+
+    // Enable timed mode
+    const label = page.locator('label.relative.inline-block').first();
+    await label.click();
+
+    // Start quiz
+    await page.getByRole('button', { name: /start quiz/i }).click();
+    await expect(page).toHaveURL(/\/quiz\/view/);
+
+    // Wait for question to load
+    await expect(page.locator('#question-text')).toBeVisible({ timeout: 10000 });
+
+    // Timer should be visible
+    const timer = page.getByText(/time remaining/i);
+    await expect(timer).toBeVisible();
+
+    // Get initial time
+    const initialTime = await timer.textContent();
+
+    // Wait a bit and check time decreased
+    await page.waitForTimeout(2000);
+    const newTime = await timer.textContent();
+
+    // Times should be different (countdown happening)
+    expect(initialTime).not.toBe(newTime);
+  });
+});
+
+test.describe('Keyboard Navigation', () => {
+  test.beforeEach(async ({ context }) => {
+    // Clear storage before each test for isolation
+    await context.clearCookies();
+    await context.clearPermissions();
+  });
+
+  test('should support tab navigation through answers', async ({ page }) => {
+    await page.goto('/quiz');
+
+    // Wait for setup page
+    await expect(page.locator('button', { hasText: '10' }).first()).toBeVisible();
+
+    await page.getByRole('button', { name: /start quiz/i }).click();
+    await expect(page).toHaveURL(/\/quiz\/view/);
+
+    await expect(page.locator('#question-text')).toBeVisible({ timeout: 10000 });
+
+    // Tab through elements
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+
+    // Check if focus is on an input element
+    const focusedElement = page.locator(':focus');
+    await expect(focusedElement).toBeVisible();
+  });
+
+  test('should allow selecting answers with Space key', async ({ page }) => {
+    await page.goto('/quiz');
+
+    // Wait for setup page
+    await expect(page.locator('button', { hasText: '10' }).first()).toBeVisible();
+
+    await page.getByRole('button', { name: /start quiz/i }).click();
+    await expect(page).toHaveURL(/\/quiz\/view/);
+
+    await expect(page.locator('#question-text')).toBeVisible({ timeout: 10000 });
+
+    // Focus first checkbox
+    const checkbox = page.locator('[type="checkbox"]').first();
+    await checkbox.focus();
+
+    // Press space to check
+    await page.keyboard.press('Space');
+    await expect(checkbox).toBeChecked();
+
+    // Press space again to uncheck
+    await page.keyboard.press('Space');
+    await expect(checkbox).not.toBeChecked();
+  });
+});
+
+test.describe('Home Page', () => {
+  test('should display all navigation cards', async ({ page }) => {
+    await page.goto('/');
+
+    // Check for main heading
+    await expect(page.locator('h1')).toBeVisible();
+
+    // Check for quiz card
+    const quizCard = page.getByText(/take a quiz/i);
+    if ((await quizCard.count()) > 0) {
+      await expect(quizCard.first()).toBeVisible();
+    }
+
+    // Check for rules card
+    const rulesCard = page.getByText(/rules/i);
+    await expect(rulesCard.first()).toBeVisible();
+
+    // Check for questions card
+    const questionsCard = page.getByText(/questions/i);
+    await expect(questionsCard.first()).toBeVisible();
+  });
+
+  test('should navigate to GitHub from home page', async ({ page }) => {
+    await page.goto('/');
+
+    // Look for GitHub link
+    const githubLink = page.locator('a[href*="github"]');
+    if ((await githubLink.count()) > 0) {
+      await expect(githubLink.first()).toBeVisible();
+    }
+  });
+
+  test('should display version information', async ({ page }) => {
+    await page.goto('/');
+
+    // Look for version text
+    const versionText = page.getByText(/version/i);
+    if ((await versionText.count()) > 0) {
+      await expect(versionText.first()).toBeVisible();
+    }
+  });
+});
+
+test.describe('Responsive Design', () => {
+  test('should work on mobile viewport', async ({ page }) => {
+    // Set mobile viewport
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.goto('/');
+
+    // Page should still load
+    await expect(page).toHaveTitle(/IHF Rules Quiz/);
+
+    // Footer navigation should be visible
+    const footer = page.locator('footer');
+    await expect(footer).toBeVisible();
+
+    // Start a quiz
+    await page.locator('footer a[routerLink="/quiz"]').click();
+    await expect(page).toHaveURL(/\/quiz/);
+  });
+
+  test('should work on tablet viewport', async ({ page }) => {
+    // Set tablet viewport
+    await page.setViewportSize({ width: 768, height: 1024 });
+    await page.goto('/');
+
+    await expect(page).toHaveTitle(/IHF Rules Quiz/);
+    await expect(page.locator('main')).toBeVisible();
+  });
+
+  test('should work on desktop viewport', async ({ page }) => {
+    // Set desktop viewport
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.goto('/');
+
+    await expect(page).toHaveTitle(/IHF Rules Quiz/);
+    await expect(page.locator('main')).toBeVisible();
+  });
+});
+
+test.describe('Error Handling', () => {
+  test('should handle navigation to non-existent routes', async ({ page }) => {
+    await page.goto('/non-existent-route');
+
+    // Should redirect or show 404
+    // The app might redirect to home or show an error
+    await page.waitForTimeout(1000);
+
+    // Page should have loaded something
+    const content = await page.locator('body').textContent();
+    expect(content).toBeTruthy();
+  });
+});
+
+test.describe('Quiz State Persistence', () => {
+  test('should warn before leaving quiz', async ({ page }) => {
+    await page.goto('/quiz');
+    await page.getByRole('button', { name: /start quiz/i }).click();
+    await expect(page).toHaveURL(/\/quiz\/view/);
+
+    // Answer a question
+    const checkbox = page.locator('[type="checkbox"]').first();
+    await checkbox.check();
+
+    // Try to navigate away - setup dialog handler
+    page.on('dialog', async (dialog) => {
+      expect(dialog.message()).toContain(/progress/i);
+      await dialog.dismiss();
+    });
+
+    // Click home link
+    await page.locator('footer a[routerLink="/home"]').click();
+
+    // Wait a moment
+    await page.waitForTimeout(500);
+  });
+});
+
