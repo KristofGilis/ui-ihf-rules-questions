@@ -76,7 +76,7 @@ jobs:
         uses: actions/download-artifact@v6
         with:
           name: dist
-          path: ./dist
+          path: ${{ github.workspace }}/dist
 
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
@@ -87,7 +87,7 @@ jobs:
       - name: Deploy prebuilt to Vercel
         id: deploy-vercel
         run: |
-          cp -r dist/browser .vercel/output/static
+          cp -r ${{ github.workspace }}/dist/browser .vercel/output/static
           PREVIEW_URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
           echo "preview-url=$PREVIEW_URL" >> $GITHUB_OUTPUT
 
