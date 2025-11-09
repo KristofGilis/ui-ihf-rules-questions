@@ -85,7 +85,7 @@ jobs:
         run: |
           cp vercel.json ${{ github.workspace }}/dist/browser/
           cd ${{ github.workspace }}/dist/browser
-          echo "${{ secrets.VERCEL_ORG_ID }}" > .vercel/project.json
+          mkdir -p .vercel
           cat > .vercel/project.json << EOF
           {"orgId":"${{ secrets.VERCEL_ORG_ID }}","projectId":"${{ secrets.VERCEL_PROJECT_ID }}"}
           EOF
