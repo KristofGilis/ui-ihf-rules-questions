@@ -84,7 +84,7 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: ./dist/ui-ihf-rules-questions/browser
+          working-directory: ./dist/browser
           scope: ${{ secrets.VERCEL_ORG_ID }}
 
       - name: Comment PR with preview URL
