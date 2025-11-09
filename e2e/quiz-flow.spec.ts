@@ -20,17 +20,17 @@ test.describe('Quiz Flow', () => {
     // Verify we're on quiz setup page
     await expect(page).toHaveURL(/\/quiz/);
 
-    // Configure quiz (10 questions, untimed)
-    await expect(page.getByText(/question count/i)).toBeVisible();
+    // Wait for quiz setup page to load - check for question count buttons
+    await expect(page.locator('button', { hasText: '10' }).first()).toBeVisible();
 
-    // Start quiz
+    // Start quiz with default settings (10 questions)
     await page.getByRole('button', { name: /start quiz/i }).click();
 
     // Wait for quiz to load
     await expect(page).toHaveURL(/\/quiz\/view/);
 
-    // Verify first question is displayed
-    await expect(page.getByRole('heading', { level: 2 })).toBeVisible();
+    // Verify first question is displayed - wait for heading
+    await expect(page.locator('h2').first()).toBeVisible();
 
     // Answer the first question (select first answer)
     const firstAnswer = page.locator('[type="checkbox"]').first();
@@ -39,8 +39,8 @@ test.describe('Quiz Flow', () => {
     // Navigate to next question
     await page.keyboard.press('ArrowRight');
 
-    // Verify we moved to question 2
-    await expect(page.getByText(/question 2/i)).toBeVisible();
+    // Verify we moved to question 2 - check progress indicator
+    await expect(page.locator('text=/2 \\/ \\d+/')).toBeVisible();
   });
 
   test('should navigate to questions page', async ({ page }) => {
@@ -52,8 +52,8 @@ test.describe('Quiz Flow', () => {
     // Verify we're on questions page
     await expect(page).toHaveURL(/\/questions/);
 
-    // Wait for questions to load
-    await expect(page.getByRole('heading', { level: 2 })).toBeVisible();
+    // Wait for questions page to load - check for h1 heading
+    await expect(page.locator('h1').first()).toBeVisible();
   });
 
   test('should navigate to rules page', async ({ page }) => {
