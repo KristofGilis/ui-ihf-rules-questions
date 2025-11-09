@@ -55,10 +55,7 @@
             ],
             "styles": ["src/styles.css"],
             "allowedCommonJsDependencies": ["hammerjs"],
-            "scripts": [],
-            "optimization": {
-              "fonts": true
-            }
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -89,7 +86,7 @@
                   "minify": true,
                   "inlineCritical": true
                 },
-                "fonts": false
+                "fonts": true
               },
               "sourceMap": {
                 "scripts": true,
