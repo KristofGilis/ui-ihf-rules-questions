@@ -27,7 +27,7 @@ export default defineConfig({
 
   // Serve production build to avoid Vite dev server chunk loading issues
   webServer: {
-    command: process.env['CI'] ? 'npm run build && npm run preview' : 'npm run preview',
+    command: 'npm run preview',
     url: 'http://localhost:4200',
     reuseExistingServer: !process.env['CI'],
     timeout: 120 * 1000,
