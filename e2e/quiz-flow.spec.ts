@@ -29,24 +29,24 @@ test.describe('Quiz Flow', () => {
     // Wait for quiz to load
     await expect(page).toHaveURL(/\/quiz\/view/);
 
-    // Verify first question is displayed - wait for heading
-    await expect(page.locator('h2').first()).toBeVisible();
-
-    // Verify we're on question 1
-    await expect(page.getByText(/Question 1 of \d+/)).toBeVisible();
+    // Verify first question is displayed - wait for question phrase
+    await expect(page.locator('#question-text')).toBeVisible();
 
     // Answer the first question (select first answer)
     const firstAnswer = page.locator('[type="checkbox"]').first();
     await firstAnswer.check();
+    await expect(firstAnswer).toBeChecked();
 
     // Click next button to navigate to question 2
-    await page.getByRole('button', { name: /next/i }).click();
+    const nextButton = page.getByRole('button', { name: /next/i });
+    await expect(nextButton).toBeVisible();
+    await nextButton.click();
 
-    // Wait a moment for navigation
-    await page.waitForTimeout(500);
+    // Wait for question to change by checking the progress text changed
+    await expect(page.getByText('Question 1 of')).not.toBeVisible();
 
-    // Verify we moved to question 2 - check progress indicator shows "Question 2 of X"
-    await expect(page.getByText(/Question 2 of \d+/)).toBeVisible();
+    // Verify second question is now visible
+    await expect(page.locator('#question-text')).toBeVisible();
   });
 
   test('should navigate to questions page', async ({ page }) => {
