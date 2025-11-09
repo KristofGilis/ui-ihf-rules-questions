@@ -84,16 +84,33 @@ jobs:
       - name: Prepare Vercel deployment
         run: |
           cd dist/browser
-          # Create vercel.json to prevent build
-          cat > vercel.json << 'EOF'
+          # Create .vercelignore to prevent detecting source files
+          cat > .vercelignore << 'EOF'
+          *
+          !*.html
+          !*.js
+          !*.css
+          !*.json
+          !*.svg
+          !*.png
+          !*.jpg
+          !*.jpeg
+          !*.gif
+          !*.webp
+          !*.ico
+          !*.woff
+          !*.woff2
+          !*.ttf
+          !*.eot
+          !ngsw-worker.js
+          !ngsw.json
+          EOF
+          # Create package.json with no build script
+          cat > package.json << 'EOF'
           {
-            "version": 2,
-            "public": false,
-            "buildCommand": null,
-            "devCommand": null,
-            "installCommand": null,
-            "framework": null,
-            "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+            "name": "ui-ihf-rules-questions-preview",
+            "version": "1.0.0",
+            "private": true
           }
           EOF
 
@@ -105,7 +122,7 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           cd dist/browser
-          PREVIEW_URL=$(vercel deploy --token=$VERCEL_TOKEN --scope=$VERCEL_ORG_ID --yes)
+          PREVIEW_URL=$(vercel deploy --token=$VERCEL_TOKEN --scope=$VERCEL_ORG_ID --yes --build-env VERCEL_SKIP_BUILD=1)
           echo "preview-url=$PREVIEW_URL" >> $GITHUB_OUTPUT
 
       - name: Comment PR with preview URL
