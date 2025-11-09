@@ -87,13 +87,7 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          cd dist/browser
-          # Copy vercel.json to deployment directory
-          cp ../../vercel.json .
-          # Create .vercelignore to prevent source file detection
-          echo "**/node_modules" > .vercelignore
-          echo "**/.git" >> .vercelignore
-          # Deploy to preview without linking
+          cd ${{ github.workspace }}/dist/browser
           PREVIEW_URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }} --yes)
           echo "preview-url=$PREVIEW_URL" >> $GITHUB_OUTPUT
 
