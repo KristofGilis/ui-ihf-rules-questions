@@ -113,7 +113,6 @@ describe('getLanguage', () => {
 
   it('should prioritize localStorage over browser language', () => {
     mockLocalStorage.getItem.mockReturnValue('srb');
-    const translateService = TestBed.inject(TranslateService);
 
     const result = TestBed.runInInjectionContext(() => getLanguage());
 

@@ -53,7 +53,6 @@ describe('ConfirmationDialogComponent', () => {
     it('should handle missing dialog element gracefully', (done) => {
       // Create a new component instance to test ngOnInit again
       const newFixture = TestBed.createComponent(ConfirmationDialogComponent);
-      const newComponent = newFixture.componentInstance;
 
       // ngOnInit will be called automatically which should not throw
       newFixture.detectChanges();

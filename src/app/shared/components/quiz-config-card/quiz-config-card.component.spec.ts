@@ -24,36 +24,36 @@ describe('QuizConfigCardComponent', () => {
 
   describe('Input Properties', () => {
     it('should have default questionCount of 10', () => {
-      expect(component.questionCount).toBe(10);
+      expect(component.questionCount()).toBe(10);
     });
 
     it('should have default timedMode of false', () => {
-      expect(component.timedMode).toBe(false);
+      expect(component.timedMode()).toBe(false);
     });
 
     it('should have default title', () => {
-      expect(component.title).toBe('home.quiz_card.title');
+      expect(component.title()).toBe('home.quiz_card.title');
     });
 
     it('should accept custom questionCount', () => {
-      component.questionCount = 20;
+      component.questionCount.set(20);
       fixture.detectChanges();
 
-      expect(component.questionCount).toBe(20);
+      expect(component.questionCount()).toBe(20);
     });
 
     it('should accept custom timedMode', () => {
-      component.timedMode = true;
+      component.timedMode.set(true);
       fixture.detectChanges();
 
-      expect(component.timedMode).toBe(true);
+      expect(component.timedMode()).toBe(true);
     });
 
     it('should accept custom title', () => {
-      component.title = 'custom.title';
+      fixture.componentRef.setInput('title', 'custom.title');
       fixture.detectChanges();
 
-      expect(component.title).toBe('custom.title');
+      expect(component.title()).toBe('custom.title');
     });
   });
 
@@ -70,9 +70,9 @@ describe('QuizConfigCardComponent', () => {
   });
 
   describe('onStartQuiz', () => {
-    it('should emit start event with default config', () => {
+    it('should emit startQuiz event with default config', () => {
       const startSpy = jest.fn();
-      component.start.subscribe(startSpy);
+      component.startQuiz.subscribe(startSpy);
 
       component.onStartQuiz();
 
@@ -83,10 +83,10 @@ describe('QuizConfigCardComponent', () => {
       });
     });
 
-    it('should emit start event with custom questionCount', () => {
+    it('should emit startQuiz event with custom questionCount', () => {
       const startSpy = jest.fn();
-      component.start.subscribe(startSpy);
-      component.questionCount = 25;
+      component.startQuiz.subscribe(startSpy);
+      component.questionCount.set(25);
 
       component.onStartQuiz();
 
@@ -96,10 +96,10 @@ describe('QuizConfigCardComponent', () => {
       });
     });
 
-    it('should emit start event with timedMode enabled', () => {
+    it('should emit startQuiz event with timedMode enabled', () => {
       const startSpy = jest.fn();
-      component.start.subscribe(startSpy);
-      component.timedMode = true;
+      component.startQuiz.subscribe(startSpy);
+      component.timedMode.set(true);
 
       component.onStartQuiz();
 
@@ -109,11 +109,11 @@ describe('QuizConfigCardComponent', () => {
       });
     });
 
-    it('should emit start event with both custom values', () => {
+    it('should emit startQuiz event with both custom values', () => {
       const startSpy = jest.fn();
-      component.start.subscribe(startSpy);
-      component.questionCount = 15;
-      component.timedMode = true;
+      component.startQuiz.subscribe(startSpy);
+      component.questionCount.set(15);
+      component.timedMode.set(true);
 
       component.onStartQuiz();
 
@@ -125,7 +125,7 @@ describe('QuizConfigCardComponent', () => {
 
     it('should emit multiple times when called multiple times', () => {
       const startSpy = jest.fn();
-      component.start.subscribe(startSpy);
+      component.startQuiz.subscribe(startSpy);
 
       component.onStartQuiz();
       component.onStartQuiz();
@@ -138,12 +138,12 @@ describe('QuizConfigCardComponent', () => {
   describe('QuizConfig Interface', () => {
     it('should emit config matching QuizConfig interface', () => {
       let emittedConfig: QuizConfig | undefined;
-      component.start.subscribe((config) => {
+      component.startQuiz.subscribe((config: QuizConfig) => {
         emittedConfig = config;
       });
 
-      component.questionCount = 30;
-      component.timedMode = true;
+      component.questionCount.set(30);
+      component.timedMode.set(true);
       component.onStartQuiz();
 
       expect(emittedConfig).toBeDefined();
@@ -155,8 +155,8 @@ describe('QuizConfigCardComponent', () => {
   describe('Edge Cases', () => {
     it('should handle questionCount of 0', () => {
       const startSpy = jest.fn();
-      component.start.subscribe(startSpy);
-      component.questionCount = 0;
+      component.startQuiz.subscribe(startSpy);
+      component.questionCount.set(0);
 
       component.onStartQuiz();
 
@@ -168,8 +168,8 @@ describe('QuizConfigCardComponent', () => {
 
     it('should handle negative questionCount', () => {
       const startSpy = jest.fn();
-      component.start.subscribe(startSpy);
-      component.questionCount = -5;
+      component.startQuiz.subscribe(startSpy);
+      component.questionCount.set(-5);
 
       component.onStartQuiz();
 
@@ -181,8 +181,8 @@ describe('QuizConfigCardComponent', () => {
 
     it('should handle very large questionCount', () => {
       const startSpy = jest.fn();
-      component.start.subscribe(startSpy);
-      component.questionCount = 999999;
+      component.startQuiz.subscribe(startSpy);
+      component.questionCount.set(999999);
 
       component.onStartQuiz();
 
@@ -194,16 +194,16 @@ describe('QuizConfigCardComponent', () => {
   });
 
   describe('Output EventEmitter', () => {
-    it('should have start EventEmitter defined', () => {
-      expect(component.start).toBeDefined();
+    it('should have startQuiz output defined', () => {
+      expect(component.startQuiz).toBeDefined();
     });
 
-    it('should allow multiple subscriptions to start event', () => {
+    it('should allow multiple subscriptions to startQuiz event', () => {
       const subscriber1 = jest.fn();
       const subscriber2 = jest.fn();
 
-      component.start.subscribe(subscriber1);
-      component.start.subscribe(subscriber2);
+      component.startQuiz.subscribe(subscriber1);
+      component.startQuiz.subscribe(subscriber2);
 
       component.onStartQuiz();
 
