@@ -36,11 +36,11 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install chromium --with-deps
 
-      - name: Run E2E tests
-        run: npm run test:e2e
-
       - name: Build app (production)
         run: npm run build -- --configuration=production
+
+      - name: Run E2E tests
+        run: npm run test:e2e --ignore-scripts
 
       - name: Check bundle size
         run: |
