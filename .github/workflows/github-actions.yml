@@ -81,8 +81,14 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
 
-      - name: Copy Vercel config to deployment directory
-        run: cp vercel.json ${{ github.workspace }}/dist/browser/
+      - name: Setup Vercel project
+        run: |
+          cp vercel.json ${{ github.workspace }}/dist/browser/
+          cd ${{ github.workspace }}/dist/browser
+          echo "${{ secrets.VERCEL_ORG_ID }}" > .vercel/project.json
+          cat > .vercel/project.json << EOF
+          {"orgId":"${{ secrets.VERCEL_ORG_ID }}","projectId":"${{ secrets.VERCEL_PROJECT_ID }}"}
+          EOF
 
       - name: Deploy to Vercel
         id: deploy-vercel
@@ -91,7 +97,7 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           cd ${{ github.workspace }}/dist/browser
-          PREVIEW_URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }} --yes)
+          PREVIEW_URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --yes)
           echo "preview-url=$PREVIEW_URL" >> $GITHUB_OUTPUT
 
       - name: Comment PR with preview URL
