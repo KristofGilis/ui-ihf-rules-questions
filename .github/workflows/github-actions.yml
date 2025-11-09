@@ -81,23 +81,17 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
 
-      - name: Setup Vercel project
+      - name: Update CSP for Vercel deployment
         run: |
-          cp vercel.json ${{ github.workspace }}/dist/browser/
-          cd ${{ github.workspace }}/dist/browser
-          mkdir -p .vercel
-          cat > .vercel/project.json << EOF
-          {"orgId":"${{ secrets.VERCEL_ORG_ID }}","projectId":"${{ secrets.VERCEL_PROJECT_ID }}"}
-          EOF
+          sed -i 's|script-src '\''self'\'' https://\*\.sentry\.io|script-src '\''self'\'' '\''unsafe-inline'\'' https://*.sentry.io https://vercel.live|g' ${{ github.workspace }}/dist/browser/index.html
+          sed -i 's|connect-src '\''self'\'' https://api-ihf-rules-questions\.azurewebsites\.net https://\*\.sentry\.io|connect-src '\''self'\'' https://api-ihf-rules-questions.azurewebsites.net https://*.sentry.io https://vercel.live|g' ${{ github.workspace }}/dist/browser/index.html
+          sed -i 's|form-action '\''self'\'';|form-action '\''self'\''; frame-src https://vercel.live;|g' ${{ github.workspace }}/dist/browser/index.html
 
       - name: Deploy to Vercel
         id: deploy-vercel
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           cd ${{ github.workspace }}/dist/browser
-          PREVIEW_URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --yes)
+          PREVIEW_URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }} --yes)
           echo "preview-url=$PREVIEW_URL" >> $GITHUB_OUTPUT
 
       - name: Comment PR with preview URL
