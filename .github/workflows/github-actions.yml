@@ -53,6 +53,7 @@ jobs:
           echo "✅ Bundle size is within limits"
 
       - name: Upload artifact
+        if: github.ref == 'refs/heads/main' || (github.event_name == 'pull_request' && github.actor != 'renovate[bot]')
         uses: actions/upload-artifact@v5
         with:
           name: dist
@@ -62,7 +63,7 @@ jobs:
   preview:
     needs: build
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && github.actor != 'renovate[bot]'
     permissions:
       contents: read
       pull-requests: write
