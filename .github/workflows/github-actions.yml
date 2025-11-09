@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened, closed]
 
 env:
   AZURE_WEBAPP_NAME: rulequestions
@@ -84,7 +85,7 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: ./dist/browser
+          working-directory: ./dist/ui-ihf-rules-questions/browser
           scope: ${{ secrets.VERCEL_ORG_ID }}
 
       - name: Comment PR with preview URL
@@ -99,6 +100,57 @@ jobs:
               repo: context.repo.repo,
               body: `🚀 Preview deployment ready!\n\n📱 **Preview URL**: ${previewUrl}\n\n✨ Deployed with Vercel (free tier)\n\n_This preview will be automatically deleted when the PR is closed._`
             });
+
+  cleanup-preview:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.actor != 'renovate[bot]'
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Delete Vercel deployment
+        uses: actions/github-script@v7
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            
+            // Get all deployments for this project
+            const response = await fetch(
+              `https://api.vercel.com/v6/deployments?projectId=${process.env.VERCEL_PROJECT_ID}&meta-githubPullRequest=${prNumber}`,
+              {
+                headers: {
+                  'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`
+                }
+              }
+            );
+            
+            const data = await response.json();
+            
+            if (data.deployments && data.deployments.length > 0) {
+              // Delete all deployments for this PR
+              for (const deployment of data.deployments) {
+                await fetch(
+                  `https://api.vercel.com/v13/deployments/${deployment.uid}`,
+                  {
+                    method: 'DELETE',
+                    headers: {
+                      'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`
+                    }
+                  }
+                );
+                console.log(`Deleted deployment: ${deployment.uid}`);
+              }
+              
+              // Comment on PR
+              github.rest.issues.createComment({
+                issue_number: prNumber,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `🗑️ Preview deployments cleaned up (${data.deployments.length} deployment(s) deleted)`
+              });
+            }
 
   deploy:
     needs: build

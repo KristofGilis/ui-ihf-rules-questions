@@ -57,7 +57,7 @@
             "allowedCommonJsDependencies": ["hammerjs"],
             "scripts": [],
             "optimization": {
-              "fonts": false
+              "fonts": true
             }
           },
           "configurations": {

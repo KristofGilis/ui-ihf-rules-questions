@@ -249,7 +249,11 @@ npx cap open ios
 
 ## 📦 Deployment
 
-### Web Deployment
+The application uses a two-tier deployment strategy:
+- **Production**: Azure Web App (automatic on `main` branch)
+- **Preview**: Vercel (automatic on pull requests)
+
+### Quick Deploy
 
 Build for production:
 ```bash
@@ -258,12 +262,20 @@ npm run build:web
 
 Output will be in `dist/ui-ihf-rules-questions/browser/`
 
-Deploy to:
-- **Azure Static Web Apps**
-- **Netlify**
-- **Vercel**
-- **GitHub Pages**
-- **Firebase Hosting**
+### Deployment Guides
+
+- **[Complete Deployment Guide](docs/DEPLOYMENT.md)** - Production & preview deployments
+- **[Vercel Setup Guide](docs/VERCEL_SETUP.md)** - Configure Vercel for PR previews
+- **[Workflow Testing](docs/WORKFLOW_TESTING.md)** - Test CI/CD behavior
+
+### Deployment Platforms
+
+The production build can be deployed to any static hosting:
+- ✅ **Azure Static Web Apps** (current production)
+- ✅ **Vercel** (current preview)
+- 🔄 Netlify
+- 🔄 GitHub Pages
+- 🔄 Firebase Hosting
 
 ### Service Worker
 
