@@ -87,6 +87,9 @@ jobs:
           sed -i 's|connect-src '\''self'\'' https://api-ihf-rules-questions\.azurewebsites\.net https://\*\.sentry\.io|connect-src '\''self'\'' https://api-ihf-rules-questions.azurewebsites.net https://*.sentry.io https://vercel.live|g' ${{ github.workspace }}/dist/browser/index.html
           sed -i 's|form-action '\''self'\'';|form-action '\''self'\''; frame-src https://vercel.live;|g' ${{ github.workspace }}/dist/browser/index.html
 
+      - name: Copy vercel.json to dist
+        run: cp vercel.json ${{ github.workspace }}/dist/browser/vercel.json
+
       - name: Deploy to Vercel
         id: deploy-vercel
         env:
