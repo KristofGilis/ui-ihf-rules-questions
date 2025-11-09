@@ -1,6 +1,6 @@
 import { HttpHeaders } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { InMemoryCache } from '@apollo/client/core';
+import { InMemoryCache, gql } from '@apollo/client/core';
 import { APOLLO_FLAGS, APOLLO_OPTIONS, Apollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { APOLLO_CACHE, apolloOptionsFactory, graphqlProvider } from './graphql.provider';
@@ -139,7 +139,6 @@ describe('GraphQL Provider', () => {
       const cache = cacheProvider?.useValue as InMemoryCache;
 
       // Test basic cache functionality
-      const { gql } = require('@apollo/client/core');
       const testQuery = gql`
         query TestQuery {
           version

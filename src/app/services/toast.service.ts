@@ -1,4 +1,4 @@
-import { ApplicationRef, ComponentRef, createComponent, EnvironmentInjector, Injectable } from '@angular/core';
+import { ApplicationRef, ComponentRef, createComponent, EnvironmentInjector, inject, Injectable } from '@angular/core';
 import { TOAST_DURATION } from '../constants';
 import { ToastComponent } from '../shared/components/toast/toast.component';
 
@@ -19,12 +19,9 @@ export interface ToastOptions {
   providedIn: 'root',
 })
 export class ToastService {
-  private toastComponentRef: ComponentRef<ToastComponent> | null = null;
-
-  constructor(
-    private appRef: ApplicationRef,
-    private injector: EnvironmentInjector
-  ) {}
+  private _toastComponentRef: ComponentRef<ToastComponent> | null = null;
+  private readonly _appRef = inject(ApplicationRef);
+  private readonly _injector = inject(EnvironmentInjector);
 
   /**
    * Show an error toast
@@ -61,12 +58,12 @@ export class ToastService {
     const { type = 'info', duration = TOAST_DURATION.INFO, dismissible = true } = options;
 
     // Create component if it doesn't exist
-    if (!this.toastComponentRef) {
+    if (!this._toastComponentRef) {
       this.createToastComponent();
     }
 
     // Add toast to the component
-    const toastComponent = this.toastComponentRef!.instance;
+    const toastComponent = this._toastComponentRef!.instance;
     const toastId = toastComponent.add({ message, type, dismissible });
 
     // Auto-dismiss after duration
@@ -81,15 +78,15 @@ export class ToastService {
    * Create the toast component and attach it to the DOM
    */
   private createToastComponent(): void {
-    this.toastComponentRef = createComponent(ToastComponent, {
-      environmentInjector: this.injector,
+    this._toastComponentRef = createComponent(ToastComponent, {
+      environmentInjector: this._injector,
     });
 
     // Attach to application
-    this.appRef.attachView(this.toastComponentRef.hostView);
+    this._appRef.attachView(this._toastComponentRef.hostView);
 
     // Append to body
-    const domElem = this.toastComponentRef.location.nativeElement as HTMLElement;
+    const domElem = this._toastComponentRef.location.nativeElement as HTMLElement;
     document.body.appendChild(domElem);
   }
 }
