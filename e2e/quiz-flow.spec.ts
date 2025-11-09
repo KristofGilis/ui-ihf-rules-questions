@@ -39,8 +39,8 @@ test.describe('Quiz Flow', () => {
     // Navigate to next question
     await page.keyboard.press('ArrowRight');
 
-    // Verify we moved to question 2 - check progress indicator
-    await expect(page.locator('text=/2 \\/ \\d+/')).toBeVisible();
+    // Verify we moved to question 2 - check progress indicator shows "Question 2 of X"
+    await expect(page.getByText(/Question 2 of \d+/)).toBeVisible();
   });
 
   test('should navigate to questions page', async ({ page }) => {
