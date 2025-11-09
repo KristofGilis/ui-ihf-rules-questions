@@ -9,7 +9,7 @@ export default defineConfig({
   fullyParallel: true, // Re-enable parallel execution with production build
   forbidOnly: !!process.env['CI'],
   retries: process.env['CI'] ? 2 : 1,
-  workers: process.env['CI'] ? 1 : 4, // Use 4 workers locally with production build
+  workers: process.env['CI'] ? 1 : undefined,
   timeout: 90000,
   reporter: 'html',
   use: {
