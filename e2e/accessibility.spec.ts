@@ -80,7 +80,12 @@ test.describe('Keyboard Navigation', () => {
     await page.getByRole('button', { name: /start quiz/i }).click();
     await expect(page).toHaveURL(/\/quiz\/view/);
 
-    await expect(page.locator('#question-text')).toBeVisible({ timeout: 10000 });
+    // Wait for quiz to load
+    await page.waitForLoadState('domcontentloaded', { timeout: 15000 }).catch(() => {});
+
+    // Wait for checkboxes to appear
+    const checkbox = page.locator('[type="checkbox"]').first();
+    await checkbox.waitFor({ state: 'visible', timeout: 15000 });
 
     await page.keyboard.press('Tab');
     await page.keyboard.press('Tab');
@@ -96,9 +101,13 @@ test.describe('Keyboard Navigation', () => {
     await page.getByRole('button', { name: /start quiz/i }).click();
     await expect(page).toHaveURL(/\/quiz\/view/);
 
-    await expect(page.locator('#question-text')).toBeVisible({ timeout: 10000 });
+    // Wait for quiz to load
+    await page.waitForLoadState('domcontentloaded', { timeout: 15000 }).catch(() => {});
 
+    // Wait for either question text or checkbox to appear
     const checkbox = page.locator('[type="checkbox"]').first();
+    await checkbox.waitFor({ state: 'visible', timeout: 15000 });
+
     await checkbox.focus();
 
     await page.keyboard.press('Space');

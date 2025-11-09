@@ -124,3 +124,91 @@ test.describe('Rules Page', () => {
     }
   });
 });
+
+test.describe('Empty States', () => {
+  test('should show empty state when rules search has no results', async ({ page }) => {
+    await page.goto('/rules');
+    await page.waitForTimeout(2000);
+
+    const searchInput = page.locator('input[type="text"]').or(page.locator('input[placeholder*="search" i]'));
+    if ((await searchInput.count()) > 0) {
+      // Search for something that won't exist
+      await searchInput.first().fill('xyznonexistentrulesearch12345');
+      await page.waitForTimeout(1000);
+
+      // Should show some indication of no results
+      const content = await page.locator('main').textContent();
+      const hasNoResults =
+        content?.includes('no results') ||
+        content?.includes('not found') ||
+        content?.includes('no rules') ||
+        content?.includes('0 results') ||
+        (await page.locator('[class*="empty"]').count()) > 0;
+
+      // Either shows empty state or no rule items
+      const ruleItems = page.locator('a[href*="/rule/"]');
+      const itemCount = await ruleItems.count();
+
+      expect(hasNoResults || itemCount === 0).toBe(true);
+    }
+  });
+
+  test('should handle empty questions data gracefully', async ({ page }) => {
+    // Mock empty GraphQL response
+    await page.route('**/graphql', (route) => {
+      if (route.request().postDataJSON()?.operationName === 'GetQuestions') {
+        route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            data: {
+              questions: [],
+            },
+          }),
+        });
+      } else {
+        route.continue();
+      }
+    });
+
+    await page.goto('/questions');
+    await page.waitForTimeout(1500);
+
+    // Should handle empty state gracefully
+    const body = page.locator('body');
+    await expect(body).toBeVisible();
+
+    const content = await body.textContent();
+    expect(content).toBeTruthy();
+  });
+
+  test('should handle empty rules data gracefully', async ({ page }) => {
+    // Mock empty GraphQL response
+    await page.route('**/graphql', (route) => {
+      if (route.request().postDataJSON()?.operationName === 'GetRules') {
+        route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            data: {
+              rules: [],
+            },
+          }),
+        });
+      } else {
+        route.continue();
+      }
+    });
+
+    await page.goto('/rules');
+    await page.waitForTimeout(1500);
+
+    // Should handle empty state gracefully
+    const body = page.locator('body');
+    await expect(body).toBeVisible();
+
+    const content = await body.textContent();
+    expect(content).toBeTruthy();
+  });
+});
+

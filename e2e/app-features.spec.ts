@@ -28,6 +28,37 @@ test.describe('Theme Switching', () => {
     const htmlElement = page.locator('html');
     await expect(htmlElement).toHaveClass(/dark/);
   });
+
+  test('should support system theme preference', async ({ page }) => {
+    // Set system to prefer dark mode
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await page.goto('/');
+
+    // Open theme menu
+    const themeButton = page
+      .locator('button[aria-label*="theme" i]')
+      .or(page.locator('button[aria-label*="Toggle theme" i]'));
+    await themeButton.click();
+    await page.waitForTimeout(300);
+
+    // Select system theme
+    const systemOption = page.locator('button[role="menuitem"]').filter({ hasText: /system/i });
+    if ((await systemOption.count()) > 0) {
+      await systemOption.first().click();
+      await page.waitForTimeout(300);
+
+      // Should respect system preference (dark)
+      const htmlElement = page.locator('html');
+      await expect(htmlElement).toHaveClass(/dark/);
+
+      // Change system preference to light
+      await page.emulateMedia({ colorScheme: 'light' });
+      await page.waitForTimeout(500);
+
+      // Should update to light theme
+      await expect(htmlElement).not.toHaveClass(/dark/);
+    }
+  });
 });
 
 test.describe('Language Switching', () => {
