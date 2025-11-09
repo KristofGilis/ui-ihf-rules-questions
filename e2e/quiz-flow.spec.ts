@@ -32,12 +32,18 @@ test.describe('Quiz Flow', () => {
     // Verify first question is displayed - wait for heading
     await expect(page.locator('h2').first()).toBeVisible();
 
+    // Verify we're on question 1
+    await expect(page.getByText(/Question 1 of \d+/)).toBeVisible();
+
     // Answer the first question (select first answer)
     const firstAnswer = page.locator('[type="checkbox"]').first();
     await firstAnswer.check();
 
-    // Navigate to next question
-    await page.keyboard.press('ArrowRight');
+    // Click next button to navigate to question 2
+    await page.getByRole('button', { name: /next/i }).click();
+
+    // Wait a moment for navigation
+    await page.waitForTimeout(500);
 
     // Verify we moved to question 2 - check progress indicator shows "Question 2 of X"
     await expect(page.getByText(/Question 2 of \d+/)).toBeVisible();
