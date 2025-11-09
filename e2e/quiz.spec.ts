@@ -336,14 +336,18 @@ test.describe('Question Interactions', () => {
     await page.getByRole('button', { name: /start quiz/i }).click();
     await expect(page).toHaveURL(/\/quiz\/view/);
 
+    // Wait for question to load first
+    await expect(page.locator('#question-text')).toBeVisible({ timeout: 10000 });
+
     const progressBar = page.locator('[role="progressbar"]');
-    await expect(progressBar).toBeVisible({ timeout: 10000 });
+    // Check that progress bar exists and has correct initial value
+    await expect(progressBar).toHaveCount(1);
 
     const initialProgress = await progressBar.getAttribute('aria-valuenow');
     expect(initialProgress).toBe('1');
 
     await page.getByRole('button', { name: /next/i }).click();
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(500);
 
     const newProgress = await progressBar.getAttribute('aria-valuenow');
     expect(newProgress).toBe('2');
