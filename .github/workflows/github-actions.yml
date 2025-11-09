@@ -81,6 +81,22 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
 
+      - name: Prepare Vercel deployment
+        run: |
+          cd dist/browser
+          # Create vercel.json to prevent build
+          cat > vercel.json << 'EOF'
+          {
+            "version": 2,
+            "public": false,
+            "buildCommand": null,
+            "devCommand": null,
+            "installCommand": null,
+            "framework": null,
+            "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+          }
+          EOF
+
       - name: Deploy to Vercel
         id: deploy-vercel
         env:
