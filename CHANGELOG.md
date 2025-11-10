@@ -25,13 +25,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `ADR-002`: Architecture Decision Record for Apollo Client
   - `ADR-003`: Architecture Decision Record for Capacitor mobile strategy
   - `CHANGELOG.md` for tracking version history
+- **PWA Enhancements**:
+  - Added shortcuts to manifest for quick access to "Browse Rules" and "Start Quiz"
+  - Added 512x512 icon for better app store compatibility
+  - Enhanced iOS PWA support with apple-mobile-web-app meta tags
+  - Improved manifest description and display mode (standalone)
+- **SEO Optimization**:
+  - Comprehensive meta tags including Open Graph and Twitter Card
+  - Resource hints (preconnect, dns-prefetch) for faster resource loading
+  - Optimized robots.txt and sitemap.xml with proper Azure domain
+  - Meta description for better search engine visibility
+- **Performance Optimization**:
+  - Deferred Sentry initialization with 100ms timeout to avoid blocking render
+  - Disabled source maps in production build for smaller bundle size
+  - Optimized font handling (inline: false)
+  - Build progress reporting disabled for cleaner CI output
+- **UX Improvements**:
+  - Checkboxes now disabled when perfect score (100%) is achieved
+  - Prevents users from changing answers after completing quiz with 100%
+  - Added comprehensive test coverage for disabled checkbox behavior
 
 ### Changed
 - Sentry performance monitoring trace sample rate increased from 10% to 20% in production
+- PWA manifest display mode changed from `fullscreen` to `standalone` for better UX
+
+### Fixed
+- **UX Bug**: Users can no longer modify answers after achieving 100% score on rules or questions pages
+- Vercel SPA routing configuration with proper rewrite rules
 
 ### Dependencies
 - Added `@axe-core/playwright` for automated accessibility testing
 - Added `hammerjs` and `@types/hammerjs` for touch gesture support
+
+### Performance Metrics
+- Lighthouse Performance: **89** (improved from 60)
+- First Contentful Paint: **2.3s** (improved from 6.3s on local)
+- Largest Contentful Paint: **3.1s**
+- Accessibility: **100**
+- Best Practices: **96**
+- SEO: **100** (on production, 63 on Vercel previews due to noindex header)
 
 ## [2024-11-08] - Test Coverage Improvements
 
