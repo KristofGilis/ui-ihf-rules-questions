@@ -141,6 +141,44 @@ src/app/
 - `npm run build:android` - Build for Android
 - `npm run build:ios` - Build for iOS
 
+#### Building Native Apps for Production
+
+1. **Build web assets**
+   ```bash
+   npm run build:web
+   ```
+
+2. **Sync to native projects**
+   ```bash
+   npx cap sync
+   ```
+
+3. **Android Build**
+   - Open project in Android Studio:
+     ```bash
+     npx cap open android
+     ```
+   - Select `Build > Generate Signed Bundle / APK`
+   - Choose `Android App Bundle` for Play Store or `APK` for direct distribution
+   - Follow signing wizard with your keystore
+   - Build release variant
+
+4. **iOS Build**
+   - Open project in Xcode:
+     ```bash
+     npx cap open ios
+     ```
+   - Select `Product > Archive`
+   - Use Organizer to upload to App Store Connect or export IPA
+   - Requires Apple Developer account and signing certificates
+
+**Version Management**: App versions are configured in:
+- `package.json` - Source of truth (web app version)
+- `android/app/build.gradle` - `versionCode` and `versionName`
+- `ios/App/App.xcodeproj/project.pbxproj` - `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION`
+
+After updating `package.json`, manually sync native versions before building.
+
 ### Testing
 
 - `npm test` - Run unit tests
