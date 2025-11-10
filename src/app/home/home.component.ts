@@ -15,6 +15,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
 import { finalize, map, shareReplay, tap } from 'rxjs';
 import { GetVersionGQL } from '../../../graphql/generated';
+import packageJson from '../../../package.json';
 import { environment } from '../../environments/environment';
 import { LogoComponent } from '../logo/logo.component';
 import { PageContainerComponent, PageHeroComponent, QuizConfigCardComponent } from '../shared/components';
@@ -53,6 +54,7 @@ export class HomeComponent {
   readonly faSpinner = faSpinner;
 
   readonly currentYear = new Date().getFullYear();
+  readonly appVersion = packageJson.version;
 
   private readonly _query = this._versionGQL.watch();
 
