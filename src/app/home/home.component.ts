@@ -52,6 +52,8 @@ export class HomeComponent {
   readonly faExternalLinkAlt = faExternalLinkAlt;
   readonly faSpinner = faSpinner;
 
+  readonly currentYear = new Date().getFullYear();
+
   private readonly _query = this._versionGQL.watch();
 
   version$ = this._query.valueChanges.pipe(
