@@ -75,9 +75,20 @@
         </h2>
 
         @for (answer of results.answers; track $index) {
-          <div class="mb-6 overflow-hidden rounded-2xl border shadow-lg" [class.border-green-500]="answer.isCorrect" [class.bg-green-50]="answer.isCorrect" [class.dark:bg-green-950/20]="answer.isCorrect" [class.border-red-500]="!answer.isCorrect" [class.bg-red-50]="!answer.isCorrect" [class.dark:bg-red-950/20]="!answer.isCorrect">
+          <div
+            class="mb-6 overflow-hidden rounded-2xl border shadow-lg"
+            [class.border-green-500]="answer.isCorrect"
+            [class.bg-green-50]="answer.isCorrect"
+            [class.dark:bg-green-950/20]="answer.isCorrect"
+            [class.border-red-500]="!answer.isCorrect"
+            [class.bg-red-50]="!answer.isCorrect"
+            [class.dark:bg-red-950/20]="!answer.isCorrect">
             <!-- Question Header -->
-            <div class="flex items-center justify-between border-b p-6" [class.border-green-200]="answer.isCorrect" [class.dark:border-green-800]="answer.isCorrect" [class.border-red-200]="!answer.isCorrect" [class.dark:border-red-800]="!answer.isCorrect">
+            <div class="flex items-center justify-between border-b p-6"
+              [class.border-green-200]="answer.isCorrect"
+              [class.dark:border-green-800]="answer.isCorrect"
+              [class.border-red-200]="!answer.isCorrect"
+              [class.dark:border-red-800]="!answer.isCorrect">
               <span class="font-bold text-slate-900 dark:text-white">
                 {{ 'quiz_results.question' | translate }} {{ answer.questionNumber }}
               </span>
