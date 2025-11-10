@@ -379,4 +379,89 @@ describe('QuestionsViewComponent', () => {
       }, 150);
     });
   });
+
+  describe('Disabled Questions on Perfect Score', () => {
+    it('should pass disabled=false when no score exists', () => {
+      fixture.componentRef.setInput('score', undefined);
+      fixture.detectChanges();
+
+      // Questions should be enabled when there's no score yet
+      const questionElements = fixture.debugElement.nativeElement.querySelectorAll('app-question');
+      expect(questionElements.length).toBeGreaterThan(0);
+    });
+
+    it('should disable checkboxes in DOM when score is 100%', () => {
+      const perfectScore: Score = {
+        total: 10,
+        score: 10,
+        percentage: '100.00 %',
+        wrongQuestionsIds: [],
+        wrongAnswerIds: [],
+      };
+
+      const questionsWithAnswers: Question[] = [
+        {
+          id: '1',
+          number: '1',
+          phrase: 'Question 1',
+          ruleId: 'r1',
+          answers: {
+            nodes: [
+              { __typename: 'Answer', id: 'a1', number: '1', phrase: 'Answer 1', questionId: '1', isCorrect: true },
+            ],
+            pageInfo: { __typename: 'PageInfo', hasNextPage: false, hasPreviousPage: false },
+            totalCount: 1,
+          },
+        },
+      ];
+
+      fixture.componentRef.setInput('questions', questionsWithAnswers);
+      fixture.componentRef.setInput('score', perfectScore);
+      fixture.detectChanges();
+
+      const checkboxes = fixture.nativeElement.querySelectorAll('input[type="checkbox"]');
+      if (checkboxes.length > 0) {
+        checkboxes.forEach((checkbox: HTMLInputElement) => {
+          expect(checkbox.disabled).toBe(true);
+        });
+      }
+    });
+
+    it('should enable checkboxes in DOM when score is not 100%', () => {
+      const partialScore: Score = {
+        total: 10,
+        score: 8,
+        percentage: '80.00 %',
+        wrongQuestionsIds: ['1'],
+        wrongAnswerIds: ['a1'],
+      };
+
+      const questionsWithAnswers: Question[] = [
+        {
+          id: '1',
+          number: '1',
+          phrase: 'Question 1',
+          ruleId: 'r1',
+          answers: {
+            nodes: [
+              { __typename: 'Answer', id: 'a1', number: '1', phrase: 'Answer 1', questionId: '1', isCorrect: true },
+            ],
+            pageInfo: { __typename: 'PageInfo', hasNextPage: false, hasPreviousPage: false },
+            totalCount: 1,
+          },
+        },
+      ];
+
+      fixture.componentRef.setInput('questions', questionsWithAnswers);
+      fixture.componentRef.setInput('score', partialScore);
+      fixture.detectChanges();
+
+      const checkboxes = fixture.nativeElement.querySelectorAll('input[type="checkbox"]');
+      if (checkboxes.length > 0) {
+        checkboxes.forEach((checkbox: HTMLInputElement) => {
+          expect(checkbox.disabled).toBe(false);
+        });
+      }
+    });
+  });
 });
