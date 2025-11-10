@@ -144,11 +144,13 @@ src/app/
 #### Building Native Apps for Production
 
 1. **Build web assets**
+
    ```bash
    npm run build:web
    ```
 
 2. **Sync to native projects**
+
    ```bash
    npx cap sync
    ```
@@ -173,6 +175,7 @@ src/app/
    - Requires Apple Developer account and signing certificates
 
 **Version Management**: App versions are configured in:
+
 - `package.json` - Source of truth (web app version)
 - `android/app/build.gradle` - `versionCode` and `versionName`
 - `ios/App/App.xcodeproj/project.pbxproj` - `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION`
