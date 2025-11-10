@@ -14,6 +14,7 @@ import { Question } from '../../../../../../graphql/generated';
 export class QuestionComponent {
   readonly question = input.required<Question>();
   readonly isWrong = input<boolean>(false);
+  readonly disabled = input<boolean>(false);
   readonly selectAnswer = output<string>();
   readonly deselectAnswer = output<string>();
 

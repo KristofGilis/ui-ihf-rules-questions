@@ -5,6 +5,7 @@
       <app-question
         [question]="question"
         [isWrong]="isQuestionWrong(question.id)"
+        [disabled]="score()?.percentage === '100.00 %'"
         (selectAnswer)="onSelectAnswer($event)"
         (deselectAnswer)="onDeselectAnswer($event)" />
     </div>

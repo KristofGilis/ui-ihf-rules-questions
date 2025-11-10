@@ -59,6 +59,29 @@ describe('QuestionComponent', () => {
 
       expect(component.isWrong()).toBe(false);
     });
+
+    it('should accept disabled input with default false', () => {
+      fixture.componentRef.setInput('question', mockQuestion);
+      fixture.detectChanges();
+
+      expect(component.disabled()).toBe(false);
+    });
+
+    it('should accept disabled input as true', () => {
+      fixture.componentRef.setInput('question', mockQuestion);
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+
+      expect(component.disabled()).toBe(true);
+    });
+
+    it('should accept disabled input as false', () => {
+      fixture.componentRef.setInput('question', mockQuestion);
+      fixture.componentRef.setInput('disabled', false);
+      fixture.detectChanges();
+
+      expect(component.disabled()).toBe(false);
+    });
   });
 
   describe('FontAwesome Icons', () => {
@@ -210,6 +233,85 @@ describe('QuestionComponent', () => {
       // Deselect answer
       component.onCheckboxChange('a1', false);
       expect(deselectSpy).toHaveBeenCalledWith('a1');
+    });
+
+    it('should disable all checkboxes when disabled input is true', () => {
+      const questionWithAnswers: Question = {
+        ...mockQuestion,
+        answers: {
+          nodes: [
+            { __typename: 'Answer', id: 'a1', number: '1', phrase: 'Answer 1', questionId: 'q1', isCorrect: true },
+            { __typename: 'Answer', id: 'a2', number: '2', phrase: 'Answer 2', questionId: 'q1', isCorrect: false },
+          ],
+          pageInfo: { __typename: 'PageInfo', hasNextPage: false, hasPreviousPage: false },
+          totalCount: 2,
+        },
+      };
+
+      fixture.componentRef.setInput('question', questionWithAnswers);
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+
+      const checkboxes = fixture.nativeElement.querySelectorAll('input[type="checkbox"]');
+      expect(checkboxes.length).toBe(2);
+      checkboxes.forEach((checkbox: HTMLInputElement) => {
+        expect(checkbox.disabled).toBe(true);
+      });
+    });
+
+    it('should enable all checkboxes when disabled input is false', () => {
+      const questionWithAnswers: Question = {
+        ...mockQuestion,
+        answers: {
+          nodes: [
+            { __typename: 'Answer', id: 'a1', number: '1', phrase: 'Answer 1', questionId: 'q1', isCorrect: true },
+            { __typename: 'Answer', id: 'a2', number: '2', phrase: 'Answer 2', questionId: 'q1', isCorrect: false },
+          ],
+          pageInfo: { __typename: 'PageInfo', hasNextPage: false, hasPreviousPage: false },
+          totalCount: 2,
+        },
+      };
+
+      fixture.componentRef.setInput('question', questionWithAnswers);
+      fixture.componentRef.setInput('disabled', false);
+      fixture.detectChanges();
+
+      const checkboxes = fixture.nativeElement.querySelectorAll('input[type="checkbox"]');
+      expect(checkboxes.length).toBe(2);
+      checkboxes.forEach((checkbox: HTMLInputElement) => {
+        expect(checkbox.disabled).toBe(false);
+      });
+    });
+
+    it('should not emit events when checkboxes are disabled', () => {
+      const questionWithAnswers: Question = {
+        ...mockQuestion,
+        answers: {
+          nodes: [
+            { __typename: 'Answer', id: 'a1', number: '1', phrase: 'Answer 1', questionId: 'q1', isCorrect: true },
+          ],
+          pageInfo: { __typename: 'PageInfo', hasNextPage: false, hasPreviousPage: false },
+          totalCount: 1,
+        },
+      };
+
+      fixture.componentRef.setInput('question', questionWithAnswers);
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+
+      const selectSpy = jest.fn();
+      const deselectSpy = jest.fn();
+      component.selectAnswer.subscribe(selectSpy);
+      component.deselectAnswer.subscribe(deselectSpy);
+
+      // Try to trigger change on disabled checkbox
+      const checkbox = fixture.nativeElement.querySelector('input[type="checkbox"]') as HTMLInputElement;
+      checkbox.click();
+      fixture.detectChanges();
+
+      // Events should not be emitted because checkbox is disabled
+      expect(selectSpy).not.toHaveBeenCalled();
+      expect(deselectSpy).not.toHaveBeenCalled();
     });
   });
 });
