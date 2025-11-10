@@ -8,12 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - **Security Headers**: Content Security Policy (CSP), X-Frame-Options, X-Content-Type-Options, and Referrer-Policy headers in index.html
 - **Offline Detection**: Real-time offline/online status detection with visual banner in 3 languages (EN, NL, SRB)
 - **Touch Gestures**: Swipe left/right support for quiz navigation using HammerJS
 - **Automated Accessibility Testing**: Integrated axe-core with Playwright E2E tests for WCAG 2.1 AA compliance
 - **API Debouncing**: 300ms debounce on score calculation requests to reduce API load
-- **Performance Monitoring**: 
+- **Performance Monitoring**:
   - Increased Sentry trace sample rate to 20% for better insights
   - Added performance marks for quiz start/complete tracking
 - **CI/CD Enhancements**:
@@ -46,18 +47,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added comprehensive test coverage for disabled checkbox behavior
 
 ### Changed
+
 - Sentry performance monitoring trace sample rate increased from 10% to 20% in production
 - PWA manifest display mode changed from `fullscreen` to `standalone` for better UX
 
 ### Fixed
+
 - **UX Bug**: Users can no longer modify answers after achieving 100% score on rules or questions pages
 - Vercel SPA routing configuration with proper rewrite rules
 
 ### Dependencies
+
 - Added `@axe-core/playwright` for automated accessibility testing
 - Added `hammerjs` and `@types/hammerjs` for touch gesture support
 
 ### Performance Metrics
+
 - Lighthouse Performance: **89** (improved from 60)
 - First Contentful Paint: **2.3s** (improved from 6.3s on local)
 - Largest Contentful Paint: **3.1s**
@@ -68,11 +73,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2024-11-08] - Test Coverage Improvements
 
 ### Changed
+
 - Improved test coverage from ~80% to **97.52%** across entire codebase
 - Fixed flaky async tests in ScrollRestorationService
 - Improved horizontal scrolling test navigation flow
 
 ### Added
+
 - Comprehensive tests for QuizComponent (37 tests, 100% coverage)
 - Comprehensive tests for RuleComponent (100% coverage)
 - Comprehensive tests for AppComponent (100% coverage)
@@ -89,6 +96,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tests for presentation components
 
 ### Fixed
+
 - ScrollRestorationService async test timeouts by clearing mock between navigations
 - Horizontal scrolling test navigation logic
 - Scroll restoration test navigation flow
@@ -97,15 +105,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2024-11-07] - Production Configuration
 
 ### Added
+
 - GitHub Actions workflow with lint, test, build, and size-check steps
 - Environment file replacement for production builds (`environment.prod.ts`)
 
 ### Changed
+
 - Configured fileReplacements to use `environment.prod.ts` for production builds
 
 ## [Initial Release]
 
 ### Added
+
 - Angular 20.3 standalone component architecture with Signals
 - GraphQL integration with Apollo Client 4.0
 - Three main sections: Home, Rules, Questions
@@ -123,6 +134,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Accessibility features (ARIA labels, keyboard navigation, focus management)
 
 ### Features
+
 - **Quiz Mode**: Interactive handball rules quiz with random questions
 - **Rules Browser**: Searchable, filterable rules database
 - **Score Tracking**: Real-time score calculation
@@ -133,6 +145,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Touch-Friendly**: Optimized for mobile with native action sheets
 
 ### Technical Stack
+
 - **Framework**: Angular 20.3 with standalone components
 - **State Management**: Angular Signals
 - **Data Layer**: Apollo Client 4.0 with GraphQL

@@ -1,22 +1,20 @@
 @if (toasts().length > 0) {
-  <div class="fixed top-5 right-5 sm:right-5 sm:left-auto left-5 z-10000 flex flex-col gap-3 pointer-events-none">
+  <div class="pointer-events-none fixed top-5 right-5 left-5 z-10000 flex flex-col gap-3 sm:right-5 sm:left-auto">
     @for (toast of toasts(); track toast.id) {
       <div
-        class="w-full sm:max-w-sm rounded-lg shadow-xl text-sm leading-relaxed animate-slide-in pointer-events-auto"
+        class="animate-slide-in pointer-events-auto w-full rounded-lg text-sm leading-relaxed shadow-xl sm:max-w-sm"
         [class]="getToastClasses(toast.type)"
         role="alert"
-        [attr.aria-live]="toast.type === 'error' ? 'assertive' : 'polite'"
-      >
-        <div class="flex gap-3 items-center p-4">
-          <fa-icon class="text-lg shrink-0" [icon]="getIcon(toast.type)" [fixedWidth]="true"></fa-icon>
+        [attr.aria-live]="toast.type === 'error' ? 'assertive' : 'polite'">
+        <div class="flex items-center gap-3 p-4">
+          <fa-icon class="shrink-0 text-lg" [icon]="getIcon(toast.type)" [fixedWidth]="true"></fa-icon>
           <div class="flex-1 font-medium">{{ toast.message }}</div>
           @if (toast.dismissible) {
             <button
               type="button"
-              class="shrink-0 opacity-80 hover:opacity-100 transition-opacity flex items-center justify-center"
+              class="flex shrink-0 items-center justify-center opacity-80 transition-opacity hover:opacity-100"
               (click)="dismiss(toast.id)"
-              aria-label="Close notification"
-            >
+              aria-label="Close notification">
               <fa-icon [icon]="faXmark"></fa-icon>
             </button>
           }

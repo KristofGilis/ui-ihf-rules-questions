@@ -721,4 +721,3 @@ test.describe('Quiz Score Edge Cases', () => {
     }
   });
 });
-

@@ -9,6 +9,7 @@ An interactive quiz application for testing knowledge of International Handball 
 ## ✨ Features
 
 ### Quiz System
+
 - **Interactive Quizzes** - Multiple choice questions with instant feedback
 - **Two Modes** - Timed (90s per question) or untimed practice
 - **Smart Scoring** - Backend calculation for security
@@ -18,11 +19,13 @@ An interactive quiz application for testing knowledge of International Handball 
 - **Question Shuffling** - Randomized order using Fisher-Yates algorithm
 
 ### Content Browser
+
 - **All Questions** - Browse and study all available questions
 - **Rules Explorer** - Navigate questions by specific IHF rule
 - **Instant Scoring** - Calculate your score while browsing
 
 ### User Experience
+
 - **Multi-Language** - English, Dutch, Serbian (Cyrillic)
 - **Theme System** - Light, Dark, or System preference
 - **Mobile Apps** - Native iOS and Android via Capacitor
@@ -33,6 +36,7 @@ An interactive quiz application for testing knowledge of International Handball 
 ## 🏗️ Architecture
 
 ### Tech Stack
+
 - **Framework**: Angular 20.3 with Signals
 - **State Management**: Signal-based reactive state
 - **API**: GraphQL via Apollo Client
@@ -42,6 +46,7 @@ An interactive quiz application for testing knowledge of International Handball 
 - **Build**: Angular CLI with Vite
 
 ### Key Patterns
+
 - **Standalone Components** - No NgModules, fully modular
 - **OnPush Change Detection** - Performance optimized
 - **Lazy Loading** - Code splitting for all routes
@@ -49,6 +54,7 @@ An interactive quiz application for testing knowledge of International Handball 
 - **Service-Oriented** - Clear separation of concerns
 
 ### Project Structure
+
 ```
 src/app/
 ├── home/              # Landing page with quiz setup
@@ -68,25 +74,29 @@ src/app/
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 22+ and npm
 - Angular CLI 20+ (optional, but recommended)
 
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/KristofGilis/ui-ihf-rules-questions.git
    cd ui-ihf-rules-questions
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Configure API endpoint** (if needed)
-   
+
    The GraphQL API endpoint is configured in `src/app/graphql.provider.ts`:
+
    ```typescript
    const uri = 'https://api-ihf-rules-questions.azurewebsites.net/graphql';
    ```
@@ -100,6 +110,7 @@ src/app/
 ## 📜 Available Scripts
 
 ### Development
+
 - `npm start` - Start dev server (port 4200)
 - `npm run watch` - Build with watch mode
 - `npm run lint` - Run ESLint
@@ -108,17 +119,21 @@ src/app/
 - `npm run prettier:write` - Format all files
 
 ### Build
+
 - `npm run build` - Development build
 - `npm run build:web` - Production build for web
 
 ### Internationalization
+
 - `npm run i18n:extract` - Extract translation strings
 - `npm run i18n:clean` - Remove unused translations
 
 ### GraphQL
+
 - `npm run generate` - Generate TypeScript types from GraphQL schema
 
 ### Mobile (Capacitor)
+
 - `npm run cap:init` - Initialize Capacitor
 - `npm run cap:add:android` - Add Android platform
 - `npm run cap:add:ios` - Add iOS platform
@@ -127,6 +142,7 @@ src/app/
 - `npm run build:ios` - Build for iOS
 
 ### Testing
+
 - `npm test` - Run unit tests
 - `npm run test:watch` - Run tests in watch mode
 - `npm run test:coverage` - Generate coverage report
@@ -137,6 +153,7 @@ src/app/
 ## 🌍 Internationalization
 
 The app supports 3 languages out of the box:
+
 - 🇬🇧 English (en)
 - 🇳🇱 Dutch (nl)
 - 🇷🇸 Serbian (srb) - Cyrillic script
@@ -144,6 +161,7 @@ The app supports 3 languages out of the box:
 ### Adding a New Language
 
 1. **Add translation file**
+
    ```bash
    cp public/i18n/en.json public/i18n/fr.json
    ```
@@ -152,26 +170,29 @@ The app supports 3 languages out of the box:
    Edit `public/i18n/fr.json` with translations
 
 3. **Update language list**
-   
+
    In `src/app/app.component.ts`:
+
    ```typescript
    private readonly LANGUAGES = ['en', 'nl', 'srb', 'fr'] as const;
    ```
 
 4. **Update language detection**
-   
+
    In `src/app/language.ts`:
+
    ```typescript
-   const browserLanguage = translateService.getBrowserLang()?.match(/en|nl|sr|fr/)
+   const browserLanguage = translateService.getBrowserLang()?.match(/en|nl|sr|fr/);
    ```
 
 5. **Add to UI**
-   
+
    Add button in `src/app/app.component.html` language menu
 
 ## 🎨 Theming
 
 The app supports three theme modes:
+
 - **Light** - Bright, high contrast
 - **Dark** - Easy on the eyes
 - **System** - Follows OS preference
@@ -224,12 +245,14 @@ npx cap open ios
 ## 🧪 Testing
 
 ### Unit Tests (Jest)
+
 - **646 tests** with **97.52% code coverage**
 - Run tests: `npm test`
 - Watch mode: `npm run test:watch`
 - Coverage report: `npm run test:coverage`
 
 ### E2E Tests (Playwright)
+
 - **116 tests** covering all major user flows
 - **100% pass rate** across all browsers
 - Run tests: `npm run test:e2e`
@@ -237,6 +260,7 @@ npx cap open ios
 - Headed mode: `npm run test:e2e:headed`
 
 ### Test Coverage
+
 - ✅ Quiz flow and configuration
 - ✅ Navigation and routing
 - ✅ Theme and language switching
@@ -250,12 +274,14 @@ npx cap open ios
 ## 📦 Deployment
 
 The application uses a two-tier deployment strategy:
+
 - **Production**: Azure Web App (automatic on `main` branch)
 - **Preview**: Vercel (automatic on pull requests)
 
 ### Quick Deploy
 
 Build for production:
+
 ```bash
 npm run build:web
 ```
@@ -271,6 +297,7 @@ Output will be in `dist/ui-ihf-rules-questions/browser/`
 ### Deployment Platforms
 
 The production build can be deployed to any static hosting:
+
 - ✅ **Azure Static Web Apps** (current production)
 - ✅ **Vercel** (current preview)
 - 🔄 Netlify
@@ -292,6 +319,7 @@ Contributions are welcome! Please follow these steps:
 5. Open a Pull Request
 
 ### Coding Standards
+
 - Follow the existing code style
 - Use meaningful variable names
 - Add comments for complex logic

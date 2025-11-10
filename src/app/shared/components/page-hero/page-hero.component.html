@@ -1,12 +1,14 @@
 <div class="mb-12 text-center">
   @if (icon()) {
-    <div class="mb-6 inline-flex items-center justify-center rounded-3xl bg-linear-to-br from-cyan-500 to-blue-500 p-5 shadow-xl shadow-cyan-500/30">
+    <div
+      class="mb-6 inline-flex items-center justify-center rounded-3xl bg-linear-to-br from-cyan-500 to-blue-500 p-5 shadow-xl shadow-cyan-500/30">
       <ng-content select="[icon]" />
     </div>
   }
 
-  <h1 class="mb-3 font-black tracking-tight text-slate-900 dark:text-white" 
-      [class]="size() === 'small' ? 'text-3xl md:text-4xl' : 'text-5xl md:text-6xl'">
+  <h1
+    class="mb-3 font-black tracking-tight text-slate-900 dark:text-white"
+    [class]="size() === 'small' ? 'text-3xl md:text-4xl' : 'text-5xl md:text-6xl'">
     {{ title() }}
   </h1>
 
@@ -18,4 +20,3 @@
     {{ description() }}
   </p>
 </div>
-

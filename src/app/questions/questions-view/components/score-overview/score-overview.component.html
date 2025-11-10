@@ -1,7 +1,9 @@
 <div
   [class]="
     'relative flex flex-col rounded-2xl bg-white shadow-xl dark:bg-slate-900 ' +
-    (compact() ? 'h-full overflow-hidden' : 'border border-slate-200 dark:border-slate-800 overflow-hidden max-h-[calc(100vh-12rem)]') +
+    (compact()
+      ? 'h-full overflow-hidden'
+      : 'max-h-[calc(100vh-12rem)] overflow-hidden border border-slate-200 dark:border-slate-800') +
     (scoreLoading() && !score() && !compact() ? ' h-[calc(100vh-12rem)]' : '')
   ">
   <!-- Loading Overlay (full screen when no score yet) -->
@@ -14,7 +16,7 @@
   <!-- Loading Overlay (over content when recalculating) -->
   @if (scoreLoading() && score()) {
     <div
-      class="absolute inset-0 z-10 flex items-center justify-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
+      class="absolute inset-0 z-10 flex items-center justify-center bg-white/80 backdrop-blur-sm dark:bg-slate-900/80">
       <app-loading-spinner [size]="'lg'" />
     </div>
   }
@@ -24,7 +26,7 @@
     <!-- Header -->
     <div
       [class]="
-        'bg-linear-to-br from-cyan-500 to-blue-500 text-center text-white ' + (compact() ? 'p-4 rounded-t-2xl' : 'p-4')
+        'bg-linear-to-br from-cyan-500 to-blue-500 text-center text-white ' + (compact() ? 'rounded-t-2xl p-4' : 'p-4')
       ">
       <h4 [class]="'font-semibold opacity-90 ' + (compact() ? 'mb-1 text-base' : 'mb-1.5 text-base')">
         {{ 'score_overview.title' | translate }}
@@ -33,31 +35,26 @@
         {{ score()?.percentage }}
       </div>
       <div class="text-sm opacity-90">
-        <span class="font-semibold">{{ questions().length - (score()?.wrongQuestionsIds?.length ?? 0) }}</span> {{ 'score_overview.of_total_correct' | translate: {total: questions().length} }}
+        <span class="font-semibold">{{ questions().length - (score()?.wrongQuestionsIds?.length ?? 0) }}</span>
+        {{ 'score_overview.of_total_correct' | translate: { total: questions().length } }}
       </div>
     </div>
 
     <!-- Stats Grid -->
     <div [class]="'grid grid-cols-2 gap-3 ' + (compact() ? 'p-3' : 'p-4')">
-      <div
-        [class]="'rounded-lg text-center bg-green-100 dark:bg-green-950 ' + (compact() ? 'p-3' : 'p-4')">
-        <div
-          [class]="'font-bold text-green-600 dark:text-green-400 ' + (compact() ? 'text-2xl' : 'text-3xl')">
+      <div [class]="'rounded-lg bg-green-100 text-center dark:bg-green-950 ' + (compact() ? 'p-3' : 'p-4')">
+        <div [class]="'font-bold text-green-600 dark:text-green-400 ' + (compact() ? 'text-2xl' : 'text-3xl')">
           {{ questions().length - (score()?.wrongQuestionsIds?.length ?? 0) }}
         </div>
-        <div
-          class="text-xs font-medium text-green-700 dark:text-green-300">
+        <div class="text-xs font-medium text-green-700 dark:text-green-300">
           {{ 'score_overview.correct' | translate }}
         </div>
       </div>
-      <div
-        [class]="'rounded-lg text-center bg-red-100 dark:bg-red-950 ' + (compact() ? 'p-3' : 'p-4')">
-        <div
-          [class]="'font-bold text-red-600 dark:text-red-400 ' + (compact() ? 'text-2xl' : 'text-3xl')">
+      <div [class]="'rounded-lg bg-red-100 text-center dark:bg-red-950 ' + (compact() ? 'p-3' : 'p-4')">
+        <div [class]="'font-bold text-red-600 dark:text-red-400 ' + (compact() ? 'text-2xl' : 'text-3xl')">
           {{ score()?.wrongQuestionsIds?.length ?? 0 }}
         </div>
-        <div
-          class="text-xs font-medium text-red-700 dark:text-red-300">
+        <div class="text-xs font-medium text-red-700 dark:text-red-300">
           {{ 'score_overview.wrong' | translate }}
         </div>
       </div>
@@ -99,25 +96,27 @@
     @if (score()?.wrongQuestionsIds?.length ?? 0 > 0) {
       <div
         [class]="
-          'flex flex-1 flex-col min-h-0 border-t border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800 ' +
+          'flex min-h-0 flex-1 flex-col border-t border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800 ' +
           (compact() ? 'p-3' : 'p-4')
         ">
         <div [class]="'flex items-center gap-2 ' + (compact() ? 'mb-2' : 'mb-3')">
           <fa-icon [icon]="faTimesCircle" class="text-red-500"></fa-icon>
-          <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ 'score_overview.review_mistakes' | translate }}</span>
+          <span class="text-sm font-semibold text-slate-900 dark:text-white">{{
+            'score_overview.review_mistakes' | translate
+          }}</span>
         </div>
-        <div [class]="'flex-1 min-h-0 space-y-2 overflow-y-auto pr-1 ' + (compact() ? 'mb-2' : 'mb-3')">
+        <div [class]="'min-h-0 flex-1 space-y-2 overflow-y-auto pr-1 ' + (compact() ? 'mb-2' : 'mb-3')">
           @for (wrongQuestionId of score()?.wrongQuestionsIds; track wrongQuestionId) {
             <button
               type="button"
               [class]="
-                'flex w-full items-start gap-2 rounded-lg bg-white text-left shadow-sm transition-all duration-200 hover:shadow-md cursor-pointer dark:bg-slate-900 ' +
+                'flex w-full cursor-pointer items-start gap-2 rounded-lg bg-white text-left shadow-sm transition-all duration-200 hover:shadow-md dark:bg-slate-900 ' +
                 (compact() ? 'p-2' : 'p-3')
               "
               (click)="onQuestionClick(wrongQuestionId)">
-              <span [class]="'flex-1 font-medium text-slate-900 dark:text-white ' + (compact() ? 'text-sm' : '')"
-                >{{ 'score_overview.question_number' | translate: {number: getQuestionNumber(wrongQuestionId)} }}</span
-              >
+              <span [class]="'flex-1 font-medium text-slate-900 dark:text-white ' + (compact() ? 'text-sm' : '')">{{
+                'score_overview.question_number' | translate: { number: getQuestionNumber(wrongQuestionId) }
+              }}</span>
               <fa-icon [icon]="faTimesCircle" class="mt-0.5 shrink-0 text-red-500"></fa-icon>
             </button>
           }

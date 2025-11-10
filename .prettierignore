@@ -1,0 +1,10 @@
+# Angular templates with complex attribute bindings that prettier struggles with
+src/app/quiz/quiz-results/quiz-results.component.html
+
+# Build outputs
+dist/
+android/
+ios/
+
+# Generated files
+graphql/generated.ts

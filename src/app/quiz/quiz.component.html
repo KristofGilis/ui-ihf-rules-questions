@@ -67,16 +67,13 @@
               class="mb-3 text-xl font-bold text-slate-900 dark:text-white"
               [innerHTML]="question.phrase"
               id="question-text"></p>
-            <p class="text-sm italic text-slate-600 dark:text-slate-400">{{ 'quiz.select_answers' | translate }}</p>
+            <p class="text-sm text-slate-600 italic dark:text-slate-400">{{ 'quiz.select_answers' | translate }}</p>
           </div>
 
           <!-- Answers -->
           <fieldset class="space-y-3" aria-labelledby="question-text" aria-describedby="answer-instruction">
             <legend class="sr-only">
-              {{
-                'quiz.select_answers_for_question'
-                  | translate: { current: quizService.progress().current }
-              }}
+              {{ 'quiz.select_answers_for_question' | translate: { current: quizService.progress().current } }}
             </legend>
             <div id="answer-instruction" class="sr-only">{{ 'quiz.select_answers' | translate }}</div>
             @for (answer of question.shuffledAnswers; track answer?.id) {

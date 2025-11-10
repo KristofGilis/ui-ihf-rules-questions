@@ -4,13 +4,14 @@
   <!-- Wrapper - full width container -->
   <div class="lg:mx-auto">
     <!-- Grid layout that changes based on score -->
-    <div class="layout-grid flex flex-col gap-6" 
-         [class.no-score]="!score && !scoreLoading()" 
-         [class.has-score]="score || scoreLoading()">
+    <div
+      class="layout-grid flex flex-col gap-6"
+      [class.no-score]="!score && !scoreLoading()"
+      [class.has-score]="score || scoreLoading()">
       <!-- Main content area -->
-      <div class="pt-12 w-full">
-        <app-page-hero 
-          [title]="getRuleName(rule) ?? ''" 
+      <div class="w-full pt-12">
+        <app-page-hero
+          [title]="getRuleName(rule) ?? ''"
           [description]="'rule.description' | translate"
           [size]="'small'" />
 
@@ -27,7 +28,8 @@
 
       <!-- Right side: Score Overview Sidebar -->
       @if (score || scoreLoading()) {
-        <div class="hidden lg:sticky lg:top-24 lg:block lg:h-fit lg:w-[384px] lg:shrink-0 lg:self-start lg:max-h-[calc(100vh-5rem)]">
+        <div
+          class="hidden lg:sticky lg:top-24 lg:block lg:h-fit lg:max-h-[calc(100vh-5rem)] lg:w-[384px] lg:shrink-0 lg:self-start">
           <app-score-overview
             [score]="score ?? undefined"
             [questions]="rule ? getQuestions(rule) : []"

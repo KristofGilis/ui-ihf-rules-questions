@@ -17,7 +17,7 @@ export function getLanguage(): string {
   } else {
     browserLanguage = translateService.getFallbackLang() ?? undefined;
   }
-  
+
   const localStorageLanguage = localStorage?.getItem('language');
 
   return localStorageLanguage ?? browserLanguage ?? 'en';

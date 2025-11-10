@@ -211,4 +211,3 @@ test.describe('Empty States', () => {
     expect(content).toBeTruthy();
   });
 });
-
