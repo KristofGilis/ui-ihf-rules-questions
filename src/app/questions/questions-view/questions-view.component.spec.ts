@@ -31,6 +31,9 @@ describe('QuestionsViewComponent', () => {
   };
 
   beforeEach(async () => {
+    // Mock window.scrollTo
+    window.scrollTo = jest.fn();
+
     await TestBed.configureTestingModule({
       imports: [QuestionsViewComponent],
       providers: [provideTranslateService()],

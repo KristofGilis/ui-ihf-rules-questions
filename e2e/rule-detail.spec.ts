@@ -5,6 +5,19 @@ import { expect, test } from '@playwright/test';
  * Tests viewing individual rules, score calculation, score sidebar, and related features
  */
 
+/**
+ * Helper function to click the calculate button with proper scrolling
+ */
+async function clickCalculateButton(page: any) {
+  const calculateButton = page.getByRole('button', { name: /calculate|check|submit/i });
+  if ((await calculateButton.count()) > 0) {
+    await calculateButton.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(300);
+    await calculateButton.click({ force: true });
+    await page.waitForTimeout(2000);
+  }
+}
+
 test.describe('Rule Detail Page', () => {
   test('should display rule details when navigating to specific rule', async ({ page }) => {
     await page.goto('/rules');
@@ -75,17 +88,13 @@ test.describe('Rule Detail Score Calculation', () => {
           await page.waitForTimeout(200);
         }
 
-        // Look for calculate score button
-        const calculateButton = page.getByRole('button', { name: /calculate|check|submit/i });
-        if ((await calculateButton.count()) > 0) {
-          await calculateButton.click();
-          await page.waitForTimeout(2000);
+        // Calculate score
+        await clickCalculateButton(page);
 
-          // Should show score or score calculation result
-          const scoreText = page.getByText(/score|correct|points/i);
-          if ((await scoreText.count()) > 0) {
-            await expect(scoreText.first()).toBeVisible();
-          }
+        // Should show score or score calculation result
+        const scoreText = page.getByText(/score|correct|points/i);
+        if ((await scoreText.count()) > 0) {
+          await expect(scoreText.first()).toBeVisible();
         }
       }
     }
@@ -106,17 +115,14 @@ test.describe('Rule Detail Score Calculation', () => {
         await checkboxes.first().check();
         await page.waitForTimeout(200);
 
-        const calculateButton = page.getByRole('button', { name: /calculate|check|submit/i });
-        if ((await calculateButton.count()) > 0) {
-          await calculateButton.click();
+        await clickCalculateButton(page);
 
-          // May briefly show loading state
-          await page.waitForTimeout(500);
+        // May briefly show loading state
+        await page.waitForTimeout(500);
 
-          // Page should remain responsive
-          const body = page.locator('body');
-          await expect(body).toBeVisible();
-        }
+        // Page should remain responsive
+        const body = page.locator('body');
+        await expect(body).toBeVisible();
       }
     }
   });
@@ -136,19 +142,15 @@ test.describe('Rule Detail Score Calculation', () => {
         await checkboxes.first().check();
         await page.waitForTimeout(200);
 
-        const calculateButton = page.getByRole('button', { name: /calculate|check|submit/i });
-        if ((await calculateButton.count()) > 0) {
-          await calculateButton.click();
-          await page.waitForTimeout(2000);
+        await clickCalculateButton(page);
 
-          // Check for score sidebar (desktop view)
-          const scoreSidebar = page.locator('app-score-overview');
-          if ((await scoreSidebar.count()) > 0) {
-            // Score sidebar should be visible on larger screens
-            // On mobile it might be in a different location
-            const sidebarVisible = await scoreSidebar.isVisible();
-            expect(sidebarVisible).toBeTruthy();
-          }
+        // Check for score sidebar (desktop view)
+        const scoreSidebar = page.locator('app-score-overview');
+        if ((await scoreSidebar.count()) > 0) {
+          // Score sidebar should be visible on larger screens
+          // On mobile it might be in a different location
+          const sidebarVisible = await scoreSidebar.isVisible();
+          expect(sidebarVisible).toBeTruthy();
         }
       }
     }
@@ -170,21 +172,17 @@ test.describe('Rule Detail Score Sidebar Features', () => {
         await checkboxes.first().check();
         await page.waitForTimeout(200);
 
-        const calculateButton = page.getByRole('button', { name: /calculate|check|submit/i });
-        if ((await calculateButton.count()) > 0) {
-          await calculateButton.click();
-          await page.waitForTimeout(2000);
+        await clickCalculateButton(page);
 
-          // Look for correct/incorrect indicators
-          const correctIndicator = page.getByText(/correct/i);
-          const incorrectIndicator = page.getByText(/incorrect/i);
+        // Look for correct/incorrect indicators
+        const correctIndicator = page.getByText(/correct/i);
+        const incorrectIndicator = page.getByText(/incorrect/i);
 
-          // Should show some indication of correct/incorrect
-          const hasCorrect = (await correctIndicator.count()) > 0;
-          const hasIncorrect = (await incorrectIndicator.count()) > 0;
+        // Should show some indication of correct/incorrect
+        const hasCorrect = (await correctIndicator.count()) > 0;
+        const hasIncorrect = (await incorrectIndicator.count()) > 0;
 
-          expect(hasCorrect || hasIncorrect).toBe(true);
-        }
+        expect(hasCorrect || hasIncorrect).toBe(true);
       }
     }
   });
@@ -203,22 +201,18 @@ test.describe('Rule Detail Score Sidebar Features', () => {
         await checkboxes.first().check();
         await page.waitForTimeout(200);
 
-        const calculateButton = page.getByRole('button', { name: /calculate|check|submit/i });
-        if ((await calculateButton.count()) > 0) {
-          await calculateButton.click();
-          await page.waitForTimeout(2000);
+        await clickCalculateButton(page);
 
-          // Look for restart button
-          const restartButton = page.getByRole('button', { name: /restart|reset|clear|try again/i });
-          if ((await restartButton.count()) > 0) {
-            await restartButton.click();
-            await page.waitForTimeout(1000);
+        // Verify restart button appears
+        const restartButton = page.getByRole('button', { name: /restart|reset|start over/i });
+        if ((await restartButton.count()) > 0) {
+          await restartButton.click();
+          await page.waitForTimeout(1000);
 
-            // Score should be cleared
-            // Checkboxes should be unchecked or score hidden
-            const body = page.locator('body');
-            await expect(body).toBeVisible();
-          }
+          // Score should be cleared
+          // Checkboxes should be unchecked or score hidden
+          const body = page.locator('body');
+          await expect(body).toBeVisible();
         }
       }
     }
@@ -241,26 +235,22 @@ test.describe('Rule Detail Score Sidebar Features', () => {
         await checkboxes.first().check();
         await page.waitForTimeout(200);
 
-        const calculateButton = page.getByRole('button', { name: /calculate|check|submit/i });
-        if ((await calculateButton.count()) > 0) {
-          await calculateButton.click();
+        await clickCalculateButton(page);
+
+        // Change answer - uncheck first, check second
+        await checkboxes.first().uncheck();
+        await checkboxes.nth(1).check();
+        await page.waitForTimeout(200);
+
+        // Recalculate - specifically click the recalculate button (not calculate)
+        const recalculateButton = page.getByRole('button', { name: /^recalculate/i });
+        if ((await recalculateButton.count()) > 0) {
+          await recalculateButton.first().click();
           await page.waitForTimeout(2000);
 
-          // Change answer - uncheck first, check second
-          await checkboxes.first().uncheck();
-          await checkboxes.nth(1).check();
-          await page.waitForTimeout(200);
-
-          // Recalculate - specifically click the recalculate button (not calculate)
-          const recalculateButton = page.getByRole('button', { name: /^recalculate/i });
-          if ((await recalculateButton.count()) > 0) {
-            await recalculateButton.first().click();
-            await page.waitForTimeout(2000);
-
-            // Should show updated score
-            const body = page.locator('body');
-            await expect(body).toBeVisible();
-          }
+          // Should show updated score
+          const body = page.locator('body');
+          await expect(body).toBeVisible();
         }
       }
     }
@@ -280,28 +270,24 @@ test.describe('Rule Detail Score Sidebar Features', () => {
         await checkboxes.first().check();
         await page.waitForTimeout(200);
 
-        const calculateButton = page.getByRole('button', { name: /calculate|check|submit/i });
-        if ((await calculateButton.count()) > 0) {
-          await calculateButton.click();
-          await page.waitForTimeout(2000);
+        await clickCalculateButton(page);
 
-          // Scroll to top first
-          await page.evaluate(() => window.scrollTo(0, 0));
-          await page.waitForTimeout(500);
+        // Scroll to top first
+        await page.evaluate(() => window.scrollTo(0, 0));
+        await page.waitForTimeout(500);
 
-          // Look for clickable question items in score sidebar
-          const scoreSidebar = page.locator('app-score-overview');
-          if ((await scoreSidebar.count()) > 0) {
-            const questionLinks = scoreSidebar.locator('button, a, [role="button"]');
-            if ((await questionLinks.count()) > 0) {
-              await questionLinks.first().click();
-              await page.waitForTimeout(1000);
+        // Look for clickable question items in score sidebar
+        const scoreSidebar = page.locator('app-score-overview');
+        if ((await scoreSidebar.count()) > 0) {
+          const questionLinks = scoreSidebar.locator('button, a, [role="button"]');
+          if ((await questionLinks.count()) > 0) {
+            await questionLinks.first().click();
+            await page.waitForTimeout(1000);
 
-              // Page should scroll (scroll position should change)
-              const scrollY = await page.evaluate(() => window.scrollY);
-              // Accept any scroll position (including 0 if already at top)
-              expect(scrollY).toBeGreaterThanOrEqual(0);
-            }
+            // Page should scroll (scroll position should change)
+            const scrollY = await page.evaluate(() => window.scrollY);
+            // Accept any scroll position (including 0 if already at top)
+            expect(scrollY).toBeGreaterThanOrEqual(0);
           }
         }
       }

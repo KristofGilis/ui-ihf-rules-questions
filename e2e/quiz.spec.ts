@@ -6,6 +6,62 @@ import { expect, test } from '@playwright/test';
  */
 
 /**
+ * Helper function to click complete button with proper scrolling
+ */
+async function clickCompleteButton(page: any) {
+  // Match "Complete and submit quiz" which is the title attribute
+  const completeButton = page.getByRole('button', { name: /complete and submit quiz/i });
+  await completeButton.waitFor({ state: 'visible', timeout: 10000 });
+
+  // Scroll button into view AND add extra space to move footer away
+  await completeButton.scrollIntoViewIfNeeded();
+  await page.evaluate(() => window.scrollBy(0, -100)); // Scroll up 100px to move footer down
+  await page.waitForTimeout(300);
+
+  // Click normally (not force) so Angular event handlers fire
+  await completeButton.click();
+
+  // Wait for navigation to results page
+  await page.waitForURL(/.*\/results$/, { timeout: 10000 });
+  await page.waitForTimeout(500);
+}
+
+/**
+ * Helper function to click next button with proper scrolling
+ */
+async function clickNextButton(page: any) {
+  const nextButton = page.getByRole('button', { name: /go to next question/i });
+  await nextButton.waitFor({ state: 'visible', timeout: 10000 });
+
+  // Get current question number from the heading before clicking
+  const currentHeading = await page
+    .locator('h2')
+    .filter({ hasText: /question \d+ of \d+/i })
+    .textContent();
+  const currentMatch = currentHeading?.match(/question (\d+) of (\d+)/i);
+  const currentNum = currentMatch ? parseInt(currentMatch[1]) : 0;
+  const expectedNext = currentNum + 1;
+
+  // Scroll button into view AND add extra space to move footer away
+  await nextButton.scrollIntoViewIfNeeded();
+  await page.evaluate(() => window.scrollBy(0, -100)); // Scroll up 100px to move footer down
+  await page.waitForTimeout(300);
+
+  // Click normally (not force) so Angular event handlers fire
+  await nextButton.click();
+
+  // Wait for the heading to change to the next question number
+  if (expectedNext > 0) {
+    await page
+      .locator('h2')
+      .filter({ hasText: new RegExp(`question ${expectedNext} of`, 'i') })
+      .waitFor({ state: 'visible', timeout: 10000 });
+  }
+
+  await page.waitForTimeout(300);
+}
+
+/**
  * Helper function to complete a quiz by answering all questions
  */
 async function completeQuizHelper(page: any, questionCount: number = 10) {
@@ -31,15 +87,12 @@ async function completeQuizHelper(page: any, questionCount: number = 10) {
 
     // Navigate to next question or complete
     if (i < questionCount - 1) {
-      const nextButton = page.getByRole('button', { name: /next/i });
-      await nextButton.waitFor({ state: 'visible', timeout: 15000 });
-      await nextButton.click({ force: true });
-      await page.waitForTimeout(500);
+      await clickNextButton(page);
     } else {
-      // Wait for complete button to appear on last question
-      const completeButton = page.getByRole('button', { name: /complete/i });
-      await completeButton.waitFor({ state: 'visible', timeout: 15000 });
-      await completeButton.click({ force: true });
+      // Use the helper function to click complete button with proper scrolling
+      await clickCompleteButton(page);
+      // Wait for navigation to results page
+      await page.waitForTimeout(1000);
     }
   }
 }
@@ -61,9 +114,8 @@ test.describe('Quiz Flow', () => {
     await firstAnswer.check();
     await expect(firstAnswer).toBeChecked();
 
-    const nextButton = page.getByRole('button', { name: /next/i });
-    await expect(nextButton).toBeVisible();
-    await nextButton.click();
+    await clickNextButton(page);
+    await page.waitForTimeout(1000);
 
     await expect(page.getByText('Question 2 of').first()).toBeVisible({ timeout: 10000 });
     await expect(page.locator('#question-text')).toBeVisible();
@@ -615,13 +667,11 @@ test.describe('Quiz Score Edge Cases', () => {
       await checkbox.check();
 
       if (i < 9) {
-        const nextButton = page.getByRole('button', { name: /next/i });
-        await nextButton.click();
+        await clickNextButton(page);
         await page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => {});
         await page.waitForTimeout(300);
       } else {
-        const completeButton = page.getByRole('button', { name: /complete/i });
-        await completeButton.click();
+        await clickCompleteButton(page);
       }
     }
 
@@ -651,13 +701,11 @@ test.describe('Quiz Score Edge Cases', () => {
       }
 
       if (i < 9) {
-        const nextButton = page.getByRole('button', { name: /next/i });
-        await nextButton.click();
+        await clickNextButton(page);
         await page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => {});
         await page.waitForTimeout(300);
       } else {
-        const completeButton = page.getByRole('button', { name: /complete/i });
-        await completeButton.click();
+        await clickCompleteButton(page);
       }
     }
 
@@ -708,8 +756,7 @@ test.describe('Quiz Score Edge Cases', () => {
       const checkbox = page.locator('[type="checkbox"]').first();
       await checkbox.check();
 
-      const nextButton = page.getByRole('button', { name: /next/i });
-      await nextButton.click();
+      await clickNextButton(page);
       await page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => {});
       await page.waitForTimeout(300);
     }

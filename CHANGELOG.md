@@ -7,8 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Breaking Changes
+
+- **Complete UI Redesign**: Migrated from Angular Material to Tailwind CSS 4
+  - All Material Design components replaced with custom Tailwind-based components
+  - New visual design system with custom color palette (cyan primary)
+  - Improved mobile-first responsive design
+  - Enhanced accessibility with better focus states and ARIA labels
+- **Capacitor Removed**: Native mobile apps (iOS/Android) temporarily removed
+  - Focus on perfecting PWA experience first
+  - Mobile apps will be re-implemented in future release with proper asset generation
+  - Removed all Capacitor dependencies and configuration files
+
 ### Added
 
+- **New Design System**: Complete Tailwind CSS 4 implementation
+  - Custom gradient buttons with hover/active/disabled states
+  - Consistent spacing and typography system
+  - Mobile-optimized dialogs and overlays
+  - Enhanced dark mode with proper contrast ratios
+- **Development Tooling**:
+  - Semantic-release for automated versioning
+  - Commitlint + Husky for conventional commits enforcement
+  - Prettier with Tailwind plugin for consistent formatting
 - **Security Headers**: Content Security Policy (CSP), X-Frame-Options, X-Content-Type-Options, and Referrer-Policy headers in index.html
 - **Offline Detection**: Real-time offline/online status detection with visual banner in 3 languages (EN, NL, SRB)
 - **Touch Gestures**: Swipe left/right support for quiz navigation using HammerJS
@@ -24,7 +45,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `CONTRIBUTING.md` with comprehensive setup and coding guidelines
   - `ADR-001`: Architecture Decision Record for Signals over NgRx
   - `ADR-002`: Architecture Decision Record for Apollo Client
-  - `ADR-003`: Architecture Decision Record for Capacitor mobile strategy
   - `CHANGELOG.md` for tracking version history
 - **PWA Enhancements**:
   - Added shortcuts to manifest for quick access to "Browse Rules" and "Start Quiz"
@@ -48,6 +68,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **UI Framework**: Complete migration from Angular Material to Tailwind CSS
+- **Component Architecture**: All components rewritten with custom Tailwind styling
+- **Theme System**: Enhanced dark mode implementation with CSS variables
+- **Mobile Navigation**: Improved responsive menu and dialog systems
+- **Test Suite**: Updated all component tests to match new Tailwind components (645 tests passing)
 - Sentry performance monitoring trace sample rate increased from 10% to 20% in production
 - PWA manifest display mode changed from `fullscreen` to `standalone` for better UX
 
@@ -58,8 +83,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
-- Added `@axe-core/playwright` for automated accessibility testing
-- Added `hammerjs` and `@types/hammerjs` for touch gesture support
+- **Removed**:
+  - `@angular/material` and `@angular/cdk` (replaced with Tailwind CSS)
+  - `@capacitor/core`, `@capacitor/cli`, `@capacitor/android`, `@capacitor/ios` (native apps removed)
+  - `@capacitor/action-sheet`, `@capacitor/splash-screen` (Capacitor plugins)
+  - `@capacitor/assets` (asset generation tool)
+- **Added**:
+  - `@axe-core/playwright` for automated accessibility testing
+  - `hammerjs` and `@types/hammerjs` for touch gesture support
+  - `semantic-release` for automated version management
+  - `@commitlint/cli` and `@commitlint/config-conventional` for commit message linting
+  - `husky` for git hooks
+  - `prettier-plugin-tailwindcss` for consistent Tailwind class ordering
 
 ### Performance Metrics
 
@@ -150,9 +185,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **State Management**: Angular Signals
 - **Data Layer**: Apollo Client 4.0 with GraphQL
 - **Testing**: Jest (unit) + Playwright (E2E)
-- **Mobile**: Capacitor 7.4
-- **Styling**: Tailwind CSS 4.1
-- **Icons**: FontAwesome
+- **Styling**: Tailwind CSS 4.1 (upgraded from Angular Material)
+- **Mobile**: PWA only (Capacitor removed, will be re-added in future release)
+- **Testing**: Jest (unit) + Playwright (E2E)
 - **Monitoring**: Sentry
 - **CI/CD**: GitHub Actions + Azure Static Web Apps
 

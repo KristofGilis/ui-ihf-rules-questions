@@ -1,26 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
-import { ActionSheet } from '@capacitor/action-sheet';
-import { Capacitor } from '@capacitor/core';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { AppComponent } from './app.component';
 import { ThemeService } from './services/theme.service';
-
-// Mock Capacitor
-jest.mock('@capacitor/core', () => ({
-  Capacitor: {
-    isNativePlatform: jest.fn(() => false),
-  },
-}));
-
-// Mock ActionSheet
-jest.mock('@capacitor/action-sheet', () => ({
-  ActionSheet: {
-    showActions: jest.fn(),
-  },
-}));
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -124,74 +108,11 @@ describe('AppComponent', () => {
   });
 
   describe('toggleLanguageMenu', () => {
-    it('should toggle language menu on desktop', () => {
-      (Capacitor.isNativePlatform as jest.Mock).mockReturnValue(false);
-      Object.defineProperty(component, 'isNativePlatform', { value: false, writable: true });
-
+    it('should toggle language menu', () => {
       const initialValue = component['showLanguageMenu']();
       component.toggleLanguageMenu();
 
       expect(component['showLanguageMenu']()).toBe(!initialValue);
-    });
-
-    it('should show action sheet on native platform', () => {
-      (Capacitor.isNativePlatform as jest.Mock).mockReturnValue(true);
-      Object.defineProperty(component, 'isNativePlatform', { value: true, writable: true });
-      (ActionSheet.showActions as jest.Mock).mockResolvedValue({ index: -1 });
-
-      component.toggleLanguageMenu();
-
-      expect(ActionSheet.showActions).toHaveBeenCalledWith({
-        title: 'Mocked Title',
-        options: [{ title: 'Mocked Title' }, { title: 'Mocked Title' }, { title: 'Mocked Title' }],
-      });
-    });
-  });
-
-  describe('showLanguageActionSheet', () => {
-    beforeEach(() => {
-      (Capacitor.isNativePlatform as jest.Mock).mockReturnValue(true);
-      Object.defineProperty(component, 'isNativePlatform', { value: true, writable: true });
-    });
-
-    it('should change language when option selected', async () => {
-      (ActionSheet.showActions as jest.Mock).mockResolvedValue({ index: 1 });
-
-      component.toggleLanguageMenu();
-      // Wait for async action sheet to complete
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      expect(component['currentLang']()).toBe('nl');
-      expect(document.documentElement.lang).toBe('nl');
-    });
-
-    it('should not change language when cancelled', async () => {
-      (ActionSheet.showActions as jest.Mock).mockResolvedValue({ index: -1 });
-      const currentLang = component['currentLang']();
-
-      component.toggleLanguageMenu();
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      expect(component['currentLang']()).toBe(currentLang);
-    });
-
-    it('should handle first language option', async () => {
-      (ActionSheet.showActions as jest.Mock).mockResolvedValue({ index: 0 });
-
-      component.toggleLanguageMenu();
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      expect(component['currentLang']()).toBe('en');
-    });
-
-    it('should handle last language option', async () => {
-      (ActionSheet.showActions as jest.Mock).mockResolvedValue({ index: 2 });
-
-      component.toggleLanguageMenu();
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      expect(component['currentLang']()).toBe('srb');
-      expect(document.documentElement.lang).toBe('srb');
     });
   });
 
@@ -290,75 +211,11 @@ describe('AppComponent', () => {
   });
 
   describe('toggleThemeMenu', () => {
-    it('should toggle theme menu on desktop', () => {
-      (Capacitor.isNativePlatform as jest.Mock).mockReturnValue(false);
-      Object.defineProperty(component, 'isNativePlatform', { value: false, writable: true });
-
+    it('should toggle theme menu', () => {
       const initialValue = component['showThemeMenu']();
       component.toggleThemeMenu();
 
       expect(component['showThemeMenu']()).toBe(!initialValue);
-    });
-
-    it('should show action sheet on native platform', async () => {
-      (Capacitor.isNativePlatform as jest.Mock).mockReturnValue(true);
-      Object.defineProperty(component, 'isNativePlatform', { value: true, writable: true });
-      (ActionSheet.showActions as jest.Mock).mockResolvedValue({ index: -1 });
-
-      await component.toggleThemeMenu();
-
-      expect(ActionSheet.showActions).toHaveBeenCalledWith({
-        title: 'Mocked Title',
-        options: [{ title: 'Mocked Title' }, { title: 'Mocked Title' }, { title: 'Mocked Title' }],
-      });
-    });
-  });
-
-  describe('showThemeActionSheet', () => {
-    beforeEach(() => {
-      (Capacitor.isNativePlatform as jest.Mock).mockReturnValue(true);
-      Object.defineProperty(component, 'isNativePlatform', { value: true, writable: true });
-      // Reset theme service mock calls
-      (themeService.setTheme as jest.Mock).mockClear();
-    });
-
-    it('should set light theme when first option selected', async () => {
-      (ActionSheet.showActions as jest.Mock).mockResolvedValue({ index: 0 });
-
-      component.toggleThemeMenu();
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      expect(themeService.setTheme).toHaveBeenCalledWith('light');
-      expect(component['currentTheme']()).toBe('light');
-    });
-
-    it('should set dark theme when second option selected', async () => {
-      (ActionSheet.showActions as jest.Mock).mockResolvedValue({ index: 1 });
-
-      component.toggleThemeMenu();
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      expect(themeService.setTheme).toHaveBeenCalledWith('dark');
-      expect(component['currentTheme']()).toBe('dark');
-    });
-
-    it('should set system theme when third option selected', async () => {
-      (ActionSheet.showActions as jest.Mock).mockResolvedValue({ index: 2 });
-
-      component.toggleThemeMenu();
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      expect(themeService.setTheme).toHaveBeenCalledWith('system');
-      expect(component['currentTheme']()).toBe('system');
-    });
-
-    it('should not change theme when cancelled', async () => {
-      (ActionSheet.showActions as jest.Mock).mockResolvedValue({ index: -1 });
-
-      component.toggleThemeMenu();
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      expect(themeService.setTheme).not.toHaveBeenCalled();
     });
   });
 

@@ -3,8 +3,6 @@ import { ChangeDetectionStrategy, Component, computed, HostListener, inject, sig
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { ActionSheet } from '@capacitor/action-sheet';
-import { Capacitor } from '@capacitor/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faBook,
@@ -53,7 +51,6 @@ export class AppComponent {
   protected readonly currentTheme = signal(this._themeService.currentTheme());
   protected readonly showLanguageMenu = signal(false);
   protected readonly showThemeMenu = signal(false);
-  protected readonly isNativePlatform = Capacitor.isNativePlatform();
 
   // Online/offline state
   protected readonly isOnline = toSignal(
@@ -99,26 +96,7 @@ export class AppComponent {
   }
 
   toggleLanguageMenu(): void {
-    if (this.isNativePlatform) {
-      this.showLanguageActionSheet();
-    } else {
-      this.showLanguageMenu.update((v) => !v);
-    }
-  }
-
-  private async showLanguageActionSheet(): Promise<void> {
-    const result = await ActionSheet.showActions({
-      title: this._translateService.instant('languages.label'),
-      options: [
-        { title: this._translateService.instant('languages.en') },
-        { title: this._translateService.instant('languages.nl') },
-        { title: this._translateService.instant('languages.srb') },
-      ],
-    });
-
-    if (result.index >= 0 && result.index < this.LANGUAGES.length) {
-      this.onChangeLanguage(this.LANGUAGES[result.index]);
-    }
+    this.showLanguageMenu.update((v) => !v);
   }
 
   selectLanguage(lang: string): void {
@@ -142,29 +120,7 @@ export class AppComponent {
   }
 
   toggleThemeMenu(): void {
-    if (this.isNativePlatform) {
-      this.showThemeActionSheet();
-    } else {
-      this.showThemeMenu.update((v) => !v);
-    }
-  }
-
-  private async showThemeActionSheet(): Promise<void> {
-    const result = await ActionSheet.showActions({
-      title: this._translateService.instant('theme.toggle'),
-      options: [
-        { title: this._translateService.instant('theme.light') },
-        { title: this._translateService.instant('theme.dark') },
-        { title: this._translateService.instant('theme.system') },
-      ],
-    });
-
-    const themes: ('light' | 'dark' | 'system')[] = ['light', 'dark', 'system'];
-    if (result.index >= 0 && result.index < themes.length) {
-      const selectedTheme = themes[result.index];
-      this._themeService.setTheme(selectedTheme);
-      this.currentTheme.set(selectedTheme);
-    }
+    this.showThemeMenu.update((v) => !v);
   }
 
   selectTheme(theme: 'light' | 'dark' | 'system'): void {

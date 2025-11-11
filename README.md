@@ -1,10 +1,11 @@
 # IHF Rules Quiz 🏐
 
-An interactive quiz application for testing knowledge of International Handball Federation (IHF) rules. Built with Angular 20.3, featuring multi-language support, mobile apps, and comprehensive accessibility.
+An interactive quiz application for testing knowledge of International Handball Federation (IHF) rules. Built with Angular 20.3 and Tailwind CSS, featuring multi-language support and comprehensive accessibility.
 
 [![Angular](https://img.shields.io/badge/Angular-20.3-red)](https://angular.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
 [![GraphQL](https://img.shields.io/badge/GraphQL-16.12-pink)](https://graphql.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1-38bdf8)](https://tailwindcss.com/)
 
 ## ✨ Features
 
@@ -28,10 +29,10 @@ An interactive quiz application for testing knowledge of International Handball 
 
 - **Multi-Language** - English, Dutch, Serbian (Cyrillic)
 - **Theme System** - Light, Dark, or System preference
-- **Mobile Apps** - Native iOS and Android via Capacitor
 - **PWA Support** - Install on any device, works offline
 - **Fully Accessible** - WCAG 2.1 AA compliant
 - **Responsive Design** - Optimized for all screen sizes
+- **Touch Gestures** - Swipe navigation on mobile devices
 
 ## 🏗️ Architecture
 
@@ -40,9 +41,8 @@ An interactive quiz application for testing knowledge of International Handball 
 - **Framework**: Angular 20.3 with Signals
 - **State Management**: Signal-based reactive state
 - **API**: GraphQL via Apollo Client
-- **Styling**: Tailwind CSS v4
+- **Styling**: Tailwind CSS 4
 - **i18n**: ngx-translate
-- **Mobile**: Capacitor 7
 - **Build**: Angular CLI with Vite
 
 ### Key Patterns
@@ -132,55 +132,25 @@ src/app/
 
 - `npm run generate` - Generate TypeScript types from GraphQL schema
 
-### Mobile (Capacitor)
+## 📱 Progressive Web App (PWA)
 
-- `npm run cap:init` - Initialize Capacitor
-- `npm run cap:add:android` - Add Android platform
-- `npm run cap:add:ios` - Add iOS platform
-- `npm run cap:sync` - Sync web code with native projects
-- `npm run build:android` - Build for Android
-- `npm run build:ios` - Build for iOS
+This application is a fully-featured PWA that works offline and can be installed on any device.
 
-#### Building Native Apps for Production
+### Installation
 
-1. **Build web assets**
+1. Visit the app in a modern browser (Chrome, Edge, Safari, Firefox)
+2. Look for the "Install" prompt in the address bar
+3. Click "Install" to add to your home screen
+4. The app will work offline with cached data
 
-   ```bash
-   npm run build:web
-   ```
+### PWA Features
 
-2. **Sync to native projects**
+- **Offline Support** - Service Worker caches assets for offline use
+- **Install Prompt** - Add to home screen on mobile and desktop
+- **App Shortcuts** - Quick access to "Browse Rules" and "Start Quiz"
+- **Standalone Mode** - Runs like a native app when installed
 
-   ```bash
-   npx cap sync
-   ```
-
-3. **Android Build**
-   - Open project in Android Studio:
-     ```bash
-     npx cap open android
-     ```
-   - Select `Build > Generate Signed Bundle / APK`
-   - Choose `Android App Bundle` for Play Store or `APK` for direct distribution
-   - Follow signing wizard with your keystore
-   - Build release variant
-
-4. **iOS Build**
-   - Open project in Xcode:
-     ```bash
-     npx cap open ios
-     ```
-   - Select `Product > Archive`
-   - Use Organizer to upload to App Store Connect or export IPA
-   - Requires Apple Developer account and signing certificates
-
-**Version Management**: App versions are configured in:
-
-- `package.json` - Source of truth (web app version)
-- `android/app/build.gradle` - `versionCode` and `versionName`
-- `ios/App/App.xcodeproj/project.pbxproj` - `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION`
-
-After updating `package.json`, manually sync native versions before building.
+> **Note**: Native mobile apps (iOS/Android via Capacitor) were removed in v2.0.0 to focus on perfecting the PWA experience. They will be re-implemented in a future release with proper asset generation and testing.
 
 ### Testing
 

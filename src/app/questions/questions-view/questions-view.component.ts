@@ -11,7 +11,6 @@ import {
   viewChildren,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Capacitor } from '@capacitor/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faChartBar, faQuestionCircle, faRotateRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -70,18 +69,16 @@ export class QuestionsViewComponent {
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
 
-  // Check if running on native mobile platform or small screen
+  // Check if running on small screen
   readonly isMobile = toSignal(
     isPlatformBrowser(this.platformId)
       ? fromEvent<MediaQueryListEvent>(window.matchMedia('(max-width: 1023px)'), 'change').pipe(
-          map((e) => e.matches || Capacitor.isNativePlatform()),
-          startWith(window.matchMedia('(max-width: 1023px)').matches || Capacitor.isNativePlatform())
+          map((e) => e.matches),
+          startWith(window.matchMedia('(max-width: 1023px)').matches)
         )
       : of(false), // Server-side: treat as desktop
     {
-      initialValue:
-        isPlatformBrowser(this.platformId) &&
-        (window.matchMedia('(max-width: 1023px)').matches || Capacitor.isNativePlatform()),
+      initialValue: isPlatformBrowser(this.platformId) && window.matchMedia('(max-width: 1023px)').matches,
     }
   );
 
