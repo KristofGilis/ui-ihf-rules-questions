@@ -1,3 +1,8 @@
+/* iOS Notch Support */
+header {
+  padding-top: max(0px, env(safe-area-inset-top));
+}
+
 footer a.active-nav {
   color: #0e7490; /* cyan-700 for better contrast (WCAG AA compliant) */
 }
