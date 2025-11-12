@@ -1,0 +1,61 @@
+name: Cleanup Preview Deployment
+
+on:
+  pull_request:
+    branches: [main]
+    types: [closed]
+
+jobs:
+  cleanup-preview:
+    runs-on: ubuntu-latest
+    if: github.actor != 'renovate[bot]'
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Delete Vercel deployment
+        uses: actions/github-script@v8
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            console.log(`Cleaning up deployments for PR #${prNumber}`);
+
+            // Get all deployments for this project
+            const response = await fetch(
+              `https://api.vercel.com/v6/deployments?projectId=${process.env.VERCEL_PROJECT_ID}&meta-githubPullRequest=${prNumber}`,
+              {
+                headers: {
+                  'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`
+                }
+              }
+            );
+
+            const data = await response.json();
+
+            if (data.deployments && data.deployments.length > 0) {
+              // Delete all deployments for this PR
+              for (const deployment of data.deployments) {
+                await fetch(
+                  `https://api.vercel.com/v13/deployments/${deployment.uid}`,
+                  {
+                    method: 'DELETE',
+                    headers: {
+                      'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`
+                    }
+                  }
+                );
+                console.log(`Deleted deployment: ${deployment.uid}`);
+              }
+              
+              // Comment on PR
+              github.rest.issues.createComment({
+                issue_number: prNumber,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `🗑️ Preview deployments cleaned up (${data.deployments.length} deployment(s) deleted)`
+              });
+            } else {
+              console.log('No deployments found for this PR');
+            }
