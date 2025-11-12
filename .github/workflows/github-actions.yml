@@ -14,7 +14,7 @@ env:
 jobs:
   release:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && github.actor != 'renovate[bot]'
     permissions:
       contents: write
       issues: write
