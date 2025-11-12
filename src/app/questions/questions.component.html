@@ -1,24 +1,41 @@
-<div class="container-fluid h-100">
-  <div class="row">
-    <div class="col">
-      <h4>
-        @if (random().isRandom) {
-          {{ 'random_questions.title' | translate }}
-        } @else {
-          {{ 'questions.title' | translate }}
-        }
-      </h4>
+@let score = score$ | async;
+@let questions = questions$ | async;
+<app-page-container padding="pb-24">
+  <!-- Wrapper - full width container -->
+  <div class="lg:mx-auto">
+    <!-- Grid layout that changes based on score -->
+    <div
+      class="flex flex-col gap-6 lg:grid lg:gap-6"
+      [class.lg:justify-items-center]="!score && !scoreLoading()"
+      [class.lg:grid-cols-[1fr_auto]]="score || scoreLoading()">
+      <!-- Main content area -->
+      <div class="pt-12">
+        <app-page-hero [title]="'questions.title' | translate" [description]="'questions.description' | translate" />
 
-      <app-questions-view
-        [questions]="(questions$ | async) ?? []"
-        [loading]="loading()"
-        [hasMoreQuestions]="hasMoreQuestions"
-        [score]="(score$ | async) ?? undefined"
-        [scoreLoading]="scoreLoading()"
-        [isRandom]="random().isRandom"
-        [randomCount]="random().count"
-        (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)"
-        (newRandomQuestions)="onNewRandomQuestions()" />
+        <app-questions-view
+          [questions]="questions ?? []"
+          [loading]="loading()"
+          [hasMoreQuestions]="hasMoreQuestions"
+          [score]="score ?? undefined"
+          [scoreLoading]="scoreLoading()"
+          (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)"
+          (restart)="onRestart()"
+          #questionsView />
+      </div>
+
+      <!-- Right side: Score Overview Sidebar -->
+      @if (score || scoreLoading()) {
+        <div
+          class="hidden lg:sticky lg:top-24 lg:block lg:h-fit lg:max-h-[calc(100vh-5rem)] lg:w-[384px] lg:shrink-0 lg:self-start">
+          <app-score-overview
+            [score]="score ?? undefined"
+            [questions]="questions ?? []"
+            [scoreLoading]="scoreLoading()"
+            (scrollToQuestion)="onScrollToQuestion($event)"
+            (recalculate)="questionsView.onCalculateScore()"
+            (restart)="questionsView.onRestart()" />
+        </div>
+      }
     </div>
   </div>
-</div>
+</app-page-container>

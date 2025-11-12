@@ -1,0 +1,25 @@
+<button
+  type="{{ type() }}"
+  [title]="title()"
+  [attr.aria-label]="title()"
+  [attr.aria-disabled]="disabled() || loading()"
+  [disabled]="disabled() || loading()"
+  (click)="onClick()"
+  [class]="
+    'flex items-center justify-center gap-2 rounded-xl font-semibold text-white shadow-lg transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none ' +
+    (fullWidth() ? 'w-full ' : 'flex-1 ') +
+    (size() === 'sm' ? 'px-4 py-2 text-sm ' : size() === 'lg' ? 'px-8 py-4 text-lg ' : 'px-6 py-3 ') +
+    (variant() === 'success'
+      ? 'bg-linear-to-br from-emerald-500 to-teal-600 focus:ring-emerald-500 '
+      : 'bg-linear-to-br from-cyan-500 to-blue-600 focus:ring-cyan-500 ') +
+    (disabled() || loading() ? 'cursor-not-allowed opacity-50' : 'hover:scale-105 hover:shadow-xl active:scale-95')
+  ">
+  @if (icon() || loadingIcon()) {
+    <fa-icon
+      [icon]="loading() && loadingIcon() ? loadingIcon()! : icon()!"
+      [animation]="loading() && loadingIcon() ? 'spin' : undefined"
+      aria-hidden="true">
+    </fa-icon>
+  }
+  <ng-content></ng-content>
+</button>

@@ -1,6 +1,1 @@
-@use 'sass:map';
-@use '@angular/material' as mat;
-
-.red {
-  color: map.get($map: mat.$red-palette, $key: 40);
-}
+/* Styling moved to inline Tailwind classes in HTML */

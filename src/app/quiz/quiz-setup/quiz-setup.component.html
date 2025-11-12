@@ -1,0 +1,16 @@
+<app-page-container [gradient]="true" [padding]="'pt-20 pb-24'">
+  <div class="space-y-8">
+    <!-- Header -->
+    <div class="text-center">
+      <h1 class="mb-4 text-4xl font-bold text-slate-900 md:text-5xl dark:text-white">
+        {{ 'home.quiz_card.title' | translate }}
+      </h1>
+      <p class="text-lg text-slate-600 dark:text-white/80">
+        {{ 'quiz.setup_description' | translate }}
+      </p>
+    </div>
+
+    <!-- Quiz Setup Card -->
+    <app-quiz-config-card [title]="'quiz.configure' | translate" (startQuiz)="onStartQuiz($event)" />
+  </div>
+</app-page-container>

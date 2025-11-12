@@ -1,29 +1,58 @@
 {
-  "name": "IHF Rules Questions",
-  "short_name": "IHF Rules",
+  "name": "IHF Rules Quiz - Test Your Handball Knowledge",
+  "short_name": "IHF Rules Quiz",
+  "description": "Master IHF handball rules with our interactive quiz. Test your knowledge of handball regulations and improve your understanding of the game.",
   "icons": [
     {
       "src": "icons/android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "icons/android-chrome-256x256.png",
       "sizes": "256x256",
       "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any"
     }
   ],
+  "shortcuts": [
+    {
+      "name": "Browse Rules",
+      "short_name": "Rules",
+      "description": "Browse IHF handball rules",
+      "url": "/rules",
+      "icons": [{ "src": "icons/android-chrome-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Browse Questions",
+      "short_name": "Questions",
+      "description": "Browse IHF handball questions",
+      "url": "/questions",
+      "icons": [{ "src": "icons/android-chrome-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Start Quiz",
+      "short_name": "Quiz",
+      "description": "Take a rules quiz",
+      "url": "/quiz",
+      "icons": [{ "src": "icons/android-chrome-192x192.png", "sizes": "192x192" }]
+    }
+  ],
   "theme_color": "#d7e3ff",
-  "background_color": "#d7e3ff",
-  "display": "fullscreen",
-  "description": "Practice the IHF Rules Questions",
+  "background_color": "#0f172a",
+  "display": "standalone",
   "start_url": "./",
   "dir": "auto",
   "scope": "./",
   "lang": "en",
   "orientation": "portrait",
   "display_override": ["standalone", "minimal-ui"],
-  "categories": ["personalization", "productivity", "sports", "utilities"]
+  "categories": ["education", "sports", "utilities"]
 }

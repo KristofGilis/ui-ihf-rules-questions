@@ -1,72 +1,203 @@
-@let isHandset = isHandset$ | async;
-<mat-sidenav-container fullscreen>
-  <mat-sidenav
-    #drawer
-    fixedInViewport
-    [mode]="!isHandset ? 'side' : 'over'"
-    [opened]="!isHandset"
-    [autoFocus]="false">
-    <div class="d-flex flex-column h-100">
-      <div class="d-flex justify-content-center background">
-        <app-logo class="logo-image py-4" />
-      </div>
-      <mat-nav-list class="pt-3 px-2 navigation-container">
-        @for (item of rootRoutes; track $index) {
-          <a
-            mat-list-item
-            [routerLink]="item.path"
-            #link="routerLinkActive"
-            routerLinkActive
-            [activated]="link.isActive"
-            class="mb-1"
-            (click)="onNavigationLinkClicked(drawer, item.path)">
-            {{ 'navigation.' + item.path | translate }}
-          </a>
-        }
-      </mat-nav-list>
-      <div class="mt-auto">
-        <div class="px-3 pt-2 pb-5 background">
-          <mat-form-field class="w-100 mt-3">
-            <mat-label>{{ 'languages.label' | translate }}</mat-label>
-            <mat-select
-              [(value)]="currentLang"
-              (selectionChange)="onChangeLanguage($event.value)"
-              [hideSingleSelectionIndicator]="true">
-              <mat-select-trigger>
-                {{ 'languages.' + currentLang | translate }}
-              </mat-select-trigger>
-              <mat-option value="en">
-                {{ 'languages.en' | translate }}
-              </mat-option>
-              <mat-option value="nl">
-                {{ 'languages.nl' | translate }}
-              </mat-option>
-              <mat-option value="srb">
-                {{ 'languages.srb' | translate }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+<!-- Skip to main content link for keyboard users -->
+<a
+  href="#main-content"
+  class="sr-only outline-none focus-visible:not-sr-only focus-visible:absolute focus-visible:top-20 focus-visible:left-4 focus-visible:z-60 focus-visible:rounded-lg focus-visible:bg-cyan-500 focus-visible:px-4 focus-visible:py-2 focus-visible:text-white focus-visible:shadow-lg focus-visible:ring-2 focus-visible:ring-cyan-600"
+  tabindex="0">
+  {{ 'accessibility.skip_to_main' | translate }}
+</a>
 
-          <small class="fw-bold">&copy; Copyright 2025, Kristof Gilis</small>
-        </div>
-      </div>
+<!-- Offline Banner -->
+@if (!isOnline()) {
+  <div
+    class="fixed top-0 right-0 left-0 z-60 flex items-center justify-center gap-2 bg-yellow-500 px-4 py-2 text-center text-sm font-medium text-yellow-950"
+    role="alert"
+    aria-live="assertive">
+    <fa-icon [icon]="faWifi" class="text-yellow-950" aria-hidden="true" />
+    <span>{{ 'offline.message' | translate }}</span>
+  </div>
+}
+
+<!-- Header -->
+<header
+  class="fixed top-0 right-0 left-0 z-50 border-b border-slate-300 bg-slate-100 dark:border-slate-800 dark:bg-slate-900"
+  role="banner"
+  [class.top-8]="!isOnline()">
+  <nav class="flex h-16 items-center justify-between px-4" role="navigation" aria-label="Main navigation">
+    <!-- Logo -->
+    <div class="flex items-center gap-3">
+      <a
+        href="/"
+        class="flex items-center gap-3 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2"
+        aria-label="IHF Rules Quiz - Home">
+        <app-logo class="h-10 w-10" aria-hidden="true" />
+        <span class="text-lg font-bold text-slate-900 dark:text-white">{{ 'main.title' | translate }}</span>
+      </a>
     </div>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <mat-toolbar class="sticky-top">
-      @if (isHandset$ | async) {
-        <button type="button" class="me-2" mat-icon-button (click)="drawer.toggle()" onclick="blur()">
-          <mat-icon>menu</mat-icon>
+
+    <!-- Actions -->
+    <div class="flex items-center gap-2">
+      <!-- Language Dropdown -->
+      <div class="language-dropdown relative">
+        <button
+          type="button"
+          (click)="toggleLanguageMenu()"
+          [attr.aria-label]="'languages.label' | translate"
+          [attr.aria-expanded]="showLanguageMenu()"
+          [attr.aria-controls]="'language-menu'"
+          class="flex items-center gap-2 rounded-lg border border-slate-300 bg-slate-200 p-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-300 focus:ring-2 focus:ring-cyan-500 focus:outline-none md:px-3 md:py-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+          </svg>
+          <span class="hidden md:inline">{{ currentLang().toUpperCase() }}</span>
         </button>
-      }
-      <h1 class="fw-bolder">{{ 'main.title' | translate }}</h1>
-    </mat-toolbar>
-    <div class="container-fluid py-4">
-      <div class="row">
-        <div class="col">
-          <router-outlet />
-        </div>
+
+        @if (showLanguageMenu()) {
+          <div
+            id="language-menu"
+            role="menu"
+            aria-label="Language selection"
+            class="absolute right-0 z-50 mt-2 w-40 overflow-hidden rounded-lg border border-slate-300 bg-slate-50 shadow-lg dark:border-slate-700 dark:bg-slate-800">
+            <button
+              type="button"
+              role="menuitem"
+              [attr.title]="'languages.en' | translate"
+              (click)="selectLanguage('en')"
+              [attr.aria-current]="currentLang() === 'en' ? 'true' : null"
+              [class.bg-cyan-500]="currentLang() === 'en'"
+              class="w-full px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
+              {{ 'languages.en' | translate }}
+            </button>
+            <button
+              type="button"
+              role="menuitem"
+              [attr.title]="'languages.nl' | translate"
+              (click)="selectLanguage('nl')"
+              [attr.aria-current]="currentLang() === 'nl' ? 'true' : null"
+              [class.bg-cyan-500]="currentLang() === 'nl'"
+              class="w-full px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
+              {{ 'languages.nl' | translate }}
+            </button>
+            <button
+              type="button"
+              role="menuitem"
+              [attr.title]="'languages.srb' | translate"
+              (click)="selectLanguage('srb')"
+              [attr.aria-current]="currentLang() === 'srb' ? 'true' : null"
+              [class.bg-cyan-500]="currentLang() === 'srb'"
+              class="w-full px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
+              {{ 'languages.srb' | translate }}
+            </button>
+          </div>
+        }
+      </div>
+
+      <!-- Theme Dropdown -->
+      <div class="theme-dropdown relative">
+        <button
+          type="button"
+          (click)="toggleThemeMenu()"
+          [attr.aria-label]="'theme.toggle' | translate"
+          title="{{ 'theme.toggle' | translate }}"
+          [attr.aria-expanded]="showThemeMenu()"
+          [attr.aria-controls]="'theme-menu'"
+          class="flex items-center gap-2 rounded-lg border border-slate-300 bg-slate-200 p-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-300 focus:ring-2 focus:ring-cyan-500 focus:outline-none md:px-3 md:py-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
+          <fa-icon [icon]="themeIcon()" aria-hidden="true" />
+          <span class="hidden md:inline">{{ themeLabel() | translate }}</span>
+        </button>
+
+        @if (showThemeMenu()) {
+          <div
+            id="theme-menu"
+            role="menu"
+            aria-label="Theme selection"
+            class="absolute right-0 z-50 mt-2 w-32 overflow-hidden rounded-lg border border-slate-300 bg-slate-50 shadow-lg dark:border-slate-700 dark:bg-slate-800">
+            <button
+              type="button"
+              role="menuitem"
+              title="{{ 'theme.light' | translate }}"
+              (click)="selectTheme('light')"
+              [attr.aria-current]="currentTheme() === 'light' ? 'true' : null"
+              [class.bg-cyan-500]="currentTheme() === 'light'"
+              class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
+              <fa-icon [icon]="faSun" class="w-4" aria-hidden="true" />
+              <span>{{ 'theme.light' | translate }}</span>
+            </button>
+            <button
+              type="button"
+              role="menuitem"
+              title="{{ 'theme.dark' | translate }}"
+              (click)="selectTheme('dark')"
+              [attr.aria-current]="currentTheme() === 'dark' ? 'true' : null"
+              [class.bg-cyan-500]="currentTheme() === 'dark'"
+              class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
+              <fa-icon [icon]="faMoon" class="w-4" aria-hidden="true" />
+              <span>{{ 'theme.dark' | translate }}</span>
+            </button>
+            <button
+              type="button"
+              role="menuitem"
+              title="{{ 'theme.system' | translate }}"
+              (click)="selectTheme('system')"
+              [attr.aria-current]="currentTheme() === 'system' ? 'true' : null"
+              [class.bg-cyan-500]="currentTheme() === 'system'"
+              class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
+              <fa-icon [icon]="faDesktop" class="w-4" aria-hidden="true" />
+              <span>{{ 'theme.system' | translate }}</span>
+            </button>
+          </div>
+        }
       </div>
     </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+  </nav>
+</header>
+
+<!-- Main Content -->
+<main id="main-content" class="min-h-screen pt-16" role="main" tabindex="-1">
+  <router-outlet />
+</main>
+
+<!-- Footer Navigation -->
+<footer
+  class="fixed right-0 bottom-0 left-0 z-50 border-t border-slate-300 bg-slate-100 dark:border-slate-800 dark:bg-slate-900">
+  <nav class="flex h-16 items-center justify-around px-4">
+    <a
+      routerLink="/home"
+      routerLinkActive="active-nav"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="flex min-w-[60px] flex-col items-center justify-center gap-0.5 text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+      <fa-icon [icon]="faHome" size="lg" />
+      <span class="text-xs font-medium">{{ 'navigation.home' | translate }}</span>
+    </a>
+    <a
+      routerLink="/quiz"
+      routerLinkActive="active-nav"
+      class="flex min-w-[60px] flex-col items-center justify-center gap-0.5 text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+      <fa-icon [icon]="faTrophy" size="lg" />
+      <span class="text-xs font-medium">{{ 'navigation.quiz' | translate }}</span>
+    </a>
+    <a
+      routerLink="/questions"
+      routerLinkActive="active-nav"
+      class="flex min-w-[60px] flex-col items-center justify-center gap-0.5 text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+      <fa-icon [icon]="faQuestionCircle" size="lg" />
+      <span class="text-xs font-medium">{{ 'navigation.questions' | translate }}</span>
+    </a>
+    <a
+      routerLink="/rules"
+      routerLinkActive="active-nav"
+      class="flex min-w-[60px] flex-col items-center justify-center gap-0.5 text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+      <fa-icon [icon]="faBook" size="lg" />
+      <span class="text-xs font-medium">{{ 'navigation.rules' | translate }}</span>
+    </a>
+  </nav>
+</footer>

@@ -1,16 +1,32 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { MatCheckbox } from '@angular/material/checkbox';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input, output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Question } from '../../../../../../graphql/generated';
 
 @Component({
   selector: 'app-question',
-  imports: [MatCheckbox],
+  imports: [FormsModule, FaIconComponent, TranslatePipe],
   templateUrl: './question.component.html',
-  styleUrl: './question.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuestionComponent {
   readonly question = input.required<Question>();
+  readonly isWrong = input<boolean>(false);
+  readonly disabled = input<boolean>(false);
   readonly selectAnswer = output<string>();
   readonly deselectAnswer = output<string>();
+
+  readonly elementRef = inject(ElementRef);
+
+  readonly faTimesCircle = faTimesCircle;
+
+  onCheckboxChange(answerId: string, checked: boolean) {
+    if (checked) {
+      this.selectAnswer.emit(answerId);
+    } else {
+      this.deselectAnswer.emit(answerId);
+    }
+  }
 }

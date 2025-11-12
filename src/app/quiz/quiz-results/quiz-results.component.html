@@ -1,0 +1,141 @@
+<app-page-container [padding]="'pt-12 pb-24'">
+  @if (quizService.results(); as results) {
+    <!-- Page Hero -->
+    <div class="mb-12 text-center">
+        <h1 class="mb-6 text-5xl font-black tracking-tight text-slate-900 dark:text-white">
+          {{ 'quiz_results.title' | translate }}
+        </h1>
+
+        <!-- Score Card -->
+        <div class="mb-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl dark:border-slate-800 dark:bg-slate-900">
+          <div class="bg-linear-to-br from-cyan-500 to-blue-500 p-6 text-center text-white">
+            <h4 class="mb-1.5 text-base font-semibold opacity-90">
+              {{ 'quiz_results.title' | translate }}
+            </h4>
+            <div class="mb-2 text-5xl font-bold drop-shadow-lg">
+              {{ results.percentage.toFixed(0) }}%
+            </div>
+            <div class="text-sm opacity-90">
+              <span class="font-semibold">{{ results.correctCount }}</span> {{ 'score_overview.of_total_correct' | translate: {total: results.totalQuestions} }}
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 p-4">
+            <div class="rounded-lg bg-green-100 p-4 text-center dark:bg-green-950">
+              <div class="text-3xl font-bold text-green-600 dark:text-green-400">
+                {{ results.correctCount }}
+              </div>
+              <div class="text-xs font-medium text-green-700 dark:text-green-300">
+                {{ 'quiz_results.correct' | translate }}
+              </div>
+            </div>
+            <div class="rounded-lg bg-red-100 p-4 text-center dark:bg-red-950">
+              <div class="text-3xl font-bold text-red-600 dark:text-red-400">
+                {{ results.wrongCount }}
+              </div>
+              <div class="text-xs font-medium text-red-700 dark:text-red-300">
+                {{ 'quiz_results.wrong' | translate }}
+              </div>
+            </div>
+          </div>
+
+          @if (results.completionTimeSeconds) {
+            <div class="border-t border-slate-200 px-4 py-3 text-center dark:border-slate-800">
+              <div class="text-sm text-slate-600 dark:text-slate-400">
+                {{ 'quiz_results.completion_time' | translate }}
+              </div>
+              <div class="text-lg font-bold text-slate-900 dark:text-white">
+                {{ quizService.formatCompletionTime(results.completionTimeSeconds) }}
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-3">
+          <app-gradient-button
+            [fullWidth]="true"
+            [variant]="'primary'"
+            [icon]="faRedo"
+            [routerLink]="['/quiz']"
+            (clicked)="retakeQuiz()">
+            <span>{{ 'quiz_results.retake' | translate }}</span>
+          </app-gradient-button>
+
+          <app-gradient-button [fullWidth]="true" [variant]="'success'" [icon]="faHome" [routerLink]="['/']">
+            <span>{{ 'quiz_results.home' | translate }}</span>
+          </app-gradient-button>
+        </div>
+      </div>
+
+      <!-- Review Section -->
+      <div>
+        <h2 class="mb-6 text-3xl font-bold text-slate-900 dark:text-white">
+          {{ 'quiz_results.review' | translate }}
+        </h2>
+
+        @for (answer of results.answers; track $index) {
+          <div
+            class="mb-6 overflow-hidden rounded-2xl border shadow-lg"
+            [class.border-green-500]="answer.isCorrect"
+            [class.bg-green-50]="answer.isCorrect"
+            [class.dark:bg-green-950/20]="answer.isCorrect"
+            [class.border-red-500]="!answer.isCorrect"
+            [class.bg-red-50]="!answer.isCorrect"
+            [class.dark:bg-red-950/20]="!answer.isCorrect">
+            <!-- Question Header -->
+            <div class="flex items-center justify-between border-b p-6"
+              [class.border-green-200]="answer.isCorrect"
+              [class.dark:border-green-800]="answer.isCorrect"
+              [class.border-red-200]="!answer.isCorrect"
+              [class.dark:border-red-800]="!answer.isCorrect">
+              <span class="font-bold text-slate-900 dark:text-white">
+                {{ 'quiz_results.question' | translate }} {{ answer.questionNumber }}
+              </span>
+              @if (answer.isCorrect) {
+                <div class="flex items-center gap-2 rounded-full bg-green-500 px-3 py-1 text-sm font-semibold text-white">
+                  <fa-icon [icon]="faCheckCircle"></fa-icon>
+                  <span>{{ 'quiz_results.correct' | translate }}</span>
+                </div>
+              } @else {
+                <div class="flex items-center gap-2 rounded-full bg-red-500 px-3 py-1 text-sm font-semibold text-white">
+                  <fa-icon [icon]="faTimesCircle"></fa-icon>
+                  <span>{{ 'quiz_results.wrong' | translate }}</span>
+                </div>
+              }
+            </div>
+
+            <!-- Question Text -->
+            <div class="bg-white p-6 dark:bg-slate-900">
+              <p class="mb-6 text-lg text-slate-700 dark:text-slate-300" [innerHTML]="answer.question"></p>
+
+              <!-- Answers -->
+              <div class="space-y-3">
+                @for (ans of answer.allAnswers; track ans.id) {
+                  @let wasSelected = answer.selectedAnswerIds.includes(ans.id);
+                  <div
+                    class="flex flex-col gap-3 rounded-lg border p-4 transition-all sm:flex-row sm:items-center sm:justify-between"
+                    [class.border-cyan-500]="wasSelected"
+                    [class.bg-cyan-50]="wasSelected"
+                    [class.dark:bg-cyan-900/30]="wasSelected"
+                    [class.border-slate-200]="!wasSelected"
+                    [class.dark:border-slate-700]="!wasSelected">
+                    <div class="flex items-start gap-2">
+                      <span class="font-semibold text-slate-900 dark:text-white">{{ ans.number }})</span>
+                      <span class="text-slate-900 dark:text-white">{{ ans.phrase }}</span>
+                    </div>
+
+                    @if (wasSelected) {
+                      <span class="whitespace-nowrap self-start rounded-full bg-cyan-500 px-3 py-1 text-center text-xs font-semibold text-white sm:self-center">
+                        {{ 'quiz_results.your_answer' | translate }}
+                      </span>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+  }
+</app-page-container>

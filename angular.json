@@ -53,14 +53,18 @@
                 "input": "public"
               }
             ],
-            "styles": ["bootstrap/dist/css/bootstrap.min.css", "src/styles.scss"],
-            "scripts": [],
-            "optimization": {
-              "fonts": false
-            }
+            "styles": ["src/styles.css"],
+            "allowedCommonJsDependencies": ["hammerjs"],
+            "scripts": []
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -82,13 +86,16 @@
                   "minify": true,
                   "inlineCritical": true
                 },
-                "fonts": false
+                "fonts": {
+                  "inline": false
+                }
               },
               "sourceMap": {
-                "scripts": true,
+                "scripts": false,
                 "styles": false,
                 "vendor": false
-              }
+              },
+              "progress": false
             },
             "development": {
               "optimization": false,
@@ -116,7 +123,8 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"],
+            "eslintConfig": ".eslintrc.json"
           }
         }
       }

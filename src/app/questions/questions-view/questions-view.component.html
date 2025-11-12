@@ -1,40 +1,97 @@
-@for (question of questions(); track question.id) {
-  <div class="mb-4">
-    <app-question
-      [question]="question"
-      (selectAnswer)="onSelectAnswer($event)"
-      (deselectAnswer)="onDeselectAnswer($event)" />
-  </div>
-}
-@if (loading()) {
-  <div class="d-flex justify-content-center align-items-center">
-    <mat-progress-spinner mode="indeterminate" diameter="50" />
-  </div>
-}
-@if (!hasMoreQuestions() && !loading()) {
-  <div class="d-flex w-100">
-    <button
-      type="button"
-      class="ms-auto ms-md-0"
-      mat-flat-button
-      [disabled]="scoreLoading()"
-      (click)="onCalculateScore()">
-      <div class="d-flex align-items-center">
+<!-- Questions List - Always rendered, no conditional destruction -->
+<div class="questions-list w-full" [class.pb-8]="isMobile()" [class.lg:pb-0]="isMobile()">
+  @for (question of questions(); track question.id; let last = $last) {
+    <div class="fade-in w-full" [class.mb-5]="!last || isMobile() || (!score() && !scoreLoading())">
+      <app-question
+        [question]="question"
+        [isWrong]="isQuestionWrong(question.id)"
+        [disabled]="score()?.percentage === '100.00 %'"
+        (selectAnswer)="onSelectAnswer($event)"
+        (deselectAnswer)="onDeselectAnswer($event)" />
+    </div>
+  } @empty {
+    @if (!loading()) {
+      <app-empty-state [message]="'questions.no_questions' | translate">
+        <fa-icon [icon]="faQuestionCircle" size="3x" class="text-slate-400 dark:text-slate-600" />
+      </app-empty-state>
+    }
+  }
+
+  @if (loading()) {
+    <app-loading-spinner [size]="'lg'" [text]="'questions.loading' | translate" />
+  }
+
+  @if (!hasMoreQuestions() && !loading()) {
+    <div [class.hidden]="score() || scoreLoading()">
+      <app-gradient-button [fullWidth]="true" [variant]="'primary'" (clicked)="onCalculateScore()">
         {{ 'questions.calculate_score' | translate }}
-        @if (scoreLoading()) {
-          <mat-progress-spinner class="ms-2" diameter="20" color="primary" mode="indeterminate" />
-        }
+      </app-gradient-button>
+    </div>
+  }
+</div>
+
+<!-- Mobile: Fixed Bottom Bar (only when score exists) -->
+@if (score() && isMobile() && !showMobileScoreDialog()) {
+  <div class="fixed right-0 bottom-16 left-0 z-40 bg-white p-4 shadow-2xl dark:bg-slate-900">
+    @if (score()?.percentage !== '100.00 %') {
+      <!-- Show both buttons when there are wrong answers -->
+      <div class="mx-auto flex max-w-md gap-3">
+        <!-- Recalculate Button -->
+        <app-gradient-button
+          [title]="'questions.recalculate_score_full' | translate"
+          [variant]="'primary'"
+          [icon]="faRotateRight"
+          [loadingIcon]="faSpinner"
+          [loading]="scoreLoading()"
+          [disabled]="scoreLoading()"
+          (clicked)="onCalculateScore()">
+          <span>{{ 'questions.recalculate_score' | translate }}</span>
+        </app-gradient-button>
+
+        <!-- Show Score Button -->
+        <app-gradient-button
+          [title]="'questions.show_score' | translate"
+          [variant]="'success'"
+          [icon]="faChartBar"
+          (clicked)="showMobileScoreDialog.set(true)">
+          <span>{{ 'questions.show_score' | translate }}</span>
+        </app-gradient-button>
       </div>
-    </button>
-    @if (isRandom()) {
-      <button type="button" class="ms-2" mat-button [disabled]="scoreLoading()" (click)="newRandomQuestions.emit()">
-        {{ 'questions_random_new' | translate: { count: randomCount() } }}
-      </button>
+    } @else {
+      <!-- Show Restart and Show Score buttons when perfect score -->
+      <div class="mx-auto flex max-w-md gap-3">
+        <!-- Restart Button -->
+        <app-gradient-button
+          [title]="'questions.restart' | translate"
+          [variant]="'primary'"
+          [icon]="faRotateRight"
+          (clicked)="onRestart()">
+          <span>{{ 'questions.restart' | translate }}</span>
+        </app-gradient-button>
+
+        <!-- Show Score Button -->
+        <app-gradient-button
+          [title]="'questions.show_score' | translate"
+          [variant]="'success'"
+          [icon]="faChartBar"
+          (clicked)="showMobileScoreDialog.set(true)">
+          <span>{{ 'questions.show_score' | translate }}</span>
+        </app-gradient-button>
+      </div>
     }
   </div>
 }
-@if (score()) {
-  <div class="mt-4">
-    <app-score-overview [score]="score()" [questions]="questions()" />
-  </div>
+
+<!-- Mobile: Score Overview Dialog -->
+@if (isMobile()) {
+  <app-mobile-dialog
+    [open]="showMobileScoreDialog()"
+    [closeTitle]="'Close score overview'"
+    (closed)="closeMobileScoreDialog()">
+    <app-score-overview
+      [score]="score()"
+      [questions]="questions()"
+      [compact]="true"
+      (scrollToQuestion)="scrollToQuestion($event)" />
+  </app-mobile-dialog>
 }

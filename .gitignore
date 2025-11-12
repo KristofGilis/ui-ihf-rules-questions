@@ -33,6 +33,7 @@ yarn-error.log
 .sass-cache/
 /connect.lock
 /coverage
+coverage-output.txt
 /libpeerconnection.log
 testem.log
 /typings
@@ -40,3 +41,13 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# Bundle analysis
+stats.html
+stats.json

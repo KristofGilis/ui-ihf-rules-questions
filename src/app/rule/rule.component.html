@@ -1,17 +1,44 @@
-<div class="container-fluid h-100">
-  <div class="row">
-    <div class="col">
-      @if (rule$ | async; as rule) {
-        <h4 class="pb-4">{{ getRuleName(rule) }}</h4>
+@let score = score$ | async;
+@let rule = rule$ | async;
+<app-page-container padding="pb-24">
+  <!-- Wrapper - full width container -->
+  <div class="lg:mx-auto">
+    <!-- Grid layout that changes based on score -->
+    <div
+      class="layout-grid flex flex-col gap-6"
+      [class.no-score]="!score && !scoreLoading()"
+      [class.has-score]="score || scoreLoading()">
+      <!-- Main content area -->
+      <div class="w-full pt-12">
+        <app-page-hero
+          [title]="getRuleName(rule) ?? ''"
+          [description]="'rule.description' | translate"
+          [size]="'small'" />
 
         <app-questions-view
-          [questions]="getQuestions(rule)"
+          [questions]="rule ? getQuestions(rule) : []"
           [loading]="loading()"
           [hasMoreQuestions]="hasMoreQuestions"
-          [score]="(score$ | async) ?? undefined"
+          [score]="score ?? undefined"
           [scoreLoading]="scoreLoading()"
-          (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)" />
+          (calculareScore)="onCalculateScore($event.questionIds, $event.selectedAnswerIds)"
+          (restart)="onRestart()"
+          #questionsView />
+      </div>
+
+      <!-- Right side: Score Overview Sidebar -->
+      @if (score || scoreLoading()) {
+        <div
+          class="hidden lg:sticky lg:top-24 lg:block lg:h-fit lg:max-h-[calc(100vh-5rem)] lg:w-[384px] lg:shrink-0 lg:self-start">
+          <app-score-overview
+            [score]="score ?? undefined"
+            [questions]="rule ? getQuestions(rule) : []"
+            [scoreLoading]="scoreLoading()"
+            (scrollToQuestion)="onScrollToQuestion($event)"
+            (recalculate)="questionsView.onCalculateScore()"
+            (restart)="questionsView.onRestart()" />
+        </div>
       }
     </div>
   </div>
-</div>
+</app-page-container>

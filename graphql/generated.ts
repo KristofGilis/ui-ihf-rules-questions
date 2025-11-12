@@ -3,21 +3,11 @@ import { Injectable } from '@angular/core';
 import * as Apollo from 'apollo-angular';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> =
-  | T
-  | {
-      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
-    };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string };
@@ -25,7 +15,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
-  UUID: { input: any; output: any };
+  UUID: { input: string; output: string };
 };
 
 /** IHF rule */
@@ -448,11 +438,7 @@ export type GetQuestionsQuery = {
         } | null;
       } | null;
     }> | null;
-    pageInfo: {
-      __typename?: 'PageInfo';
-      endCursor?: string | null;
-      hasNextPage: boolean;
-    };
+    pageInfo: { __typename?: 'PageInfo'; endCursor?: string | null; hasNextPage: boolean };
   } | null;
 };
 
@@ -490,11 +476,7 @@ export type GetRuleQuery = {
           } | null;
         } | null;
       }> | null;
-      pageInfo: {
-        __typename?: 'PageInfo';
-        endCursor?: string | null;
-        hasNextPage: boolean;
-      };
+      pageInfo: { __typename?: 'PageInfo'; endCursor?: string | null; hasNextPage: boolean };
     } | null;
   } | null;
 };
@@ -511,12 +493,7 @@ export type GetRulesQuery = {
     edges?: Array<{
       __typename?: 'RulesEdge';
       cursor: string;
-      node?: {
-        __typename?: 'Rule';
-        id: string;
-        number?: string | null;
-        name?: string | null;
-      } | null;
+      node?: { __typename?: 'Rule'; id: string; number?: string | null; name?: string | null } | null;
     }> | null;
     pageInfo: { __typename?: 'PageInfo'; endCursor?: string | null };
   } | null;
@@ -541,7 +518,7 @@ export const CalculateScoreDocument = gql`
   providedIn: 'root',
 })
 export class CalculateScoreGQL extends Apollo.Query<CalculateScoreQuery, CalculateScoreQueryVariables> {
-  document = CalculateScoreDocument;
+  override document = CalculateScoreDocument;
 
   constructor(apollo: Apollo.Apollo) {
     super(apollo);
@@ -556,7 +533,7 @@ export const GetQuestionsDocument = gql`
           id
           number
           phrase
-          answers(order: [{ number: ASC }]) {
+          answers(order: { number: ASC }) {
             nodes {
               id
               number
@@ -577,7 +554,7 @@ export const GetQuestionsDocument = gql`
   providedIn: 'root',
 })
 export class GetQuestionsGQL extends Apollo.Query<GetQuestionsQuery, GetQuestionsQueryVariables> {
-  document = GetQuestionsDocument;
+  override document = GetQuestionsDocument;
 
   constructor(apollo: Apollo.Apollo) {
     super(apollo);
@@ -618,7 +595,7 @@ export const GetRuleDocument = gql`
   providedIn: 'root',
 })
 export class GetRuleGQL extends Apollo.Query<GetRuleQuery, GetRuleQueryVariables> {
-  document = GetRuleDocument;
+  override document = GetRuleDocument;
 
   constructor(apollo: Apollo.Apollo) {
     super(apollo);
@@ -646,7 +623,7 @@ export const GetRulesDocument = gql`
   providedIn: 'root',
 })
 export class GetRulesGQL extends Apollo.Query<GetRulesQuery, GetRulesQueryVariables> {
-  document = GetRulesDocument;
+  override document = GetRulesDocument;
 
   constructor(apollo: Apollo.Apollo) {
     super(apollo);
@@ -662,7 +639,7 @@ export const GetVersionDocument = gql`
   providedIn: 'root',
 })
 export class GetVersionGQL extends Apollo.Query<GetVersionQuery, GetVersionQueryVariables> {
-  document = GetVersionDocument;
+  override document = GetVersionDocument;
 
   constructor(apollo: Apollo.Apollo) {
     super(apollo);

@@ -1,8 +1,6 @@
-<div class="container-fluid h-100">
-  <div class="row">
-    <div class="col">
-      <h4>{{ 'rules.title' | translate }}</h4>
-      <app-rules-view [rules]="(rules$ | async) ?? []" [loading]="loading()" />
-    </div>
-  </div>
-</div>
+<app-page-container>
+  <app-page-hero [title]="'rules.title' | translate" [description]="'rules.description' | translate" />
+
+  <!-- Rules List -->
+  <app-rules-view [rules]="(rules$ | async) ?? []" [loading]="(loading$ | async) ?? false" />
+</app-page-container>

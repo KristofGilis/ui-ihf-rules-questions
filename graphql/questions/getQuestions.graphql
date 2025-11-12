@@ -6,7 +6,7 @@ query getQuestions($first: Int!, $after: String, $order: [QuestionSortInput!], $
         id
         number
         phrase
-        answers(order: [{ number: ASC }]) {
+        answers(order: { number: ASC }) {
           nodes {
             id
             number

@@ -1,0 +1,11 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow service worker and manifest files
+Disallow: /ngsw.json
+Disallow: /ngsw-worker.js
+Disallow: /safety-worker.js
+
+# Sitemap location (update with your actual domain)
+# Sitemap: https://yourdomain.com/sitemap.xml

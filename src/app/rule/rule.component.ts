@@ -1,19 +1,27 @@
-import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
-import { Observable, finalize, map, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, Subject, finalize, map, merge, shareReplay, switchMap, tap } from 'rxjs';
 import { Question, Rule, Score } from '../../../graphql/generated';
+import { ScoreOverviewComponent } from '../questions/questions-view/components/score-overview/score-overview.component';
 import { QuestionsViewComponent } from '../questions/questions-view/questions-view.component';
 import { QuestionsService } from '../questions/services/questions.service';
+import { PageContainerComponent, PageHeroComponent } from '../shared/components';
 import { RuleService } from './services/rule.service';
 
 @Component({
   selector: 'app-rule',
-  imports: [AsyncPipe, QuestionsViewComponent],
+  imports: [
+    AsyncPipe,
+    TranslatePipe,
+    QuestionsViewComponent,
+    ScoreOverviewComponent,
+    PageContainerComponent,
+    PageHeroComponent,
+  ],
   templateUrl: './rule.component.html',
   styleUrl: './rule.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,11 +30,9 @@ export class RuleComponent {
   private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _ruleService = inject(RuleService);
   private readonly _questionsService = inject(QuestionsService);
-  private readonly _scrollDispatcher = inject(ScrollDispatcher);
   private readonly _translateService = inject(TranslateService);
 
   loading = signal(false);
-  score$?: Observable<Score>;
   scoreLoading = signal(false);
 
   rule$ = this._ruleService.get(this._activatedRoute.snapshot.params['id']).pipe(
@@ -37,20 +43,43 @@ export class RuleComponent {
     shareReplay()
   );
 
+  private _calculating$ = new Subject<{ questionIds: string[]; selectedAnswerIds: string[] }>();
+  private _reset$ = new BehaviorSubject<Score | undefined>(undefined);
+
+  score$ = merge(
+    this._calculating$.pipe(
+      switchMap(({ questionIds, selectedAnswerIds }) =>
+        this._questionsService.calculateScore(questionIds, selectedAnswerIds).pipe(
+          tap((x) => this.scoreLoading.set(x.loading)),
+          onlyCompleteData(),
+          map((x) => x.data.calculateScore as Score),
+          finalize(() => this.scoreLoading.set(false))
+        )
+      )
+    ),
+    this._reset$
+  );
+
   get hasMoreQuestions(): boolean {
     return this._ruleService.hasNextPage;
   }
 
-  constructor() {
-    this._scrollDispatcher
-      .scrolled()
-      .pipe(takeUntilDestroyed())
-      .subscribe((res) => {
-        if ((res as CdkScrollable).measureScrollOffset('bottom') < 50) {
-          this._ruleService.fetchMoreQuestions();
-        }
-      });
+  @HostListener('window:scroll')
+  onScroll(): void {
+    if (this.loading()) {
+      return;
+    }
 
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const documentHeight = document.documentElement.scrollHeight;
+    const threshold = 200; // pixels from bottom
+
+    if (scrollPosition >= documentHeight - threshold && this.hasMoreQuestions) {
+      this._ruleService.fetchMoreQuestions();
+    }
+  }
+
+  constructor() {
     this._translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => this._ruleService.refetch());
   }
 
@@ -67,11 +96,25 @@ export class RuleComponent {
   }
 
   onCalculateScore(questionIds: string[], selectedAnswerIds: string[]): void {
-    this.score$ = this._questionsService.calculateScore(questionIds, selectedAnswerIds).pipe(
-      tap((x) => this.scoreLoading.set(x.loading)),
-      onlyCompleteData(),
-      map((x) => x.data.calculateScore as Score),
-      finalize(() => this.scoreLoading.set(false))
-    );
+    // Set loading state immediately to show sidebar
+    this.scoreLoading.set(true);
+    this._calculating$.next({ questionIds, selectedAnswerIds });
+  }
+
+  onRestart(): void {
+    // Reset the score
+    this._reset$.next(undefined);
+    this.scoreLoading.set(false);
+  }
+
+  onScrollToQuestion(questionId: string): void {
+    // Find the question element and scroll to it
+    const questionElement = document.querySelector(`[data-question-id="${questionId}"]`);
+    if (questionElement) {
+      questionElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
   }
 }

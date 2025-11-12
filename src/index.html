@@ -1,12 +1,38 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
-    <title>IHF Rules Questions</title>
+    <title>IHF Rules Quiz - Test Your Handball Knowledge</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <meta
+      name="description"
+      content="Master IHF handball rules with our interactive quiz. Test your knowledge of handball regulations, learn official rules, and improve your understanding of the game." />
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="IHF Rules Quiz - Test Your Handball Knowledge" />
+    <meta
+      property="og:description"
+      content="Master IHF handball rules with our interactive quiz. Test your knowledge of handball regulations and improve your understanding of the game." />
+    <meta property="og:site_name" content="IHF Rules Quiz" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="IHF Rules Quiz - Test Your Handball Knowledge" />
+    <meta
+      name="twitter:description"
+      content="Master IHF handball rules with our interactive quiz. Test your knowledge of handball regulations and improve your understanding of the game." />
+
+    <!-- Performance: Preconnect to external domains -->
+    <link rel="preconnect" href="https://api-ihf-rules-questions.azurewebsites.net" crossorigin />
+    <link rel="dns-prefetch" href="https://api-ihf-rules-questions.azurewebsites.net" />
+
+    <!-- Security Headers -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://*.sentry.io; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; connect-src 'self' https://api-ihf-rules-questions.azurewebsites.net https://*.sentry.io wss:; img-src 'self' data: https:; font-src 'self' data:; base-uri 'self'; form-action 'self';" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
 
     <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png" />
@@ -14,14 +40,16 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="mask-icon" href="icons/safari-pinned-tab.svg" color="#d7e3ff" />
     <link rel="shortcut icon" href="favicon.ico" />
-    <meta name="msapplication-TileColor" content="#d7e3ff" />
+    <meta name="msapplication-TileColor" content="#0f172a" />
     <meta name="msapplication-config" content="icons/browserconfig.xml" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#d7e3ff" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#004f4f" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8fafc" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f172a" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="IHF Rules Quiz" />
   </head>
-  <body class="mat-typography">
+  <body>
     <app-root></app-root>
     <noscript>Please enable JavaScript to continue using this application.</noscript>
   </body>

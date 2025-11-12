@@ -7,5 +7,8 @@
       "externalTemplate": true,
       "style": "scss"
     }
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
   }
 }
