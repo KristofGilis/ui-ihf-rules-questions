@@ -1,117 +1,17 @@
-name: Build and Deploy UI
+name: Preview Deployment
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened, closed]
 
 env:
-  AZURE_WEBAPP_NAME: rulequestions
   NODE_VERSION: 22
 
 jobs:
-  release:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    permissions:
-      contents: write
-      issues: write
-      pull-requests: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-
-      - name: Check if commit is from Renovate
-        id: check_renovate
-        run: |
-          COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
-          echo "author=$COMMIT_AUTHOR" >> $GITHUB_OUTPUT
-          if [[ "$COMMIT_AUTHOR" == "renovate[bot]" ]]; then
-            echo "skip=true" >> $GITHUB_OUTPUT
-          else
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Setup Node.js
-        if: steps.check_renovate.outputs.skip == 'false'
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        if: steps.check_renovate.outputs.skip == 'false'
-        run: npm ci
-
-      - name: Semantic Release
-        if: steps.check_renovate.outputs.skip == 'false'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
-
-  build:
-    runs-on: ubuntu-latest
-    needs: release
-    if: always() && (needs.release.result == 'success' || needs.release.result == 'skipped') && (github.event_name != 'pull_request' || github.event.action != 'closed')
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-        with:
-          ref: ${{ github.event_name == 'pull_request' && github.head_ref || 'main' }}
-          fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Lint code
-        run: npm run lint
-
-      - name: Build app (production)
-        run: npm run build -- --configuration=production
-
-      - name: Check bundle size
-        run: |
-          MAIN_SIZE=$(find dist/ui-ihf-rules-questions/browser -name 'main*.js' -exec wc -c {} \; | awk '{print $1}')
-          MAX_SIZE=350000
-          echo "Main bundle size: $MAIN_SIZE bytes (max: $MAX_SIZE bytes)"
-          if [ $MAIN_SIZE -gt $MAX_SIZE ]; then
-            echo "❌ Bundle size exceeds limit!"
-            exit 1
-          fi
-          echo "✅ Bundle size is within limits"
-
-      - name: Run tests
-        run: npm test -- --coverage --silent
-
-      - name: Install Playwright browsers
-        run: npx playwright install chromium --with-deps
-
-      - name: Run E2E tests
-        run: npm run test:e2e --ignore-scripts
-
-      - name: Upload artifact
-        if: github.ref == 'refs/heads/main' || (github.event_name == 'pull_request' && github.actor != 'renovate[bot]')
-        uses: actions/upload-artifact@v5
-        with:
-          name: dist
-          path: dist/ui-ihf-rules-questions
-
-  # Preview deployment for pull requests (Vercel)
   preview:
-    needs: build
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.action != 'closed' && github.actor != 'renovate[bot]'
+    if: github.event.action != 'closed' && github.actor != 'renovate[bot]'
     permissions:
       contents: read
       pull-requests: write
@@ -185,7 +85,7 @@ jobs:
 
   cleanup-preview:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.actor != 'renovate[bot]'
+    if: github.event.action == 'closed' && github.actor != 'renovate[bot]'
     permissions:
       pull-requests: write
     steps:
@@ -236,32 +136,3 @@ jobs:
             } else {
               console.log('No deployments found for this PR');
             }
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v6
-        with:
-          name: dist
-          path: ${{ github.workspace }}/dist
-
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Deploy to Azure Web App (Node)
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: ${{ github.workspace }}/dist/browser
-          clean: true
-          startup-command: pm2 serve /home/site/wwwroot --no-daemon --spa

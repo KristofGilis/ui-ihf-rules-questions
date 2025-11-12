@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  pull_request_target:
+    branches: [main]
+    types: [closed]
+
+env:
+  NODE_VERSION: 22
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: main
+
+      - name: Check if commit is from Renovate
+        id: check_renovate
+        run: |
+          COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
+          echo "author=$COMMIT_AUTHOR" >> $GITHUB_OUTPUT
+          if [[ "$COMMIT_AUTHOR" == "renovate[bot]" ]]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Node.js
+        if: steps.check_renovate.outputs.skip == 'false'
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        if: steps.check_renovate.outputs.skip == 'false'
+        run: npm ci
+
+      - name: Semantic Release
+        if: steps.check_renovate.outputs.skip == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
