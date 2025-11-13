@@ -42,14 +42,14 @@ jobs:
           fi
           echo "✅ Bundle size is within limits"
 
-      # - name: Run tests
-      #   run: npm test -- --coverage --silent
+      - name: Run tests
+        run: npm test -- --coverage --silent
 
-      # - name: Install Playwright browsers
-      #   run: npx playwright install chromium --with-deps
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
 
-      # - name: Run E2E tests
-      #   run: npm run test:e2e --ignore-scripts
+      - name: Run E2E tests
+        run: npm run test:e2e --ignore-scripts
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v5
