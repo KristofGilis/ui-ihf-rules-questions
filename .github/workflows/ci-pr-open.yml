@@ -98,18 +98,18 @@ jobs:
             const previewUrl = '${{ steps.deploy-vercel.outputs.preview-url }}';
             const prNumber = context.issue.number;
             const commentBody = `🚀 Preview deployment ready!\n\n📱 **Preview URL**: ${previewUrl}\n\n✨ Deployed with Vercel (free tier)\n\n_This preview will be automatically deleted when the PR is closed._`;
-            
+
             const comments = await github.rest.issues.listComments({
               issue_number: prNumber,
               owner: context.repo.owner,
               repo: context.repo.repo,
             });
-            
+
             const botComment = comments.data.find(comment => 
               comment.user.type === 'Bot' && 
               comment.body.includes('🚀 Preview deployment ready!')
             );
-            
+
             if (botComment) {
               await github.rest.issues.deleteComment({
                 owner: context.repo.owner,
@@ -117,7 +117,7 @@ jobs:
                 comment_id: botComment.id
               });
             }
-            
+
             await github.rest.issues.createComment({
               issue_number: prNumber,
               owner: context.repo.owner,
