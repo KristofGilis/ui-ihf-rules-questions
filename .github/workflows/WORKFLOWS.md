@@ -8,8 +8,10 @@ This directory contains scenario-based workflows for different deployment paths.
 
 **Triggers:** `push` event on `main` branch
 
-1. **ci-push-main.yml** → Build and test code
-2. **cd-push-main.yml** → Deploy to Azure
+**ci-push-main.yml**
+
+- `build-and-test` job → Build and test code
+- `deploy` job → Deploy to Azure (after build succeeds)
 
 **Execution flow:** Push → Build → Deploy
 

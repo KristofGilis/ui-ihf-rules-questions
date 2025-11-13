@@ -55,7 +55,7 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: dist
-          path: dist/ui-ihf-rules-questions
+          path: dist/ui-ihf-rules-questions/browser
           retention-days: 1
 
   preview:
@@ -70,7 +70,7 @@ jobs:
         uses: actions/download-artifact@v6
         with:
           name: dist
-          path: dist/browser
+          path: dist
 
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
