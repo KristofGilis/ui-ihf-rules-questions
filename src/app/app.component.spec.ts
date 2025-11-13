@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
+import { SwUpdate } from '@angular/service-worker';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { AppComponent } from './app.component';
@@ -22,9 +23,21 @@ describe('AppComponent', () => {
       setTheme: jest.fn(),
     };
 
+    const swUpdateMock = {
+      isEnabled: false,
+      versionUpdates: { subscribe: jest.fn(() => ({ unsubscribe: jest.fn() })) } as any,
+      checkForUpdate: jest.fn().mockResolvedValue(true),
+      activateUpdate: jest.fn().mockResolvedValue(true),
+    };
+
     await TestBed.configureTestingModule({
       imports: [AppComponent],
-      providers: [provideRouter([]), provideTranslateService(), { provide: ThemeService, useValue: themeServiceMock }],
+      providers: [
+        provideRouter([]),
+        provideTranslateService(),
+        { provide: ThemeService, useValue: themeServiceMock },
+        { provide: SwUpdate, useValue: swUpdateMock },
+      ],
     }).compileComponents();
 
     translateService = TestBed.inject(TranslateService);

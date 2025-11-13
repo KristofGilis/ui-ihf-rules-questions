@@ -231,6 +231,172 @@ describe('ToastComponent', () => {
     });
   });
 
+  describe('executeAction()', () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+      jest.setSystemTime(new Date('2024-01-01'));
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('should execute callback and dismiss toast', () => {
+      const callback = jest.fn();
+      const id = component.add({
+        message: 'Test',
+        type: 'info',
+        dismissible: true,
+        action: { label: 'Action', callback },
+      });
+
+      expect(component.toasts()).toHaveLength(1);
+      component.executeAction(id, callback);
+
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(component.toasts()).toHaveLength(0);
+    });
+
+    it('should only dismiss the specified toast', () => {
+      const callback1 = jest.fn();
+      const callback2 = jest.fn();
+
+      const id1 = component.add({
+        message: 'First',
+        type: 'info',
+        dismissible: true,
+        action: { label: 'Action', callback: callback1 },
+      });
+      jest.advanceTimersByTime(1);
+      const id2 = component.add({
+        message: 'Second',
+        type: 'success',
+        dismissible: true,
+        action: { label: 'Action', callback: callback2 },
+      });
+
+      component.executeAction(id1, callback1);
+
+      expect(callback1).toHaveBeenCalledTimes(1);
+      expect(callback2).not.toHaveBeenCalled();
+      expect(component.toasts()).toHaveLength(1);
+      expect(component.toasts()[0].id).toBe(id2);
+    });
+
+    it('should handle callback that throws error gracefully', () => {
+      const errorCallback = jest.fn(() => {
+        throw new Error('Callback error');
+      });
+
+      const id = component.add({
+        message: 'Test',
+        type: 'info',
+        dismissible: true,
+        action: { label: 'Action', callback: errorCallback },
+      });
+
+      expect(() => component.executeAction(id, errorCallback)).toThrow();
+      expect(errorCallback).toHaveBeenCalled();
+    });
+
+    it('should work with empty callback', () => {
+      const callback = jest.fn();
+      const id = component.add({
+        message: 'Test',
+        type: 'info',
+        dismissible: true,
+        action: { label: 'Action', callback },
+      });
+
+      component.executeAction(id, () => {
+        // Empty callback
+      });
+
+      expect(component.toasts()).toHaveLength(0);
+    });
+
+    it('should handle multiple executeAction calls', () => {
+      jest.useFakeTimers();
+      const callback1 = jest.fn();
+      const callback2 = jest.fn();
+
+      const id1 = component.add({
+        message: 'First',
+        type: 'info',
+        dismissible: true,
+        action: { label: 'Action', callback: callback1 },
+      });
+      jest.advanceTimersByTime(1);
+      const id2 = component.add({
+        message: 'Second',
+        type: 'success',
+        dismissible: true,
+        action: { label: 'Action', callback: callback2 },
+      });
+
+      component.executeAction(id1, callback1);
+      component.executeAction(id2, callback2);
+
+      expect(callback1).toHaveBeenCalled();
+      expect(callback2).toHaveBeenCalled();
+      expect(component.toasts()).toHaveLength(0);
+    });
+  });
+
+  describe('Toast with Action', () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+      jest.setSystemTime(new Date('2024-01-01'));
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('should add toast with action', () => {
+      const callback = jest.fn();
+      const action = { label: 'Update', callback };
+
+      component.add({
+        message: 'New version available',
+        type: 'info',
+        dismissible: true,
+        action,
+      });
+
+      expect(component.toasts()[0].action).toEqual(action);
+    });
+
+    it('should add toast without action', () => {
+      component.add({
+        message: 'Simple toast',
+        type: 'info',
+        dismissible: true,
+      });
+
+      expect(component.toasts()[0].action).toBeUndefined();
+    });
+
+    it('should support optional action property', () => {
+      component.add({
+        message: 'With action',
+        type: 'info',
+        dismissible: true,
+        action: { label: 'Click me', callback: jest.fn() },
+      });
+      jest.advanceTimersByTime(1);
+      component.add({
+        message: 'Without action',
+        type: 'success',
+        dismissible: true,
+      });
+
+      expect(component.toasts()).toHaveLength(2);
+      expect(component.toasts()[0].action).toBeDefined();
+      expect(component.toasts()[1].action).toBeUndefined();
+    });
+  });
+
   describe('Integration', () => {
     beforeEach(() => {
       jest.useFakeTimers();

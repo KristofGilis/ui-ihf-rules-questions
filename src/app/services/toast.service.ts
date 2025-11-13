@@ -9,6 +9,10 @@ export interface ToastOptions {
   type?: ToastType;
   duration?: ToastDuration;
   dismissible?: boolean;
+  action?: {
+    label: string;
+    callback: () => void;
+  };
 }
 
 /**

@@ -14,6 +14,10 @@ export interface Toast {
   message: string;
   type: 'error' | 'warning' | 'success' | 'info';
   dismissible: boolean;
+  action?: {
+    label: string;
+    callback: () => void;
+  };
 }
 
 /**
@@ -30,6 +34,14 @@ export class ToastComponent {
 
   // Font Awesome icons
   readonly faXmark = faXmark;
+
+  /**
+   * Execute action and dismiss toast
+   */
+  executeAction(id: number, callback: () => void): void {
+    callback();
+    this.dismiss(id);
+  }
 
   /**
    * Add a new toast notification

@@ -55,7 +55,7 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: dist
-          path: dist/ui-ihf-rules-questions/browser
+          path: dist/ui-ihf-rules-questions
           retention-days: 1
 
   preview:
@@ -65,20 +65,25 @@ jobs:
       contents: read
       pull-requests: write
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
       - name: Download build artifact
         uses: actions/download-artifact@v6
         with:
           name: dist
-          path: dist
+          path: ${{ github.workspace }}/dist
 
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
 
       - name: Update CSP for Vercel deployment
         run: |
-          sed -i 's|script-src '"'"'self'"'"' https://\*\.sentry\.io|script-src '"'"'self'"'"' '"'"'unsafe-inline'"'"' https://*.sentry.io https://vercel.live|g' dist/index.html
-          sed -i 's|connect-src '"'"'self'"'"' https://api-ihf-rules-questions\.azurewebsites\.net https://\*\.sentry\.io|connect-src '"'"'self'"'"' https://api-ihf-rules-questions.azurewebsites.net https://*.sentry.io https://vercel.live|g' dist/index.html
-          sed -i 's|form-action '"'"'self'"'"';|form-action '"'"'self'"'"'; frame-src https://vercel.live;|g' dist/index.html
+          sed -i 's|script-src '\''self'\'' '\''unsafe-inline'\'' https://\*\.sentry\.io|script-src '\''self'\'' '\''unsafe-inline'\'' https://*.sentry.io https://vercel.live|g' ${{ github.workspace }}/dist/browser/index.html
+          sed -i 's|connect-src '\''self'\'' https://api-ihf-rules-questions\.azurewebsites\.net https://\*\.sentry\.io wss:|connect-src '\''self'\'' https://api-ihf-rules-questions.azurewebsites.net https://*.sentry.io https://vercel.live wss:|g' ${{ github.workspace }}/dist/browser/index.html
+
+      - name: Copy vercel.json to dist
+        run: cp vercel.json ${{ github.workspace }}/dist/browser/vercel.json
 
       - name: Deploy to Vercel
         id: deploy-vercel
@@ -86,7 +91,7 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          cd dist
+          cd ${{ github.workspace }}/dist/browser
           PREVIEW_URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --yes)
           echo "preview-url=$PREVIEW_URL" >> $GITHUB_OUTPUT
 
