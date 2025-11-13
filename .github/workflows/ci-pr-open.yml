@@ -70,7 +70,7 @@ jobs:
         uses: actions/download-artifact@v6
         with:
           name: dist
-          path: dist
+          path: dist/browser
 
       - name: Install Vercel CLI
         run: npm install -g vercel@latest

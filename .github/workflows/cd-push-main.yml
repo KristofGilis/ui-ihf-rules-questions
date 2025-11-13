@@ -21,7 +21,7 @@ jobs:
         uses: actions/download-artifact@v6
         with:
           name: dist
-          path: ${{ github.workspace }}/dist
+          path: ${{ github.workspace }}/dist/browser
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
 
@@ -36,6 +36,6 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: ${{ github.workspace }}/dist
+          package: ${{ github.workspace }}/dist/browser
           clean: true
           startup-command: pm2 serve /home/site/wwwroot --no-daemon --spa
