@@ -2,7 +2,10 @@
   "routes": [
     {
       "src": "/manifest.webmanifest",
-      "dest": "/manifest.webmanifest"
+      "dest": "/manifest.webmanifest",
+      "headers": {
+        "Content-Type": "application/manifest+json"
+      }
     },
     {
       "src": "/(.*\\.(js|css|json|webmanifest|xml|ico|png|svg|woff|woff2|ttf|eot))",
@@ -11,17 +14,6 @@
     {
       "src": "/(.*)",
       "dest": "/index.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/manifest.webmanifest",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/manifest+json"
-        }
-      ]
     }
   ]
 }
