@@ -5,9 +5,9 @@
  * Requires: npm install sharp --save-dev
  */
 
-const fs = require('fs');
-const path = require('path');
-const sharp = require('sharp');
+import { existsSync, mkdirSync, readFileSync, statSync } from 'fs';
+import { join } from 'path';
+import sharp from 'sharp';
 
 const sizes = [
   { size: 192, filename: 'android-chrome-192x192.png' },
@@ -22,16 +22,16 @@ const sizes = [
   { size: 150, filename: 'mstile-150x150.png' },
 ];
 
-const svgPath = path.join(__dirname, '../public/icons/logo.svg');
-const outputDir = path.join(__dirname, '../public/icons');
+const svgPath = join(__dirname, '../public/icons/logo.svg');
+const outputDir = join(__dirname, '../public/icons');
 
 // Ensure output directory exists
-if (!fs.existsSync(outputDir)) {
-  fs.mkdirSync(outputDir, { recursive: true });
+if (!existsSync(outputDir)) {
+  mkdirSync(outputDir, { recursive: true });
 }
 
 // Check if SVG exists
-if (!fs.existsSync(svgPath)) {
+if (!existsSync(svgPath)) {
   console.error(`❌ SVG file not found: ${svgPath}`);
   process.exit(1);
 }
@@ -41,7 +41,7 @@ console.log('🎨 Generating PWA icons from logo...\n');
 async function generateIcons() {
   try {
     for (const { size, filename } of sizes) {
-      const outputFile = path.join(outputDir, filename);
+      const outputFile = join(outputDir, filename);
 
       // Create a gradient background (cyan to blue)
       const gradientSvg = `<svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -52,7 +52,7 @@ async function generateIcons() {
           </linearGradient>
         </defs>
         <rect width="${size}" height="${size}" fill="url(#bg)" />
-        <image href="data:image/svg+xml;base64,${Buffer.from(fs.readFileSync(svgPath)).toString('base64')}" 
+        <image href="data:image/svg+xml;base64,${Buffer.from(readFileSync(svgPath)).toString('base64')}" 
                x="${Math.round(size * 0.1)}" y="${Math.round(size * 0.1)}" 
                width="${Math.round(size * 0.8)}" height="${Math.round(size * 0.8)}" 
                preserveAspectRatio="xMidYMid meet" />
@@ -63,7 +63,7 @@ async function generateIcons() {
       // Convert to PNG
       await sharp(compositeBuffer, { density: 300 }).resize(size, size, { fit: 'cover' }).png().toFile(outputFile);
 
-      const stats = fs.statSync(outputFile);
+      const stats = statSync(outputFile);
       console.log(`✅ Generated ${size}x${size} icon: ${filename} (${(stats.size / 1024).toFixed(1)}KB)`);
     }
 
