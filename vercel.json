@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/(?!manifest\\.webmanifest|.*\\.js|.*\\.css|.*\\.ico|.*\\.png|.*\\.svg|.*\\.webmanifest|sitemap\\.xml|robots\\.txt|browserconfig\\.xml)(.*)",
+      "source": "/((?!(manifest\\.webmanifest|[^/]*\\.[^/]*$)).*)",
       "destination": "/index.html"
     }
   ],
