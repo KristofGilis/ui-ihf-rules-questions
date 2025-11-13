@@ -3,8 +3,7 @@ name: Cleanup Preview Deployment
 on:
   pull_request:
     branches: [main]
-    types:
-      - closed
+    types: [closed]
 
 jobs:
   cleanup-preview:
