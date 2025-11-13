@@ -1,3 +1,9 @@
+# [2.1.0](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.0.1...v2.1.0) (2025-11-13)
+
+### Features
+
+- pwa updates & deployment improvements ([40a3152](https://github.com/KristofGilis/ui-ihf-rules-questions/commit/40a3152aac73d0199e4fbe081ba1b6c7b7167364))
+
 ## [2.0.1](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.0.0...v2.0.1) (2025-11-13)
 
 ### Bug Fixes
