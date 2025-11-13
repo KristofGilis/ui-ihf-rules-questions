@@ -79,6 +79,8 @@ Three workflows handle all CI/CD scenarios:
 
 - All PRs receive the same CI/CD treatment regardless of actor
 - Build job uses `if: always()` to ensure it runs even if release job has no changes to release
+- Semantic-release runs on every push but only creates releases when commits warrant a version bump (per conventional commits)
+- GitHub token requires `contents: write` and `pull-requests: read` permissions for semantic-release to create releases, tags, and access associated pull request data
 
 ## Key Environment Variables
 
