@@ -1,0 +1,126 @@
+name: CI - PR Open
+
+on:
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: 22
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint code
+        run: npm run lint
+
+      - name: Build application
+        run: npm run build -- --configuration=production
+
+      - name: Check bundle size
+        run: |
+          MAIN_SIZE=$(find dist/ui-ihf-rules-questions/browser -name 'main*.js' -exec wc -c {} \; | awk '{print $1}')
+          MAX_SIZE=350000
+          echo "Main bundle size: $MAIN_SIZE bytes (max: $MAX_SIZE bytes)"
+          if [ $MAIN_SIZE -gt $MAX_SIZE ]; then
+            echo "❌ Bundle size exceeds limit!"
+            exit 1
+          fi
+          echo "✅ Bundle size is within limits"
+
+      - name: Run tests
+        run: npm test -- --coverage --silent
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Run E2E tests
+        run: npm run test:e2e --ignore-scripts
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: dist
+          path: dist/ui-ihf-rules-questions/browser
+          retention-days: 1
+
+  preview:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.actor != 'renovate[bot]'
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: dist
+          path: dist
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Update CSP for Vercel deployment
+        run: |
+          sed -i 's|script-src '"'"'self'"'"' https://\*\.sentry\.io|script-src '"'"'self'"'"' '"'"'unsafe-inline'"'"' https://*.sentry.io https://vercel.live|g' dist/index.html
+          sed -i 's|connect-src '"'"'self'"'"' https://api-ihf-rules-questions\.azurewebsites\.net https://\*\.sentry\.io|connect-src '"'"'self'"'"' https://api-ihf-rules-questions.azurewebsites.net https://*.sentry.io https://vercel.live|g' dist/index.html
+          sed -i 's|form-action '"'"'self'"'"';|form-action '"'"'self'"'"'; frame-src https://vercel.live;|g' dist/index.html
+
+      - name: Deploy to Vercel
+        id: deploy-vercel
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          cd dist
+          PREVIEW_URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --yes)
+          echo "preview-url=$PREVIEW_URL" >> $GITHUB_OUTPUT
+
+      - name: Comment PR with preview URL
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const previewUrl = '${{ steps.deploy-vercel.outputs.preview-url }}';
+            const prNumber = context.issue.number;
+            const commentBody = `🚀 Preview deployment ready!\n\n📱 **Preview URL**: ${previewUrl}\n\n✨ Deployed with Vercel (free tier)\n\n_This preview will be automatically deleted when the PR is closed._`;
+
+            const comments = await github.rest.issues.listComments({
+              issue_number: prNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+
+            const botComment = comments.data.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('🚀 Preview deployment ready!')
+            );
+
+            if (botComment) {
+              await github.rest.issues.deleteComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id
+              });
+            }
+
+            await github.rest.issues.createComment({
+              issue_number: prNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: commentBody
+            });
