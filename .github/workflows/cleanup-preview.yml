@@ -38,7 +38,7 @@ jobs:
               for (const deployment of data.deployments) {
                 try {
                   const deleteResponse = await fetch(
-                    `https://api.vercel.com/v13/deployments/${deployment.uid}`,
+                    `https://api.vercel.com/v13/deployments/${deployment.id}`,
                     {
                       method: 'DELETE',
                       headers: {
@@ -47,12 +47,12 @@ jobs:
                     }
                   );
                   if (deleteResponse.ok) {
-                    console.log(`Deleted deployment: ${deployment.uid}`);
+                    console.log(`Deleted deployment: ${deployment.id}`);
                   } else {
-                    console.log(`Failed to delete deployment ${deployment.uid}: ${deleteResponse.status}`);
+                    console.log(`Failed to delete deployment ${deployment.id}: ${deleteResponse.status}`);
                   }
                 } catch (error) {
-                  console.error(`Error deleting deployment ${deployment.uid}:`, error);
+                  console.error(`Error deleting deployment ${deployment.id}:`, error);
                 }
               }
               
