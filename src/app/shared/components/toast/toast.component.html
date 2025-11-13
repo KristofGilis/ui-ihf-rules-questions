@@ -9,15 +9,26 @@
         <div class="flex items-center gap-3 p-4">
           <fa-icon class="shrink-0 text-lg" [icon]="getIcon(toast.type)" [fixedWidth]="true"></fa-icon>
           <div class="flex-1 font-medium">{{ toast.message }}</div>
-          @if (toast.dismissible) {
-            <button
-              type="button"
-              class="flex shrink-0 items-center justify-center opacity-80 transition-opacity hover:opacity-100"
-              (click)="dismiss(toast.id)"
-              aria-label="Close notification">
-              <fa-icon [icon]="faXmark"></fa-icon>
-            </button>
-          }
+          <div class="flex shrink-0 items-center gap-2">
+            @if (toast.action) {
+              <button
+                type="button"
+                class="rounded bg-white/20 px-3 py-1 font-medium whitespace-nowrap transition-colors hover:bg-white/30"
+                (click)="executeAction(toast.id, toast.action.callback)"
+                [attr.aria-label]="toast.action.label">
+                {{ toast.action.label }}
+              </button>
+            }
+            @if (toast.dismissible) {
+              <button
+                type="button"
+                class="flex shrink-0 items-center justify-center opacity-80 transition-opacity hover:opacity-100"
+                (click)="dismiss(toast.id)"
+                aria-label="Close notification">
+                <fa-icon [icon]="faXmark"></fa-icon>
+              </button>
+            }
+          </div>
         </div>
       </div>
     }

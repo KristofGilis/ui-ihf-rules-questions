@@ -54,6 +54,10 @@
   "offline": {
     "message": "You are currently offline. Some features may not be available."
   },
+  "pwa": {
+    "update_available": "A new version is available.",
+    "update_now": "Update"
+  },
   "questions": {
     "calculate_score": "Calculate Score",
     "description": "Browse and study all available questions at your own pace",

@@ -54,6 +54,10 @@
   "offline": {
     "message": "Je bent momenteel offline. Sommige functies zijn mogelijk niet beschikbaar."
   },
+  "pwa": {
+    "update_available": "Een nieuwe versie is beschikbaar.",
+    "update_now": "Bijwerken"
+  },
   "questions": {
     "calculate_score": "Bereken score",
     "description": "Bekijk en bestudeer alle beschikbare vragen in je eigen tempo",
