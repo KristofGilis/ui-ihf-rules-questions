@@ -59,7 +59,7 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: dist
-          path: dist/ui-ihf-rules-questions/browser
+          path: dist/ui-ihf-rules-questions
           retention-days: 1
 
   deploy:
@@ -87,6 +87,6 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: ${{ github.workspace }}/dist
+          package: ${{ github.workspace }}/dist/browser
           clean: true
           startup-command: pm2 serve /home/site/wwwroot --no-daemon --spa
