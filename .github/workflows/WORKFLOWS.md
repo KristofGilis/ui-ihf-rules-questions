@@ -1,14 +1,14 @@
 # GitHub Actions Workflows
 
-This directory contains scenario-based workflows for different deployment paths.
+This directory contains three workflows that manage CI/CD, testing, and deployment for the project.
 
 ## Workflow Overview
 
 Three workflows handle all CI/CD scenarios:
 
-1. **release-and-deploy.yml** - Triggered on push to main (handles release, build, test, deploy)
-2. **ci-pr-open.yml** - Triggered on PR open (handles build, test, and optional preview)
-3. **cleanup-preview.yml** - Triggered on PR close (cleans up Vercel preview)
+1. **release-and-deploy.yml** - Triggered on push to main (handles semantic release, build, and deploy to Azure)
+2. **ci-pr-open.yml** - Triggered on PR open (handles build, tests, linting, and optional Vercel preview)
+3. **cleanup-preview.yml** - Triggered on PR close (cleans up Vercel preview deployments)
 
 ## Detailed Scenarios
 
@@ -18,11 +18,11 @@ Three workflows handle all CI/CD scenarios:
 
 **release-and-deploy.yml execution:**
 
-- `release` job → Skipped (no PR context)
-- `build-and-test` job → Build and test code
-- `deploy` job → Deploy to Azure
+- `release` job → Semantic release (creates release only if commits warrant new version)
+- `build` job → Build application (runs regardless of release job outcome with `if: always()`)
+- `deploy` job → Deploy to Azure (depends on build)
 
-**Execution flow:** Push → Build → Deploy (no release)
+**Execution flow:** Push → Release (conditional) → Build → Deploy
 
 ---
 
@@ -32,71 +32,66 @@ Three workflows handle all CI/CD scenarios:
 
 **ci-pr-open.yml execution:**
 
-- `build-and-test` job → Build and test code
-- `preview` job → Deploy preview to Vercel (non-renovate only)
+- `build-and-test` job → Build, lint, test, and check bundle size
+- `preview` job → Deploy preview to Vercel and comment on PR
 
-**Execution flow:** PR Open → Build → Preview (if not renovate)
+**Execution flow:** PR Open → Build/Test → Preview
+
+**Details:**
+
+- Runs linting checks
+- Builds application in production mode
+- Validates bundle size (max 350KB for main bundle)
+- Runs unit tests with coverage
+- Installs and runs E2E tests with Playwright
+- For non-renovate PRs: Updates CSP headers and deploys to Vercel preview
+- Adds comment to PR with preview URL
 
 ---
 
-### Scenario 3: PR Merge (Non-Renovate User)
+### Scenario 3: PR Merge (Any User)
 
 **Triggers:** `push` event on `main` branch (from PR merge)
 
 **release-and-deploy.yml execution:**
 
-- `release` job → Create GitHub release tag (PR context present, creator is not renovate)
-- `build-and-test` job → Build and test code
+- `release` job → Semantic release (creates release only if commits warrant new version)
+- `build` job → Build application (runs regardless of release job outcome)
 - `deploy` job → Deploy to Azure
 
-**Execution flow:** PR Merge → Release → Build → Deploy
+**Execution flow:** PR Merge → Release (conditional) → Build → Deploy
 
 ---
 
-### Scenario 4: PR Merge (Renovate)
+### Scenario 4: PR Close
 
-**Triggers:** `push` event on `main` branch (from PR merge)
-
-**release-and-deploy.yml execution:**
-
-- `release` job → Skipped (creator is renovate[bot])
-- `build-and-test` job → Build and test code
-- `deploy` job → Deploy to Azure
-
-**Execution flow:** PR Merge → Build → Deploy (no release)
-
----
-
-### Scenario 5: PR Close (Non-Renovate User)
-
-**Triggers:** `pull_request` event (closed)
+**Triggers:** `pull_request` event with `closed` action
 
 **cleanup-preview.yml execution:**
 
-- Deletes Vercel preview deployment
+- `cleanup-preview` job → Finds and deletes associated Vercel deployments and comments on PR
 
-**Execution flow:** PR Close → Cleanup Preview
+**Execution flow:** PR Close → Cleanup Vercel Preview
 
 ---
 
-## Renovate Handling
+## Notes
 
-- **Renovate PRs:** Build only (on open), no preview
-- **Renovate PR merge:** Build + deploy, no release
-- **Non-renovate PRs:** Build + preview (on open), release + build + deploy (on merge)
+- All PRs receive the same CI/CD treatment regardless of actor
+- Build job uses `if: always()` to ensure it runs even if release job has no changes to release
 
-## How Release Detection Works
+## Key Environment Variables
 
-The `release` job in `release-and-deploy.yml` uses the `github.event.pull_requests` context to detect if the push came from a PR merge:
+- `NODE_VERSION: 22` - Node.js version used across all workflows
+- `AZURE_WEBAPP_NAME: rulequestions` - Azure Web App deployment target
+- Build artifacts retained for 1 day
 
-- **Direct push:** `pull_requests` is null → release job skipped
-- **PR merge:** `pull_requests` contains PR data → release job runs (unless creator is renovate[bot])
+## Secrets Required
 
-This allows a single workflow to handle all scenarios without conditional skips on commit messages.
-
-## Key Differences from Traditional Single Workflow
-
-- **Separation of concerns:** Build/deploy vs. PR preview are separate workflows
-- **Clear triggers:** Easy to understand when each workflow runs
-- **Efficient execution:** No unnecessary duplicate builds on PR merges
-- **Better debugging:** Easier to identify which stage failed
+- `AZURE_CLIENT_ID` - Azure Service Principal client ID
+- `AZURE_TENANT_ID` - Azure Service Principal tenant ID
+- `AZURE_SUBSCRIPTION_ID` - Azure subscription ID
+- `VERCEL_TOKEN` - Vercel API token
+- `VERCEL_ORG_ID` - Vercel organization ID
+- `VERCEL_PROJECT_ID` - Vercel project ID
+- `GITHUB_TOKEN` - Automatically provided by GitHub Actions
