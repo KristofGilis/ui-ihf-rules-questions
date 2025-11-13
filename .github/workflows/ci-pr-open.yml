@@ -65,28 +65,28 @@ jobs:
       contents: read
       pull-requests: write
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
       - name: Download build artifact
         uses: actions/download-artifact@v6
         with:
           name: dist
-          path: dist
-
-      - name: Checkout code for vercel.json
-        uses: actions/checkout@v5
-        with:
-          sparse-checkout: vercel.json
-
-      - name: Copy vercel.json to dist
-        run: cp vercel.json dist/vercel.json
+          path: ${{ github.workspace }}/dist
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
 
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
 
       - name: Update CSP for Vercel deployment
         run: |
-          sed -i 's|script-src '"'"'self'"'"' https://\*\.sentry\.io|script-src '"'"'self'"'"' '"'"'unsafe-inline'"'"' https://*.sentry.io https://vercel.live|g' dist/index.html
-          sed -i 's|connect-src '"'"'self'"'"' https://api-ihf-rules-questions\.azurewebsites\.net https://\*\.sentry\.io|connect-src '"'"'self'"'"' https://api-ihf-rules-questions.azurewebsites.net https://*.sentry.io https://vercel.live|g' dist/index.html
-          sed -i 's|form-action '"'"'self'"'"';|form-action '"'"'self'"'"'; frame-src https://vercel.live;|g' dist/index.html
+          sed -i 's|script-src '\''self'\'' https://\*\.sentry\.io|script-src '\''self'\'' '\''unsafe-inline'\'' https://*.sentry.io https://vercel.live|g' ${{ github.workspace }}/dist/browser/index.html
+          sed -i 's|connect-src '\''self'\'' https://api-ihf-rules-questions\.azurewebsites\.net https://\*\.sentry\.io|connect-src '\''self'\'' https://api-ihf-rules-questions.azurewebsites.net https://*.sentry.io https://vercel.live|g' ${{ github.workspace }}/dist/browser/index.html
+          sed -i 's|form-action '\''self'\'';|form-action '\''self'\''; frame-src https://vercel.live;|g' ${{ github.workspace }}/dist/browser/index.html
+
+      - name: Copy vercel.json to dist
+        run: cp vercel.json ${{ github.workspace }}/dist/vercel.json
 
       - name: Deploy to Vercel
         id: deploy-vercel
