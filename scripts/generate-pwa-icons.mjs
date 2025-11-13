@@ -8,6 +8,9 @@
 import { existsSync, mkdirSync, readFileSync, statSync } from 'fs';
 import { join } from 'path';
 import sharp from 'sharp';
+import { fileURLToPath } from 'url';
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 const sizes = [
   { size: 192, filename: 'android-chrome-192x192.png' },
@@ -20,6 +23,9 @@ const sizes = [
   { size: 180, filename: 'apple-touch-icon-180x180.png' },
   { size: 180, filename: 'apple-touch-icon.png' },
   { size: 150, filename: 'mstile-150x150.png' },
+  { size: 16, filename: 'favicon-16x16.png' },
+  { size: 32, filename: 'favicon-32x32.png' },
+  { size: 96, filename: 'favicon-96x96.png' },
 ];
 
 const svgPath = join(__dirname, '../public/icons/logo.svg');
