@@ -19,24 +19,15 @@ This directory contains scenario-based workflows for different deployment paths.
 
 **Triggers:** `pull_request` event on `main` branch
 
-1. **ci-pr-open.yml** → Build and test code
+1. **ci-pr-open.yml**
+   - `build-and-test` job → Build and test code
+   - `preview` job → Deploy preview to Vercel (non-renovate only)
 
-**Execution flow:** PR Open → Build
-
----
-
-### Scenario 3: PR Open (Non-Renovate User)
-
-**Triggers:** `pull_request` event on `main` branch + workflow_run
-
-1. **ci-pr-open.yml** → Build and test code
-2. **cd-pr-preview.yml** → Deploy preview to Vercel (skips renovate[bot])
-
-**Execution flow:** PR Open → Build → Preview
+**Execution flow:** PR Open → Build → Preview (if not renovate)
 
 ---
 
-### Scenario 4: PR Merge (Non-Renovate User)
+### Scenario 3: PR Merge (Non-Renovate User)
 
 **Triggers:** `pull_request_target` event (closed + merged)
 
@@ -49,7 +40,7 @@ This directory contains scenario-based workflows for different deployment paths.
 
 ---
 
-### Scenario 5: PR Merge (Renovate)
+### Scenario 4: PR Merge (Renovate)
 
 **Triggers:** `pull_request_target` event (closed + merged)
 **Condition:** Renovate bot PR merge
@@ -63,7 +54,7 @@ This directory contains scenario-based workflows for different deployment paths.
 
 ---
 
-### Scenario 6: PR Close (Non-Renovate User)
+### Scenario 5: PR Close (Non-Renovate User)
 
 **Triggers:** `pull_request` event (closed)
 
