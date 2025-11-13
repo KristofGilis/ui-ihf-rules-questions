@@ -1,6 +1,6 @@
 {
   "name": "ui-ihf-rules-questions",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Interactive quiz application for testing knowledge of International Handball Federation (IHF) rules",
   "author": "Kristof Gilis <kristof.gilis@outlook.be>",
   "license": "MIT",

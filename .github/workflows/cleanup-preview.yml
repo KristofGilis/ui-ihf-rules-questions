@@ -8,7 +8,6 @@ on:
 jobs:
   cleanup-preview:
     runs-on: ubuntu-latest
-    if: github.actor != 'renovate[bot]'
     permissions:
       pull-requests: write
     steps:
@@ -24,7 +23,7 @@ jobs:
 
             // Get all deployments for this project
             const response = await fetch(
-              `https://api.vercel.com/v6/deployments?projectId=${process.env.VERCEL_PROJECT_ID}&meta-githubPullRequest=${prNumber}`,
+              `https://api.vercel.com/v6/deployments?projectId=${process.env.VERCEL_PROJECT_ID}&meta.githubPr=${prNumber}`,
               {
                 headers: {
                   'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`
@@ -37,20 +36,28 @@ jobs:
             if (data.deployments && data.deployments.length > 0) {
               // Delete all deployments for this PR
               for (const deployment of data.deployments) {
-                await fetch(
-                  `https://api.vercel.com/v13/deployments/${deployment.uid}`,
-                  {
-                    method: 'DELETE',
-                    headers: {
-                      'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`
+                try {
+                  const deleteResponse = await fetch(
+                    `https://api.vercel.com/v13/deployments/${deployment.id}`,
+                    {
+                      method: 'DELETE',
+                      headers: {
+                        'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`
+                      }
                     }
+                  );
+                  if (deleteResponse.ok) {
+                    console.log(`Deleted deployment: ${deployment.id}`);
+                  } else {
+                    console.log(`Failed to delete deployment ${deployment.id}: ${deleteResponse.status}`);
                   }
-                );
-                console.log(`Deleted deployment: ${deployment.uid}`);
+                } catch (error) {
+                  console.error(`Error deleting deployment ${deployment.id}:`, error);
+                }
               }
               
               // Comment on PR
-              github.rest.issues.createComment({
+              await github.rest.issues.createComment({
                 issue_number: prNumber,
                 owner: context.repo.owner,
                 repo: context.repo.repo,

@@ -18,6 +18,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { fromEvent, map, merge, of } from 'rxjs';
 import { getLanguage } from './language';
 import { LogoComponent } from './logo/logo.component';
+import { PwaUpdateService } from './services/pwa-update.service';
 import { ThemeService } from './services/theme.service';
 
 @Component({
@@ -32,6 +33,7 @@ export class AppComponent {
   private readonly _document = inject(DOCUMENT);
   private readonly _themeService = inject(ThemeService);
   private readonly _titleService = inject(Title);
+  private readonly _pwaUpdateService = inject(PwaUpdateService);
 
   // Constants
   private readonly LANGUAGES = ['en', 'nl', 'srb'] as const;
@@ -85,6 +87,9 @@ export class AppComponent {
       // Update document title on language change
       this._titleService.setTitle(this._translateService.instant('main.title'));
     });
+
+    // Initialize PWA update checking
+    this._pwaUpdateService.initializeUpdateCheck();
   }
 
   onChangeLanguage(lang: string): void {

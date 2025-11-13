@@ -11,42 +11,25 @@ env:
 jobs:
   release:
     runs-on: ubuntu-latest
-    # Only create release when triggered by PR merge (has pull_requests context)
-    # and creator is not renovate[bot]
-    if: |
-      github.event.pull_requests != null &&
-      github.event.pull_requests[0].user.login != 'renovate[bot]'
     permissions:
       contents: write
+      pull-requests: read
+      issues: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - name: Check if commit is from Renovate
-        id: check_renovate
-        run: |
-          COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
-          echo "author=$COMMIT_AUTHOR" >> $GITHUB_OUTPUT
-          if [[ "$COMMIT_AUTHOR" == "renovate[bot]" ]]; then
-            echo "skip=true" >> $GITHUB_OUTPUT
-          else
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
-
       - name: Setup Node.js
-        if: steps.check_renovate.outputs.skip == 'false'
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Install dependencies
-        if: steps.check_renovate.outputs.skip == 'false'
         run: npm ci
 
       - name: Semantic Release
-        if: steps.check_renovate.outputs.skip == 'false'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
@@ -77,7 +60,7 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: dist
-          path: dist/ui-ihf-rules-questions/browser
+          path: dist/ui-ihf-rules-questions
           retention-days: 1
 
   deploy:
@@ -105,6 +88,6 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: ${{ github.workspace }}/dist
+          package: ${{ github.workspace }}/dist/browser
           clean: true
           startup-command: pm2 serve /home/site/wwwroot --no-daemon --spa
