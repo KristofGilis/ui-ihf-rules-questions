@@ -71,6 +71,14 @@ jobs:
           name: dist
           path: dist
 
+      - name: Checkout code for vercel.json
+        uses: actions/checkout@v5
+        with:
+          sparse-checkout: vercel.json
+
+      - name: Copy vercel.json to dist
+        run: cp vercel.json dist/vercel.json
+
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
 
