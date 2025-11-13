@@ -1,0 +1,138 @@
+name: Release and Deploy (PR Merge)
+
+on:
+  pull_request_target:
+    branches: [main]
+    types: [closed]
+
+env:
+  NODE_VERSION: 22
+  AZURE_WEBAPP_NAME: rulequestions
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: |
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.user.login != 'renovate[bot]'
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Get version from package.json
+        id: get-version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create release
+        uses: actions/github-script@v8
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script: |
+            const fs = require('fs');
+            const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+            const version = packageJson.version;
+            const tag = `v${version}`;
+
+            try {
+              await github.rest.git.createRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `refs/tags/${tag}`,
+                sha: context.payload.pull_request.merge_commit_sha
+              });
+              
+              await github.rest.repos.createRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag_name: tag,
+                name: `Release ${tag}`,
+                body: `## Version ${version}\n\nAutomatic release from merge of PR #${context.payload.pull_request.number}`,
+                draft: false,
+                prerelease: false
+              });
+              
+              console.log(`Released ${tag}`);
+            } catch (error) {
+              if (error.message.includes('Reference already exists')) {
+                console.log(`Tag ${tag} already exists, skipping`);
+              } else {
+                throw error;
+              }
+            }
+
+  build-and-test:
+    runs-on: ubuntu-latest
+    needs: release
+    if: always()
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test:ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/ui-ihf-rules-questions
+          retention-days: 1
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: |
+      github.event.pull_request.merged == true
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: ${{ github.workspace }}/dist
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          package: ${{ github.workspace }}/dist
+          clean: true
+          startup-command: pm2 serve /home/site/wwwroot --no-daemon --spa

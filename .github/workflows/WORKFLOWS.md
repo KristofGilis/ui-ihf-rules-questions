@@ -1,125 +1,87 @@
-# GitHub Actions Workflows - Documentation
+# GitHub Actions Workflows
 
-## Overview
+This directory contains scenario-based workflows for different deployment paths.
 
-The CI/CD pipeline has been split into 4 separate, focused workflows to improve clarity and prevent duplicate runs.
+## Workflow Structure
 
-## Workflows
+### Scenario 1: Direct Push to Main
 
-### 1. `release.yml` - Semantic Release
+**Triggers:** `push` event on `main` branch
 
-**Triggers:** `pull_request_target` (when PR is merged to main)
+1. **ci-push-main.yml** → Build and test code
+2. **cd-push-main.yml** → Deploy to Azure
 
-**Behavior:**
-
-- Only runs when a PR is successfully merged (squash, rebase, or merge commit)
-- Skips if the commit author is `renovate[bot]`
-- Creates semantic version tags and releases
-- Does NOT run on direct commits to main
-
-**Execution Time:** ~1-2 minutes
+**Execution flow:** Push → Build → Deploy
 
 ---
 
-### 2. `build-and-test.yml` - Build and Test
+### Scenario 2: PR Open (Any User)
 
-**Triggers:**
+**Triggers:** `pull_request` event on `main` branch
 
-1. `pull_request` (on pull request open, synchronize, reopen)
-2. `push` (on direct commits to main)
-3. `workflow_run` (after `release.yml` completes successfully on PR merge)
+1. **ci-pr-open.yml** → Build and test code
 
-**Behavior:**
-
-- Lints code
-- Builds production bundle
-- Checks bundle size (max 350KB)
-- Runs unit tests with coverage
-- Runs E2E tests with Playwright
-- Uploads artifacts for deployment
-
-**Execution Time:** ~5-10 minutes
+**Execution flow:** PR Open → Build
 
 ---
 
-### 3. `preview.yml` - Vercel Preview Deployments
+### Scenario 3: PR Open (Non-Renovate User)
 
-**Triggers:** `pull_request` (all events on PRs to main)
+**Triggers:** `pull_request` event on `main` branch + workflow_run
 
-**Behavior:**
+1. **ci-pr-open.yml** → Build and test code
+2. **cd-pr-preview.yml** → Deploy preview to Vercel (skips renovate[bot])
 
-- Deploys preview on PR open/update
-- Comments PR with preview URL
-- Cleans up preview on PR close
-- Skips for Renovate bot
-
-**Execution Time:** ~2-3 minutes
+**Execution flow:** PR Open → Build → Preview
 
 ---
 
-### 4. `deploy.yml` - Azure Deployment
+### Scenario 4: PR Merge (Non-Renovate User)
 
-**Triggers:** `workflow_run` (after `build-and-test.yml` completes successfully)
+**Triggers:** `pull_request_target` event (closed + merged)
 
-**Behavior:**
+1. **release-and-deploy.yml**
+   - `release` job → Create GitHub release tag
+   - `build-and-test` job → Build and test code (after release)
+   - `deploy` job → Deploy to Azure (after build)
 
-- Only runs after successful build-and-test
-- Downloads build artifacts
-- Deploys to Azure Web App with PM2
-
-**Execution Time:** ~2-3 minutes
-
----
-
-## Execution Flows
-
-### Flow 1: PR Merge to main (with Release)
-
-```
-PR Merged
-    ↓
-release.yml (creates version tag)
-    ↓ (success)
-build-and-test.yml (build + test + artifacts)
-    ↓ (success)
-deploy.yml (deploy to Azure)
-```
-
-### Flow 2: Direct Commit to main (no Release)
-
-```
-Direct Commit
-    ↓
-build-and-test.yml (build + test + artifacts)
-    ↓ (success)
-deploy.yml (deploy to Azure)
-```
-
-### Flow 3: Pull Request (Preview Only)
-
-```
-PR Opened/Updated
-    ↓
-build-and-test.yml (build + test)
-    ↓
-preview.yml (Vercel preview)
-```
+**Execution flow:** PR Merge → Release → Build → Deploy
 
 ---
 
-## Key Features
+### Scenario 5: PR Merge (Renovate)
 
-✅ **Release only on PR merges** - Direct commits skip semantic-release
-✅ **Sequential execution** - Build waits for release, deploy waits for build
-✅ **No duplicate runs** - Each commit triggers only relevant workflows
-✅ **Preview deployments** - Automatic previews for PRs
-✅ **Artifact reuse** - Build artifacts shared across workflows
-✅ **Renovate skip** - Bot commits don't trigger releases or previews
+**Triggers:** `pull_request_target` event (closed + merged)
+**Condition:** Renovate bot PR merge
+
+1. **release-and-deploy.yml**
+   - `release` job → Skipped (renovate condition filters it out)
+   - `build-and-test` job → Build and test code
+   - `deploy` job → Deploy to Azure
+
+**Execution flow:** PR Merge → Build → Deploy (no release)
 
 ---
 
-## Notes
+### Scenario 6: PR Close (Non-Renovate User)
 
-- The original `github-actions.yml` is backed up as `github-actions.yml.bak`
-- Artifacts are automatically cleaned up after retention period (default: 90 days)
-- Preview deployments are deleted when PRs are closed
+**Triggers:** `pull_request` event (closed)
+
+1. **cleanup-preview.yml** → Delete Vercel preview deployment
+
+**Execution flow:** PR Close → Cleanup Preview
+
+---
+
+## Renovate Handling
+
+- Renovate PRs: Build only (on open), no preview
+- Renovate PR merge: Build + deploy, no release
+- Non-renovate PRs: Build + preview (on open), release + build + deploy (on merge)
+
+## Key Differences from Traditional Single Workflow
+
+- **Separation of concerns:** Each workflow has a single responsibility
+- **Clear triggers:** Easy to understand when each workflow runs
+- **Independent scaling:** Can run builds separately from deployments
+- **Better debugging:** Easier to identify which stage failed
