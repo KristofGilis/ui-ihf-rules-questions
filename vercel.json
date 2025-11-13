@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/((?!(manifest\\.webmanifest|[^/]*\\.[^/]*$)).*)",
+      "source": "/:path*",
       "destination": "/index.html"
     }
   ],
