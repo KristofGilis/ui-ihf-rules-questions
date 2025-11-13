@@ -24,48 +24,32 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Check if commit is from Renovate
+        id: check_renovate
+        run: |
+          COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
+          echo "author=$COMMIT_AUTHOR" >> $GITHUB_OUTPUT
+          if [[ "$COMMIT_AUTHOR" == "renovate[bot]" ]]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Setup Node.js
+        if: steps.check_renovate.outputs.skip == 'false'
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Create release
-        uses: actions/github-script@v8
+      - name: Install dependencies
+        if: steps.check_renovate.outputs.skip == 'false'
+        run: npm ci
+
+      - name: Semantic Release
+        if: steps.check_renovate.outputs.skip == 'false'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          script: |
-            const fs = require('fs');
-            const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
-            const version = packageJson.version;
-            const tag = `v${version}`;
-
-            try {
-              await github.rest.git.createRef({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                ref: `refs/tags/${tag}`,
-                sha: context.sha
-              });
-              
-              await github.rest.repos.createRelease({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                tag_name: tag,
-                name: `Release ${tag}`,
-                body: `## Version ${version}\n\nAutomatic release from merge`,
-                draft: false,
-                prerelease: false
-              });
-              
-              console.log(`Released ${tag}`);
-            } catch (error) {
-              if (error.message.includes('Reference already exists')) {
-                console.log(`Tag ${tag} already exists, skipping`);
-              } else {
-                throw error;
-              }
-            }
+        run: npx semantic-release
 
   build:
     runs-on: ubuntu-latest
