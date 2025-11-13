@@ -79,9 +79,8 @@ jobs:
 
       - name: Update CSP for Vercel deployment
         run: |
-          sed -i 's|script-src '\''self'\'' https://\*\.sentry\.io|script-src '\''self'\'' '\''unsafe-inline'\'' https://*.sentry.io https://vercel.live|g' ${{ github.workspace }}/dist/browser/index.html
-          sed -i 's|connect-src '\''self'\'' https://api-ihf-rules-questions\.azurewebsites\.net https://\*\.sentry\.io|connect-src '\''self'\'' https://api-ihf-rules-questions.azurewebsites.net https://*.sentry.io https://vercel.live|g' ${{ github.workspace }}/dist/browser/index.html
-          sed -i 's|form-action '\''self'\'';|form-action '\''self'\''; frame-src https://vercel.live;|g' ${{ github.workspace }}/dist/browser/index.html
+          sed -i 's|script-src '\''self'\'' '\''unsafe-inline'\'' https://\*\.sentry\.io|script-src '\''self'\'' '\''unsafe-inline'\'' https://*.sentry.io https://vercel.live|g' ${{ github.workspace }}/dist/browser/index.html
+          sed -i 's|connect-src '\''self'\'' https://api-ihf-rules-questions\.azurewebsites\.net https://\*\.sentry\.io wss:|connect-src '\''self'\'' https://api-ihf-rules-questions.azurewebsites.net https://*.sentry.io https://vercel.live wss:|g' ${{ github.workspace }}/dist/browser/index.html
 
       - name: Copy vercel.json to dist
         run: cp vercel.json ${{ github.workspace }}/dist/browser/vercel.json
