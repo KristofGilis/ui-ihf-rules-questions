@@ -18,8 +18,9 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         with:
           script: |
-            let prNumber = context.issue.number;
+            let prNumber = parseInt(context.issue.number);
             console.log(`Cleaning up deployments for PR #${prNumber}`);
+            console.log(`PR Number type: ${typeof prNumber}, value: ${prNumber}`);
 
             // Get all deployments for this project (query filters don't work reliably)
             // Filter manually by matching PR number from meta field if available
@@ -40,10 +41,12 @@ jobs:
               
               // Delete deployments for this PR (filter manually)
               for (const deployment of data.deployments) {
-                // Skip if this doesn't appear to be from the PR we're cleaning up
+                // Skip if this deployment is from a different PR
                 // Note: meta.githubPr may not be set (see ci-pr-open.yml) so we may delete all previews
-                if (deployment.meta?.githubPr && deployment.meta?.githubPr !== prNumber) {
-                  console.log(`⊘ Skipping deployment from different PR: ${deployment.uid}`);
+                const deploymentPr = deployment.meta?.githubPr;
+                console.log(`Deployment ${deployment.uid}: githubPr=${deploymentPr}, comparing with prNumber=${prNumber} (${typeof deploymentPr} vs ${typeof prNumber})`);
+                if (deploymentPr && deploymentPr !== prNumber) {
+                  console.log(`⊘ Skipping deployment from different PR (PR #${deploymentPr}): ${deployment.uid}`);
                   skippedCount++;
                   continue;
                 }
