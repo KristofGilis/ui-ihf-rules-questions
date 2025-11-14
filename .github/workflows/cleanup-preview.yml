@@ -4,7 +4,6 @@ on:
   pull_request:
     branches: [main]
     types: [closed]
-  workflow_dispatch:
 
 jobs:
   cleanup-preview:
@@ -19,87 +18,65 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         with:
           script: |
-            // Get PR number - try multiple approaches
-            let prNumber = null;
-
-            // 1. Try from github.event.pull_request (pull_request trigger)
-            if (github.event?.pull_request?.number) {
-              prNumber = github.event.pull_request.number;
-              console.log(`✓ Got PR number from github.event.pull_request.number: ${prNumber}`);
-            }
-            // 2. Try from github.event.number (alternative for pull_request trigger)
-            else if (github.event?.number) {
-              prNumber = github.event.number;
-              console.log(`✓ Got PR number from github.event.number: ${prNumber}`);
-            }
-            // 3. Try from context.issue (issues/pull_request context)
-            else if (context.issue?.number) {
-              prNumber = context.issue.number;
-              console.log(`✓ Got PR number from context.issue.number: ${prNumber}`);
-            }
-
-            if (!prNumber) {
-              console.log('⚠️ Could not determine PR number - will delete all preview deployments');
-            } else {
-              console.log(`Cleaning up deployments for PR #${prNumber}`);
-            }
+            let prNumber = context.issue.number;
+            console.log(`Cleaning up deployments for PR #${prNumber}`);
 
             // Get all deployments for this project (query filters don't work reliably)
-            // // Filter manually by matching PR number from meta field if available
-            // const response = await fetch(
-            //   `https://api.vercel.com/v6/deployments?projectId=${process.env.VERCEL_PROJECT_ID}&target=preview&limit=100`,
-            //   {
-            //     headers: {
-            //       'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`
-            //     }
-            //   }
-            // );
+            // Filter manually by matching PR number from meta field if available
+            const response = await fetch(
+              `https://api.vercel.com/v6/deployments?projectId=${process.env.VERCEL_PROJECT_ID}&target=preview&limit=100`,
+              {
+                headers: {
+                  'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`
+                }
+              }
+            );
 
-            // const data = await response.json();
+            const data = await response.json();
 
-            // if (data.deployments && data.deployments.length > 0) {
-            //   let deletedCount = 0;
-            //   let skippedCount = 0;
+            if (data.deployments && data.deployments.length > 0) {
+              let deletedCount = 0;
+              let skippedCount = 0;
               
-            //   // Delete deployments for this PR (filter manually)
-            //   for (const deployment of data.deployments) {
-            //     // Skip if this doesn't appear to be from the PR we're cleaning up
-            //     // Note: meta.githubPr may not be set (see ci-pr-open.yml) so we may delete all previews
-            //     if (deployment.meta?.githubPr && deployment.meta?.githubPr !== prNumber) {
-            //       console.log(`⊘ Skipping deployment from different PR: ${deployment.uid}`);
-            //       skippedCount++;
-            //       continue;
-            //     }
+              // Delete deployments for this PR (filter manually)
+              for (const deployment of data.deployments) {
+                // Skip if this doesn't appear to be from the PR we're cleaning up
+                // Note: meta.githubPr may not be set (see ci-pr-open.yml) so we may delete all previews
+                if (deployment.meta?.githubPr && deployment.meta?.githubPr !== prNumber) {
+                  console.log(`⊘ Skipping deployment from different PR: ${deployment.uid}`);
+                  skippedCount++;
+                  continue;
+                }
 
-            //     // This deployment is a preview - delete it
-            //     try {
-            //       const deleteResponse = await fetch(
-            //         `https://api.vercel.com/v13/deployments/${deployment.uid}`,
-            //         {
-            //           method: 'DELETE',
-            //           headers: {
-            //             'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`
-            //           }
-            //         }
-            //       );
-            //       if (deleteResponse.ok) {
-            //         console.log(`✓ Deleted deployment: ${deployment.uid}`);
-            //         deletedCount++;
-            //       } else {
-            //         console.log(`✗ Failed to delete deployment ${deployment.uid}: ${deleteResponse.status}`);
-            //       }
-            //     } catch (error) {
-            //       console.error(`✗ Error deleting deployment ${deployment.uid}:`, error);
-            //     }
-            //   }
+                // This deployment is a preview - delete it
+                try {
+                  const deleteResponse = await fetch(
+                    `https://api.vercel.com/v13/deployments/${deployment.uid}`,
+                    {
+                      method: 'DELETE',
+                      headers: {
+                        'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`
+                      }
+                    }
+                  );
+                  if (deleteResponse.ok) {
+                    console.log(`✓ Deleted deployment: ${deployment.uid}`);
+                    deletedCount++;
+                  } else {
+                    console.log(`✗ Failed to delete deployment ${deployment.uid}: ${deleteResponse.status}`);
+                  }
+                } catch (error) {
+                  console.error(`✗ Error deleting deployment ${deployment.uid}:`, error);
+                }
+              }
               
-            //   // Comment on PR
-            //   await github.rest.issues.createComment({
-            //     issue_number: prNumber,
-            //     owner: context.repo.owner,
-            //     repo: context.repo.repo,
-            //     body: `🗑️ Preview deployments cleaned up (${deletedCount} deployment(s) deleted)`
-            //   });
-            // } else {
-            //   console.log('No deployments found for this PR');
-            // }
+              // Comment on PR
+              await github.rest.issues.createComment({
+                issue_number: prNumber,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `🗑️ Preview deployments cleaned up (${deletedCount} deployment(s) deleted)`
+              });
+            } else {
+              console.log('No deployments found for this PR');
+            }
