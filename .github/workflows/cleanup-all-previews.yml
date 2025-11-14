@@ -40,7 +40,7 @@ jobs:
 
             const data = await response.json();
             console.log(`Found ${data.deployments?.length || 0} total deployments`);
-            console.log(data);
+            console.log(JSON.stringify(data, null, 2));
 
             if (data.deployments && data.deployments.length > 0) {
               let previewCount = 0;
@@ -51,7 +51,7 @@ jobs:
               // Delete all preview deployments (filter by production status)
               for (const deployment of data.deployments) {
                 // Skip production deployments
-                if (deployment.production || deployment.environment === 'production') {
+                if (deployment.target === 'production') {
                   console.log(`⊘ Skipping production deployment: ${deployment.uid}`);
                   productionCount++;
                   continue;
