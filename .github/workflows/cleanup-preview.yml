@@ -19,11 +19,29 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         with:
           script: |
-            console.log(context);
-            // const prNumber = github.event.number;
-            // console.log(`Cleaning up deployments for PR #${prNumber}`);
+            // Get PR number - try multiple approaches
+            let prNumber = null;
 
-            // // Get all deployments for this project (query filters don't work reliably)
+            // 1. Try from github.event.pull_request (pull_request trigger)
+            if (github.event?.pull_request?.number) {
+              prNumber = github.event.pull_request.number;
+            }
+            // 2. Try from github.event.number (alternative for pull_request trigger)
+            else if (github.event?.number) {
+              prNumber = github.event.number;
+            }
+            // 3. Try from context.issue (issues/pull_request context)
+            else if (context.issue?.number) {
+              prNumber = context.issue.number;
+            }
+
+            if (!prNumber) {
+              console.log('⚠️ Could not determine PR number - will delete all preview deployments');
+            } else {
+              console.log(`Cleaning up deployments for PR #${prNumber}`);
+            }
+
+            // Get all deployments for this project (query filters don't work reliably)
             // // Filter manually by matching PR number from meta field if available
             // const response = await fetch(
             //   `https://api.vercel.com/v6/deployments?projectId=${process.env.VERCEL_PROJECT_ID}&target=preview&limit=100`,
