@@ -242,9 +242,18 @@ describe('QuizService', () => {
 
       expect(currentAnswerIds).toEqual([]);
     });
+
+    it('should return empty array when no current question exists', () => {
+      // Move to a non-existent question index
+      service.state.update((s) => ({ ...s, currentQuestionIndex: 10 }));
+
+      const currentAnswerIds = service.getCurrentAnswerIds();
+
+      expect(currentAnswerIds).toEqual([]);
+    });
   });
 
-  describe('Progress', () => {
+  describe('Navigation', () => {
     beforeEach(() => {
       service.initializeQuiz(mockQuestions, false);
     });

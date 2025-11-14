@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { DestroyRef, Injectable, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SwUpdate } from '@angular/service-worker';
 import { TranslateService } from '@ngx-translate/core';
@@ -18,10 +18,10 @@ export class PwaUpdateService {
   private readonly _translateService = inject(TranslateService);
 
   /**
-   * Initialize PWA update checking
-   * Checks for updates on initialization and every hour
+   * Setup PWA update checking with periodic checks and version update notifications
+   * @param destroyRef DestroyRef from the caller for proper subscription cleanup
    */
-  initializeUpdateCheck(): void {
+  initializeUpdateCheck(destroyRef: DestroyRef): void {
     if (!this._swUpdate.isEnabled) {
       console.log('Service Worker is not enabled');
       return;
@@ -33,13 +33,13 @@ export class PwaUpdateService {
     // Check for updates every hour (3600000 ms)
     interval(3600000)
       .pipe(
-        takeUntilDestroyed(),
+        takeUntilDestroyed(destroyRef),
         switchMap(() => this._swUpdate.checkForUpdate())
       )
       .subscribe();
 
     // Listen for available updates
-    this._swUpdate.versionUpdates.pipe(takeUntilDestroyed()).subscribe((event) => {
+    this._swUpdate.versionUpdates.pipe(takeUntilDestroyed(destroyRef)).subscribe((event) => {
       if (event.type === 'VERSION_READY') {
         // Show update notification with action button
         this._toastService.show(this._translateService.instant('pwa.update_available'), {

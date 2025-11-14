@@ -225,47 +225,18 @@ This application is built with accessibility as a priority:
 - ✅ **Skip Links** - Bypass navigation for keyboard users
 - ✅ **High Contrast** - Clear visual indicators in all themes
 
-## 📱 Mobile Apps
-
-### Building for Android
-
-```bash
-# First time setup
-npm run cap:add:android
-
-# Build and sync
-npm run build:android
-
-# Open in Android Studio
-npx cap open android
-```
-
-### Building for iOS
-
-```bash
-# First time setup (macOS only)
-npm run cap:add:ios
-
-# Build and sync
-npm run build:ios
-
-# Open in Xcode
-npx cap open ios
-```
-
 ## 🧪 Testing
 
 ### Unit Tests (Jest)
 
-- **646 tests** with **97.52% code coverage**
+- **704 tests** with **97.63% statements coverage** and **85.51% branch coverage**
 - Run tests: `npm test`
 - Watch mode: `npm run test:watch`
 - Coverage report: `npm run test:coverage`
 
 ### E2E Tests (Playwright)
 
-- **116 tests** covering all major user flows
-- **100% pass rate** across all browsers
+- **194 tests** covering all major user flows
 - Run tests: `npm run test:e2e`
 - UI mode: `npm run test:e2e:ui`
 - Headed mode: `npm run test:e2e:headed`

@@ -139,6 +139,41 @@ describe('QuestionsService', () => {
         done();
       });
     });
+
+    it('should handle response with null or missing data', (done) => {
+      const responseWithoutData = {
+        ...mockQuestionsResponse,
+        data: null,
+      };
+
+      questionsSubject.next(responseWithoutData);
+
+      service.questions$.subscribe(() => {
+        // Should default to null cursor and true for hasNextPage
+        expect(service.hasNextPage).toBe(true);
+        done();
+      });
+    });
+
+    it('should handle response with missing pageInfo', (done) => {
+      const responseWithoutPageInfo = {
+        ...mockQuestionsResponse,
+        data: {
+          questions: {
+            edges: mockQuestionsResponse.data.questions.edges,
+            pageInfo: null as any,
+          },
+        },
+      };
+
+      questionsSubject.next(responseWithoutPageInfo);
+
+      service.questions$.subscribe(() => {
+        // Should default to null cursor and true for hasNextPage
+        expect(service.hasNextPage).toBe(true);
+        done();
+      });
+    });
   });
 
   describe('Pagination', () => {
@@ -256,6 +291,80 @@ describe('QuestionsService', () => {
           fetchPolicy: 'no-cache',
         })
       );
+    });
+  });
+
+  describe('debouncedScore$', () => {
+    it('should provide debounced score calculation observable', () => {
+      expect(service.debouncedScore$).toBeDefined();
+    });
+
+    it('should trigger score calculation through requestScore', (done) => {
+      const scoreSubject = new BehaviorSubject({
+        loading: false,
+        data: { calculateScore: { score: 5, totalQuestions: 10 } },
+      });
+
+      calculateScoreGQL.watch = jest.fn(
+        () =>
+          ({
+            valueChanges: scoreSubject.asObservable(),
+            refetch: refetchMock,
+            fetchMore: fetchMoreMock,
+          }) as any
+      );
+
+      service.debouncedScore$.subscribe(() => {
+        // Subscription active during debounce period
+      });
+
+      // Call requestScore
+      service.requestScore(['q1'], ['a1']);
+
+      // Wait for debounce time to complete
+      setTimeout(() => {
+        expect(calculateScoreGQL.watch).toHaveBeenCalledWith({
+          variables: { questionIds: ['q1'], selectedAnswerIds: ['a1'] },
+          fetchPolicy: 'no-cache',
+        });
+        done();
+      }, 400);
+    });
+
+    it('should debounce multiple requestScore calls', (done) => {
+      const scoreSubject = new BehaviorSubject({
+        loading: false,
+        data: { calculateScore: { score: 5, totalQuestions: 10 } },
+      });
+
+      calculateScoreGQL.watch = jest.fn(
+        () =>
+          ({
+            valueChanges: scoreSubject.asObservable(),
+            refetch: refetchMock,
+            fetchMore: fetchMoreMock,
+          }) as any
+      );
+
+      const subscription = service.debouncedScore$.subscribe(() => {
+        // Subscription active during debounce period
+      });
+
+      service.requestScore(['q1'], ['a1']);
+      service.requestScore(['q1'], ['a2']);
+      service.requestScore(['q1'], ['a3']);
+
+      // Wait for debounce (300ms) + safety margin
+      setTimeout(() => {
+        // Should only be called once due to debounce, with the last args
+        expect(calculateScoreGQL.watch).toHaveBeenCalledTimes(1);
+        expect(calculateScoreGQL.watch).toHaveBeenCalledWith({
+          variables: { questionIds: ['q1'], selectedAnswerIds: ['a3'] },
+          fetchPolicy: 'no-cache',
+        });
+        subscription.unsubscribe();
+        done();
+      }, 350);
     });
   });
 });

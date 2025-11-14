@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, HostListener, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, HostListener, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
@@ -34,6 +34,7 @@ export class AppComponent {
   private readonly _themeService = inject(ThemeService);
   private readonly _titleService = inject(Title);
   private readonly _pwaUpdateService = inject(PwaUpdateService);
+  private readonly _destroyRef = inject(DestroyRef);
 
   // Constants
   private readonly LANGUAGES = ['en', 'nl', 'srb'] as const;
@@ -88,8 +89,8 @@ export class AppComponent {
       this._titleService.setTitle(this._translateService.instant('main.title'));
     });
 
-    // Initialize PWA update checking
-    this._pwaUpdateService.initializeUpdateCheck();
+    // Initialize PWA update checking with proper subscription cleanup
+    this._pwaUpdateService.initializeUpdateCheck(this._destroyRef);
   }
 
   onChangeLanguage(lang: string): void {
