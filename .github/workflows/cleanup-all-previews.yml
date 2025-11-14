@@ -42,9 +42,6 @@ jobs:
             // Using target=preview to filter at API level (only returns preview deployments, not production)
             // Optionally filter by PR number if provided
             let url = `https://api.vercel.com/v6/deployments?projectId=${process.env.VERCEL_PROJECT_ID}&target=preview&limit=100`;
-            if (prNumber) {
-              url += `&meta.githubPr=${prNumber}`;
-            }
 
             const response = await fetch(url, {
               headers: {
@@ -77,6 +74,12 @@ jobs:
 
               // Delete all preview deployments (already filtered by target=preview from API)
               for (const deployment of data.deployments) {
+                // If PR number specified, skip deployments not matching that PR
+                if (prNumber && deployment.meta?.githubPr !== prNumber) {
+                  console.log(`⊘ Skipping deployment from different PR: ${deployment.uid}`);
+                  continue;
+                }
+
                 const deploymentId = deployment.uid;
                 console.log(`📦 Preview deployment: ${deploymentId}`);
                 console.log(`   target: ${deployment.target}, readySubstate: ${deployment.readySubstate}`);
