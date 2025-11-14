@@ -4,6 +4,12 @@ on:
   pull_request:
     branches: [main]
     types: [closed]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to cleanup deployments for'
+        required: true
+        type: number
 
 jobs:
   cleanup-preview:
@@ -18,7 +24,7 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         with:
           script: |
-            const prNumber = context.payload.pull_request.number;
+            const prNumber = context.payload.pull_request?.number || ${{ inputs.pr_number }};
             console.log(`Cleaning up deployments for PR #${prNumber}`);
 
             // Get all deployments for this project
