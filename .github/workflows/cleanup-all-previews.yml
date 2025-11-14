@@ -50,7 +50,7 @@ jobs:
               // Delete all preview deployments (filter by production status)
               for (const deployment of data.deployments) {
                 // Skip production deployments
-                if (deployment.production) {
+                if (deployment.production || deployment.environment === 'production') {
                   console.log(`⊘ Skipping production deployment: ${deployment.uid}`);
                   productionCount++;
                   continue;
