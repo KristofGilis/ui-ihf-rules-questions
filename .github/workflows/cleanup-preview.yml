@@ -25,14 +25,17 @@ jobs:
             // 1. Try from github.event.pull_request (pull_request trigger)
             if (github.event?.pull_request?.number) {
               prNumber = github.event.pull_request.number;
+              console.log(`✓ Got PR number from github.event.pull_request.number: ${prNumber}`);
             }
             // 2. Try from github.event.number (alternative for pull_request trigger)
             else if (github.event?.number) {
               prNumber = github.event.number;
+              console.log(`✓ Got PR number from github.event.number: ${prNumber}`);
             }
             // 3. Try from context.issue (issues/pull_request context)
             else if (context.issue?.number) {
               prNumber = context.issue.number;
+              console.log(`✓ Got PR number from context.issue.number: ${prNumber}`);
             }
 
             if (!prNumber) {
