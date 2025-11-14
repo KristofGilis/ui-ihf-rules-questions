@@ -43,7 +43,7 @@ jobs:
               for (const deployment of data.deployments) {
                 // Skip if this deployment is from a different PR
                 // Note: meta.githubPr may not be set (see ci-pr-open.yml) so we may delete all previews
-                const deploymentPr = deployment.meta?.githubPr;
+                const deploymentPr = deployment.meta?.githubPr ? parseInt(deployment.meta.githubPr) : null;
                 console.log(`Deployment ${deployment.uid}: githubPr=${deploymentPr}, comparing with prNumber=${prNumber} (${typeof deploymentPr} vs ${typeof prNumber})`);
                 if (deploymentPr && deploymentPr !== prNumber) {
                   console.log(`⊘ Skipping deployment from different PR (PR #${deploymentPr}): ${deployment.uid}`);
