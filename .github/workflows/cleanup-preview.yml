@@ -18,7 +18,7 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         with:
           script: |
-            const prNumber = context.payload.pull_request.number;
+            const prNumber = github.event.number;
             console.log(`Cleaning up deployments for PR #${prNumber}`);
 
             // Get all deployments for this project (query filters don't work reliably)
