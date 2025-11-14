@@ -40,6 +40,21 @@ jobs:
 
             const data = await response.json();
             console.log(`Found ${data.deployments?.length || 0} total deployments`);
+
+            // Log deployment details to identify which is preview vs production
+            if (data.deployments) {
+              console.log('\n=== Deployment Analysis ===');
+              data.deployments.forEach((d, i) => {
+                console.log(`[${i}] ${d.uid}`);
+                console.log(`    url: ${d.url}`);
+                console.log(`    target: ${d.target}`);
+                console.log(`    readySubstate: ${d.readySubstate}`);
+                console.log(`    aliasAssigned: ${d.aliasAssigned}`);
+                console.log(`    meta: ${JSON.stringify(d.meta)}`);
+              });
+              console.log('');
+            }
+
             console.log(JSON.stringify(data, null, 2));
 
             if (data.deployments && data.deployments.length > 0) {
@@ -53,12 +68,22 @@ jobs:
                 // Skip production deployments
                 if (deployment.target === 'production') {
                   console.log(`⊘ Skipping production deployment: ${deployment.uid}`);
+                  console.log(`   target: ${deployment.target}, readySubstate: ${deployment.readySubstate}`);
                   productionCount++;
+                  continue;
+                }
+
+                // Only delete deployments with target: preview
+                if (deployment.target !== 'preview') {
+                  console.log(`⊘ Skipping non-preview deployment: ${deployment.uid}`);
+                  console.log(`   target: ${deployment.target}, readySubstate: ${deployment.readySubstate}`);
                   continue;
                 }
 
                 previewCount++;
                 const deploymentId = deployment.uid;
+                console.log(`📦 Preview deployment: ${deploymentId}`);
+                console.log(`   target: ${deployment.target}, readySubstate: ${deployment.readySubstate}`);
                 console.log(`${dryRun ? '[DRY RUN]' : ''} Would delete preview deployment: ${deploymentId}`);
                 
                 // Skip actual deletion in dry run mode
