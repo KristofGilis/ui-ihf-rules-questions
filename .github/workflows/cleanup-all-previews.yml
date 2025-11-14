@@ -2,6 +2,15 @@ name: Cleanup All Preview Deployments
 
 on:
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run mode (preview what would be deleted without actually deleting)'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 jobs:
   cleanup-all-previews:
@@ -16,7 +25,8 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         with:
           script: |
-            console.log('Starting cleanup of all preview deployments');
+            const dryRun = '${{ inputs.dry_run }}' === 'true';
+            console.log(`Starting cleanup of all preview deployments (DRY RUN: ${dryRun})`);
 
             // Get all deployments for this project
             const response = await fetch(
@@ -32,6 +42,8 @@ jobs:
             console.log(`Found ${data.deployments?.length || 0} total deployments`);
 
             if (data.deployments && data.deployments.length > 0) {
+              let previewCount = 0;
+              let productionCount = 0;
               let deletedCount = 0;
               let failedCount = 0;
 
@@ -39,13 +51,21 @@ jobs:
               for (const deployment of data.deployments) {
                 // Skip production deployments
                 if (deployment.production) {
-                  console.log(`Skipping production deployment: ${deployment.uid}`);
+                  console.log(`⊘ Skipping production deployment: ${deployment.uid}`);
+                  productionCount++;
                   continue;
                 }
 
+                previewCount++;
                 const deploymentId = deployment.uid;
-                console.log(`Deleting preview deployment: ${deploymentId}`);
+                console.log(`${dryRun ? '[DRY RUN]' : ''} Would delete preview deployment: ${deploymentId}`);
                 
+                // Skip actual deletion in dry run mode
+                if (dryRun) {
+                  deletedCount++;
+                  continue;
+                }
+
                 try {
                   const deleteResponse = await fetch(
                     `https://api.vercel.com/v13/deployments/${deploymentId}`,
@@ -70,7 +90,12 @@ jobs:
                 }
               }
 
-              console.log(`\nCleanup summary: ${deletedCount} deleted, ${failedCount} failed`);
+              console.log(`\n=== Cleanup Summary ===`);
+              console.log(`Production deployments (preserved): ${productionCount}`);
+              console.log(`Preview deployments: ${previewCount}`);
+              console.log(`${dryRun ? 'Would delete' : 'Deleted'}: ${deletedCount}`);
+              if (!dryRun) console.log(`Failed: ${failedCount}`);
+              console.log(`DRY RUN: ${dryRun}`);
             } else {
               console.log('No deployments found for this project');
             }
