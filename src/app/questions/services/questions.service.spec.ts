@@ -314,9 +314,8 @@ describe('QuestionsService', () => {
           }) as any
       );
 
-      let scoreReceived = false;
       service.debouncedScore$.subscribe(() => {
-        scoreReceived = true;
+        // Subscription active during debounce period
       });
 
       // Call requestScore
