@@ -3,10 +3,6 @@ name: Cleanup All Preview Deployments
 on:
   workflow_dispatch:
     inputs:
-      pr_number:
-        description: 'Optional: PR number to cleanup (if empty, cleans up all previews)'
-        required: false
-        type: number
       dry_run:
         description: 'Dry run mode (preview what would be deleted without actually deleting)'
         required: false
@@ -30,13 +26,8 @@ jobs:
         with:
           script: |
             const dryRun = '${{ inputs.dry_run }}' === 'true';
-            const prNumber = '${{ inputs.pr_number }}' ? parseInt('${{ inputs.pr_number }}') : null;
 
-            if (prNumber) {
-              console.log(`Starting cleanup of preview deployments for PR #${prNumber} (DRY RUN: ${dryRun})`);
-            } else {
-              console.log(`Starting cleanup of all preview deployments (DRY RUN: ${dryRun})`);
-            }
+            console.log(`Starting cleanup of all preview deployments (DRY RUN: ${dryRun})`);
 
             // Get all preview deployments for this project
             // Using target=preview to filter at API level (only returns preview deployments, not production)
@@ -74,12 +65,6 @@ jobs:
 
               // Delete all preview deployments (already filtered by target=preview from API)
               for (const deployment of data.deployments) {
-                // If PR number specified, skip deployments not matching that PR
-                if (prNumber && deployment.meta?.githubPr !== prNumber) {
-                  console.log(`⊘ Skipping deployment from different PR: ${deployment.uid}`);
-                  continue;
-                }
-
                 const deploymentId = deployment.uid;
                 console.log(`📦 Preview deployment: ${deploymentId}`);
                 console.log(`   target: ${deployment.target}, readySubstate: ${deployment.readySubstate}`);

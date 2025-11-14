@@ -27,9 +27,10 @@ jobs:
             const prNumber = context.payload.pull_request?.number || ${{ inputs.pr_number }};
             console.log(`Cleaning up deployments for PR #${prNumber}`);
 
-            // Get all deployments for this project created by this PR
+            // Get all deployments for this project (query filters don't work reliably)
+            // Filter manually by matching PR number from meta field if available
             const response = await fetch(
-              `https://api.vercel.com/v6/deployments?projectId=${process.env.VERCEL_PROJECT_ID}&meta.githubPr=${prNumber}&limit=100`,
+              `https://api.vercel.com/v6/deployments?projectId=${process.env.VERCEL_PROJECT_ID}&target=preview&limit=100`,
               {
                 headers: {
                   'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`
@@ -41,16 +42,19 @@ jobs:
 
             if (data.deployments && data.deployments.length > 0) {
               let deletedCount = 0;
-              // Delete all preview deployments for this PR
+              let skippedCount = 0;
+              
+              // Delete deployments for this PR (filter manually)
               for (const deployment of data.deployments) {
-                // Skip production deployments (those with explicit production alias)
-                if (deployment.target === 'production') {
-                  console.log(`⊘ Skipping production deployment: ${deployment.uid}`);
+                // Skip if this doesn't appear to be from the PR we're cleaning up
+                // Note: meta.githubPr may not be set (see ci-pr-open.yml) so we may delete all previews
+                if (deployment.meta?.githubPr && deployment.meta?.githubPr !== prNumber) {
+                  console.log(`⊘ Skipping deployment from different PR: ${deployment.uid}`);
+                  skippedCount++;
                   continue;
                 }
 
-                // This PR's deployments are previews - delete them
-                // (target is null or preview, but never 'production' since we filtered above)
+                // This deployment is a preview - delete it
 
                 try {
                   const deleteResponse = await fetch(
