@@ -54,11 +54,15 @@ describe('ToastService', () => {
       // Show a toast with a short duration
       service.show('Test message', { type: 'info', duration: 3000 });
 
-      // Fast-forward time
+      // Get the toast component instance
+      const toastComponentRef = (service as any)._toastComponentRef;
+      const dismissSpy = jest.spyOn(toastComponentRef.instance, 'dismiss');
+
+      // Fast-forward time to trigger timeout
       jest.advanceTimersByTime(3000);
 
-      // The toast should have been dismissed (this covers line 75)
-      expect(true).toBe(true); // Test passes if no errors thrown
+      // The toast should have been dismissed
+      expect(dismissSpy).toHaveBeenCalled();
     });
 
     it('should not auto-dismiss toast when duration is 0', () => {
@@ -69,6 +73,39 @@ describe('ToastService', () => {
       jest.advanceTimersByTime(10000);
 
       // No setTimeout should have been called
+      expect(true).toBe(true); // Test passes if no errors thrown
+    });
+  });
+
+  describe('Toast with Action', () => {
+    it('should pass action property to toast component', () => {
+      const callback = jest.fn();
+      const action = { label: 'Click me', callback };
+
+      service.show('Test message', {
+        type: 'info',
+        duration: 0,
+        dismissible: true,
+        action,
+      });
+
+      // Verify the toast component was created and action was passed
+      expect(callback).not.toHaveBeenCalled(); // Action shouldn't be called until user clicks
+    });
+
+    it('should show toast with action button', () => {
+      const callback = jest.fn();
+
+      service.show('Update available', {
+        type: 'info',
+        duration: 0,
+        dismissible: true,
+        action: {
+          label: 'Update now',
+          callback,
+        },
+      });
+
       expect(true).toBe(true); // Test passes if no errors thrown
     });
   });

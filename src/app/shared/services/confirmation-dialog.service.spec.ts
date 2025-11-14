@@ -189,4 +189,15 @@ describe('ConfirmationDialogService', () => {
     const componentRef = (service as any)._dialogRef;
     componentRef.instance.onCancel();
   });
+
+  it('should handle close gracefully when no dialog is open', () => {
+    // Ensure _dialogRef is null
+    (service as any)._dialogRef = null;
+
+    // Call the private close method through a confirm/cancel flow
+    // This tests the if (this._dialogRef) branch when _dialogRef is null
+    expect(() => {
+      (service as any).close();
+    }).not.toThrow();
+  });
 });

@@ -30,13 +30,6 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
-    "preview": "http-server dist/ui-ihf-rules-questions/browser -p 4200 -c-1 --proxy http://localhost:4200?",
-    "cap:init": "npx cap init \"IHF Rules Quiz\" net.rulequestions.ihf --web-dir=dist/ui-ihf-rules-questions/browser",
-    "cap:add:android": "npx cap add android",
-    "cap:add:ios": "npx cap add ios",
-    "cap:sync": "npx cap sync",
-    "build:android": "npm run build:web && npx cap copy android && npx cap sync android",
-    "build:ios": "npm run build:web && npx cap copy ios && npx cap sync ios",
     "prepare": "husky"
   },
   "private": true,

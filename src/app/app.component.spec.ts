@@ -298,4 +298,53 @@ describe('AppComponent', () => {
       expect(component['themeLabel']()).toBe('theme.system');
     });
   });
+
+  describe('Online/Offline State', () => {
+    it('should initialize with navigator.onLine status', () => {
+      const currentStatus = component['isOnline']();
+      expect(typeof currentStatus).toBe('boolean');
+    });
+
+    it('should update isOnline when online event is fired', () => {
+      // Dispatch online event
+      window.dispatchEvent(new Event('online'));
+
+      // Wait for signal update
+      fixture.detectChanges();
+
+      // The isOnline signal should now be true
+      expect(component['isOnline']()).toBe(true);
+    });
+
+    it('should update isOnline when offline event is fired', () => {
+      // First ensure we're online
+      window.dispatchEvent(new Event('online'));
+      fixture.detectChanges();
+      expect(component['isOnline']()).toBe(true);
+
+      // Dispatch offline event
+      window.dispatchEvent(new Event('offline'));
+
+      // Wait for signal update
+      fixture.detectChanges();
+
+      // The isOnline signal should now be false
+      expect(component['isOnline']()).toBe(false);
+    });
+
+    it('should handle multiple online/offline transitions', () => {
+      // Online -> Offline -> Online sequence
+      window.dispatchEvent(new Event('online'));
+      fixture.detectChanges();
+      expect(component['isOnline']()).toBe(true);
+
+      window.dispatchEvent(new Event('offline'));
+      fixture.detectChanges();
+      expect(component['isOnline']()).toBe(false);
+
+      window.dispatchEvent(new Event('online'));
+      fixture.detectChanges();
+      expect(component['isOnline']()).toBe(true);
+    });
+  });
 });

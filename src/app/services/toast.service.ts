@@ -59,7 +59,7 @@ export class ToastService {
    * Show a toast notification
    */
   show(message: string, options: ToastOptions = {}): void {
-    const { type = 'info', duration = TOAST_DURATION.INFO, dismissible = true } = options;
+    const { type = 'info', duration = TOAST_DURATION.INFO, dismissible = true, action } = options;
 
     // Create component if it doesn't exist
     if (!this._toastComponentRef) {
@@ -68,7 +68,7 @@ export class ToastService {
 
     // Add toast to the component
     const toastComponent = this._toastComponentRef!.instance;
-    const toastId = toastComponent.add({ message, type, dismissible });
+    const toastId = toastComponent.add({ message, type, dismissible, action });
 
     // Auto-dismiss after duration
     if (duration > 0) {

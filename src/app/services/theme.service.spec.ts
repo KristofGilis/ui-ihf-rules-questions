@@ -86,6 +86,22 @@ describe('ThemeService', () => {
     expect(document.documentElement.classList.contains('dark')).toBe(true);
   });
 
+  it('should handle system theme preference with light mode', () => {
+    // Mock system preference as light (not dark)
+    Object.defineProperty(window, 'matchMedia', {
+      value: jest.fn().mockImplementation((query) => ({
+        matches: false, // prefers-color-scheme: dark is false, so it's light
+        media: query,
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+      })),
+      writable: true,
+    });
+
+    service.setTheme('system');
+    expect(document.documentElement.classList.contains('dark')).toBe(false);
+  });
+
   it('should load saved theme from localStorage', () => {
     // Test that themes are persisted correctly to localStorage
     service.setTheme('light');
@@ -96,6 +112,55 @@ describe('ThemeService', () => {
 
     service.setTheme('system');
     expect(localStorage.setItem).toHaveBeenCalledWith('theme', 'system');
+  });
+
+  it('should not load invalid theme from localStorage', () => {
+    // Set invalid theme in mock localStorage
+    mockLocalStorage['theme'] = 'invalid-theme' as any;
+
+    // Recreate service to trigger loadTheme() in constructor
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [ThemeService],
+    });
+
+    const newService = TestBed.inject(ThemeService);
+
+    // Should fall back to system theme
+    expect(newService.currentTheme()).toBe('system');
+  });
+
+  it('should not load null theme from localStorage', () => {
+    // Ensure theme is not in localStorage
+    delete mockLocalStorage['theme'];
+
+    // Recreate service
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [ThemeService],
+    });
+
+    const newService = TestBed.inject(ThemeService);
+
+    // Should use system theme as default
+    expect(newService.currentTheme()).toBe('system');
+  });
+
+  it('should handle missing theme gracefully', () => {
+    // Clear localStorage
+    mockLocalStorage = {};
+
+    // Recreate service
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [ThemeService],
+    });
+
+    const newService = TestBed.inject(ThemeService);
+
+    // Service should still work
+    expect(newService).toBeTruthy();
+    expect(newService.currentTheme()).toBe('system');
   });
 
   it('should react to system preference changes when theme is system', () => {

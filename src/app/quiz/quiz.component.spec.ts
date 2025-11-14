@@ -515,4 +515,54 @@ describe('QuizComponent', () => {
       expect(instantSpy).toHaveBeenCalledWith('quiz.leave_cancel');
     });
   });
+
+  describe('Swipe Gesture Handling', () => {
+    it('should navigate to next question on swipe left when possible', () => {
+      quizService.canGoNext.mockReturnValue(true);
+      const goToNextSpy = jest.spyOn(component, 'goToNext');
+
+      // Simulate swipe left event
+      if (component['_hammer']) {
+        component['_hammer'].emit('swipeleft', {});
+      }
+
+      expect(goToNextSpy).toHaveBeenCalled();
+    });
+
+    it('should not navigate to next question on swipe left when not possible', () => {
+      quizService.canGoNext.mockReturnValue(false);
+      const goToNextSpy = jest.spyOn(component, 'goToNext');
+
+      // Simulate swipe left event
+      if (component['_hammer']) {
+        component['_hammer'].emit('swipeleft', {});
+      }
+
+      expect(goToNextSpy).not.toHaveBeenCalled();
+    });
+
+    it('should navigate to previous question on swipe right when possible', () => {
+      quizService.canGoPrevious.mockReturnValue(true);
+      const goToPreviousSpy = jest.spyOn(component, 'goToPrevious');
+
+      // Simulate swipe right event
+      if (component['_hammer']) {
+        component['_hammer'].emit('swiperight', {});
+      }
+
+      expect(goToPreviousSpy).toHaveBeenCalled();
+    });
+
+    it('should not navigate to previous question on swipe right when not possible', () => {
+      quizService.canGoPrevious.mockReturnValue(false);
+      const goToPreviousSpy = jest.spyOn(component, 'goToPrevious');
+
+      // Simulate swipe right event
+      if (component['_hammer']) {
+        component['_hammer'].emit('swiperight', {});
+      }
+
+      expect(goToPreviousSpy).not.toHaveBeenCalled();
+    });
+  });
 });

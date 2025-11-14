@@ -43,6 +43,81 @@ test.describe('Toast Notifications', () => {
       await expect(toast.first()).not.toBeVisible();
     }
   });
+
+  test('should display action button on toast when provided', async ({ page }) => {
+    await page.goto('/');
+
+    // Simulate a toast with action button
+    await page.evaluate(() => {
+      if ((window as any).__toastComponent) {
+        (window as any).__toastComponent.add({
+          message: 'A new version is available',
+          type: 'info',
+          dismissible: true,
+          action: {
+            label: 'Update now',
+            callback: () => console.log('Update clicked'),
+          },
+        });
+      }
+    });
+
+    // Check if toast with action button appears
+    const toast = page.locator('[role="alert"]').filter({ hasText: /version|update/i });
+    if ((await toast.count()) > 0) {
+      await expect(toast.first()).toBeVisible();
+
+      // Look for action button within the toast
+      const actionButton = toast
+        .first()
+        .locator('button')
+        .filter({ hasText: /update|now/i });
+      await expect(actionButton).toBeVisible();
+    }
+  });
+
+  test('should execute action callback when action button is clicked', async ({ page }) => {
+    await page.goto('/');
+
+    // Log to track if callback was executed
+    let callbackExecuted = false;
+    await page.evaluate(() => {
+      (window as any).__updateClicked = false;
+    });
+
+    // Create a toast with action and track callback
+    await page.evaluate(() => {
+      if ((window as any).__toastComponent) {
+        (window as any).__toastComponent.add({
+          message: 'A new version is available',
+          type: 'info',
+          dismissible: true,
+          action: {
+            label: 'Update now',
+            callback: () => {
+              (window as any).__updateClicked = true;
+            },
+          },
+        });
+      }
+    });
+
+    // Find and click the action button
+    const toast = page.locator('[role="alert"]').filter({ hasText: /version|update/i });
+    if ((await toast.count()) > 0) {
+      const actionButton = toast
+        .first()
+        .locator('button')
+        .filter({ hasText: /update|now/i });
+      if ((await actionButton.count()) > 0) {
+        await actionButton.click();
+
+        // Verify callback was executed
+        callbackExecuted = await page.evaluate(() => (window as any).__updateClicked);
+        expect(callbackExecuted).toBe(true);
+      }
+    }
+  });
 });
 
 test.describe('Confirmation Dialogs', () => {

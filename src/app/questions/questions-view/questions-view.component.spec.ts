@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { Question, Score } from '../../../../graphql/generated';
@@ -378,6 +379,38 @@ describe('QuestionsViewComponent', () => {
 
       setTimeout(() => {
         expect(newComponent.showMobileScoreDialog()).toBe(false);
+        done();
+      }, 150);
+    });
+
+    it('should auto-open dialog when score calculated on mobile after initial load', (done) => {
+      // Create fresh component for this specific test
+      const newFixture = TestBed.createComponent(QuestionsViewComponent);
+      const newComponent = newFixture.componentInstance;
+
+      newFixture.componentRef.setInput('questions', mockQuestions);
+      newFixture.componentRef.setInput('loading', false);
+      newFixture.componentRef.setInput('hasMoreQuestions', false);
+      newFixture.componentRef.setInput('score', undefined);
+      newFixture.componentRef.setInput('scoreLoading', false);
+      newFixture.detectChanges();
+
+      // Mock isMobile as true
+      Object.defineProperty(newComponent, 'isMobile', {
+        value: signal(true),
+        writable: false,
+      });
+
+      // Force initial load flag to false (simulating second visit)
+      (newComponent as any).isInitialLoad = false;
+
+      // Now set score - should trigger auto-open
+      newFixture.componentRef.setInput('score', mockScore);
+      newFixture.detectChanges();
+
+      // Wait for setTimeout in effect to complete
+      setTimeout(() => {
+        expect(newComponent.showMobileScoreDialog()).toBe(true);
         done();
       }, 150);
     });
