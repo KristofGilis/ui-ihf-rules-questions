@@ -3,6 +3,10 @@ name: Cleanup All Preview Deployments
 on:
   workflow_dispatch:
     inputs:
+      pr_number:
+        description: 'Optional: PR number to cleanup (if empty, cleans up all previews)'
+        required: false
+        type: number
       dry_run:
         description: 'Dry run mode (preview what would be deleted without actually deleting)'
         required: false
@@ -26,17 +30,27 @@ jobs:
         with:
           script: |
             const dryRun = '${{ inputs.dry_run }}' === 'true';
-            console.log(`Starting cleanup of all preview deployments (DRY RUN: ${dryRun})`);
+            const prNumber = '${{ inputs.pr_number }}' ? parseInt('${{ inputs.pr_number }}') : null;
 
-            // Get all deployments for this project
-            const response = await fetch(
-              `https://api.vercel.com/v6/deployments?projectId=${process.env.VERCEL_PROJECT_ID}&limit=100`,
-              {
-                headers: {
-                  'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`
-                }
+            if (prNumber) {
+              console.log(`Starting cleanup of preview deployments for PR #${prNumber} (DRY RUN: ${dryRun})`);
+            } else {
+              console.log(`Starting cleanup of all preview deployments (DRY RUN: ${dryRun})`);
+            }
+
+            // Get all preview deployments for this project
+            // Using target=preview to filter at API level (only returns preview deployments, not production)
+            // Optionally filter by PR number if provided
+            let url = `https://api.vercel.com/v6/deployments?projectId=${process.env.VERCEL_PROJECT_ID}&target=preview&limit=100`;
+            if (prNumber) {
+              url += `&meta.githubPr=${prNumber}`;
+            }
+
+            const response = await fetch(url, {
+              headers: {
+                'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`
               }
-            );
+            });
 
             const data = await response.json();
             console.log(`Found ${data.deployments?.length || 0} total deployments`);
@@ -58,35 +72,15 @@ jobs:
             console.log(JSON.stringify(data, null, 2));
 
             if (data.deployments && data.deployments.length > 0) {
-              let previewCount = 0;
-              let productionCount = 0;
               let deletedCount = 0;
               let failedCount = 0;
 
-              // Delete all preview deployments (filter by production status)
+              // Delete all preview deployments (already filtered by target=preview from API)
               for (const deployment of data.deployments) {
-                // Skip production deployments (explicit production alias)
-                if (deployment.target === 'production') {
-                  console.log(`⊘ Skipping production deployment: ${deployment.uid}`);
-                  console.log(`   target: ${deployment.target}, readySubstate: ${deployment.readySubstate}`);
-                  productionCount++;
-                  continue;
-                }
-
-                // Preview deployments: everything that is NOT production
-                // This includes target: null, target: 'preview', and any other non-production target
-                // We identify previews as anything that doesn't have a production alias
-                if (deployment.readySubstate === 'PROMOTED' && deployment.target !== 'production') {
-                  console.log(`⊘ Skipping promoted deployment: ${deployment.uid}`);
-                  console.log(`   target: ${deployment.target}, readySubstate: ${deployment.readySubstate}`);
-                  continue;
-                }
-
-                previewCount++;
                 const deploymentId = deployment.uid;
                 console.log(`📦 Preview deployment: ${deploymentId}`);
                 console.log(`   target: ${deployment.target}, readySubstate: ${deployment.readySubstate}`);
-                console.log(`${dryRun ? '[DRY RUN]' : ''} Would delete preview deployment: ${deploymentId}`);
+                console.log(`${dryRun ? '[DRY RUN]' : ''} Deleting preview deployment: ${deploymentId}`);
                 
                 // Skip actual deletion in dry run mode
                 if (dryRun) {
@@ -119,8 +113,7 @@ jobs:
               }
 
               console.log(`\n=== Cleanup Summary ===`);
-              console.log(`Production deployments (preserved): ${productionCount}`);
-              console.log(`Preview deployments: ${previewCount}`);
+              console.log(`Preview deployments found: ${data.deployments.length}`);
               console.log(`${dryRun ? 'Would delete' : 'Deleted'}: ${deletedCount}`);
               if (!dryRun) console.log(`Failed: ${failedCount}`);
               console.log(`DRY RUN: ${dryRun}`);
