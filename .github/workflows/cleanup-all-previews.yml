@@ -65,7 +65,7 @@ jobs:
 
               // Delete all preview deployments (filter by production status)
               for (const deployment of data.deployments) {
-                // Skip production deployments
+                // Skip production deployments (explicit production alias)
                 if (deployment.target === 'production') {
                   console.log(`⊘ Skipping production deployment: ${deployment.uid}`);
                   console.log(`   target: ${deployment.target}, readySubstate: ${deployment.readySubstate}`);
@@ -73,9 +73,11 @@ jobs:
                   continue;
                 }
 
-                // Only delete deployments with target: preview
-                if (deployment.target !== 'preview') {
-                  console.log(`⊘ Skipping non-preview deployment: ${deployment.uid}`);
+                // Preview deployments: everything that is NOT production
+                // This includes target: null, target: 'preview', and any other non-production target
+                // We identify previews as anything that doesn't have a production alias
+                if (deployment.readySubstate === 'PROMOTED' && deployment.target !== 'production') {
+                  console.log(`⊘ Skipping promoted deployment: ${deployment.uid}`);
                   console.log(`   target: ${deployment.target}, readySubstate: ${deployment.readySubstate}`);
                   continue;
                 }

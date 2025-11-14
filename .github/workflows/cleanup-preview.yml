@@ -43,11 +43,14 @@ jobs:
               let deletedCount = 0;
               // Delete all preview deployments for this PR
               for (const deployment of data.deployments) {
-                // Skip production deployments
+                // Skip production deployments (those with explicit production alias)
                 if (deployment.target === 'production') {
                   console.log(`⊘ Skipping production deployment: ${deployment.uid}`);
                   continue;
                 }
+
+                // This PR's deployments are previews - delete them
+                // (target is null or preview, but never 'production' since we filtered above)
 
                 try {
                   const deleteResponse = await fetch(
