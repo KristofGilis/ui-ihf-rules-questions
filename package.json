@@ -30,6 +30,7 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
+    "preview": "http-server dist/ui-ihf-rules-questions/browser -p 4200 -c-1 --proxy http://localhost:4200?",
     "prepare": "husky"
   },
   "private": true,
