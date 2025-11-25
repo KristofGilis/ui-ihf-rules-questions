@@ -78,7 +78,7 @@
     "@graphql-codegen/typescript": "~5.0.0",
     "@graphql-codegen/typescript-apollo-angular": "~4.0.0",
     "@graphql-codegen/typescript-operations": "~5.0.0",
-    "@playwright/test": "~1.56.0",
+    "@playwright/test": "~1.57.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@tailwindcss/postcss": "~4.1.0",
