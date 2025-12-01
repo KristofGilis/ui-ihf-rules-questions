@@ -1,3 +1,9 @@
+# [2.2.0](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.1.4...v2.2.0) (2025-12-01)
+
+### Features
+
+- update to angular 21 ([#256](https://github.com/KristofGilis/ui-ihf-rules-questions/issues/256)) ([cc37c4e](https://github.com/KristofGilis/ui-ihf-rules-questions/commit/cc37c4e58966fa824cccc9f9156c627b99e6e843))
+
 ## [2.1.4](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.1.3...v2.1.4) (2025-12-01)
 
 ### Bug Fixes
