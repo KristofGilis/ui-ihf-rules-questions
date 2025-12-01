@@ -1,3 +1,9 @@
+## [2.1.4](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.1.3...v2.1.4) (2025-12-01)
+
+### Bug Fixes
+
+- **deps:** update dependency apollo-angular to v13 ([#255](https://github.com/KristofGilis/ui-ihf-rules-questions/issues/255)) ([0cdec32](https://github.com/KristofGilis/ui-ihf-rules-questions/commit/0cdec32190a17b01e10c6147424aad1e0d1d491e))
+
 ## [2.1.3](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.1.2...v2.1.3) (2025-11-24)
 
 ### Bug Fixes
