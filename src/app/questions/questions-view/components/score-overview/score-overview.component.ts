@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faRotateRight, faSpinner, faThumbsUp, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
@@ -8,7 +7,7 @@ import { GradientButtonComponent, LoadingSpinnerComponent } from '../../../../sh
 
 @Component({
   selector: 'app-score-overview',
-  imports: [CommonModule, TranslatePipe, FontAwesomeModule, GradientButtonComponent, LoadingSpinnerComponent],
+  imports: [TranslatePipe, FontAwesomeModule, GradientButtonComponent, LoadingSpinnerComponent],
   templateUrl: './score-overview.component.html',
   styleUrl: './score-overview.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

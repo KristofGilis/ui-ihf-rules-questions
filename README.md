@@ -2,7 +2,7 @@
 
 An interactive quiz application for testing knowledge of International Handball Federation (IHF) rules. Built with Angular 20.3 and Tailwind CSS, featuring multi-language support and comprehensive accessibility.
 
-[![Angular](https://img.shields.io/badge/Angular-20.3-red)](https://angular.dev)
+[![Angular](https://img.shields.io/badge/Angular-21-red)](https://angular.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
 [![GraphQL](https://img.shields.io/badge/GraphQL-16.12-pink)](https://graphql.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1-38bdf8)](https://tailwindcss.com/)
@@ -38,7 +38,7 @@ An interactive quiz application for testing knowledge of International Handball 
 
 ### Tech Stack
 
-- **Framework**: Angular 20.3 with Signals
+- **Framework**: Angular 21 with Signals
 - **State Management**: Signal-based reactive state
 - **API**: GraphQL via Apollo Client
 - **Styling**: Tailwind CSS 4
@@ -76,7 +76,7 @@ src/app/
 ### Prerequisites
 
 - Node.js 22+ and npm
-- Angular CLI 20+ (optional, but recommended)
+- Angular CLI 21+ (optional, but recommended)
 
 ### Installation
 
@@ -152,15 +152,6 @@ This application is a fully-featured PWA that works offline and can be installed
 
 > **Note**: Native mobile apps (iOS/Android via Capacitor) were removed in v2.0.0 to focus on perfecting the PWA experience. They will be re-implemented in a future release with proper asset generation and testing.
 
-### Testing
-
-- `npm test` - Run unit tests
-- `npm run test:watch` - Run tests in watch mode
-- `npm run test:coverage` - Generate coverage report
-- `npm run test:e2e` - Run E2E tests
-- `npm run test:e2e:ui` - Run E2E tests with UI
-- `npm run test:e2e:headed` - Run E2E tests in headed mode
-
 ## 🌍 Internationalization
 
 The app supports 3 languages out of the box:
@@ -225,34 +216,6 @@ This application is built with accessibility as a priority:
 - ✅ **Skip Links** - Bypass navigation for keyboard users
 - ✅ **High Contrast** - Clear visual indicators in all themes
 
-## 🧪 Testing
-
-### Unit Tests (Jest)
-
-- **704 tests** with **97.63% statements coverage** and **85.51% branch coverage**
-- Run tests: `npm test`
-- Watch mode: `npm run test:watch`
-- Coverage report: `npm run test:coverage`
-
-### E2E Tests (Playwright)
-
-- **194 tests** covering all major user flows
-- Run tests: `npm run test:e2e`
-- UI mode: `npm run test:e2e:ui`
-- Headed mode: `npm run test:e2e:headed`
-
-### Test Coverage
-
-- ✅ Quiz flow and configuration
-- ✅ Navigation and routing
-- ✅ Theme and language switching
-- ✅ Questions and rules browsing
-- ✅ Score calculation
-- ✅ Error handling
-- ✅ Accessibility (WCAG compliance)
-- ✅ Responsive design
-- ✅ GraphQL integration
-
 ## 📦 Deployment
 
 The application uses a two-tier deployment strategy:
@@ -305,8 +268,6 @@ Contributions are welcome! Please follow these steps:
 - Follow the existing code style
 - Use meaningful variable names
 - Add comments for complex logic
-- Write unit tests for new features
-- Ensure E2E tests pass
 - Ensure accessibility compliance
 - Test in multiple languages
 - Verify mobile responsiveness
