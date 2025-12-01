@@ -27,7 +27,7 @@ This project adheres to a code of conduct that all contributors are expected to 
 
 - Node.js 18+ and npm
 - Git
-- Angular CLI 20+ (optional but recommended)
+- Angular CLI 21+ (optional but recommended)
 
 ### Setup
 

@@ -4,7 +4,7 @@ import {
   inject,
   isDevMode,
   provideAppInitializer,
-  provideZoneChangeDetection,
+  provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideRouter, Router } from '@angular/router';
 import * as Sentry from '@sentry/angular';
@@ -76,7 +76,7 @@ export const languageInterceptor: HttpInterceptorFn = (req, next) => {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideZonelessChangeDetection(),
     provideRouter(routes),
     provideAppInitializer(() => {
       inject(ScrollRestorationService);

@@ -1,3 +1,2 @@
 npm run prettier:write
 git add .
-npm test

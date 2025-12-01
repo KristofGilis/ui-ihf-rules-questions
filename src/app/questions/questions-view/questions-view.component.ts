@@ -1,4 +1,4 @@
-import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,7 +28,6 @@ import { ScoreOverviewComponent } from './components/score-overview/score-overvi
 @Component({
   selector: 'app-questions-view',
   imports: [
-    CommonModule,
     QuestionComponent,
     TranslatePipe,
     ScoreOverviewComponent,
