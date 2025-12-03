@@ -1,3 +1,5 @@
+## [2.2.2](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.2.1...v2.2.2) (2025-12-03)
+
 ## [2.2.1](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.2.0...v2.2.1) (2025-12-02)
 
 ### Bug Fixes
