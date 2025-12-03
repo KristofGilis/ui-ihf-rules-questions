@@ -19,8 +19,8 @@ export class RulesService {
     nextFetchPolicy: 'cache-first',
   });
 
-  rules$ = this._rulesQuery.valueChanges.pipe(tap((x) => (this._cursor = x.data?.rules?.pageInfo?.endCursor)));
-  loading$ = this._rulesQuery.valueChanges.pipe(map((x) => x.loading));
+  readonly rules$ = this._rulesQuery.valueChanges.pipe(tap((x) => (this._cursor = x.data?.rules?.pageInfo?.endCursor)));
+  readonly loading$ = this._rulesQuery.valueChanges.pipe(map((x) => x.loading));
 
   fetchMore(): void {
     this._rulesQuery.fetchMore({

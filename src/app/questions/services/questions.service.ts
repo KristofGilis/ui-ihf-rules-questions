@@ -49,7 +49,7 @@ export class QuestionsService {
     return this._hasNextPage;
   }
 
-  questions$ = this._questionsQuery.valueChanges.pipe(
+  readonly questions$ = this._questionsQuery.valueChanges.pipe(
     tap((x) => {
       this._cursor = x.data?.questions?.pageInfo?.endCursor ?? null;
       this._hasNextPage = x.data?.questions?.pageInfo?.hasNextPage ?? true;

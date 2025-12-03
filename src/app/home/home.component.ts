@@ -40,7 +40,7 @@ export class HomeComponent {
   private readonly _translateService = inject(TranslateService);
   private readonly _router = inject(Router);
 
-  loadingVersion = signal(false);
+  readonly loadingVersion = signal(false);
 
   // Environment configuration
   readonly githubUrl = environment.githubUrl;
@@ -58,7 +58,7 @@ export class HomeComponent {
 
   private readonly _query = this._versionGQL.watch();
 
-  version$ = this._query.valueChanges.pipe(
+  readonly version$ = this._query.valueChanges.pipe(
     tap((x) => this.loadingVersion.set(x.loading)),
     onlyCompleteData(),
     map((x) => x.data.version),

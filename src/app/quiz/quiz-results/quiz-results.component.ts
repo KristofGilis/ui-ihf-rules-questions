@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faCheckCircle, faHome, faRedo, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
@@ -8,10 +8,10 @@ import { QuizService } from '../services/quiz.service';
 
 @Component({
   selector: 'app-quiz-results',
-  standalone: true,
   imports: [RouterLink, TranslatePipe, FaIconComponent, PageContainerComponent, GradientButtonComponent],
   templateUrl: './quiz-results.component.html',
-  styleUrl: './quiz-results.component.scss',
+  styleUrls: ['./quiz-results.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuizResultsComponent implements OnInit {
   private readonly _router = inject(Router);

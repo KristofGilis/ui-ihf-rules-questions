@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faCircleCheck,
@@ -28,9 +28,10 @@ export interface Toast {
   selector: 'app-toast',
   imports: [FaIconComponent],
   templateUrl: './toast.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToastComponent {
-  toasts = signal<Toast[]>([]);
+  readonly toasts = signal<Toast[]>([]);
 
   // Font Awesome icons
   readonly faXmark = faXmark;

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { map, Observable, tap } from 'rxjs';
 import { CalculateScoreGQL, Question } from '../../../../graphql/generated';
 import { QUIZ_CONFIG } from '../../constants';
+import { parseTranslations } from '../pipes/parse-translations.function';
 
 /**
  * Internal types - not exported as they're only used within this service
@@ -13,6 +14,7 @@ interface Answer {
   id: string;
   number: string;
   phrase: string;
+  translations: Record<string, string>; // JSON string of translations
 }
 
 /** Represents a user's answer to a specific question */
@@ -27,6 +29,7 @@ interface QuizQuestion {
   id: string;
   number: string;
   phrase: string;
+  translations: Record<string, string>; // JSON string of translations
   answers: Answer[]; // Original unshuffled answers
   shuffledAnswers: Answer[]; // Randomized order shown to user
 }
@@ -170,12 +173,14 @@ export class QuizService {
               id: a.id,
               number: a.number ?? '',
               phrase: a.phrase ?? '',
+              translations: parseTranslations(a.translations),
             })) || [];
 
         return {
           id: q.id,
           number: q.number || '',
           phrase: q.phrase || '',
+          translations: parseTranslations(q.translations),
           answers,
           shuffledAnswers: this.shuffleArray([...answers]),
         };

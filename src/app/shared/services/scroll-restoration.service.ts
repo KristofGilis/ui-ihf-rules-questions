@@ -8,43 +8,43 @@ import { filter } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class ScrollRestorationService {
-  private scrollPositions = new Map<string, [number, number]>();
-  private router = inject(Router);
-  private viewportScroller = inject(ViewportScroller);
+  private readonly _scrollPositions = new Map<string, [number, number]>();
+  private readonly _router = inject(Router);
+  private readonly _viewportScroller = inject(ViewportScroller);
 
   constructor() {
     // Save scroll position before navigation
-    this.router.events
+    this._router.events
       .pipe(
         filter((event): event is NavigationStart => event instanceof NavigationStart),
         takeUntilDestroyed()
       )
       .subscribe(() => {
-        const currentUrl = this.router.url;
-        const position = this.viewportScroller.getScrollPosition();
-        this.scrollPositions.set(currentUrl, position);
+        const currentUrl = this._router.url;
+        const position = this._viewportScroller.getScrollPosition();
+        this._scrollPositions.set(currentUrl, position);
       });
 
     // Restore scroll position after navigation
-    this.router.events
+    this._router.events
       .pipe(
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
         takeUntilDestroyed()
       )
       .subscribe((event) => {
         const url = event.urlAfterRedirects || event.url;
-        const savedPosition = this.scrollPositions.get(url);
+        const savedPosition = this._scrollPositions.get(url);
 
         if (savedPosition) {
           // Wait for content to render
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
-              this.viewportScroller.scrollToPosition(savedPosition);
+              this._viewportScroller.scrollToPosition(savedPosition);
             });
           });
         } else {
           // No saved position, scroll to top
-          this.viewportScroller.scrollToPosition([0, 0]);
+          this._viewportScroller.scrollToPosition([0, 0]);
         }
       });
   }

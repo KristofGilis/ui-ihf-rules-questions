@@ -1,4 +1,4 @@
-import { Component, input, model, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faArrowRight, faClock } from '@fortawesome/free-solid-svg-icons';
@@ -11,17 +11,17 @@ export interface QuizConfig {
 
 @Component({
   selector: 'app-quiz-config-card',
-  standalone: true,
   imports: [FormsModule, TranslatePipe, FaIconComponent],
   templateUrl: './quiz-config-card.component.html',
   styleUrl: './quiz-config-card.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuizConfigCardComponent {
-  title = input('home.quiz_card.title');
-  startQuiz = output<QuizConfig>();
+  readonly title = input('home.quiz_card.title');
+  readonly startQuiz = output<QuizConfig>();
 
-  questionCount = model(10);
-  timedMode = model(false);
+  readonly questionCount = model(10);
+  readonly timedMode = model(false);
 
   readonly faClock = faClock;
   readonly faArrowRight = faArrowRight;

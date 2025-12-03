@@ -6,11 +6,13 @@ query getQuestions($first: Int!, $after: String, $order: [QuestionSortInput!], $
         id
         number
         phrase
+        translations
         answers(order: { number: ASC }) {
           nodes {
             id
             number
             phrase
+            translations
           }
         }
       }

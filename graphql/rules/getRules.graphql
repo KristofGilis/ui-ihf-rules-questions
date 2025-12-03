@@ -6,6 +6,7 @@ query getRules($first: Int!, $after: String) {
         id
         number
         name
+        translations
       }
     }
     pageInfo {

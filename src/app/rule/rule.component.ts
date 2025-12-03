@@ -32,10 +32,10 @@ export class RuleComponent {
   private readonly _questionsService = inject(QuestionsService);
   private readonly _translateService = inject(TranslateService);
 
-  loading = signal(false);
-  scoreLoading = signal(false);
+  readonly loading = signal(false);
+  readonly scoreLoading = signal(false);
 
-  rule$ = this._ruleService.get(this._activatedRoute.snapshot.params['id']).pipe(
+  readonly rule$ = this._ruleService.get(this._activatedRoute.snapshot.params['id']).pipe(
     tap((x) => this.loading.set(x.loading)),
     onlyCompleteData(),
     map((x) => x.data.ruleById as Rule),
@@ -43,10 +43,10 @@ export class RuleComponent {
     shareReplay()
   );
 
-  private _calculating$ = new Subject<{ questionIds: string[]; selectedAnswerIds: string[] }>();
-  private _reset$ = new BehaviorSubject<Score | undefined>(undefined);
+  private readonly _calculating$ = new Subject<{ questionIds: string[]; selectedAnswerIds: string[] }>();
+  private readonly _reset$ = new BehaviorSubject<Score | undefined>(undefined);
 
-  score$ = merge(
+  readonly score$ = merge(
     this._calculating$.pipe(
       switchMap(({ questionIds, selectedAnswerIds }) =>
         this._questionsService.calculateScore(questionIds, selectedAnswerIds).pipe(

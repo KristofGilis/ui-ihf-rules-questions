@@ -30,18 +30,18 @@ export class QuestionsComponent {
   private readonly _questionsService = inject(QuestionsService);
   private readonly _translateService = inject(TranslateService);
 
-  loading = signal(false);
-  questions$ = this._questionsService.questions$.pipe(
+  readonly loading = signal(false);
+  readonly questions$ = this._questionsService.questions$.pipe(
     tap((x) => this.loading.set(x.loading)),
     onlyCompleteData(),
     map((x) => x.data.questions?.edges?.map((y) => y?.node as Question) ?? []),
     finalize(() => this.loading.set(false))
   );
 
-  private _calculating$ = new Subject<{ questionIds: string[]; selectedAnswerIds: string[] }>();
-  private _reset$ = new BehaviorSubject<Score | undefined>(undefined);
+  private readonly _calculating$ = new Subject<{ questionIds: string[]; selectedAnswerIds: string[] }>();
+  private readonly _reset$ = new BehaviorSubject<Score | undefined>(undefined);
 
-  score$ = merge(
+  readonly score$ = merge(
     this._calculating$.pipe(
       switchMap(({ questionIds, selectedAnswerIds }) =>
         this._questionsService.calculateScore(questionIds, selectedAnswerIds).pipe(
@@ -55,7 +55,7 @@ export class QuestionsComponent {
     this._reset$
   );
 
-  scoreLoading = signal(false);
+  readonly scoreLoading = signal(false);
 
   // Track current language to trigger refetch when it changes
   private readonly _currentLang = toSignal(this._translateService.onLangChange);

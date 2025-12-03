@@ -19,8 +19,8 @@ export class RulesComponent {
   private readonly _rulesService = inject(RulesService);
   private readonly _translateService = inject(TranslateService);
 
-  loading$ = this._rulesService.loading$;
-  rules$ = this._rulesService.rules$.pipe(
+  readonly loading$ = this._rulesService.loading$;
+  readonly rules$ = this._rulesService.rules$.pipe(
     onlyCompleteData(),
     map((x) => x.data.rules?.edges?.map((y) => y?.node as Rule) ?? [])
   );

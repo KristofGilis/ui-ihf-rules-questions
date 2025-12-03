@@ -3,6 +3,7 @@ query getRule($id: ID!, $first: Int!, $after: String) {
     id
     number
     name
+    translations
     questions(first: $first, after: $after, order: [{ number: ASC }]) {
       edges {
         cursor

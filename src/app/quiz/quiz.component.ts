@@ -1,19 +1,21 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, ElementRef, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft, faArrowRight, faCheck, faClock } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { onlyCompleteData } from 'apollo-angular';
 import * as Hammer from 'hammerjs';
 import { map, Observable } from 'rxjs';
 import { GetQuestionsGQL, Question } from '../../../graphql/generated';
 import { GradientButtonComponent, LoadingSpinnerComponent, PageContainerComponent } from '../shared/components';
 import { ConfirmationDialogService } from '../shared/services/confirmation-dialog.service';
+import { PhraseTranslationPipe } from './pipes/phrase-translation-pipe';
 import { QuizService } from './services/quiz.service';
 
 @Component({
   selector: 'app-quiz',
-  standalone: true,
   imports: [
     AsyncPipe,
     TranslatePipe,
@@ -21,8 +23,10 @@ import { QuizService } from './services/quiz.service';
     PageContainerComponent,
     GradientButtonComponent,
     LoadingSpinnerComponent,
+    PhraseTranslationPipe,
   ],
   templateUrl: './quiz.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuizComponent implements OnInit, OnDestroy {
   private readonly _router = inject(Router);
@@ -45,26 +49,28 @@ export class QuizComponent implements OnInit, OnDestroy {
   private readonly _count = this._navigationState?.['count'] || 10;
   private readonly _timed = this._navigationState?.['timed'] === true;
 
-  readonly questions$: Observable<Question[]> = this._getQuestionsGQL
-    .watch({
-      variables: {
-        first: this._count,
-        random: true,
-      },
-      fetchPolicy: 'no-cache',
+  private readonly _questionsQuery = this._getQuestionsGQL.watch({
+    variables: {
+      first: this._count,
+      random: true,
+    },
+    fetchPolicy: 'no-cache',
+  });
+
+  readonly questions$: Observable<Question[]> = this._questionsQuery.valueChanges.pipe(
+    onlyCompleteData(),
+    map((result) => {
+      const questions = result.data.questions?.edges?.map((edge) => edge?.node as Question) || [];
+      if (questions.length > 0 && !this.quizService.config()) {
+        this.quizService.initializeQuiz(questions, this._timed);
+      }
+      return questions;
     })
-    .valueChanges.pipe(
-      map((result) => {
-        if (!result.data) {
-          return [];
-        }
-        const questions = result.data.questions?.edges?.map((edge) => edge?.node as Question) || [];
-        if (questions.length > 0 && !this.quizService.config()) {
-          this.quizService.initializeQuiz(questions, this._timed);
-        }
-        return questions;
-      })
-    );
+  );
+
+  readonly currentLanguage = toSignal(this._translate.onLangChange.pipe(map(() => this._translate.getCurrentLang())), {
+    initialValue: this._translate.getCurrentLang(),
+  });
 
   selectedAnswers: Set<string> = new Set();
 
