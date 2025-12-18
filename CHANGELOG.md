@@ -1,3 +1,9 @@
+## [2.2.4](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.2.3...v2.2.4) (2025-12-18)
+
+### Bug Fixes
+
+- **ui:** adjust padding for header and main content ([978fc19](https://github.com/KristofGilis/ui-ihf-rules-questions/commit/978fc198b4dbf5cb0e9e2f2c2ea44f08911a81bb))
+
 ## [2.2.3](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.2.2...v2.2.3) (2025-12-04)
 
 ### Bug Fixes
