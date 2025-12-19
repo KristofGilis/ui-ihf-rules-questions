@@ -158,6 +158,7 @@ The app supports 3 languages out of the box:
 
 - 🇬🇧 English (en)
 - 🇳🇱 Dutch (nl)
+- 🇫🇷 French (fr)
 - 🇷🇸 Serbian (srb) - Cyrillic script
 
 ### Adding a New Language
