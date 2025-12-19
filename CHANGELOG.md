@@ -1,3 +1,9 @@
+# [2.3.0](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.2.4...v2.3.0) (2025-12-19)
+
+### Features
+
+- add french language ([#289](https://github.com/KristofGilis/ui-ihf-rules-questions/issues/289)) ([cd8f193](https://github.com/KristofGilis/ui-ihf-rules-questions/commit/cd8f1930c3ff8a004273e0ce9e2a47d3866fe87c))
+
 ## [2.2.4](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.2.3...v2.2.4) (2025-12-18)
 
 ### Bug Fixes
