@@ -12,7 +12,7 @@ export function getLanguage(): string {
   let browserLanguage: string | undefined;
   if (browserLang?.startsWith('sr')) {
     browserLanguage = 'srb'; // Serbian (standard code 'sr' -> our 'srb')
-  } else if (browserLang?.match(/en|nl/)) {
+  } else if (browserLang?.match(/en|nl|fr/)) {
     browserLanguage = browserLang;
   } else {
     browserLanguage = translateService.getFallbackLang() ?? undefined;

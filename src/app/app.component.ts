@@ -37,7 +37,7 @@ export class AppComponent {
   private readonly _destroyRef = inject(DestroyRef);
 
   // Constants
-  private readonly LANGUAGES = ['en', 'nl', 'srb'] as const;
+  private readonly LANGUAGES = ['en', 'nl', 'fr', 'srb'] as const;
 
   // FontAwesome icons - readonly for immutability
   protected readonly faHome = faHome;
