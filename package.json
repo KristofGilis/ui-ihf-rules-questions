@@ -58,7 +58,7 @@
     "@angular-eslint/schematics": "~21.1.0",
     "@angular-eslint/template-parser": "~21.1.0",
     "@angular/build": "^21.0.1",
-    "@angular/cli": "~21.0.1",
+    "@angular/cli": "~21.1.0",
     "@angular/compiler-cli": "~21.1.0",
     "@biesbjerg/ngx-translate-extract-marker": "~1.0.0",
     "@commitlint/cli": "^20.1.0",
