@@ -1,3 +1,9 @@
+## [2.3.2](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.3.1...v2.3.2) (2026-01-16)
+
+### Bug Fixes
+
+- **deps:** update dependency @apollo/client to ~4.1.0 ([#317](https://github.com/KristofGilis/ui-ihf-rules-questions/issues/317)) ([40f1cb2](https://github.com/KristofGilis/ui-ihf-rules-questions/commit/40f1cb250343be31093a5b0e7650ef6745f7f264))
+
 ## [2.3.1](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.3.0...v2.3.1) (2026-01-14)
 
 ### Bug Fixes
