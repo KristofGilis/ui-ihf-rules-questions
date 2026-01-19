@@ -1,3 +1,9 @@
+## [2.3.3](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.3.2...v2.3.3) (2026-01-19)
+
+### Bug Fixes
+
+- **deps:** update dependency @sentry/angular to ~10.35.0 ([#321](https://github.com/KristofGilis/ui-ihf-rules-questions/issues/321)) ([64aa689](https://github.com/KristofGilis/ui-ihf-rules-questions/commit/64aa689e42eeaba02d6b7920762f0eb367004b43))
+
 ## [2.3.2](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.3.1...v2.3.2) (2026-01-16)
 
 ### Bug Fixes
