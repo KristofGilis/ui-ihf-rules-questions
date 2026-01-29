@@ -1,4 +1,4 @@
-# IHF Rules Quiz 🏐
+# IHF Rules Quiz 🤾‍♂️
 
 An interactive quiz application for testing knowledge of International Handball Federation (IHF) rules. Built with Angular 21 and Tailwind CSS, featuring multi-language support and comprehensive accessibility.
 
