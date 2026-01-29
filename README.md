@@ -27,7 +27,7 @@ An interactive quiz application for testing knowledge of International Handball 
 
 ### User Experience
 
-- **Multi-Language** - English, Dutch, Serbian (Cyrillic)
+- **Multi-Language** - English, Dutch, French, Serbian (Cyrillic)
 - **Theme System** - Light, Dark, or System preference
 - **PWA Support** - Install on any device, works offline
 - **Fully Accessible** - WCAG 2.1 AA compliant
@@ -154,7 +154,7 @@ This application is a fully-featured PWA that works offline and can be installed
 
 ## 🌍 Internationalization
 
-The app supports 3 languages out of the box:
+The app supports 4 languages out of the box:
 
 - 🇬🇧 English (en)
 - 🇳🇱 Dutch (nl)
