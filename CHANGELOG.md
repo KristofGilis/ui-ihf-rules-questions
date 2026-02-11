@@ -1,3 +1,9 @@
+## [2.3.4](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.3.3...v2.3.4) (2026-02-11)
+
+### Bug Fixes
+
+- **deps:** update font awesome to ~7.2.0 ([#355](https://github.com/KristofGilis/ui-ihf-rules-questions/issues/355)) ([1bc8f6b](https://github.com/KristofGilis/ui-ihf-rules-questions/commit/1bc8f6b944571c57830a8e5136b3984af53496dd))
+
 ## [2.3.3](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.3.2...v2.3.3) (2026-01-19)
 
 ### Bug Fixes
