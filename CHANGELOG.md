@@ -1,3 +1,9 @@
+## [2.3.8](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.3.7...v2.3.8) (2026-02-26)
+
+### Bug Fixes
+
+- **deps:** update angular monorepo to ~21.2.0 ([#378](https://github.com/KristofGilis/ui-ihf-rules-questions/issues/378)) ([49850c9](https://github.com/KristofGilis/ui-ihf-rules-questions/commit/49850c94c6d7c5d822d87d73d9e0a99f97539ed4))
+
 ## [2.3.7](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.3.6...v2.3.7) (2026-02-24)
 
 ### Bug Fixes
