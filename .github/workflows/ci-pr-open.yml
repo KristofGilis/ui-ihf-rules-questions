@@ -87,7 +87,7 @@ jobs:
           echo "preview-url=$PREVIEW_URL" >> $GITHUB_OUTPUT
 
       - name: Comment PR with preview URL
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const previewUrl = '${{ steps.deploy-vercel.outputs.preview-url }}';
