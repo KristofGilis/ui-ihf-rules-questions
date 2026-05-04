@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faChevronRight, faFileAlt } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Rule } from '../../../../graphql/generated';
+import { Rule } from '../../../../graphql/types';
 import { EmptyStateComponent, LoadingSpinnerComponent } from '../../shared/components';
 
 @Component({

@@ -1,7 +1,8 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { map, Observable, tap } from 'rxjs';
-import { CalculateScoreGQL, Question } from '../../../../graphql/generated';
+import { CalculateScoreGQL } from '../../../../graphql/generated';
+import { Question } from '../../../../graphql/types';
 import { QUIZ_CONFIG } from '../../constants';
 import { parseTranslations } from '../pipes/parse-translations.function';
 
@@ -165,22 +166,26 @@ export class QuizService {
 
     // Convert Question[] to QuizQuestion[] and shuffle
     const quizQuestions: QuizQuestion[] = questions
+      .filter((q) => q !== null)
       .map((q) => {
         const answers: Answer[] =
           q.answers?.nodes
             ?.filter((a) => a !== null)
-            .map((a) => ({
+            ?.map((a) => ({
               id: a.id,
               number: a.number ?? '',
               phrase: a.phrase ?? '',
-              translations: parseTranslations(a.translations),
+              translations: parseTranslations(a.translations as string | Record<string, string> | null | undefined),
             })) || [];
 
         return {
           id: q.id,
           number: q.number || '',
           phrase: q.phrase || '',
-          translations: parseTranslations(q.translations),
+          translations: parseTranslations(
+            ('translations' in q ? (q.translations as string | Record<string, string> | null | undefined) : null) ??
+              undefined
+          ),
           answers,
           shuffledAnswers: this.shuffleArray([...answers]),
         };

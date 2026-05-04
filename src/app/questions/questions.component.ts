@@ -4,7 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
 import { BehaviorSubject, finalize, map, merge, Subject, switchMap, tap } from 'rxjs';
-import { Question, Score } from '../../../graphql/generated';
+import { Question, Score } from '../../../graphql/types';
 import { PageContainerComponent, PageHeroComponent } from '../shared/components';
 import { ScoreOverviewComponent } from './questions-view/components/score-overview/score-overview.component';
 import { QuestionsViewComponent } from './questions-view/questions-view.component';

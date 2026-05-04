@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
 import { BehaviorSubject, Subject, finalize, map, merge, shareReplay, switchMap, tap } from 'rxjs';
-import { Question, Rule, Score } from '../../../graphql/generated';
+import { Question, Rule, Score } from '../../../graphql/types';
 import { ScoreOverviewComponent } from '../questions/questions-view/components/score-overview/score-overview.component';
 import { QuestionsViewComponent } from '../questions/questions-view/questions-view.component';
 import { QuestionsService } from '../questions/services/questions.service';
@@ -84,7 +84,7 @@ export class RuleComponent {
   }
 
   getQuestions(rule: Rule | null): Question[] {
-    return rule?.questions?.edges?.map((x) => x.node as Question) ?? [];
+    return rule?.questions?.edges?.filter((x) => x !== null).map((x) => x.node as Question) ?? [];
   }
 
   getRuleName(rule: Rule | null): string | undefined {

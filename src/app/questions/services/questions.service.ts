@@ -6,7 +6,6 @@ import {
   CalculateScoreQuery,
   GetQuestionsGQL,
   QuestionSortInput,
-  SortEnumType,
 } from '../../../../graphql/generated';
 
 @Injectable({
@@ -16,7 +15,7 @@ export class QuestionsService {
   private _cursor: string | null = null;
   private _hasNextPage = true;
 
-  private readonly _order: QuestionSortInput[] = [{ number: SortEnumType.Asc }];
+  private readonly _order: QuestionSortInput[] = [{ number: 'ASC' }];
   private readonly _pageSize = 10;
   private readonly _getQuestionsGQL = inject(GetQuestionsGQL);
   private readonly _questionsQuery = this._getQuestionsGQL.watch({

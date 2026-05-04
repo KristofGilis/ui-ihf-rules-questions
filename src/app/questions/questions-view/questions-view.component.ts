@@ -15,7 +15,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faChartBar, faQuestionCircle, faRotateRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
 import { fromEvent, map, of, startWith } from 'rxjs';
-import { Question, Score } from '../../../../graphql/generated';
+import { Question, Score } from '../../../../graphql/types';
 import {
   EmptyStateComponent,
   GradientButtonComponent,
@@ -132,7 +132,9 @@ export class QuestionsViewComponent {
   onCalculateScore(): void {
     if (!this.hasMoreQuestions()) {
       this.calculareScore.emit({
-        questionIds: this.questions().map((x) => x.id),
+        questionIds: this.questions()
+          .filter((q) => q !== null)
+          .map((x) => x.id),
         selectedAnswerIds: this.selectedAnswers(),
       });
     }

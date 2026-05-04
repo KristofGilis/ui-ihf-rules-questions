@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faRotateRight, faSpinner, faThumbsUp, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Question, Score } from '../../../../../../graphql/generated';
+import { Question, Score } from '../../../../../../graphql/types';
 import { GradientButtonComponent, LoadingSpinnerComponent } from '../../../../shared/components';
 
 @Component({

@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
 import { map } from 'rxjs';
-import { Rule } from '../../../graphql/generated';
+import { Rule } from '../../../graphql/types';
 import { PageContainerComponent, PageHeroComponent } from '../shared/components';
 import { RulesViewComponent } from './rules-view/rules-view.component';
 import { RulesService } from './services/rules.service';

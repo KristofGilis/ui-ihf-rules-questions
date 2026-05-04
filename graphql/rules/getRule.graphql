@@ -16,6 +16,7 @@ query getRule($id: ID!, $first: Int!, $after: String) {
               id
               number
               phrase
+              translations
             }
           }
         }

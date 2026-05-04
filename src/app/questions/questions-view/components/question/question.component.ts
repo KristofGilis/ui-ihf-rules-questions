@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Question } from '../../../../../../graphql/generated';
+import { Question } from '../../../../../../graphql/types';
 
 @Component({
   selector: 'app-question',

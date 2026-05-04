@@ -5,14 +5,12 @@ const config: CodegenConfig = {
   documents: './graphql/**/*.graphql',
   generates: {
     './graphql/generated.ts': {
-      plugins: ['typescript', 'typescript-operations', 'typescript-apollo-angular'],
+      plugins: ['typescript-operations', 'typescript-apollo-angular'],
       config: {
-        scalars: {
-          UUID: 'string',
-        },
         addExplicitOverride: true,
       },
     },
   },
+  overwrite: true,
 };
 export default config;
