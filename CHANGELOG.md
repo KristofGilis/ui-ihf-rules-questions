@@ -1,3 +1,9 @@
+## [2.3.20](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.3.19...v2.3.20) (2026-05-06)
+
+### Bug Fixes
+
+- **deps:** update dependency graphql to ~16.14.0 ([#474](https://github.com/KristofGilis/ui-ihf-rules-questions/issues/474)) ([8a4345b](https://github.com/KristofGilis/ui-ihf-rules-questions/commit/8a4345b7c425d4348a1fdbbeed784e32360db584))
+
 ## [2.3.19](https://github.com/KristofGilis/ui-ihf-rules-questions/compare/v2.3.18...v2.3.19) (2026-04-30)
 
 ### Bug Fixes
