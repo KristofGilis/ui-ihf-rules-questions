@@ -77,7 +77,7 @@ jobs:
 
       - name: 📝 Inject version into Angular
         run: |
-          sed -i "s/__APP_VERSION__/${APP_VERSION}/g" ui-ihf-rules-questions/src/version.ts
+          sed -i "s/__APP_VERSION__/${APP_VERSION}/g" src/version.ts
 
       - name: 📦 Install dependencies
         run: npm ci
