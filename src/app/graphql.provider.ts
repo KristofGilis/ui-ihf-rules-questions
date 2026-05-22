@@ -66,11 +66,9 @@ export function apolloOptionsFactory(): ApolloClient.Options {
     defaultOptions: {
       watchQuery: {
         fetchPolicy: 'cache-first',
-        errorPolicy: 'all',
       },
       query: {
         fetchPolicy: 'cache-first',
-        errorPolicy: 'all',
       },
     },
   };

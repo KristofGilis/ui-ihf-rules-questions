@@ -222,7 +222,6 @@ This application is built with accessibility as a priority:
 The application uses a two-tier deployment strategy:
 
 - **Production**: Azure Web App (automatic on `main` branch)
-- **Preview**: Vercel (automatic on pull requests)
 
 ### Quick Deploy
 
@@ -237,7 +236,6 @@ Output will be in `dist/ui-ihf-rules-questions/browser/`
 ### Deployment Guides
 
 - **[Complete Deployment Guide](docs/DEPLOYMENT.md)** - Production & preview deployments
-- **[Vercel Setup Guide](docs/VERCEL_SETUP.md)** - Configure Vercel for PR previews
 - **[Workflow Testing](docs/WORKFLOW_TESTING.md)** - Test CI/CD behavior
 
 ### Deployment Platforms
@@ -245,7 +243,6 @@ Output will be in `dist/ui-ihf-rules-questions/browser/`
 The production build can be deployed to any static hosting:
 
 - ✅ **Azure Static Web Apps** (current production)
-- ✅ **Vercel** (current preview)
 - 🔄 Netlify
 - 🔄 GitHub Pages
 - 🔄 Firebase Hosting

@@ -7,8 +7,7 @@ This directory contains three workflows that manage CI/CD, testing, and deployme
 Three workflows handle all CI/CD scenarios:
 
 1. **release-and-deploy.yml** - Triggered on push to main (handles semantic release, build, and deploy to Azure)
-2. **ci-pr-open.yml** - Triggered on PR open (handles build, tests, linting, and optional Vercel preview)
-3. **cleanup-preview.yml** - Triggered on PR close (cleans up Vercel preview deployments)
+2. **ci-pr-open.yml** - Triggered on PR open (handles build, tests, linting)
 
 ## Detailed Scenarios
 
@@ -33,9 +32,8 @@ Three workflows handle all CI/CD scenarios:
 **ci-pr-open.yml execution:**
 
 - `build-and-test` job → Build, lint, test, and check bundle size
-- `preview` job → Deploy preview to Vercel and comment on PR
 
-**Execution flow:** PR Open → Build/Test → Preview
+**Execution flow:** PR Open → Build/Test
 
 **Details:**
 
@@ -44,8 +42,6 @@ Three workflows handle all CI/CD scenarios:
 - Validates bundle size (max 350KB for main bundle)
 - Runs unit tests with coverage
 - Installs and runs E2E tests with Playwright
-- For non-renovate PRs: Updates CSP headers and deploys to Vercel preview
-- Adds comment to PR with preview URL
 
 ---
 
@@ -60,18 +56,6 @@ Three workflows handle all CI/CD scenarios:
 - `deploy` job → Deploy to Azure
 
 **Execution flow:** PR Merge → Release (conditional) → Build → Deploy
-
----
-
-### Scenario 4: PR Close
-
-**Triggers:** `pull_request` event with `closed` action
-
-**cleanup-preview.yml execution:**
-
-- `cleanup-preview` job → Finds and deletes associated Vercel deployments and comments on PR
-
-**Execution flow:** PR Close → Cleanup Vercel Preview
 
 ---
 
@@ -93,7 +77,4 @@ Three workflows handle all CI/CD scenarios:
 - `AZURE_CLIENT_ID` - Azure Service Principal client ID
 - `AZURE_TENANT_ID` - Azure Service Principal tenant ID
 - `AZURE_SUBSCRIPTION_ID` - Azure subscription ID
-- `VERCEL_TOKEN` - Vercel API token
-- `VERCEL_ORG_ID` - Vercel organization ID
-- `VERCEL_PROJECT_ID` - Vercel project ID
 - `GITHUB_TOKEN` - Automatically provided by GitHub Actions
