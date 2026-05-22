@@ -233,11 +233,6 @@ npm run build:web
 
 Output will be in `dist/ui-ihf-rules-questions/browser/`
 
-### Deployment Guides
-
-- **[Complete Deployment Guide](docs/DEPLOYMENT.md)** - Production & preview deployments
-- **[Workflow Testing](docs/WORKFLOW_TESTING.md)** - Test CI/CD behavior
-
 ### Deployment Platforms
 
 The production build can be deployed to any static hosting:
