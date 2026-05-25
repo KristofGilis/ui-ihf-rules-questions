@@ -7,7 +7,7 @@ import tsParser from '@typescript-eslint/parser';
 
 export default [
   {
-    ignores: ['src/generated/*', 'src/main.ts'],
+    ignores: ['src/main.ts', 'graphql/generated.ts'],
   },
   {
     files: ['**/*.ts'],

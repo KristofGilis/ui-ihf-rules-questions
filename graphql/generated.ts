@@ -23,7 +23,7 @@ export type CalculateScoreQueryVariables = Exact<{
 }>;
 
 
-export type CalculateScoreQuery = { calculateScore: { score: number | null, total: number | null, percentage: string | null, wrongQuestionsIds: Array<string> } | null };
+export type CalculateScoreQuery = { calculateScore: { score: number, total: number, percentage: string | null, wrongQuestionsIds: Array<string> } };
 
 export type GetQuestionsQueryVariables = Exact<{
   first: number;
@@ -33,7 +33,7 @@ export type GetQuestionsQueryVariables = Exact<{
 }>;
 
 
-export type GetQuestionsQuery = { questions: { edges: Array<{ cursor: string, node: { id: string, number: string | null, phrase: string | null, translations: unknown, answers: { nodes: Array<{ id: string, number: string | null, phrase: string | null, translations: unknown } | null> | null } | null } | null }> | null, pageInfo: { endCursor: string | null, hasNextPage: boolean } } | null };
+export type GetQuestionsQuery = { questions: { edges: Array<{ cursor: string, node: { id: string, number: string, phrase: string | null, translations: unknown, answers: { nodes: Array<{ id: string, number: string, phrase: string | null, translations: unknown }> | null } } }> | null, pageInfo: { endCursor: string | null, hasNextPage: boolean } } };
 
 export type GetRuleQueryVariables = Exact<{
   id: string | number;
@@ -42,7 +42,7 @@ export type GetRuleQueryVariables = Exact<{
 }>;
 
 
-export type GetRuleQuery = { ruleById: { id: string, number: string | null, name: string | null, translations: unknown, questions: { edges: Array<{ cursor: string, node: { id: string, number: string | null, phrase: string | null, answers: { nodes: Array<{ id: string, number: string | null, phrase: string | null, translations: unknown } | null> | null } | null } | null }> | null, pageInfo: { endCursor: string | null, hasNextPage: boolean } } | null } | null };
+export type GetRuleQuery = { ruleById: { id: string, number: string, name: string | null, translations: unknown, questions: { edges: Array<{ cursor: string, node: { id: string, number: string, phrase: string | null, answers: { nodes: Array<{ id: string, number: string, phrase: string | null, translations: unknown }> | null } } }> | null, pageInfo: { endCursor: string | null, hasNextPage: boolean } } } | null };
 
 export type GetRulesQueryVariables = Exact<{
   first: number;
@@ -50,7 +50,7 @@ export type GetRulesQueryVariables = Exact<{
 }>;
 
 
-export type GetRulesQuery = { rules: { edges: Array<{ cursor: string, node: { id: string, number: string | null, name: string | null, translations: unknown } | null }> | null, pageInfo: { endCursor: string | null } } | null };
+export type GetRulesQuery = { rules: { edges: Array<{ cursor: string, node: { id: string, number: string, name: string | null, translations: unknown } }> | null, pageInfo: { endCursor: string | null } } };
 
 export type GetVersionQueryVariables = Exact<{ [key: string]: never; }>;
 

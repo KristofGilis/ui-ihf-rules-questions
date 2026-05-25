@@ -23,7 +23,7 @@
   </div>
 
   <div class="space-y-3">
-    @for (answer of question().answers?.nodes; track answer?.id) {
+    @for (answer of question().answers.nodes; track answer?.id) {
       <label
         class="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 p-4 transition-all duration-200 hover:border-cyan-400 hover:bg-cyan-50 dark:border-slate-700 dark:bg-slate-800 dark:hover:border-cyan-500 dark:hover:bg-slate-700">
         <input

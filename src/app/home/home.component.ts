@@ -1,6 +1,5 @@
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
@@ -23,7 +22,6 @@ import { APP_VERSION } from '../../version';
 @Component({
   selector: 'app-home',
   imports: [
-    AsyncPipe,
     RouterLink,
     TranslatePipe,
     LogoComponent,
@@ -58,12 +56,14 @@ export class HomeComponent {
 
   private readonly _query = this._versionGQL.watch();
 
-  readonly version$ = this._query.valueChanges.pipe(
-    tap((x) => this.loadingVersion.set(x.loading)),
-    onlyCompleteData(),
-    map((x) => x.data.version),
-    shareReplay(1),
-    finalize(() => this.loadingVersion.set(false))
+  readonly version = toSignal(
+    this._query.valueChanges.pipe(
+      tap((x) => this.loadingVersion.set(x.loading)),
+      onlyCompleteData(),
+      map((x) => x.data.version),
+      shareReplay(1),
+      finalize(() => this.loadingVersion.set(false))
+    )
   );
 
   constructor() {
