@@ -62,7 +62,7 @@
     "@biesbjerg/ngx-translate-extract-marker": "~1.0.0",
     "@commitlint/cli": "~21.0.0",
     "@commitlint/config-conventional": "~21.0.0",
-    "@graphql-codegen/cli": "~7.0.0",
+    "@graphql-codegen/cli": "~7.1.0",
     "@graphql-codegen/typescript": "~6.0.0",
     "@graphql-codegen/typescript-apollo-angular": "~5.0.0",
     "@graphql-codegen/typescript-operations": "~6.0.0",
