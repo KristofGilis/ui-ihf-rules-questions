@@ -38,9 +38,9 @@
   },
   "languages": {
     "en": "English",
+    "fr": "French",
     "label": "Language",
     "nl": "Dutch",
-    "fr": "French",
     "srb": "Serbian"
   },
   "main": {
@@ -56,8 +56,7 @@
     "message": "You are currently offline. Some features may not be available.",
     "refresh": "Refresh offline data",
     "syncing": "Syncing",
-    "up_to_date": "Offline data is up to date",
-    "sync_error": "Failed to refresh offline data"
+    "up_to_date": "Offline data is up to date"
   },
   "pwa": {
     "update_available": "A new version is available.",
@@ -84,10 +83,10 @@
     "leave_title": "Leave Quiz?",
     "leave_warning": "Your progress will be lost if you leave now. Are you sure?",
     "next": "Next",
+    "offline_no_data": "No offline questions available. Please connect to the internet to sync the questions first.",
     "previous": "Previous",
     "progress": "Question {{current}} of {{total}}",
     "select_answers": "Select all correct answers",
-    "offline_no_data": "No offline questions available. Please connect to the internet to sync the questions first.",
     "select_answers_for_question": "Select all correct answers for question {{current}}",
     "setup_description": "Configure your quiz settings to get started",
     "time_remaining": "Time Remaining"
