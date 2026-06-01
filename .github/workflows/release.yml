@@ -90,11 +90,16 @@ jobs:
           # Layout shipped to Azure App Service wwwroot:
           #   ./server.mjs              ← static server (compression + serve-handler)
           #   ./package.json            ← runtime deps only (compression, serve-handler)
+          #   ./node_modules/           ← pre-installed runtime deps
           #   ./browser/                ← Angular build output incl. serve.json
+          # We install node_modules in CI because azure/webapps-deploy@v3 does
+          # NOT trigger Oryx build, so node_modules must be shipped or `npm start`
+          # would fail with MODULE_NOT_FOUND and App Service returns 503.
           mkdir -p deploy-pkg
           cp server.mjs deploy-pkg/server.mjs
           cp deploy/package.json deploy-pkg/package.json
           cp -r dist/ui-ihf-rules-questions/browser deploy-pkg/browser
+          (cd deploy-pkg && npm install --omit=dev --no-audit --no-fund --ignore-scripts)
 
       - name: ⬆️ Upload build artifact
         uses: actions/upload-artifact@v7
@@ -131,6 +136,6 @@ jobs:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           package: ${{ github.workspace }}/dist
           clean: true
-          # Oryx (Azure App Service Linux) sees the package.json and runs
-          # `npm install --omit=dev`, then invokes `npm start` → `node server.mjs`.
+          # node_modules is bundled in the artifact (Oryx build is not run),
+          # so App Service can directly invoke `npm start` → `node server.mjs`.
           startup-command: 'npm start'
