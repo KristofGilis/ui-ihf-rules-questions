@@ -51,16 +51,12 @@
                 : 'offline.refresh'
             ) | translate
           }}"
-          class="flex items-center gap-2 rounded-lg border border-slate-300 bg-slate-200 p-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-300 focus:ring-2 focus:ring-cyan-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 md:min-w-44 md:px-3 md:py-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
+          class="flex items-center gap-2 rounded-lg border border-slate-300 bg-slate-200 p-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-300 focus:ring-2 focus:ring-cyan-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 md:px-3 md:py-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
           <fa-icon [icon]="faRotate" [class.animate-spin]="offlineData.busy()" aria-hidden="true" />
-          <!-- Reserve width unconditionally so the syncing label appearing later
-               does not push surrounding elements (Lighthouse CLS culprit). -->
           @if (offlineData.status() === 'prefetching') {
             <span class="hidden md:inline" aria-live="polite">
               {{ 'offline.syncing' | translate }} ({{ offlineData.progress().done }}/{{ offlineData.progress().total }})
             </span>
-          } @else {
-            <span class="hidden md:inline" aria-hidden="true">&nbsp;</span>
           }
         </button>
       }
