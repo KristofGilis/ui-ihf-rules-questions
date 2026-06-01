@@ -62,7 +62,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch(), withInterceptors([languageInterceptor])),
     graphqlProvider,
     provideTranslateService({
-      loader: provideTranslateHttpLoader({ prefix: '/i18n/', suffix: '.json', enforceLoading: true }),
+      loader: provideTranslateHttpLoader({ prefix: '/i18n/', suffix: '.json' }),
       fallbackLang: 'en',
     }),
     { provide: 'BASE_URL', useFactory: getBaseUrl, deps: [] },

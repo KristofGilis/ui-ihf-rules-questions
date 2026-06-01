@@ -1,7 +1,6 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, HostListener, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component, HostListener, inject, signal } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
 import { BehaviorSubject, finalize, map, merge, Subject, switchMap, tap } from 'rxjs';
 import { Question, Score } from '../../../graphql/types';
@@ -28,7 +27,6 @@ import { QuestionsService } from './services/questions.service';
 })
 export class QuestionsComponent {
   private readonly _questionsService = inject(QuestionsService);
-  private readonly _translateService = inject(TranslateService);
 
   readonly loading = signal(false);
   readonly questions$ = this._questionsService.questions$.pipe(
@@ -57,9 +55,6 @@ export class QuestionsComponent {
 
   readonly scoreLoading = signal(false);
 
-  // Track current language to trigger refetch when it changes
-  private readonly _currentLang = toSignal(this._translateService.onLangChange);
-
   get hasMoreQuestions(): boolean {
     return this._questionsService.hasNextPage;
   }
@@ -77,15 +72,6 @@ export class QuestionsComponent {
     if (scrollPosition >= documentHeight - threshold && this.hasMoreQuestions) {
       this._questionsService.fetchMore();
     }
-  }
-
-  constructor() {
-    // Refetch questions when language changes
-    effect(() => {
-      if (this._currentLang()) {
-        this._questionsService.refetch();
-      }
-    });
   }
 
   onCalculateScore(questionIds: string[], selectedAnswerIds: string[]): void {

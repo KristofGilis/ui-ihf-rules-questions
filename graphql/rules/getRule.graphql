@@ -11,6 +11,7 @@ query getRule($id: ID!, $first: Int!, $after: String) {
           id
           number
           phrase
+          translations
           answers(order: [{ number: ASC }]) {
             nodes {
               id

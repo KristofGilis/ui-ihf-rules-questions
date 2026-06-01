@@ -1,14 +1,15 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, HostListener, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
 import { BehaviorSubject, Subject, finalize, map, merge, shareReplay, switchMap, tap } from 'rxjs';
 import { Question, Rule, Score } from '../../../graphql/types';
+import { parseTranslations } from '../quiz/pipes/parse-translations.function';
 import { ScoreOverviewComponent } from '../questions/questions-view/components/score-overview/score-overview.component';
 import { QuestionsViewComponent } from '../questions/questions-view/questions-view.component';
 import { QuestionsService } from '../questions/services/questions.service';
+import { CurrentLanguageService } from '../services/current-language.service';
 import { PageContainerComponent, PageHeroComponent } from '../shared/components';
 import { RuleService } from './services/rule.service';
 
@@ -30,7 +31,7 @@ export class RuleComponent {
   private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _ruleService = inject(RuleService);
   private readonly _questionsService = inject(QuestionsService);
-  private readonly _translateService = inject(TranslateService);
+  readonly currentLanguage = inject(CurrentLanguageService).current;
 
   readonly loading = signal(false);
   readonly scoreLoading = signal(false);
@@ -80,7 +81,9 @@ export class RuleComponent {
   }
 
   constructor() {
-    this._translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => this._ruleService.refetch());
+    // No refetch on language change: rule/question/answer translations are
+    // stored in a `translations` field on each entity and rendered reactively
+    // via `PhraseTranslationPipe` + `currentLanguage()`.
   }
 
   getQuestions(rule: Rule | null): Question[] {
@@ -88,11 +91,11 @@ export class RuleComponent {
   }
 
   getRuleName(rule: Rule | null): string | undefined {
-    if (rule) {
-      return `${rule.number} - ${rule.name}`;
-    }
-
-    return undefined;
+    if (!rule) return undefined;
+    const translated = parseTranslations(rule.translations as string | Record<string, string> | null | undefined)[
+      this.currentLanguage()
+    ];
+    return `${rule.number} - ${translated ?? rule.name ?? ''}`;
   }
 
   onCalculateScore(questionIds: string[], selectedAnswerIds: string[]): void {

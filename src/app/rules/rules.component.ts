@@ -1,7 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
 import { map } from 'rxjs';
 import { Rule } from '../../../graphql/types';
@@ -17,15 +16,10 @@ import { RulesService } from './services/rules.service';
 })
 export class RulesComponent {
   private readonly _rulesService = inject(RulesService);
-  private readonly _translateService = inject(TranslateService);
 
   readonly loading$ = this._rulesService.loading$;
   readonly rules$ = this._rulesService.rules$.pipe(
     onlyCompleteData(),
     map((x) => x.data.rules?.edges?.map((y) => y?.node as Rule) ?? [])
   );
-
-  constructor() {
-    this._translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => this._rulesService.refetch());
-  }
 }

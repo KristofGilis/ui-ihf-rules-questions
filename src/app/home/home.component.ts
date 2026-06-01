@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
@@ -11,9 +11,8 @@ import {
   faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { onlyCompleteData } from 'apollo-angular';
-import { finalize, map, shareReplay, tap } from 'rxjs';
-import { GetVersionGQL } from '../../../graphql/generated';
+import { catchError, defer, finalize, map, of, shareReplay, startWith, switchMap, tap } from 'rxjs';
+import { PrefetchVersionsGQL } from '../../../graphql/generated';
 import { environment } from '../../environments/environment';
 import { LogoComponent } from '../logo/logo.component';
 import { PageContainerComponent, PageHeroComponent, QuizConfigCardComponent } from '../shared/components';
@@ -34,7 +33,7 @@ import { APP_VERSION } from '../../version';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
-  private readonly _versionGQL = inject(GetVersionGQL);
+  private readonly _prefetchVersionsGQL = inject(PrefetchVersionsGQL);
   private readonly _translateService = inject(TranslateService);
   private readonly _router = inject(Router);
 
@@ -54,21 +53,39 @@ export class HomeComponent {
   readonly currentYear = new Date().getFullYear();
   readonly appVersion = APP_VERSION;
 
-  private readonly _query = this._versionGQL.watch();
-
-  readonly version = toSignal(
-    this._query.valueChanges.pipe(
-      tap((x) => this.loadingVersion.set(x.loading)),
-      onlyCompleteData(),
-      map((x) => x.data.version),
-      shareReplay(1),
-      finalize(() => this.loadingVersion.set(false))
-    )
+  // Re-resolve the version whenever the active language changes. `startWith`
+  // also fires once for the initial language.
+  private readonly _lang$ = this._translateService.onLangChange.pipe(
+    map((e) => e.lang),
+    startWith(this._translateService.getCurrentLang() ?? this._translateService.getFallbackLang() ?? 'en')
   );
 
-  constructor() {
-    this._translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => this._query.refetch());
-  }
+  readonly version = toSignal(
+    this._lang$.pipe(
+      switchMap((lang) =>
+        defer(() => {
+          this.loadingVersion.set(true);
+          // The server's `versions` scalar is a per-language map populated by
+          // OfflineDataService at startup and on every cache refresh. We use
+          // it as the single source of truth so the value is language-aware
+          // both online and offline. The legacy `getVersion` scalar is not
+          // parameterised by language and always returns "en", so we ignore
+          // it here.
+          return this._prefetchVersionsGQL.fetch({ fetchPolicy: 'cache-first' }).pipe(
+            map((r) => {
+              const versions = r.data?.versions as Record<string, string> | null | undefined;
+              return versions?.[lang] ?? versions?.['en'] ?? undefined;
+            }),
+            catchError(() => of<string | undefined>(undefined))
+          );
+        }).pipe(
+          tap(() => this.loadingVersion.set(false)),
+          finalize(() => this.loadingVersion.set(false))
+        )
+      ),
+      shareReplay(1)
+    )
+  );
 
   onStartQuiz(config: { questionCount: number; timedMode: boolean }): void {
     this._router.navigate(['/quiz/view'], {

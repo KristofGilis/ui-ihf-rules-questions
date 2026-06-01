@@ -78,7 +78,7 @@ export type GetRuleQueryVariables = Exact<{
 }>;
 
 
-export type GetRuleQuery = { ruleById: { id: string, number: string, name: string | null, translations: unknown, questions: { edges: Array<{ cursor: string, node: { id: string, number: string, phrase: string | null, answers: { nodes: Array<{ id: string, number: string, phrase: string | null, translations: unknown }> | null } } }> | null, pageInfo: { endCursor: string | null, hasNextPage: boolean } } } | null };
+export type GetRuleQuery = { ruleById: { id: string, number: string, name: string | null, translations: unknown, questions: { edges: Array<{ cursor: string, node: { id: string, number: string, phrase: string | null, translations: unknown, answers: { nodes: Array<{ id: string, number: string, phrase: string | null, translations: unknown }> | null } } }> | null, pageInfo: { endCursor: string | null, hasNextPage: boolean } } } | null };
 
 export type GetRulesQueryVariables = Exact<{
   first: number;
@@ -87,11 +87,6 @@ export type GetRulesQueryVariables = Exact<{
 
 
 export type GetRulesQuery = { rules: { edges: Array<{ cursor: string, node: { id: string, number: string, name: string | null, translations: unknown } }> | null, pageInfo: { endCursor: string | null } } };
-
-export type GetVersionQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetVersionQuery = { version: string | null };
 
 export const PrefetchAnswersDocument = gql`
     query prefetchAnswers($cursor: String) {
@@ -321,6 +316,7 @@ export const GetRuleDocument = gql`
           id
           number
           phrase
+          translations
           answers(order: [{number: ASC}]) {
             nodes {
               id
@@ -374,22 +370,6 @@ export const GetRulesDocument = gql`
   })
   export class GetRulesGQL extends Apollo.Query<GetRulesQuery, GetRulesQueryVariables> {
     override document = GetRulesDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const GetVersionDocument = gql`
-    query getVersion {
-  version
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class GetVersionGQL extends Apollo.Query<GetVersionQuery, GetVersionQueryVariables> {
-    override document = GetVersionDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

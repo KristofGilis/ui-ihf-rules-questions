@@ -4,10 +4,12 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Question } from '../../../../../../graphql/types';
+import { PhraseTranslationPipe } from '../../../../quiz/pipes/phrase-translation-pipe';
+import { CurrentLanguageService } from '../../../../services/current-language.service';
 
 @Component({
   selector: 'app-question',
-  imports: [FormsModule, FaIconComponent, TranslatePipe],
+  imports: [FormsModule, FaIconComponent, TranslatePipe, PhraseTranslationPipe],
   templateUrl: './question.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -19,6 +21,7 @@ export class QuestionComponent {
   readonly deselectAnswer = output<string>();
 
   readonly elementRef = inject(ElementRef);
+  readonly currentLanguage = inject(CurrentLanguageService).current;
 
   readonly faTimesCircle = faTimesCircle;
 

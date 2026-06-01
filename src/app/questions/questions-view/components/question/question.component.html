@@ -12,7 +12,9 @@
   <div class="mb-4 flex items-start justify-between">
     <div class="flex-1">
       <span class="mr-2 font-bold text-slate-900 dark:text-white">{{ question().number }})</span>
-      <span class="text-slate-700 dark:text-slate-300" [innerHTML]="question().phrase"></span>
+      <span
+        class="text-slate-700 dark:text-slate-300"
+        [innerHTML]="question().phrase | appPhraseTranslation: question().translations : currentLanguage()"></span>
     </div>
     @if (isWrong()) {
       <div class="ml-2 flex items-center gap-1.5 rounded-full bg-red-500 px-3 py-1 text-sm font-semibold text-white">
@@ -33,7 +35,7 @@
           (change)="onCheckboxChange(answer?.id ?? '', $any($event.target).checked)" />
         <span class="flex-1 text-slate-700 dark:text-slate-300">
           <span class="mr-2 font-medium">{{ answer?.number }})</span>
-          {{ answer?.phrase }}
+          {{ answer?.phrase | appPhraseTranslation: answer?.translations : currentLanguage() }}
         </span>
       </label>
     }
