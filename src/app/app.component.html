@@ -51,12 +51,16 @@
                 : 'offline.refresh'
             ) | translate
           }}"
-          class="flex items-center gap-2 rounded-lg border border-slate-300 bg-slate-200 p-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-300 focus:ring-2 focus:ring-cyan-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 md:px-3 md:py-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
+          class="flex items-center gap-2 rounded-lg border border-slate-300 bg-slate-200 p-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-300 focus:ring-2 focus:ring-cyan-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 md:min-w-44 md:px-3 md:py-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
           <fa-icon [icon]="faRotate" [class.animate-spin]="offlineData.busy()" aria-hidden="true" />
+          <!-- Reserve width unconditionally so the syncing label appearing later
+               does not push surrounding elements (Lighthouse CLS culprit). -->
           @if (offlineData.status() === 'prefetching') {
-            <span class="hidden md:inline">
+            <span class="hidden md:inline" aria-live="polite">
               {{ 'offline.syncing' | translate }} ({{ offlineData.progress().done }}/{{ offlineData.progress().total }})
             </span>
+          } @else {
+            <span class="hidden md:inline" aria-hidden="true">&nbsp;</span>
           }
         </button>
       }
@@ -209,28 +213,28 @@
       routerLink="/home"
       routerLinkActive="active-nav"
       [routerLinkActiveOptions]="{ exact: true }"
-      class="flex min-w-15 flex-col items-center justify-center gap-0.5 text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+      class="flex min-w-15 flex-col items-center justify-center gap-0.5 text-slate-600 opacity-90 transition-opacity hover:text-slate-900 hover:opacity-100 dark:text-slate-400 dark:hover:text-white">
       <fa-icon [icon]="faHome" size="lg" />
       <span class="text-xs font-medium">{{ 'navigation.home' | translate }}</span>
     </a>
     <a
       routerLink="/quiz"
       routerLinkActive="active-nav"
-      class="flex min-w-15 flex-col items-center justify-center gap-0.5 text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+      class="flex min-w-15 flex-col items-center justify-center gap-0.5 text-slate-600 opacity-90 transition-opacity hover:text-slate-900 hover:opacity-100 dark:text-slate-400 dark:hover:text-white">
       <fa-icon [icon]="faTrophy" size="lg" />
       <span class="text-xs font-medium">{{ 'navigation.quiz' | translate }}</span>
     </a>
     <a
       routerLink="/questions"
       routerLinkActive="active-nav"
-      class="flex min-w-15 flex-col items-center justify-center gap-0.5 text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+      class="flex min-w-15 flex-col items-center justify-center gap-0.5 text-slate-600 opacity-90 transition-opacity hover:text-slate-900 hover:opacity-100 dark:text-slate-400 dark:hover:text-white">
       <fa-icon [icon]="faQuestionCircle" size="lg" />
       <span class="text-xs font-medium">{{ 'navigation.questions' | translate }}</span>
     </a>
     <a
       routerLink="/rules"
       routerLinkActive="active-nav"
-      class="flex min-w-15 flex-col items-center justify-center gap-0.5 text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+      class="flex min-w-15 flex-col items-center justify-center gap-0.5 text-slate-600 opacity-90 transition-opacity hover:text-slate-900 hover:opacity-100 dark:text-slate-400 dark:hover:text-white">
       <fa-icon [icon]="faBook" size="lg" />
       <span class="text-xs font-medium">{{ 'navigation.rules' | translate }}</span>
     </a>

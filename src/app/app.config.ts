@@ -42,18 +42,22 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
     provideRouter(routes),
-    // Restore the persisted Apollo cache before any query runs so that
-    // first-paint reads from IndexedDB instead of the network, then kick off
-    // the background sync. Chaining them in a single initializer guarantees
-    // the cache-emptiness check inside OfflineDataService sees the restored
-    // cache rather than firing a full re-prefetch on every refresh.
+    // Kick off cache restore + background sync, but do NOT block bootstrap on
+    // them. Blocking here adds hundreds of ms to FCP/LCP (Lighthouse "element
+    // render delay"). Apollo's default `cache-first` policy means in-flight
+    // queries will fall back to the network for a few hundred ms after first
+    // load until restore completes, which is an acceptable trade-off for a
+    // much faster initial paint. Subsequent loads still benefit from the
+    // persisted IndexedDB cache as soon as restore finishes.
     provideAppInitializer(() => {
       inject(ScrollRestorationService);
       const offlineData = inject(OfflineDataService);
-      return restoreApolloCache().pipe(
-        switchMap(() => offlineData.initialize()),
-        takeUntilDestroyed()
-      );
+      restoreApolloCache()
+        .pipe(
+          switchMap(() => offlineData.initialize()),
+          takeUntilDestroyed()
+        )
+        .subscribe();
     }),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
