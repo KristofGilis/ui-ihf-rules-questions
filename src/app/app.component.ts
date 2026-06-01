@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, HostListener, inject, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -10,14 +10,16 @@ import {
   faHome,
   faMoon,
   faQuestionCircle,
+  faRotate,
   faSun,
   faTrophy,
   faWifi,
 } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { fromEvent, map, merge, of } from 'rxjs';
 import { getLanguage } from './language';
 import { LogoComponent } from './logo/logo.component';
+import { ConnectivityService } from './services/connectivity.service';
+import { OfflineDataService } from './services/offline-data.service';
 import { PwaUpdateService } from './services/pwa-update.service';
 import { ThemeService } from './services/theme.service';
 
@@ -34,6 +36,8 @@ export class AppComponent {
   private readonly _themeService = inject(ThemeService);
   private readonly _titleService = inject(Title);
   private readonly _pwaUpdateService = inject(PwaUpdateService);
+  private readonly _connectivity = inject(ConnectivityService);
+  protected readonly offlineData = inject(OfflineDataService);
   private readonly _destroyRef = inject(DestroyRef);
 
   // Constants
@@ -48,6 +52,7 @@ export class AppComponent {
   protected readonly faMoon = faMoon;
   protected readonly faDesktop = faDesktop;
   protected readonly faWifi = faWifi;
+  protected readonly faRotate = faRotate;
 
   // State signals
   protected readonly currentLang = signal(getLanguage());
@@ -55,15 +60,9 @@ export class AppComponent {
   protected readonly showLanguageMenu = signal(false);
   protected readonly showThemeMenu = signal(false);
 
-  // Online/offline state
-  protected readonly isOnline = toSignal(
-    merge(
-      of(navigator.onLine),
-      fromEvent(window, 'online').pipe(map(() => true)),
-      fromEvent(window, 'offline').pipe(map(() => false))
-    ),
-    { initialValue: navigator.onLine }
-  );
+  // Online/offline state - shared via ConnectivityService so other consumers
+  // (e.g. quiz offline fallbacks) observe the same source.
+  protected readonly isOnline = this._connectivity.isOnline;
 
   // Computed signals for theme icon and label
   protected readonly themeIcon = computed(() => {
@@ -133,5 +132,9 @@ export class AppComponent {
     this._themeService.setTheme(theme);
     this.currentTheme.set(theme);
     this.showThemeMenu.set(false);
+  }
+
+  refreshOfflineData(): void {
+    this.offlineData.refresh().pipe(takeUntilDestroyed(this._destroyRef)).subscribe();
   }
 }

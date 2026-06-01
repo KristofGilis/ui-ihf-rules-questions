@@ -7,13 +7,16 @@ import { faArrowLeft, faArrowRight, faCheck, faClock } from '@fortawesome/free-s
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { onlyCompleteData } from 'apollo-angular';
 import * as Hammer from 'hammerjs';
-import { map, Observable } from 'rxjs';
+import { defer, map, Observable } from 'rxjs';
 import { GetQuestionsGQL } from '../../../graphql/generated';
 import { Question } from '../../../graphql/types';
+import { ConnectivityService } from '../services/connectivity.service';
 import { GradientButtonComponent, LoadingSpinnerComponent, PageContainerComponent } from '../shared/components';
 import { ConfirmationDialogService } from '../shared/services/confirmation-dialog.service';
 import { PhraseTranslationPipe } from './pipes/phrase-translation-pipe';
+import { LocalQuestionsService } from './services/local-questions.service';
 import { QuizService } from './services/quiz.service';
+import { createSeed, mulberry32 } from './services/seeded-rng';
 
 @Component({
   selector: 'app-quiz',
@@ -35,6 +38,8 @@ export class QuizComponent implements OnInit, OnDestroy {
   private readonly _confirmationDialog = inject(ConfirmationDialogService);
   private readonly _translate = inject(TranslateService);
   private readonly _elementRef = inject(ElementRef);
+  private readonly _connectivity = inject(ConnectivityService);
+  private readonly _localQuestions = inject(LocalQuestionsService);
   readonly quizService = inject(QuizService);
 
   private _hammer?: HammerManager;
@@ -49,6 +54,12 @@ export class QuizComponent implements OnInit, OnDestroy {
   private readonly _navigationState = this._router.currentNavigation()?.extras.state;
   private readonly _count = this._navigationState?.['count'] || 10;
   private readonly _timed = this._navigationState?.['timed'] === true;
+  /**
+   * Seed generated once per quiz session and shared between the offline
+   * question selector and the seeded shuffle inside `QuizService` so the
+   * presentation order is deterministic from the seed alone.
+   */
+  private readonly _seed = createSeed();
 
   private readonly _questionsQuery = this._getQuestionsGQL.watch({
     variables: {
@@ -58,12 +69,22 @@ export class QuizComponent implements OnInit, OnDestroy {
     fetchPolicy: 'no-cache',
   });
 
-  readonly questions$: Observable<Question[]> = this._questionsQuery.valueChanges.pipe(
-    onlyCompleteData(),
-    map((result) => {
-      const questions = result.data.questions?.edges?.map((edge) => edge?.node as Question) || [];
+  /**
+   * Stream of questions for the quiz session. Branches on connectivity at
+   * subscription time: online → the existing random-questions GraphQL query;
+   * offline → a cache-only selection driven by the shared seed.
+   */
+  readonly questions$: Observable<Question[]> = defer(() =>
+    this._connectivity.online
+      ? this._questionsQuery.valueChanges.pipe(
+          onlyCompleteData(),
+          map((result) => result.data.questions?.edges?.map((edge) => edge?.node as Question) || [])
+        )
+      : this._localQuestions.getRandomQuestions(this._count, mulberry32(this._seed))
+  ).pipe(
+    map((questions) => {
       if (questions.length > 0 && !this.quizService.config()) {
-        this.quizService.initializeQuiz(questions, this._timed);
+        this.quizService.initializeQuiz(questions, this._timed, undefined, this._seed);
       }
       return questions;
     })

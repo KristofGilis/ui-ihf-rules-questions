@@ -1,0 +1,9 @@
+query prefetchScoreConfiguration {
+  scoreConfiguration {
+    correct
+    inCorrect
+    notAnswered
+    negativeScore
+    penalizeGuessingStrategy
+  }
+}

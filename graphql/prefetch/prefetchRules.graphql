@@ -1,0 +1,17 @@
+query prefetchRules($cursor: String) {
+  rules(first: 50, after: $cursor, order: { number: ASC }) {
+    edges {
+      cursor
+      node {
+        id
+        number
+        name
+        translations
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}

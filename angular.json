@@ -32,7 +32,7 @@
               }
             ],
             "styles": ["src/styles.css"],
-            "allowedCommonJsDependencies": ["hammerjs"],
+            "allowedCommonJsDependencies": ["hammerjs", "localforage"],
             "scripts": []
           },
           "configurations": {

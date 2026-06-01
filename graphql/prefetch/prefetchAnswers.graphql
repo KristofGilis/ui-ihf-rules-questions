@@ -1,0 +1,19 @@
+query prefetchAnswers($cursor: String) {
+  answers(first: 50, after: $cursor, order: { number: ASC }) {
+    edges {
+      cursor
+      node {
+        id
+        number
+        phrase
+        translations
+        questionId
+        isCorrect
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}

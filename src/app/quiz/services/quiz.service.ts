@@ -1,10 +1,13 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, Observable, tap } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 import { CalculateScoreGQL } from '../../../../graphql/generated';
-import { Question } from '../../../../graphql/types';
+import { Question, Score } from '../../../../graphql/types';
 import { QUIZ_CONFIG } from '../../constants';
+import { ConnectivityService } from '../../services/connectivity.service';
 import { parseTranslations } from '../pipes/parse-translations.function';
+import { LocalScoreService } from './local-score.service';
+import { createSeed, mulberry32, shuffle } from './seeded-rng';
 
 /**
  * Internal types - not exported as they're only used within this service
@@ -42,6 +45,8 @@ interface QuizConfig {
   timedMode: boolean;
   timePerQuestion: number; // seconds
   totalTime: number; // seconds
+  /** Seed used to drive the deterministic Fisher–Yates shuffle (reproducibility). */
+  seed: number;
 }
 
 /** Current state of an active quiz session */
@@ -85,6 +90,8 @@ interface QuizResult {
 })
 export class QuizService {
   private readonly _calculateScoreGQL = inject(CalculateScoreGQL);
+  private readonly _localScore = inject(LocalScoreService);
+  private readonly _connectivity = inject(ConnectivityService);
   private readonly _router = inject(Router);
   private _timerInterval?: number;
 
@@ -159,10 +166,15 @@ export class QuizService {
   initializeQuiz(
     questions: Question[],
     timedMode: boolean,
-    timePerQuestion: number = QUIZ_CONFIG.TIME_PER_QUESTION
+    timePerQuestion: number = QUIZ_CONFIG.TIME_PER_QUESTION,
+    seed: number = createSeed()
   ): void {
     // Clear any previous results when starting a new quiz
     this.results.set(null);
+
+    // Single shared RNG so question + answer shuffles are reproducible from
+    // the seed alone.
+    const rng = mulberry32(seed);
 
     // Convert Question[] to QuizQuestion[] and shuffle
     const quizQuestions: QuizQuestion[] = questions
@@ -187,13 +199,13 @@ export class QuizService {
               undefined
           ),
           answers,
-          shuffledAnswers: this.shuffleArray([...answers]),
+          shuffledAnswers: shuffle([...answers], rng),
         };
       })
       .filter((q) => q.answers.length > 0);
 
     // Shuffle questions
-    const shuffled = this.shuffleArray(quizQuestions);
+    const shuffled = shuffle(quizQuestions, rng);
 
     const totalTime = timedMode ? shuffled.length * timePerQuestion : 0;
 
@@ -203,6 +215,7 @@ export class QuizService {
       timedMode,
       timePerQuestion,
       totalTime,
+      seed,
     });
 
     this.state.set({
@@ -310,100 +323,105 @@ export class QuizService {
     const questionIds = this.getAllQuestionIds();
     const selectedAnswerIds = this.getAllSelectedAnswerIds();
 
-    // Call backend to calculate score
-    return this._calculateScoreGQL
-      .watch({
-        variables: {
-          questionIds,
-          selectedAnswerIds,
-        },
-        fetchPolicy: 'no-cache',
-      })
-      .valueChanges.pipe(
-        map((response) => {
-          if (response.loading) {
-            return { loading: response.loading, result: undefined };
-          }
+    // Branch: when offline, score locally from the cached configuration +
+    // answers; when online, defer to the backend. Both branches emit the
+    // same `{ loading, result }` shape so downstream consumers (and the
+    // results page) don't need to care which source produced the score.
+    const score$: Observable<{ loading: boolean; score: Score | null | undefined }> = this._connectivity.online
+      ? this._calculateScoreGQL
+          .watch({
+            variables: { questionIds, selectedAnswerIds },
+            fetchPolicy: 'no-cache',
+          })
+          .valueChanges.pipe(
+            map((response) => ({
+              loading: response.loading,
+              score: response.data?.calculateScore as Score | null | undefined,
+            })),
+            // Fall back to the local scorer on network errors so the user can
+            // still see results when the server is unreachable mid-quiz.
+            catchError(() =>
+              this._localScore
+                .calculateScore(questionIds, selectedAnswerIds)
+                .pipe(map((s) => ({ loading: false, score: s })))
+            )
+          )
+      : this._localScore
+          .calculateScore(questionIds, selectedAnswerIds)
+          .pipe(map((s) => ({ loading: false, score: s })));
 
-          if (!response.data) {
-            const emptyResult: QuizResult = {
-              totalQuestions: 0,
-              correctCount: 0,
-              wrongCount: 0,
-              percentage: 0,
-              answers: [],
-            };
-            this.results.set(emptyResult);
-            return { loading: response.loading, result: emptyResult };
-          }
+    return score$.pipe(
+      map(({ loading, score }) => {
+        if (loading) {
+          return { loading, result: undefined };
+        }
 
-          const score = response.data.calculateScore;
-          const cfg = this.config();
-          const st = this.state();
+        const cfg = this.config();
+        const st = this.state();
 
-          if (!cfg || !score) {
-            const emptyResult: QuizResult = {
-              totalQuestions: 0,
-              correctCount: 0,
-              wrongCount: 0,
-              percentage: 0,
-              answers: [],
-            };
-            this.results.set(emptyResult);
-            return { loading: response.loading, result: undefined };
-          }
-
-          // Map the score results to our quiz format
-          const wrongQuestionIds = new Set(score.wrongQuestionsIds);
-          const results = cfg.questions.map((q) => {
-            const userAnswer = st.answers.find((a) => a.questionId === q.id);
-            const selectedIds = userAnswer ? userAnswer.selectedAnswerIds : [];
-
-            // Question is correct if it's NOT in the wrong questions list
-            const isCorrect = !wrongQuestionIds.has(q.id);
-
-            return {
-              questionNumber: q.number,
-              question: q.phrase,
-              selectedAnswerIds: selectedIds,
-              isCorrect,
-              allAnswers: q.shuffledAnswers,
-            };
-          });
-
-          const total = score.total ?? cfg.totalQuestions;
-          const correctCount = score.score ?? 0;
-          const wrongCount = total - correctCount;
-          const percentage = score.percentage ? parseFloat(score.percentage) : 0;
-
-          // Calculate completion time
-          const completionTimeSeconds = st.startTime ? Math.floor((Date.now() - st.startTime) / 1000) : undefined;
-
-          const result: QuizResult = {
-            totalQuestions: total,
-            correctCount,
-            wrongCount,
-            percentage,
-            completionTimeSeconds,
-            answers: results,
+        if (!cfg || !score) {
+          const emptyResult: QuizResult = {
+            totalQuestions: 0,
+            correctCount: 0,
+            wrongCount: 0,
+            percentage: 0,
+            answers: [],
           };
+          this.results.set(emptyResult);
+          return { loading, result: cfg && score ? emptyResult : undefined };
+        }
 
-          // Performance mark: Quiz completed
-          if (typeof performance !== 'undefined') {
-            performance.mark('quiz-complete');
-            performance.measure('quiz-duration', 'quiz-start', 'quiz-complete');
-          }
+        // Map the score results to our quiz format
+        const wrongQuestionIds = new Set(score.wrongQuestionsIds);
+        const results = cfg.questions.map((q) => {
+          const userAnswer = st.answers.find((a) => a.questionId === q.id);
+          const selectedIds = userAnswer ? userAnswer.selectedAnswerIds : [];
 
-          this.results.set(result);
-          return { loading: response.loading, result };
-        }),
-        tap((state) => {
-          // Navigate to results when loading is complete
-          if (!state.loading && state.result) {
-            this._router.navigate(['/quiz/results']);
-          }
-        })
-      );
+          // Question is correct if it's NOT in the wrong questions list
+          const isCorrect = !wrongQuestionIds.has(q.id);
+
+          return {
+            questionNumber: q.number,
+            question: q.phrase,
+            selectedAnswerIds: selectedIds,
+            isCorrect,
+            allAnswers: q.shuffledAnswers,
+          };
+        });
+
+        const total = score.total ?? cfg.totalQuestions;
+        const correctCount = score.score ?? 0;
+        const wrongCount = total - correctCount;
+        const percentage = score.percentage ? parseFloat(score.percentage) : 0;
+
+        // Calculate completion time
+        const completionTimeSeconds = st.startTime ? Math.floor((Date.now() - st.startTime) / 1000) : undefined;
+
+        const result: QuizResult = {
+          totalQuestions: total,
+          correctCount,
+          wrongCount,
+          percentage,
+          completionTimeSeconds,
+          answers: results,
+        };
+
+        // Performance mark: Quiz completed
+        if (typeof performance !== 'undefined') {
+          performance.mark('quiz-complete');
+          performance.measure('quiz-duration', 'quiz-start', 'quiz-complete');
+        }
+
+        this.results.set(result);
+        return { loading, result };
+      }),
+      tap((state) => {
+        // Navigate to results when loading is complete
+        if (!state.loading && state.result) {
+          this._router.navigate(['/quiz/results']);
+        }
+      })
+    );
   }
 
   /**
@@ -485,17 +503,12 @@ export class QuizService {
   }
 
   /**
-   * Shuffle array using Fisher-Yates algorithm.
-   * @param array - Array to shuffle
-   * @returns New shuffled array (original unchanged)
+   * Shuffle array using Fisher–Yates algorithm with a non-deterministic RNG.
+   * Kept for callers that don't need reproducibility; quiz initialization uses
+   * the seeded `shuffle` helper instead.
    */
   private shuffleArray<T>(array: T[]): T[] {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
+    return shuffle(array, Math.random);
   }
 
   /**

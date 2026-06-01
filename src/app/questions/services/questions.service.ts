@@ -1,12 +1,14 @@
 import { inject, Injectable } from '@angular/core';
 import { ObservableQuery } from '@apollo/client/core';
-import { debounceTime, Observable, Subject, switchMap, tap } from 'rxjs';
+import { catchError, debounceTime, defer, map, Observable, Subject, switchMap, tap } from 'rxjs';
 import {
   CalculateScoreGQL,
   CalculateScoreQuery,
   GetQuestionsGQL,
   QuestionSortInput,
 } from '../../../../graphql/generated';
+import { LocalScoreService } from '../../quiz/services/local-score.service';
+import { ConnectivityService } from '../../services/connectivity.service';
 
 @Injectable({
   providedIn: 'root',
@@ -30,18 +32,14 @@ export class QuestionsService {
     nextFetchPolicy: 'cache-first',
   });
   private readonly _calculateScoreGQL = inject(CalculateScoreGQL);
+  private readonly _localScore = inject(LocalScoreService);
+  private readonly _connectivity = inject(ConnectivityService);
 
   // Debounced score calculation to prevent rapid-fire requests
   private readonly _scoreSubject = new Subject<{ questionIds: string[]; selectedAnswerIds: string[] }>();
   readonly debouncedScore$ = this._scoreSubject.pipe(
     debounceTime(300),
-    switchMap(
-      ({ questionIds, selectedAnswerIds }) =>
-        this._calculateScoreGQL.watch({
-          variables: { questionIds, selectedAnswerIds },
-          fetchPolicy: 'no-cache',
-        }).valueChanges
-    )
+    switchMap(({ questionIds, selectedAnswerIds }) => this.calculateScore(questionIds, selectedAnswerIds))
   );
 
   get hasNextPage(): boolean {
@@ -79,13 +77,33 @@ export class QuestionsService {
     questionIds: string[],
     selectedAnswerIds: string[]
   ): Observable<ObservableQuery.Result<CalculateScoreQuery>> {
-    return this._calculateScoreGQL.watch({
-      variables: {
-        questionIds,
-        selectedAnswerIds,
-      },
-      fetchPolicy: 'no-cache',
-    }).valueChanges;
+    // Branch on connectivity: when offline (or the network call fails)
+    // compute the score locally from the prefetched cache so /rule/:id and
+    // /questions still show a score without a server round-trip. Emit the
+    // result with `dataState: 'complete'` so apollo-angular's
+    // `onlyCompleteData()` operator passes it through.
+    const local$ = (): Observable<ObservableQuery.Result<CalculateScoreQuery>> =>
+      this._localScore.calculateScore(questionIds, selectedAnswerIds).pipe(
+        map(
+          (score) =>
+            ({
+              loading: false,
+              dataState: 'complete',
+              data: { calculateScore: score } as CalculateScoreQuery,
+            }) as unknown as ObservableQuery.Result<CalculateScoreQuery>
+        )
+      );
+
+    return defer(() =>
+      this._connectivity.online
+        ? this._calculateScoreGQL
+            .watch({
+              variables: { questionIds, selectedAnswerIds },
+              fetchPolicy: 'no-cache',
+            })
+            .valueChanges.pipe(catchError(() => local$()))
+        : local$()
+    );
   }
 
   /**

@@ -23,7 +23,6 @@ export class PwaUpdateService {
    */
   initializeUpdateCheck(destroyRef: DestroyRef): void {
     if (!this._swUpdate.isEnabled) {
-      console.log('Service Worker is not enabled');
       return;
     }
 
