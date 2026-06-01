@@ -9,16 +9,16 @@
       [badge]="true">
       <app-logo icon class="h-16 w-16 text-white md:h-20 md:w-20 [&_path]:fill-white!" />
 
-      <div badge>
+      <div badge class="mb-4 flex min-h-10 items-center justify-center">
         @if (loadingVersion()) {
           <div
-            class="mb-4 inline-flex items-center gap-2 rounded-full bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+            class="inline-flex items-center gap-2 rounded-full bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300">
             <fa-icon [icon]="faSpinner" [animation]="'spin'" size="sm" class="text-cyan-500"></fa-icon>
             {{ 'home.loading' | translate }}
           </div>
         } @else if (version()) {
           <div
-            class="mb-4 inline-flex items-center gap-2 rounded-full bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+            class="inline-flex items-center gap-2 rounded-full bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300">
             <span class="relative flex h-2 w-2">
               <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-75"></span>
               <span class="relative inline-flex h-2 w-2 rounded-full bg-cyan-500"></span>

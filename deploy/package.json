@@ -1,0 +1,17 @@
+{
+  "name": "ihf-rules-questions-server",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "compression": "1.7.5",
+    "serve-handler": "6.1.6"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
