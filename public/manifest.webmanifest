@@ -1,4 +1,5 @@
 {
+  "id": "/",
   "name": "IHF Rules Quiz - Test Your Handball Knowledge",
   "short_name": "IHF Rules Quiz",
   "description": "Master IHF handball rules with our interactive quiz. Test your knowledge of handball regulations and improve your understanding of the game.",
@@ -7,19 +8,47 @@
       "src": "icons/android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "icons/android-chrome-256x256.png",
       "sizes": "256x256",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "icons/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "icons/maskable-icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/maskable-icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "IHF Rules Quiz on desktop"
+    },
+    {
+      "src": "screenshots/screenshot-narrow.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "IHF Rules Quiz on mobile"
     }
   ],
   "shortcuts": [
