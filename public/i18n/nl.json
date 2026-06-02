@@ -53,10 +53,10 @@
     "rules": "Spelregels"
   },
   "offline": {
+    "dismiss": "Offline banner sluiten",
     "message": "Je bent momenteel offline. Sommige functies zijn mogelijk niet beschikbaar.",
     "refresh": "Offline gegevens vernieuwen",
     "syncing": "Synchroniseren",
-    "dismiss": "Offline banner sluiten",
     "up_to_date": "Offline gegevens zijn up-to-date"
   },
   "pwa": {
