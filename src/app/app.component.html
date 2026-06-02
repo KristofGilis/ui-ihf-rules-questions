@@ -6,206 +6,203 @@
   {{ 'accessibility.skip_to_main' | translate }}
 </a>
 
-<!-- Offline Banner -->
-@if (!isOnline()) {
-  <div
-    class="fixed top-0 right-0 left-0 z-60 flex items-center justify-center gap-2 bg-yellow-500 px-4 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-2 text-center text-sm font-medium text-yellow-950"
-    role="alert"
-    aria-live="assertive">
-    <fa-icon [icon]="faWifi" class="text-yellow-950" aria-hidden="true" />
-    <span>{{ 'offline.message' | translate }}</span>
-  </div>
-}
-
-<!-- Header -->
-<header
-  class="fixed right-0 left-0 z-50 border-b border-slate-300 bg-slate-100 dark:border-slate-800 dark:bg-slate-900"
-  role="banner"
-  [style.top]="!isOnline() ? 'calc(env(safe-area-inset-top) + 2.5rem)' : '0'"
-  [style.padding-top]="!isOnline() ? '0' : 'env(safe-area-inset-top)'">
-  <nav class="flex h-16 items-center justify-between px-4" role="navigation" aria-label="Main navigation">
-    <!-- Logo -->
-    <div class="flex items-center gap-3">
-      <a
-        routerLink="/"
-        class="flex items-center gap-3 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2"
-        aria-label="IHF Rules Quiz - Home">
-        <app-logo class="h-10 w-10" aria-hidden="true" />
-        <span class="text-lg font-bold text-slate-900 dark:text-white">{{ 'main.title' | translate }}</span>
-      </a>
+<!-- Fixed top bar: offline banner + header stacked together -->
+<div #topBar class="fixed top-0 right-0 left-0 z-50">
+  <!-- Offline Banner -->
+  @if (!isOnline()) {
+    <div
+      class="flex items-center justify-center gap-2 bg-yellow-500 px-4 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-2 text-center text-sm font-medium text-yellow-950"
+      role="alert"
+      aria-live="assertive">
+      <fa-icon [icon]="faWifi" class="text-yellow-950" aria-hidden="true" />
+      <span>{{ 'offline.message' | translate }}</span>
     </div>
+  }
 
-    <!-- Actions -->
-    <div class="flex items-center gap-2">
-      <!-- Refresh offline data (only when online) -->
-      @if (isOnline()) {
-        <button
-          type="button"
-          (click)="refreshOfflineData()"
-          [disabled]="offlineData.busy()"
-          [attr.aria-label]="'offline.refresh' | translate"
-          title="{{
-            (offlineData.status() === 'prefetching'
-              ? 'offline.syncing'
-              : offlineData.status() === 'up-to-date'
-                ? 'offline.up_to_date'
-                : 'offline.refresh'
-            ) | translate
-          }}"
-          class="flex items-center gap-2 rounded-lg border border-slate-300 bg-slate-200 p-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-300 focus:ring-2 focus:ring-cyan-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 md:px-3 md:py-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
-          <fa-icon [icon]="faRotate" [class.animate-spin]="offlineData.busy()" aria-hidden="true" />
-          @if (offlineData.status() === 'prefetching') {
-            <span class="hidden md:inline" aria-live="polite">
-              {{ 'offline.syncing' | translate }} ({{ offlineData.progress().done }}/{{ offlineData.progress().total }})
-            </span>
+  <!-- Header -->
+  <header
+    class="border-b border-slate-300 bg-slate-100 pt-[env(safe-area-inset-top)] dark:border-slate-800 dark:bg-slate-900"
+    [class.pt-0]="!isOnline()"
+    role="banner">
+    <nav class="flex h-16 items-center justify-between px-4" role="navigation" aria-label="Main navigation">
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <a
+          routerLink="/"
+          class="flex items-center gap-3 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2"
+          aria-label="IHF Rules Quiz - Home">
+          <app-logo class="h-10 w-10" aria-hidden="true" />
+          <span class="text-lg font-bold text-slate-900 dark:text-white">{{ 'main.title' | translate }}</span>
+        </a>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-2">
+        <!-- Refresh offline data (only when online) -->
+        @if (isOnline()) {
+          <button
+            type="button"
+            (click)="refreshOfflineData()"
+            [disabled]="offlineData.busy()"
+            [attr.aria-label]="'offline.refresh' | translate"
+            title="{{
+              (offlineData.status() === 'prefetching'
+                ? 'offline.syncing'
+                : offlineData.status() === 'up-to-date'
+                  ? 'offline.up_to_date'
+                  : 'offline.refresh'
+              ) | translate
+            }}"
+            class="flex items-center gap-2 rounded-lg border border-slate-300 bg-slate-200 p-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-300 focus:ring-2 focus:ring-cyan-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 md:px-3 md:py-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
+            <fa-icon [icon]="faRotate" [class.animate-spin]="offlineData.busy()" aria-hidden="true" />
+            @if (offlineData.status() === 'prefetching') {
+              <span class="hidden md:inline" aria-live="polite">
+                {{ 'offline.syncing' | translate }} ({{ offlineData.progress().done }}/{{
+                  offlineData.progress().total
+                }})
+              </span>
+            }
+          </button>
+        }
+
+        <!-- Language Dropdown -->
+        <div class="language-dropdown relative">
+          <button
+            type="button"
+            (click)="toggleLanguageMenu()"
+            [attr.aria-label]="'languages.label' | translate"
+            [attr.aria-expanded]="showLanguageMenu()"
+            [attr.aria-controls]="'language-menu'"
+            class="flex items-center gap-2 rounded-lg border border-slate-300 bg-slate-200 p-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-300 focus:ring-2 focus:ring-cyan-500 focus:outline-none md:px-3 md:py-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+            </svg>
+            <span class="hidden md:inline">{{ currentLang().toUpperCase() }}</span>
+          </button>
+
+          @if (showLanguageMenu()) {
+            <div
+              id="language-menu"
+              role="menu"
+              aria-label="Language selection"
+              class="absolute right-0 z-50 mt-2 w-40 overflow-hidden rounded-lg border border-slate-300 bg-slate-50 shadow-lg dark:border-slate-700 dark:bg-slate-800">
+              <button
+                type="button"
+                role="menuitem"
+                [attr.title]="'languages.en' | translate"
+                (click)="selectLanguage('en')"
+                [attr.aria-current]="currentLang() === 'en' ? 'true' : null"
+                [class.bg-cyan-500]="currentLang() === 'en'"
+                class="w-full px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
+                {{ 'languages.en' | translate }}
+              </button>
+              <button
+                type="button"
+                role="menuitem"
+                [attr.title]="'languages.nl' | translate"
+                (click)="selectLanguage('nl')"
+                [attr.aria-current]="currentLang() === 'nl' ? 'true' : null"
+                [class.bg-cyan-500]="currentLang() === 'nl'"
+                class="w-full px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
+                {{ 'languages.nl' | translate }}
+              </button>
+              <button
+                type="button"
+                role="menuitem"
+                [attr.title]="'languages.fr' | translate"
+                (click)="selectLanguage('fr')"
+                [attr.aria-current]="currentLang() === 'fr' ? 'true' : null"
+                [class.bg-cyan-500]="currentLang() === 'fr'"
+                class="w-full px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
+                {{ 'languages.fr' | translate }}
+              </button>
+              <button
+                type="button"
+                role="menuitem"
+                [attr.title]="'languages.srb' | translate"
+                (click)="selectLanguage('srb')"
+                [attr.aria-current]="currentLang() === 'srb' ? 'true' : null"
+                [class.bg-cyan-500]="currentLang() === 'srb'"
+                class="w-full px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
+                {{ 'languages.srb' | translate }}
+              </button>
+            </div>
           }
-        </button>
-      }
+        </div>
 
-      <!-- Language Dropdown -->
-      <div class="language-dropdown relative">
-        <button
-          type="button"
-          (click)="toggleLanguageMenu()"
-          [attr.aria-label]="'languages.label' | translate"
-          [attr.aria-expanded]="showLanguageMenu()"
-          [attr.aria-controls]="'language-menu'"
-          class="flex items-center gap-2 rounded-lg border border-slate-300 bg-slate-200 p-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-300 focus:ring-2 focus:ring-cyan-500 focus:outline-none md:px-3 md:py-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-          </svg>
-          <span class="hidden md:inline">{{ currentLang().toUpperCase() }}</span>
-        </button>
+        <!-- Theme Dropdown -->
+        <div class="theme-dropdown relative">
+          <button
+            type="button"
+            (click)="toggleThemeMenu()"
+            [attr.aria-label]="'theme.toggle' | translate"
+            title="{{ 'theme.toggle' | translate }}"
+            [attr.aria-expanded]="showThemeMenu()"
+            [attr.aria-controls]="'theme-menu'"
+            class="flex items-center gap-2 rounded-lg border border-slate-300 bg-slate-200 p-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-300 focus:ring-2 focus:ring-cyan-500 focus:outline-none md:px-3 md:py-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
+            <fa-icon [icon]="themeIcon()" aria-hidden="true" />
+            <span class="hidden md:inline">{{ themeLabel() | translate }}</span>
+          </button>
 
-        @if (showLanguageMenu()) {
-          <div
-            id="language-menu"
-            role="menu"
-            aria-label="Language selection"
-            class="absolute right-0 z-50 mt-2 w-40 overflow-hidden rounded-lg border border-slate-300 bg-slate-50 shadow-lg dark:border-slate-700 dark:bg-slate-800">
-            <button
-              type="button"
-              role="menuitem"
-              [attr.title]="'languages.en' | translate"
-              (click)="selectLanguage('en')"
-              [attr.aria-current]="currentLang() === 'en' ? 'true' : null"
-              [class.bg-cyan-500]="currentLang() === 'en'"
-              class="w-full px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
-              {{ 'languages.en' | translate }}
-            </button>
-            <button
-              type="button"
-              role="menuitem"
-              [attr.title]="'languages.nl' | translate"
-              (click)="selectLanguage('nl')"
-              [attr.aria-current]="currentLang() === 'nl' ? 'true' : null"
-              [class.bg-cyan-500]="currentLang() === 'nl'"
-              class="w-full px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
-              {{ 'languages.nl' | translate }}
-            </button>
-            <button
-              type="button"
-              role="menuitem"
-              [attr.title]="'languages.fr' | translate"
-              (click)="selectLanguage('fr')"
-              [attr.aria-current]="currentLang() === 'fr' ? 'true' : null"
-              [class.bg-cyan-500]="currentLang() === 'fr'"
-              class="w-full px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
-              {{ 'languages.fr' | translate }}
-            </button>
-            <button
-              type="button"
-              role="menuitem"
-              [attr.title]="'languages.srb' | translate"
-              (click)="selectLanguage('srb')"
-              [attr.aria-current]="currentLang() === 'srb' ? 'true' : null"
-              [class.bg-cyan-500]="currentLang() === 'srb'"
-              class="w-full px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
-              {{ 'languages.srb' | translate }}
-            </button>
-          </div>
-        }
+          @if (showThemeMenu()) {
+            <div
+              id="theme-menu"
+              role="menu"
+              aria-label="Theme selection"
+              class="absolute right-0 z-50 mt-2 w-32 overflow-hidden rounded-lg border border-slate-300 bg-slate-50 shadow-lg dark:border-slate-700 dark:bg-slate-800">
+              <button
+                type="button"
+                role="menuitem"
+                title="{{ 'theme.light' | translate }}"
+                (click)="selectTheme('light')"
+                [attr.aria-current]="currentTheme() === 'light' ? 'true' : null"
+                [class.bg-cyan-500]="currentTheme() === 'light'"
+                class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
+                <fa-icon [icon]="faSun" class="w-4" aria-hidden="true" />
+                <span>{{ 'theme.light' | translate }}</span>
+              </button>
+              <button
+                type="button"
+                role="menuitem"
+                title="{{ 'theme.dark' | translate }}"
+                (click)="selectTheme('dark')"
+                [attr.aria-current]="currentTheme() === 'dark' ? 'true' : null"
+                [class.bg-cyan-500]="currentTheme() === 'dark'"
+                class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
+                <fa-icon [icon]="faMoon" class="w-4" aria-hidden="true" />
+                <span>{{ 'theme.dark' | translate }}</span>
+              </button>
+              <button
+                type="button"
+                role="menuitem"
+                title="{{ 'theme.system' | translate }}"
+                (click)="selectTheme('system')"
+                [attr.aria-current]="currentTheme() === 'system' ? 'true' : null"
+                [class.bg-cyan-500]="currentTheme() === 'system'"
+                class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
+                <fa-icon [icon]="faDesktop" class="w-4" aria-hidden="true" />
+                <span>{{ 'theme.system' | translate }}</span>
+              </button>
+            </div>
+          }
+        </div>
       </div>
-
-      <!-- Theme Dropdown -->
-      <div class="theme-dropdown relative">
-        <button
-          type="button"
-          (click)="toggleThemeMenu()"
-          [attr.aria-label]="'theme.toggle' | translate"
-          title="{{ 'theme.toggle' | translate }}"
-          [attr.aria-expanded]="showThemeMenu()"
-          [attr.aria-controls]="'theme-menu'"
-          class="flex items-center gap-2 rounded-lg border border-slate-300 bg-slate-200 p-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-300 focus:ring-2 focus:ring-cyan-500 focus:outline-none md:px-3 md:py-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
-          <fa-icon [icon]="themeIcon()" aria-hidden="true" />
-          <span class="hidden md:inline">{{ themeLabel() | translate }}</span>
-        </button>
-
-        @if (showThemeMenu()) {
-          <div
-            id="theme-menu"
-            role="menu"
-            aria-label="Theme selection"
-            class="absolute right-0 z-50 mt-2 w-32 overflow-hidden rounded-lg border border-slate-300 bg-slate-50 shadow-lg dark:border-slate-700 dark:bg-slate-800">
-            <button
-              type="button"
-              role="menuitem"
-              title="{{ 'theme.light' | translate }}"
-              (click)="selectTheme('light')"
-              [attr.aria-current]="currentTheme() === 'light' ? 'true' : null"
-              [class.bg-cyan-500]="currentTheme() === 'light'"
-              class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
-              <fa-icon [icon]="faSun" class="w-4" aria-hidden="true" />
-              <span>{{ 'theme.light' | translate }}</span>
-            </button>
-            <button
-              type="button"
-              role="menuitem"
-              title="{{ 'theme.dark' | translate }}"
-              (click)="selectTheme('dark')"
-              [attr.aria-current]="currentTheme() === 'dark' ? 'true' : null"
-              [class.bg-cyan-500]="currentTheme() === 'dark'"
-              class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
-              <fa-icon [icon]="faMoon" class="w-4" aria-hidden="true" />
-              <span>{{ 'theme.dark' | translate }}</span>
-            </button>
-            <button
-              type="button"
-              role="menuitem"
-              title="{{ 'theme.system' | translate }}"
-              (click)="selectTheme('system')"
-              [attr.aria-current]="currentTheme() === 'system' ? 'true' : null"
-              [class.bg-cyan-500]="currentTheme() === 'system'"
-              class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-900 transition-colors hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:text-white dark:hover:bg-slate-700 dark:focus:bg-slate-700">
-              <fa-icon [icon]="faDesktop" class="w-4" aria-hidden="true" />
-              <span>{{ 'theme.system' | translate }}</span>
-            </button>
-          </div>
-        }
-      </div>
-    </div>
-  </nav>
-</header>
+    </nav>
+  </header>
+</div>
 
 <!-- Main Content -->
-<main
-  id="main-content"
-  class="min-h-screen"
-  role="main"
-  tabindex="-1"
-  [style.padding-top]="
-    !isOnline() ? 'calc(env(safe-area-inset-top) + 2.5rem + 4rem)' : 'calc(env(safe-area-inset-top) + 4rem)'
-  ">
+<main id="main-content" class="min-h-screen" role="main" tabindex="-1" [style.padding-top.px]="topBar.offsetHeight">
   <router-outlet />
 </main>
 
