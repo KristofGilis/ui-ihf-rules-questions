@@ -29,7 +29,7 @@
           @if (toast.action) {
             <button
               type="button"
-              class="shrink-0 rounded-md bg-black/15 px-2 py-0.5 text-xs font-semibold whitespace-nowrap transition-colors hover:bg-black/25 focus-visible:ring-2 focus-visible:ring-current focus-visible:outline-none"
+              class="shrink-0 rounded-md bg-black/10 px-2 py-0.5 text-xs font-semibold whitespace-nowrap transition-colors hover:bg-black/20 focus-visible:ring-2 focus-visible:ring-current focus-visible:outline-none"
               (click)="executeAction(toast.id, toast.action.callback)">
               {{ toast.action.label }}
             </button>
@@ -39,7 +39,7 @@
         @if (toast.dismissible) {
           <button
             type="button"
-            class="absolute top-1/2 right-3 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md transition-colors hover:bg-black/15 focus-visible:ring-2 focus-visible:ring-current focus-visible:outline-none"
+            class="absolute top-1/2 right-3 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md transition-colors hover:bg-black/10 focus-visible:ring-2 focus-visible:ring-current focus-visible:outline-none"
             (click)="dismiss(toast.id)"
             aria-label="Dismiss notification">
             <fa-icon [icon]="faXmark" />
