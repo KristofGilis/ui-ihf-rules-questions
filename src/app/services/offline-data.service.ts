@@ -23,12 +23,14 @@ import {
   PrefetchVersionsGQL,
 } from '../../../graphql/generated';
 import { APOLLO_CACHE, APOLLO_PERSISTOR } from '../graphql.provider';
+import { SCHEMA_VERSION } from '../../version';
 import { ConnectivityService } from './connectivity.service';
 
 export type OfflineSyncStatus = 'idle' | 'restoring' | 'checking' | 'prefetching' | 'up-to-date' | 'offline' | 'error';
 
-const VERSIONS_STORAGE_KEY = 'ihf:offline:versions:v2';
+const VERSIONS_STORAGE_KEY = 'ihf:offline:versions';
 const LAST_SYNC_STORAGE_KEY = 'ihf:offline:lastSync';
+const SCHEMA_VERSION_STORAGE_KEY = 'ihf:offline:schemaVersion';
 
 /** Entity buckets driven by `prefetchVersions`. */
 type Entity = 'rules' | 'questions' | 'answers' | 'languages' | 'scoreConfiguration';
@@ -78,6 +80,7 @@ export class OfflineDataService {
       tap(() => {
         localStorage.removeItem(VERSIONS_STORAGE_KEY);
         localStorage.removeItem(LAST_SYNC_STORAGE_KEY);
+        localStorage.removeItem(SCHEMA_VERSION_STORAGE_KEY);
         this.lastSyncedAt.set(null);
         this.status.set('idle');
       }),
@@ -112,10 +115,14 @@ export class OfflineDataService {
         // entity). Treat the whole blob as a single signature: if it changed,
         // every entity is considered stale.
         const manifestChanged = !deepEqual(localVersions, serverVersions);
+        // When the app version changes the GraphQL schema may have changed too;
+        // force a full resync so stale cached data never causes type mismatches.
+        const schemaChanged = this.readSchemaVersion() !== SCHEMA_VERSION;
 
-        const changed: Entity[] = isFirstRun || manifestChanged ? [...ALL_ENTITIES] : [];
+        const changed: Entity[] = isFirstRun || manifestChanged || schemaChanged ? [...ALL_ENTITIES] : [];
 
         if (changed.length === 0) {
+          this.writeSchemaVersion();
           this.status.set('up-to-date');
           this.touchLastSync();
           return of(undefined);
@@ -142,6 +149,7 @@ export class OfflineDataService {
           reduce<void, void>(() => undefined, undefined),
           switchMap(() => {
             this.writeVersions(serverVersions);
+            this.writeSchemaVersion();
             this.touchLastSync();
             return from(this._persistor.persist()).pipe(
               catchError((err) => {
@@ -245,6 +253,22 @@ export class OfflineDataService {
       localStorage.setItem(VERSIONS_STORAGE_KEY, JSON.stringify(manifest));
     } catch (err) {
       console.error('[offline-data] failed to persist versions manifest:', err);
+    }
+  }
+
+  private readSchemaVersion(): string | null {
+    try {
+      return localStorage.getItem(SCHEMA_VERSION_STORAGE_KEY);
+    } catch {
+      return null;
+    }
+  }
+
+  private writeSchemaVersion(): void {
+    try {
+      localStorage.setItem(SCHEMA_VERSION_STORAGE_KEY, SCHEMA_VERSION);
+    } catch {
+      /* ignore */
     }
   }
 
