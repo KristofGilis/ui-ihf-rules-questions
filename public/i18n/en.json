@@ -56,6 +56,7 @@
     "message": "You are currently offline. Some features may not be available.",
     "refresh": "Refresh offline data",
     "syncing": "Syncing",
+    "dismiss": "Dismiss offline banner",
     "up_to_date": "Offline data is up to date"
   },
   "pwa": {

@@ -14,6 +14,7 @@ import {
   faSun,
   faTrophy,
   faWifi,
+  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { getLanguage } from './language';
@@ -53,11 +54,13 @@ export class AppComponent {
   protected readonly faDesktop = faDesktop;
   protected readonly faWifi = faWifi;
   protected readonly faRotate = faRotate;
+  protected readonly faXmark = faXmark;
 
   // State signals
   protected readonly currentLang = signal(getLanguage());
   protected readonly currentTheme = signal(this._themeService.currentTheme());
   protected readonly showLanguageMenu = signal(false);
+  protected readonly offlineBannerDismissed = signal(false);
   protected readonly showThemeMenu = signal(false);
 
   // Online/offline state - shared via ConnectivityService so other consumers

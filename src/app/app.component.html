@@ -189,13 +189,20 @@
   </header>
 
   <!-- Offline Banner -->
-  @if (!isOnline()) {
+  @if (!isOnline() && !offlineBannerDismissed()) {
     <div
       class="flex items-center justify-center gap-2 bg-yellow-500 px-4 py-2 text-center text-sm font-medium text-yellow-950"
       role="alert"
       aria-live="assertive">
       <fa-icon [icon]="faWifi" class="text-yellow-950" aria-hidden="true" />
       <span>{{ 'offline.message' | translate }}</span>
+      <button
+        type="button"
+        (click)="offlineBannerDismissed.set(true)"
+        class="ml-2 rounded p-1 hover:bg-yellow-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-800"
+        [attr.aria-label]="'offline.dismiss' | translate">
+        <fa-icon [icon]="faXmark" aria-hidden="true" />
+      </button>
     </div>
   }
 </div>
