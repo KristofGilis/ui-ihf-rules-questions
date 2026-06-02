@@ -96,15 +96,15 @@ export class ToastComponent {
   getBannerClasses(type: ToastType): string {
     switch (type) {
       case 'error':
-        return 'bg-rose-100 text-rose-900 border-rose-200 dark:bg-rose-500 dark:text-rose-950 dark:border-rose-600';
+        return 'bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-500 dark:text-white dark:border-rose-600';
       case 'warning':
-        return 'bg-amber-100 text-amber-900 border-amber-200 dark:bg-amber-500 dark:text-amber-950 dark:border-amber-600';
+        return 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-500 dark:text-white dark:border-amber-600';
       case 'success':
-        return 'bg-emerald-100 text-emerald-900 border-emerald-200 dark:bg-emerald-500 dark:text-emerald-950 dark:border-emerald-600';
+        return 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-500 dark:text-white dark:border-emerald-600';
       case 'info':
-        return 'bg-cyan-100 text-cyan-900 border-cyan-200 dark:bg-cyan-500 dark:text-cyan-950 dark:border-cyan-600';
+        return 'bg-cyan-100 text-cyan-700 border-cyan-200 dark:bg-cyan-500 dark:text-white dark:border-cyan-600';
       case 'loading':
-        return 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-500 dark:text-white dark:border-slate-600';
+        return 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-500 dark:text-white dark:border-slate-600';
     }
   }
 
