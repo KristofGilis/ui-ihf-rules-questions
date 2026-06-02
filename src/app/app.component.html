@@ -6,28 +6,12 @@
   {{ 'accessibility.skip_to_main' | translate }}
 </a>
 
-<!-- Fixed top bar: offline banner + header stacked together -->
-<div
-  #topBar
-  class="fixed top-0 right-0 left-0 z-50 dark:bg-slate-900"
-  [class.bg-yellow-500]="!isOnline()"
-  [class.bg-slate-100]="isOnline()">
-  <!-- Safe area notch spacer -->
-  <div class="h-[env(safe-area-inset-top)]"></div>
-
-  <!-- Offline Banner -->
-  @if (!isOnline()) {
-    <div
-      class="flex items-center justify-center gap-2 bg-yellow-500 px-4 py-2 text-center text-sm font-medium text-yellow-950"
-      role="alert"
-      aria-live="assertive">
-      <fa-icon [icon]="faWifi" class="text-yellow-950" aria-hidden="true" />
-      <span>{{ 'offline.message' | translate }}</span>
-    </div>
-  }
-
+<!-- Fixed top bar -->
+<div #topBar class="fixed top-0 right-0 left-0 z-50">
   <!-- Header -->
-  <header class="border-b border-slate-300 bg-slate-100 dark:border-slate-800 dark:bg-slate-900" role="banner">
+  <header
+    class="border-b border-slate-300 bg-slate-100 pt-[env(safe-area-inset-top)] dark:border-slate-800 dark:bg-slate-900"
+    role="banner">
     <nav class="flex h-16 items-center justify-between px-4" role="navigation" aria-label="Main navigation">
       <!-- Logo -->
       <div class="flex items-center gap-3">
@@ -203,6 +187,17 @@
       </div>
     </nav>
   </header>
+
+  <!-- Offline Banner -->
+  @if (!isOnline()) {
+    <div
+      class="flex items-center justify-center gap-2 bg-yellow-500 px-4 py-2 text-center text-sm font-medium text-yellow-950"
+      role="alert"
+      aria-live="assertive">
+      <fa-icon [icon]="faWifi" class="text-yellow-950" aria-hidden="true" />
+      <span>{{ 'offline.message' | translate }}</span>
+    </div>
+  }
 </div>
 
 <!-- Main Content -->
