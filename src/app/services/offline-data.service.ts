@@ -22,8 +22,8 @@ import {
   PrefetchScoreConfigurationGQL,
   PrefetchVersionsGQL,
 } from '../../../graphql/generated';
-import { APOLLO_CACHE, APOLLO_PERSISTOR } from '../graphql.provider';
 import { SCHEMA_VERSION } from '../../version';
+import { APOLLO_CACHE, APOLLO_PERSISTOR } from '../graphql.provider';
 import { ConnectivityService } from './connectivity.service';
 
 export type OfflineSyncStatus = 'idle' | 'restoring' | 'checking' | 'prefetching' | 'up-to-date' | 'offline' | 'error';
@@ -31,6 +31,18 @@ export type OfflineSyncStatus = 'idle' | 'restoring' | 'checking' | 'prefetching
 const VERSIONS_STORAGE_KEY = 'ihf:offline:versions';
 const LAST_SYNC_STORAGE_KEY = 'ihf:offline:lastSync';
 const SCHEMA_VERSION_STORAGE_KEY = 'ihf:offline:schemaVersion';
+const CACHE_FORMAT_VERSION_STORAGE_KEY = 'ihf:offline:cacheFormatVersion';
+
+/**
+ * Bump this whenever the shape of the persisted Apollo cache changes in a way
+ * that requires existing users to wipe their IndexedDB cache on next load
+ * (e.g. typePolicy changes, new merge strategies, fixes for bogus cached
+ * connection slots written by a previous buggy build).
+ *
+ * On boot, if the stored value does not match this constant, the entire
+ * persisted cache + in-memory cache + manifest are purged before resync.
+ */
+const CACHE_FORMAT_VERSION = '2';
 
 /** Entity buckets driven by `prefetchVersions`. */
 type Entity = 'rules' | 'questions' | 'answers' | 'languages' | 'scoreConfiguration';
@@ -69,9 +81,40 @@ export class OfflineDataService {
     return this.runSync('initial');
   }
 
-  /** Explicit user-triggered refresh (button in AppComponent). No-op when offline. */
+  /**
+   * Explicit user-triggered refresh (button in AppComponent).
+   *
+   * Always wipes the persisted IndexedDB cache and in-memory Apollo cache
+   * first, then runs a full resync from the server. This guarantees no stale
+   * normalized records survive (e.g. bogus connection slots from a previous
+   * buggy build). No-op when offline.
+   */
   refresh(): Observable<void> {
-    return this.runSync('refresh');
+    return defer(() => {
+      if (!this._connectivity.online) {
+        this.status.set('offline');
+        return of(undefined);
+      }
+      this.status.set('restoring');
+      return from(this._persistor.purge()).pipe(
+        catchError((err) => {
+          console.error('[offline-data] refresh purge failed:', err);
+          return of(undefined);
+        }),
+        switchMap(() => from(this._cache.reset())),
+        catchError((err) => {
+          console.error('[offline-data] refresh cache reset failed:', err);
+          return of(undefined);
+        }),
+        tap(() => {
+          localStorage.removeItem(VERSIONS_STORAGE_KEY);
+          localStorage.removeItem(LAST_SYNC_STORAGE_KEY);
+          localStorage.removeItem(SCHEMA_VERSION_STORAGE_KEY);
+          this.lastSyncedAt.set(null);
+        }),
+        switchMap(() => this.runSync('refresh'))
+      );
+    });
   }
 
   /** Wipe the persisted cache + manifest (e.g. on logout / settings reset). */
@@ -95,7 +138,12 @@ export class OfflineDataService {
         this.status.set('offline');
         return of(undefined);
       }
-      return this.syncFromServer().pipe(
+      // One-shot auto-reset for existing users: when the cache format version
+      // bumps, wipe persisted IndexedDB + in-memory cache + manifest before
+      // resyncing so stale shapes from a previous build cannot leak through.
+      const formatReset$ = this.readCacheFormatVersion() !== CACHE_FORMAT_VERSION ? this.purgeAll() : of(undefined);
+      return formatReset$.pipe(
+        switchMap(() => this.syncFromServer()),
         catchError((err) => {
           console.error(`[offline-data] ${kind} sync failed:`, err);
           this.status.set('error');
@@ -103,6 +151,27 @@ export class OfflineDataService {
         })
       );
     });
+  }
+
+  private purgeAll(): Observable<void> {
+    return from(this._persistor.purge()).pipe(
+      catchError((err) => {
+        console.error('[offline-data] auto-reset purge failed:', err);
+        return of(undefined);
+      }),
+      switchMap(() => from(this._cache.reset())),
+      catchError((err) => {
+        console.error('[offline-data] auto-reset cache reset failed:', err);
+        return of(undefined);
+      }),
+      tap(() => {
+        localStorage.removeItem(VERSIONS_STORAGE_KEY);
+        localStorage.removeItem(LAST_SYNC_STORAGE_KEY);
+        localStorage.removeItem(SCHEMA_VERSION_STORAGE_KEY);
+        this.lastSyncedAt.set(null);
+      }),
+      map(() => undefined)
+    );
   }
 
   private syncFromServer(): Observable<void> {
@@ -123,6 +192,7 @@ export class OfflineDataService {
 
         if (changed.length === 0) {
           this.writeSchemaVersion();
+          this.writeCacheFormatVersion();
           this.status.set('up-to-date');
           this.touchLastSync();
           return of(undefined);
@@ -150,6 +220,7 @@ export class OfflineDataService {
           switchMap(() => {
             this.writeVersions(serverVersions);
             this.writeSchemaVersion();
+            this.writeCacheFormatVersion();
             this.touchLastSync();
             return from(this._persistor.persist()).pipe(
               catchError((err) => {
@@ -267,6 +338,22 @@ export class OfflineDataService {
   private writeSchemaVersion(): void {
     try {
       localStorage.setItem(SCHEMA_VERSION_STORAGE_KEY, SCHEMA_VERSION);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  private readCacheFormatVersion(): string | null {
+    try {
+      return localStorage.getItem(CACHE_FORMAT_VERSION_STORAGE_KEY);
+    } catch {
+      return null;
+    }
+  }
+
+  private writeCacheFormatVersion(): void {
+    try {
+      localStorage.setItem(CACHE_FORMAT_VERSION_STORAGE_KEY, CACHE_FORMAT_VERSION);
     } catch {
       /* ignore */
     }

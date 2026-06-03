@@ -48,9 +48,17 @@ const cache = new InMemoryCache({
               return ruleQuestionsPagination.read?.(existing, options) ?? existing;
             }
 
-            // Offline fallback: synthesize the connection from the flat
-            // root `questions` list that prefetchQuestions populated.
-            const { args, readField } = options;
+            // Offline-first fallback: synthesize the *complete* connection for
+            // this rule from the flat root `questions` list that
+            // prefetchQuestions populated. We intentionally ignore the
+            // `first` / `after` args and return all edges with
+            // `hasNextPage: false` so the UI never triggers `fetchMore`
+            // against synthesized data. The cursors in `Query.questions` are
+            // global and not valid as `after` for `Rule.questions`, so a
+            // server-side `fetchMore` here would either duplicate or skip
+            // pages. Rendering all questions at once is acceptable because
+            // the Question entities are already normalized in the cache.
+            const { readField } = options;
             const ruleId = readField<string>('id');
             if (!ruleId) return undefined;
 
@@ -68,23 +76,15 @@ const cache = new InMemoryCache({
             const filtered = allEdges.filter((edge) => readField<string>('ruleId', edge.node) === ruleId);
             if (!filtered.length) return undefined;
 
-            const first = (args?.['first'] as number | undefined) ?? filtered.length;
-            const after = args?.['after'] as string | null | undefined;
-            let start = 0;
-            if (after) {
-              const idx = filtered.findIndex((e) => e.cursor === after);
-              if (idx >= 0) start = idx + 1;
-            }
-            const slice = filtered.slice(start, start + first);
             return {
               __typename: 'QuestionsConnection',
-              edges: slice,
+              edges: filtered,
               pageInfo: {
                 __typename: 'PageInfo',
-                startCursor: slice[0]?.cursor ?? null,
-                endCursor: slice[slice.length - 1]?.cursor ?? null,
-                hasNextPage: start + first < filtered.length,
-                hasPreviousPage: start > 0,
+                startCursor: filtered[0]?.cursor ?? null,
+                endCursor: filtered[filtered.length - 1]?.cursor ?? null,
+                hasNextPage: false,
+                hasPreviousPage: false,
               },
             };
           },
