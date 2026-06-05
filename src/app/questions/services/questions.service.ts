@@ -64,7 +64,7 @@ export class QuestionsService {
   }
 
   fetchMore(): void {
-    if (this._hasNextPage) {
+    if (this._hasNextPage && this._connectivity.online) {
       this._questionsQuery.fetchMore({
         variables: {
           after: this._cursor,
