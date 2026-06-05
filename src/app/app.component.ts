@@ -7,6 +7,7 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faBook,
   faDesktop,
+  faGear,
   faHome,
   faMoon,
   faQuestionCircle,
@@ -22,6 +23,7 @@ import { LogoComponent } from './logo/logo.component';
 import { ConnectivityService } from './services/connectivity.service';
 import { OfflineDataService } from './services/offline-data.service';
 import { PwaUpdateService } from './services/pwa-update.service';
+import { SidebarService } from './services/sidebar.service';
 import { ThemeService } from './services/theme.service';
 import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 
@@ -65,6 +67,7 @@ export class AppComponent {
   protected readonly faWifi = faWifi;
   protected readonly faRotate = faRotate;
   protected readonly faXmark = faXmark;
+  protected readonly faGear = faGear;
 
   // State signals
   protected readonly currentLang = signal(getLanguage());
@@ -72,12 +75,13 @@ export class AppComponent {
   protected readonly showLanguageMenu = signal(false);
   protected readonly offlineBannerDismissed = signal(false);
   protected readonly showThemeMenu = signal(false);
+  protected readonly sidebar = inject(SidebarService);
 
   // Online/offline state - shared via ConnectivityService so other consumers
   // (e.g. quiz offline fallbacks) observe the same source.
   protected readonly isOnline = this._connectivity.isOnline;
+  protected readonly isOfflineReady = computed(() => this.offlineData.lastSyncedAt() !== null);
 
-  // Computed signals for theme icon and label
   protected readonly themeIcon = computed(() => {
     const theme = this.currentTheme();
     if (theme === 'light') return this.faSun;

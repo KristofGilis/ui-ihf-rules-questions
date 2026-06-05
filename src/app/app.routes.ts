@@ -5,6 +5,7 @@ _('navigation.home');
 _('navigation.rules');
 _('navigation.questions');
 _('navigation.quiz');
+_('navigation.settings');
 
 export const routes: Routes = [
   {
@@ -27,5 +28,9 @@ export const routes: Routes = [
   {
     path: 'quiz',
     loadChildren: () => import('./quiz/quiz.routes'),
+  },
+  {
+    path: 'settings',
+    loadComponent: () => import('./settings/settings.component').then((m) => m.SettingsComponent),
   },
 ];

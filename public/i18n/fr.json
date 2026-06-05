@@ -50,13 +50,23 @@
     "home": "Accueil",
     "questions": "Questions",
     "quiz": "Quiz",
-    "rules": "Règles"
+    "rules": "Règles",
+    "settings": "Paramètres",
+    "expand": "Agrandir la barre latérale",
+    "collapse": "Réduire la barre latérale",
+    "move_left": "Déplacer la barre à gauche",
+    "move_right": "Déplacer la barre à droite"
   },
   "offline": {
+    "available": "Disponible hors ligne",
     "message": "Vous êtes actuellement hors ligne. Certaines fonctionnalités peuvent ne pas être disponibles.",
     "refresh": "Actualiser les données hors ligne",
     "syncing": "Synchronisation",
     "dismiss": "Fermer la bannière hors ligne",
+    "last_synced": "Dernière synchronisation",
+    "never_synced": "Les données n'ont pas encore été synchronisées",
+    "not_available": "Non disponible hors ligne",
+    "sync_now": "Synchroniser maintenant",
     "up_to_date": "Les données hors ligne sont à jour",
     "sync_error": "Échec de l'actualisation des données hors ligne"
   },
@@ -125,8 +135,21 @@
     "title": "Résultat",
     "wrong": "Faux"
   },
+  "settings": {
+    "description": "Gérez vos préférences",
+    "language_section": "Langue",
+    "offline_section": "Hors ligne",
+    "sidebar_expanded": "Barre latérale agrandie",
+    "sidebar_expanded_off": "La barre affiche uniquement les icônes",
+    "sidebar_expanded_on": "La barre affiche les icônes et les étiquettes",
+    "sidebar_position": "Position de la barre latérale",
+    "sidebar_position_left": "Gauche",
+    "sidebar_position_right": "Droite",
+    "sidebar_section": "Barre latérale",
+    "theme_section": "Thème",
+    "title": "Paramètres"
+  },
   "theme": {
-    "dark": "Sombre",
     "light": "Clair",
     "system": "Système",
     "toggle": "Changer le thème"

@@ -50,12 +50,22 @@
     "home": "Почетна",
     "questions": "Питања",
     "quiz": "Квиз",
-    "rules": "Правила"
+    "rules": "Правила",
+    "settings": "Подешавања",
+    "expand": "Прошири бочну траку",
+    "collapse": "Сакриј бочну траку",
+    "move_left": "Помери траку на лево",
+    "move_right": "Помери траку на десно"
   },
   "offline": {
+    "available": "Доступно офлајн",
     "dismiss": "Затвори офлајн банер",
+    "last_synced": "Последња синхронизација",
     "message": "Тренутно сте офлајн. Неке функције можда неће бити доступне.",
+    "never_synced": "Подаци још нису синхронизовани",
+    "not_available": "Није доступно офлајн",
     "refresh": "Освежи офлајн податке",
+    "sync_now": "Синхронизуј сада",
     "syncing": "Синхронизација",
     "up_to_date": "Офлајн подаци су ажурни"
   },
@@ -123,6 +133,20 @@
     "review_mistakes": "Прегледај Грешке",
     "title": "Резултат",
     "wrong": "Погрешно"
+  },
+  "settings": {
+    "description": "Управљајте својим подешавањима",
+    "language_section": "Језик",
+    "offline_section": "Офлајн",
+    "sidebar_expanded": "Проширена боčна трака",
+    "sidebar_expanded_off": "Бочна трака приказује само иконе",
+    "sidebar_expanded_on": "Бочна трака приказује иконе и натписе",
+    "sidebar_position": "Позиција боčне траке",
+    "sidebar_position_left": "Лево",
+    "sidebar_position_right": "Десно",
+    "sidebar_section": "Боčна трака",
+    "theme_section": "Тема",
+    "title": "Подешавања"
   },
   "theme": {
     "dark": "Тамна",

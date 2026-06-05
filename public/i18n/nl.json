@@ -50,12 +50,22 @@
     "home": "Home",
     "questions": "Vragen",
     "quiz": "Quiz",
-    "rules": "Spelregels"
+    "rules": "Spelregels",
+    "settings": "Instellingen",
+    "expand": "Zijbalk uitklappen",
+    "collapse": "Zijbalk inklappen",
+    "move_left": "Zijbalk naar links",
+    "move_right": "Zijbalk naar rechts"
   },
   "offline": {
+    "available": "Beschikbaar offline",
     "dismiss": "Offline banner sluiten",
+    "last_synced": "Laatste synchronisatie",
     "message": "Je bent momenteel offline. Sommige functies zijn mogelijk niet beschikbaar.",
+    "never_synced": "Gegevens zijn nog niet gesynchroniseerd",
+    "not_available": "Niet beschikbaar offline",
     "refresh": "Offline gegevens vernieuwen",
+    "sync_now": "Nu synchroniseren",
     "syncing": "Synchroniseren",
     "up_to_date": "Offline gegevens zijn up-to-date"
   },
@@ -123,6 +133,20 @@
     "review_mistakes": "Fouten Bekijken",
     "title": "Resultaat",
     "wrong": "Fout"
+  },
+  "settings": {
+    "description": "Beheer je voorkeuren",
+    "language_section": "Taal",
+    "offline_section": "Offline",
+    "sidebar_expanded": "Uitgeklapte zijbalk",
+    "sidebar_expanded_off": "Zijbalk toont alleen pictogrammen",
+    "sidebar_expanded_on": "Zijbalk toont pictogrammen en labels",
+    "sidebar_position": "Positie zijbalk",
+    "sidebar_position_left": "Links",
+    "sidebar_position_right": "Rechts",
+    "sidebar_section": "Zijbalk",
+    "theme_section": "Thema",
+    "title": "Instellingen"
   },
   "theme": {
     "dark": "Donker",

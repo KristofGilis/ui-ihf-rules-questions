@@ -3,11 +3,13 @@ header {
   padding-top: max(0px, env(safe-area-inset-top));
 }
 
-footer a.active-nav {
+footer a.active-nav,
+aside a.active-nav {
   color: #0e7490; /* cyan-700 for better contrast (WCAG AA compliant) */
 }
 
-footer a.active-nav:is(.dark *) {
+footer a.active-nav:is(.dark *),
+aside a.active-nav:is(.dark *) {
   color: #22d3ee; /* cyan-400 for dark mode */
 }
 
