@@ -61,7 +61,8 @@
   },
   "pwa": {
     "update_available": "A new version is available.",
-    "update_now": "Update"
+    "update_now": "Update",
+    "updating": "Updating..."
   },
   "questions": {
     "calculate_score": "Calculate Score",

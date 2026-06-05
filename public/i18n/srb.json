@@ -61,7 +61,8 @@
   },
   "pwa": {
     "update_available": "Доступна је нова верзија.",
-    "update_now": "Ажурирај"
+    "update_now": "Ажурирај",
+    "updating": "Ажурирање..."
   },
   "questions": {
     "calculate_score": "Прикажи бодове",

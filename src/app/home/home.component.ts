@@ -14,9 +14,9 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { catchError, defer, finalize, map, of, shareReplay, startWith, switchMap, tap } from 'rxjs';
 import { PrefetchVersionsGQL } from '../../../graphql/generated';
 import { environment } from '../../environments/environment';
+import { APP_VERSION } from '../../version';
 import { LogoComponent } from '../logo/logo.component';
 import { PageContainerComponent, PageHeroComponent, QuizConfigCardComponent } from '../shared/components';
-import { APP_VERSION } from '../../version';
 
 @Component({
   selector: 'app-home',
@@ -71,7 +71,7 @@ export class HomeComponent {
           // both online and offline. The legacy `getVersion` scalar is not
           // parameterised by language and always returns "en", so we ignore
           // it here.
-          return this._prefetchVersionsGQL.fetch({ fetchPolicy: 'cache-first' }).pipe(
+          return this._prefetchVersionsGQL.watch({ fetchPolicy: 'cache-first' }).valueChanges.pipe(
             map((r) => {
               const versions = r.data?.versions as Record<string, string> | null | undefined;
               return versions?.[lang] ?? versions?.['en'] ?? undefined;

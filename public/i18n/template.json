@@ -82,6 +82,7 @@
   "home.all_rights_reserved": "home.all_rights_reserved",
   "pwa.update_available": "pwa.update_available",
   "pwa.update_now": "pwa.update_now",
+  "pwa.updating": "pwa.updating",
   "errors.network_connection": "errors.network_connection",
   "errors.server_error": "errors.server_error",
   "errors.not_found": "errors.not_found",

@@ -3,6 +3,7 @@ import { ObservableQuery } from '@apollo/client/core';
 import { QueryRef } from 'apollo-angular';
 import { Observable, tap } from 'rxjs';
 import { GetRuleGQL, GetRuleQuery, GetRuleQueryVariables } from '../../../../graphql/generated';
+import { ConnectivityService } from '../../services/connectivity.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ export class RuleService {
   private _cursor?: string | null;
   private readonly _pageSize = 10;
   private readonly _getRuleGQL = inject(GetRuleGQL);
+  private readonly _connectivity = inject(ConnectivityService);
   private _hasNextPage = true;
 
   private _ruleQuery?: QueryRef<GetRuleQuery, GetRuleQueryVariables>;
@@ -44,7 +46,7 @@ export class RuleService {
   }
 
   fetchMoreQuestions(): void {
-    if (this._hasNextPage) {
+    if (this._hasNextPage && this._connectivity.online) {
       this._ruleQuery?.fetchMore({
         variables: {
           first: this._pageSize,
