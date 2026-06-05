@@ -78,6 +78,7 @@ jobs:
       - name: 📝 Inject version into Angular
         run: |
           sed -i "s/__APP_VERSION__/${APP_VERSION}/g" src/version.ts
+          sed -i "s/__APP_VERSION__/${APP_VERSION}/g" ngsw-config.json
           SCHEMA_VERSION=$(sha256sum graphql/generated.ts | cut -c1-12)
           sed -i "s/__SCHEMA_VERSION__/${SCHEMA_VERSION}/g" src/version.ts
 
