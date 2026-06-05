@@ -1,10 +1,7 @@
 <app-page-container [gradient]="false" [padding]="'pt-20 pb-24'">
   <div class="space-y-8">
     <!-- Hero -->
-    <app-page-hero
-      [title]="'settings.title' | translate"
-      [description]="'settings.description' | translate"
-      [size]="'small'">
+    <app-page-hero [title]="'settings.title' | translate" [description]="'settings.description' | translate">
     </app-page-hero>
 
     <!-- Language -->
@@ -129,8 +126,8 @@
       </div>
     </section>
 
-    <!-- Sidebar -->
-    <section aria-labelledby="sidebar-section-title">
+    <!-- Sidebar (desktop only) -->
+    <section aria-labelledby="sidebar-section-title" class="hidden md:block">
       <div class="rounded-2xl bg-white shadow-lg ring-1 ring-slate-900/5 dark:bg-slate-900 dark:ring-slate-100/10">
         <div class="flex items-center gap-3 border-b border-slate-200 px-6 py-4 dark:border-slate-800">
           <fa-icon [icon]="faTableColumns" class="text-cyan-500" aria-hidden="true" />

@@ -65,7 +65,7 @@
                   : 'offline.refresh'
               ) | translate
             }}"
-            class="flex items-center gap-2 rounded-lg border border-slate-300 bg-slate-200 p-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-300 focus:ring-2 focus:ring-cyan-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 md:px-3 md:py-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
+            class="relative flex h-10 w-10 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-slate-200 p-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-300 focus:ring-2 focus:ring-cyan-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 md:px-3 md:py-2 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
             <fa-icon [icon]="faRotate" [class.animate-spin]="offlineData.busy()" aria-hidden="true" />
             @if (offlineData.status() === 'prefetching') {
               <span class="hidden md:inline" aria-live="polite">
@@ -74,21 +74,21 @@
                 }})
               </span>
             }
+            <span
+              class="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full md:hidden"
+              [class]="isOfflineReady() ? 'bg-emerald-500' : 'bg-amber-500'"
+              aria-hidden="true">
+            </span>
           </button>
         }
 
         <!-- Settings icon (mobile only) -->
         <a
           routerLink="/settings"
-          class="relative flex items-center justify-center rounded-lg border border-slate-300 bg-slate-200 p-2 text-slate-900 transition-colors hover:bg-slate-300 focus:ring-2 focus:ring-cyan-500 focus:outline-none md:hidden dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700"
+          class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-300 bg-slate-200 p-2 text-slate-900 transition-colors hover:bg-slate-300 focus:ring-2 focus:ring-cyan-500 focus:outline-none md:hidden dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700"
           [attr.aria-label]="'navigation.settings' | translate"
           [title]="'navigation.settings' | translate">
           <fa-icon [icon]="faGear" aria-hidden="true" />
-          <span
-            class="absolute top-0.5 right-0.5 h-2 w-2 rounded-full"
-            [class]="isOfflineReady() ? 'bg-emerald-500' : 'bg-amber-500'"
-            aria-hidden="true">
-          </span>
         </a>
 
         <!-- Language Dropdown (desktop only) -->

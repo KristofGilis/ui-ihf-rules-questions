@@ -1,5 +1,5 @@
 import { DatePipe, DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
@@ -17,8 +17,8 @@ import {
   faWifi,
 } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { getLanguage } from '../language';
 import { ConnectivityService } from '../services/connectivity.service';
+import { CurrentLanguageService } from '../services/current-language.service';
 import { OfflineDataService } from '../services/offline-data.service';
 import { SidebarService } from '../services/sidebar.service';
 import { ThemeService, type Theme } from '../services/theme.service';
@@ -56,7 +56,7 @@ export class SettingsComponent {
   protected readonly faArrowRightArrowLeft = faArrowRightArrowLeft;
 
   // Language
-  protected readonly currentLang = signal(getLanguage());
+  protected readonly currentLang = inject(CurrentLanguageService).current;
   readonly languages = [
     { code: 'en', key: 'languages.en' },
     { code: 'nl', key: 'languages.nl' },
@@ -78,7 +78,6 @@ export class SettingsComponent {
   selectLanguage(lang: string): void {
     this._document.defaultView?.localStorage?.setItem('language', lang);
     this._translateService.use(lang);
-    this.currentLang.set(lang);
     if (this._document.documentElement) {
       this._document.documentElement.lang = lang;
     }
