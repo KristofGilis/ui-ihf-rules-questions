@@ -60,6 +60,11 @@
     "up_to_date": "Les données hors ligne sont à jour",
     "sync_error": "Échec de l'actualisation des données hors ligne"
   },
+  "pwa": {
+    "update_available": "Une nouvelle version est disponible.",
+    "update_now": "Mettre à jour",
+    "updating": "Mise à jour..."
+  },
   "questions": {
     "calculate_score": "Calculer le score",
     "description": "Parcourez et étudiez toutes les questions disponibles à votre rythme",

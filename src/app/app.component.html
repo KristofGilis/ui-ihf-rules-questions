@@ -1,3 +1,13 @@
+<!-- Full-screen overlay for silent patch updates -->
+@if (pwaUpdateService.isReloadingForUpdate()) {
+  <div
+    class="fixed inset-0 z-9999 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm"
+    aria-live="polite"
+    aria-label="Updating application">
+    <app-loading-spinner size="lg" [text]="'pwa.updating' | translate" />
+  </div>
+}
+
 <!-- Skip to main content link for keyboard users -->
 <a
   href="#main-content"

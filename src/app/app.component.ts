@@ -23,10 +23,19 @@ import { ConnectivityService } from './services/connectivity.service';
 import { OfflineDataService } from './services/offline-data.service';
 import { PwaUpdateService } from './services/pwa-update.service';
 import { ThemeService } from './services/theme.service';
+import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TranslatePipe, RouterLink, RouterLinkActive, LogoComponent, FaIconComponent],
+  imports: [
+    RouterOutlet,
+    TranslatePipe,
+    RouterLink,
+    RouterLinkActive,
+    LogoComponent,
+    FaIconComponent,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,6 +46,7 @@ export class AppComponent {
   private readonly _themeService = inject(ThemeService);
   private readonly _titleService = inject(Title);
   private readonly _pwaUpdateService = inject(PwaUpdateService);
+  protected readonly pwaUpdateService = this._pwaUpdateService;
   private readonly _connectivity = inject(ConnectivityService);
   protected readonly offlineData = inject(OfflineDataService);
   private readonly _destroyRef = inject(DestroyRef);

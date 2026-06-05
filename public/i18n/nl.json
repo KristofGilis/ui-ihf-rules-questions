@@ -61,7 +61,8 @@
   },
   "pwa": {
     "update_available": "Een nieuwe versie is beschikbaar.",
-    "update_now": "Bijwerken"
+    "update_now": "Bijwerken",
+    "updating": "Bijwerken..."
   },
   "questions": {
     "calculate_score": "Bereken score",

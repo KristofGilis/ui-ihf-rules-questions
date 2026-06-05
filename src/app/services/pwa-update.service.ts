@@ -1,6 +1,6 @@
-import { DestroyRef, Injectable, inject } from '@angular/core';
+import { DestroyRef, Injectable, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationStart, Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, interval, switchMap } from 'rxjs';
@@ -20,6 +20,7 @@ export class PwaUpdateService {
   private readonly _router = inject(Router);
 
   private _patchUpdatePending = false;
+  readonly isReloadingForUpdate = signal(false);
 
   /**
    * Setup PWA update checking with periodic checks and version update notifications
@@ -78,12 +79,14 @@ export class PwaUpdateService {
     this._router.events
       .pipe(
         takeUntilDestroyed(destroyRef),
-        filter((e) => e instanceof NavigationEnd)
+        filter((e) => e instanceof NavigationStart)
       )
       .subscribe(() => {
         if (this._patchUpdatePending) {
           this._patchUpdatePending = false;
-          this.activateUpdate();
+          this.isReloadingForUpdate.set(true);
+          // Delay to allow the overlay to render before reloading
+          requestAnimationFrame(() => this.activateUpdate());
         }
       });
   }
