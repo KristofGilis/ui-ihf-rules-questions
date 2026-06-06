@@ -26,6 +26,7 @@ import { PwaUpdateService } from './services/pwa-update.service';
 import { SidebarService } from './services/sidebar.service';
 import { ThemeService } from './services/theme.service';
 import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
+import { ElementHeightDirective } from './shared/directives/element-height.directive';
 
 @Component({
   selector: 'app-root',
@@ -37,6 +38,7 @@ import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loa
     LogoComponent,
     FaIconComponent,
     LoadingSpinnerComponent,
+    ElementHeightDirective,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

@@ -4,9 +4,7 @@
     class="fixed inset-0 z-9999 flex items-center justify-center bg-slate-900/70 backdrop-blur-sm"
     aria-live="polite"
     aria-label="Updating application">
-    <div class="rounded-xl bg-white px-8 py-6 shadow-xl dark:bg-slate-800">
-      <app-loading-spinner size="lg" [text]="'pwa.updating' | translate" />
-    </div>
+    <app-loading-spinner size="lg" [text]="'pwa.updating' | translate" textClass="text-white" />
   </div>
 }
 
@@ -19,7 +17,7 @@
 </a>
 
 <!-- Fixed top bar -->
-<div #topBar class="fixed top-0 right-0 left-0 z-50">
+<div #topBar="appElementHeight" appElementHeight class="fixed top-0 right-0 left-0 z-50">
   <!-- Header -->
   <header
     class="border-b border-slate-300 bg-slate-100 pt-[env(safe-area-inset-top)] dark:border-slate-800 dark:bg-slate-900"
@@ -87,10 +85,17 @@
         <!-- Settings icon (mobile only) -->
         <a
           routerLink="/settings"
-          class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-300 bg-slate-200 p-2 text-slate-900 transition-colors hover:bg-slate-300 focus:ring-2 focus:ring-cyan-500 focus:outline-none md:hidden dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700"
+          class="relative flex h-10 w-10 items-center justify-center rounded-lg border border-slate-300 bg-slate-200 p-2 text-slate-900 transition-colors hover:bg-slate-300 focus:ring-2 focus:ring-cyan-500 focus:outline-none md:hidden dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700"
           [attr.aria-label]="'navigation.settings' | translate"
           [title]="'navigation.settings' | translate">
           <fa-icon [icon]="faGear" aria-hidden="true" />
+          @if (!isOnline()) {
+            <span
+              class="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full"
+              [class]="isOfflineReady() ? 'bg-emerald-500' : 'bg-amber-500'"
+              aria-hidden="true">
+            </span>
+          }
         </a>
 
         <!-- Language Dropdown (desktop only) -->
@@ -256,7 +261,7 @@
   [class.border-l]="sidebar.position() === 'right'"
   [class.w-14]="!sidebar.expanded()"
   [class.w-44]="sidebar.expanded()"
-  [style.top.px]="topBar.offsetHeight"
+  [style.top.px]="topBar.height()"
   role="navigation"
   aria-label="Main navigation">
   <a
@@ -357,7 +362,7 @@
   [class.md:mr-44]="sidebar.position() === 'right' && sidebar.expanded()"
   role="main"
   tabindex="-1"
-  [style.padding-top.px]="topBar.offsetHeight">
+  [style.padding-top.px]="topBar.height()">
   <router-outlet />
 </main>
 

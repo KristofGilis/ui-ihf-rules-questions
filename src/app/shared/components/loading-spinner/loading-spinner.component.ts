@@ -11,6 +11,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 export class LoadingSpinnerComponent {
   readonly size = input<'sm' | 'md' | 'lg' | 'xl'>('md');
   readonly text = input<string>();
+  readonly textClass = input<string>('text-slate-600 dark:text-slate-400');
   readonly faSpinner = faSpinner;
 
   readonly iconSize = computed(() => {
