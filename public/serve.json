@@ -70,11 +70,24 @@
       ]
     },
     {
-      "source": "@(index.html|ngsw.json|ngsw-worker.js|safety-worker.js|worker-basic.min.js|manifest.webmanifest|robots.txt|sitemap.xml)",
+      "source": "@(index.html|ngsw.json|safety-worker.js|worker-basic.min.js|manifest.webmanifest|robots.txt|sitemap.xml)",
       "headers": [
         {
           "key": "Cache-Control",
           "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "ngsw-worker.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        },
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
         }
       ]
     }
