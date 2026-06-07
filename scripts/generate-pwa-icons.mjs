@@ -13,8 +13,11 @@ import { fileURLToPath } from 'url';
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 const sizes = [
+  { size: 96, filename: 'android-chrome-96x96.png' },
+  { size: 144, filename: 'android-chrome-144x144.png' },
   { size: 192, filename: 'android-chrome-192x192.png' },
   { size: 256, filename: 'android-chrome-256x256.png' },
+  { size: 384, filename: 'android-chrome-384x384.png' },
   { size: 512, filename: 'android-chrome-512x512.png' },
   { size: 60, filename: 'apple-touch-icon-60x60.png' },
   { size: 76, filename: 'apple-touch-icon-76x76.png' },
