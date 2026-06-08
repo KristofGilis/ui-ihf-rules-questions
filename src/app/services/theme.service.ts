@@ -1,10 +1,8 @@
-import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { DestroyRef, inject, Service, signal } from '@angular/core';
 
 export type Theme = 'light' | 'dark' | 'system';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ThemeService {
   private readonly _destroyRef = inject(DestroyRef);
 

@@ -1,11 +1,11 @@
 # IHF Rules Quiz 🤾‍♂️
 
-An interactive quiz application for testing knowledge of International Handball Federation (IHF) rules. Built with Angular 21 and Tailwind CSS, featuring multi-language support and comprehensive accessibility.
+An interactive quiz application for testing knowledge of International Handball Federation (IHF) rules. Built with Angular 22 and Tailwind CSS, featuring multi-language support and comprehensive accessibility.
 
-[![Angular](https://img.shields.io/badge/Angular-21-red)](https://angular.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
+[![Angular](https://img.shields.io/badge/Angular-22-red)](https://angular.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-blue)](https://www.typescriptlang.org/)
 [![GraphQL](https://img.shields.io/badge/GraphQL-16.12-pink)](https://graphql.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1-38bdf8)](https://tailwindcss.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.3-38bdf8)](https://tailwindcss.com/)
 
 ## ✨ Features
 
@@ -38,7 +38,7 @@ An interactive quiz application for testing knowledge of International Handball 
 
 ### Tech Stack
 
-- **Framework**: Angular 21 with Signals
+- **Framework**: Angular 22 with Signals
 - **State Management**: Signal-based reactive state
 - **API**: GraphQL via Apollo Client
 - **Styling**: Tailwind CSS 4
@@ -76,7 +76,7 @@ src/app/
 ### Prerequisites
 
 - Node.js 22+ and npm
-- Angular CLI 21+ (optional, but recommended)
+- Angular CLI 22+ (optional, but recommended)
 
 ### Installation
 

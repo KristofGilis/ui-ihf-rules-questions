@@ -1,12 +1,10 @@
 import { ViewportScroller } from '@angular/common';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ScrollRestorationService {
   private readonly _scrollPositions = new Map<string, [number, number]>();
   private readonly _router = inject(Router);

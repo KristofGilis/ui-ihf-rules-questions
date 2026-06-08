@@ -1,4 +1,4 @@
-import { DestroyRef, Injectable, inject, signal } from '@angular/core';
+import { DestroyRef, Service, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationStart, Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
@@ -10,9 +10,7 @@ import { ToastService } from './toast.service';
  * Service to handle PWA updates
  * Checks for updates and notifies the user
  */
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class PwaUpdateService {
   private readonly _swUpdate = inject(SwUpdate);
   private readonly _toastService = inject(ToastService);

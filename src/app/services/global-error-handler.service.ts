@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ErrorHandler, inject, Injectable, isDevMode } from '@angular/core';
+import { ErrorHandler, inject, isDevMode, Service } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TOAST_DURATION } from '../constants';
 import { ToastService } from './toast.service';
@@ -55,7 +55,7 @@ interface WrappedError {
  * // - HTTP/GraphQL errors (if unhandled by components)
  * // - Promise rejections
  */
-@Injectable()
+@Service()
 export class GlobalErrorHandler implements ErrorHandler {
   private readonly _isDevelopment = isDevMode();
   private readonly _toastService = inject(ToastService);
