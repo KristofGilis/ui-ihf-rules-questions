@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { ObservableQuery } from '@apollo/client/core';
 import { catchError, debounceTime, defer, map, Observable, Subject, switchMap, tap } from 'rxjs';
 import {
@@ -10,9 +10,7 @@ import {
 import { LocalScoreService } from '../../quiz/services/local-score.service';
 import { ConnectivityService } from '../../services/connectivity.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class QuestionsService {
   private _cursor: string | null = null;
   private _hasNextPage = true;

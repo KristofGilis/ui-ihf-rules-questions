@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Service, signal } from '@angular/core';
 import {
   catchError,
   concatMap,
@@ -56,7 +56,7 @@ interface PageInfo {
   hasNextPage: boolean;
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class OfflineDataService {
   private readonly _persistor = inject(APOLLO_PERSISTOR);
   private readonly _cache = inject(APOLLO_CACHE);

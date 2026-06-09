@@ -1,6 +1,6 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Service, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { catchError, map, Observable, tap } from 'rxjs';
 import { CalculateScoreGQL } from '../../../../graphql/generated';
 import { Question, Score } from '../../../../graphql/types';
 import { QUIZ_CONFIG } from '../../constants';
@@ -85,9 +85,7 @@ interface QuizResult {
  * - Navigation to results page
  */
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class QuizService {
   private readonly _calculateScoreGQL = inject(CalculateScoreGQL);
   private readonly _localScore = inject(LocalScoreService);

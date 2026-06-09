@@ -1,10 +1,8 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { map, tap } from 'rxjs';
 import { GetRulesGQL } from '../../../../graphql/generated';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class RulesService {
   private _cursor?: string | null;
   private readonly _pageSize = 20;

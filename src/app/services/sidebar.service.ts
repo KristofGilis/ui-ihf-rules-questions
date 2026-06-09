@@ -1,8 +1,8 @@
 import { DOCUMENT } from '@angular/common';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Service, signal } from '@angular/core';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SidebarService {
   private readonly _document = inject(DOCUMENT);
 

@@ -4,7 +4,7 @@ import {
   createComponent,
   EnvironmentInjector,
   inject,
-  Injectable,
+  Service,
   signal,
 } from '@angular/core';
 import { TOAST_DURATION } from '../constants';
@@ -72,7 +72,7 @@ interface StoredToast {
  * Holds the source-of-truth toast list and lazily creates a ToastComponent
  * attached to <body> for presentation.
  */
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ToastService {
   private readonly _appRef = inject(ApplicationRef);
   private readonly _injector = inject(EnvironmentInjector);

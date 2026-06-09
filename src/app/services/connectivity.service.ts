@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { fromEvent, map, merge, of, shareReplay } from 'rxjs';
 
@@ -6,7 +6,7 @@ import { fromEvent, map, merge, of, shareReplay } from 'rxjs';
  * Shared connectivity status. Exposes both a signal (for components/templates)
  * and an observable (for non-Angular consumers such as Apollo links).
  */
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ConnectivityService {
   readonly isOnline$ = merge(
     of(navigator.onLine),

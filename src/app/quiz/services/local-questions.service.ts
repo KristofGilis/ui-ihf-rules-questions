@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { EMPTY, expand, iif, map, Observable, of, reduce, switchMap } from 'rxjs';
 import { PrefetchAnswersGQL, PrefetchQuestionsGQL } from '../../../../graphql/generated';
 import { Question } from '../../../../graphql/types';
@@ -42,7 +42,7 @@ interface PageResult<T> {
  * Output shape matches `Question` (see graphql/types.ts) so it can be consumed
  * by `QuizService.initializeQuiz` without branching.
  */
-@Injectable({ providedIn: 'root' })
+@Service()
 export class LocalQuestionsService {
   private readonly _questionsGQL = inject(PrefetchQuestionsGQL);
   private readonly _answersGQL = inject(PrefetchAnswersGQL);

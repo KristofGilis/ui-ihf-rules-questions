@@ -1,4 +1,4 @@
-import { inject, Injectable, Signal } from '@angular/core';
+import { inject, Service, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
@@ -8,7 +8,7 @@ import { map } from 'rxjs';
  * reactively re-render content fields that are kept locally in a
  * `translations` JSON blob (e.g. Rule.name, Question.phrase, Answer.phrase).
  */
-@Injectable({ providedIn: 'root' })
+@Service()
 export class CurrentLanguageService {
   private readonly _translate = inject(TranslateService);
 

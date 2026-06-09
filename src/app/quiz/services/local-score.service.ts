@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { catchError, combineLatest, EMPTY, expand, map, Observable, of, reduce } from 'rxjs';
 import { PrefetchAnswersGQL, PrefetchScoreConfigurationGQL } from '../../../../graphql/generated';
 import { Score } from '../../../../graphql/types';
@@ -37,7 +37,7 @@ const DEFAULT_SCORE_CONFIG: ScoreConfiguration = {
  * Output shape matches `CalculateScoreQuery['calculateScore']` so callers can
  * be agnostic about the source.
  */
-@Injectable({ providedIn: 'root' })
+@Service()
 export class LocalScoreService {
   private readonly _answersGQL = inject(PrefetchAnswersGQL);
   private readonly _scoreConfigGQL = inject(PrefetchScoreConfigurationGQL);

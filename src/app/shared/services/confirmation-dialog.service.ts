@@ -1,13 +1,11 @@
-import { ApplicationRef, ComponentRef, createComponent, EnvironmentInjector, inject, Injectable } from '@angular/core';
+import { ApplicationRef, ComponentRef, createComponent, EnvironmentInjector, inject, Service } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import {
   ConfirmationDialogComponent,
   ConfirmationDialogData,
 } from '../components/confirmation-dialog/confirmation-dialog.component';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ConfirmationDialogService {
   private readonly _appRef = inject(ApplicationRef);
   private readonly _injector = inject(EnvironmentInjector);

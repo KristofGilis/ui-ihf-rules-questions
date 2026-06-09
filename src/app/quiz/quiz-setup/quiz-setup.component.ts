@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { PageContainerComponent, QuizConfigCardComponent } from '../../shared/components';
@@ -8,6 +8,7 @@ import { PageContainerComponent, QuizConfigCardComponent } from '../../shared/co
   standalone: true,
   imports: [TranslatePipe, PageContainerComponent, QuizConfigCardComponent],
   templateUrl: './quiz-setup.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './quiz-setup.component.scss',
 })
 export class QuizSetupComponent {

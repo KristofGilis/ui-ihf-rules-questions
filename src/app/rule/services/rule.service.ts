@@ -1,13 +1,11 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { ObservableQuery } from '@apollo/client/core';
 import { QueryRef } from 'apollo-angular';
 import { Observable, tap } from 'rxjs';
 import { GetRuleGQL, GetRuleQuery, GetRuleQueryVariables } from '../../../../graphql/generated';
 import { ConnectivityService } from '../../services/connectivity.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class RuleService {
   private _cursor?: string | null;
   private readonly _pageSize = 10;

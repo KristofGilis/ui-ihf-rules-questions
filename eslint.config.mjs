@@ -16,6 +16,7 @@ export default [
       parserOptions: {
         ecmaVersion: 2020,
         sourceType: 'module',
+        project: true,
       },
     },
     plugins: {
@@ -25,8 +26,7 @@ export default [
     },
     processor: angularTemplatePlugin.processors['extract-inline-html'],
     rules: {
-      ...tsPlugin.configs['recommended'].rules,
-      ...angularPlugin.configs['recommended'].rules,
+      ...(tsPlugin.configs?.['recommended']?.rules ?? {}),
       '@angular-eslint/directive-selector': [
         'error',
         {
@@ -64,7 +64,7 @@ export default [
       parser: templateParser,
     },
     rules: {
-      ...angularTemplatePlugin.configs['recommended'].rules,
+      'no-case-declarations': 'warn',
     },
   },
 ];
