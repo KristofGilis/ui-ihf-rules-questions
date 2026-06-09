@@ -35,9 +35,7 @@
           (change)="onCheckboxChange(answer?.id, $any($event.target).checked)" />
         <span class="flex-1 text-slate-700 dark:text-slate-300">
           <span class="mr-2 font-medium">{{ answer?.number }})</span>
-          {{
-            $safeNavigationMigration(answer?.phrase) | appPhraseTranslation: answer?.translations : currentLanguage()
-          }}
+          {{ answer?.phrase | appPhraseTranslation: answer?.translations : currentLanguage() }}
         </span>
       </label>
     }
