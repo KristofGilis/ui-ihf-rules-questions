@@ -9,17 +9,17 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { provideRouter } from '@angular/router';
 
-import { HttpInterceptorFn, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { HttpInterceptorFn, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { switchMap } from 'rxjs';
 import { routes } from './app.routes';
 import { graphqlProvider, restoreApolloCache } from './graphql.provider';
 import { getLanguage } from './language';
 import { GlobalErrorHandler } from './services/global-error-handler.service';
 import { OfflineDataService } from './services/offline-data.service';
 import { ScrollRestorationService } from './shared/services/scroll-restoration.service';
-import { switchMap } from 'rxjs';
 
 export function getBaseUrl(): string {
   return document.getElementsByTagName('base')[0].href;
@@ -63,7 +63,7 @@ export const appConfig: ApplicationConfig = {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',
     }),
-    provideHttpClient(withFetch(), withInterceptors([languageInterceptor])),
+    provideHttpClient(withInterceptors([languageInterceptor])),
     graphqlProvider,
     provideTranslateService({
       loader: provideTranslateHttpLoader({ prefix: '/i18n/', suffix: '.json' }),

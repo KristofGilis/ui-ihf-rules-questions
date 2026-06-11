@@ -93,11 +93,16 @@ export class PwaUpdateService {
    * Activate the pending update and reload the app
    */
   activateUpdate(): void {
-    this._swUpdate.activateUpdate().then(() => {
-      // Clear any persisted toasts so they don't reappear after the reload
-      this._toastService.dismissAll();
-      window.location.reload();
-    });
+    this._swUpdate
+      .activateUpdate()
+      .then(() => {
+        // Clear any persisted toasts so they don't reappear after the reload
+        this._toastService.dismissAll();
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.error('Failed to activate update:', err);
+      });
   }
 
   /**
