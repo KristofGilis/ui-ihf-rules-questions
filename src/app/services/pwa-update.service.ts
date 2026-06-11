@@ -1,9 +1,9 @@
 import { DestroyRef, Service, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NavigationStart, Router } from '@angular/router';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { TranslateService } from '@ngx-translate/core';
-import { filter, interval, switchMap } from 'rxjs';
+import { filter, interval, pairwise, switchMap } from 'rxjs';
 import { ToastService } from './toast.service';
 
 /**
@@ -77,13 +77,21 @@ export class PwaUpdateService {
     this._router.events
       .pipe(
         takeUntilDestroyed(destroyRef),
-        filter((e) => e instanceof NavigationStart)
+        filter((e) => e instanceof NavigationStart || e instanceof NavigationEnd),
+        pairwise(),
+        filter(
+          ([a, b]) =>
+            // Only react to NavigationEnd events...
+            b instanceof NavigationEnd &&
+            // ...that are NOT the bootstrap redirect (NavigationStart from '/' to '/home')
+            !(a instanceof NavigationStart && a.url === '/')
+        )
       )
-      .subscribe((e) => {
+      .subscribe(([_, end]) => {
         if (this._patchUpdatePending) {
           this._patchUpdatePending = false;
           this.isReloadingForUpdate.set(true);
-          const destinationUrl = e.url;
+          const destinationUrl = (end as NavigationEnd).urlAfterRedirects;
           // Delay to allow the overlay to render before reloading
           requestAnimationFrame(() => this.activateUpdate(destinationUrl));
         }
