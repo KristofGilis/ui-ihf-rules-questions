@@ -47,15 +47,13 @@
     "title": "ИХФ Квиз о Правилима"
   },
   "navigation": {
+    "collapse": "Сакриј бочну траку",
+    "expand": "Прошири бочну траку",
     "home": "Почетна",
     "questions": "Питања",
     "quiz": "Квиз",
     "rules": "Правила",
-    "settings": "Подешавања",
-    "expand": "Прошири бочну траку",
-    "collapse": "Сакриј бочну траку",
-    "move_left": "Помери траку на лево",
-    "move_right": "Помери траку на десно"
+    "settings": "Подешавања"
   },
   "offline": {
     "available": "Доступно офлајн",
@@ -138,6 +136,8 @@
     "description": "Управљајте својим подешавањима",
     "language_section": "Језик",
     "offline_section": "Офлајн",
+    "sidebar_collapse": "Сакриј бочну траку",
+    "sidebar_expand": "Прошири бочну траку",
     "sidebar_expanded": "Проширена боčна трака",
     "sidebar_expanded_off": "Бочна трака приказује само иконе",
     "sidebar_expanded_on": "Бочна трака приказује иконе и натписе",

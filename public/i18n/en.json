@@ -47,15 +47,13 @@
     "title": "IHF Rules Quiz"
   },
   "navigation": {
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar",
     "home": "Home",
     "questions": "Questions",
     "quiz": "Quiz",
     "rules": "Rules",
-    "settings": "Settings",
-    "expand": "Expand sidebar",
-    "collapse": "Collapse sidebar",
-    "move_left": "Move sidebar to left",
-    "move_right": "Move sidebar to right"
+    "settings": "Settings"
   },
   "offline": {
     "available": "Available offline",
@@ -138,6 +136,8 @@
     "description": "Manage your preferences",
     "language_section": "Language",
     "offline_section": "Offline",
+    "sidebar_collapse": "Collapse sidebar",
+    "sidebar_expand": "Expand sidebar",
     "sidebar_expanded": "Expanded sidebar",
     "sidebar_expanded_off": "Sidebar shows icons only",
     "sidebar_expanded_on": "Sidebar shows icons and labels",

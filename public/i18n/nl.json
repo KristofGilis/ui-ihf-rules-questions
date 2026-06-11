@@ -47,15 +47,13 @@
     "title": "IHF Spelregels Quiz"
   },
   "navigation": {
+    "collapse": "Zijbalk inklappen",
+    "expand": "Zijbalk uitklappen",
     "home": "Home",
     "questions": "Vragen",
     "quiz": "Quiz",
     "rules": "Spelregels",
-    "settings": "Instellingen",
-    "expand": "Zijbalk uitklappen",
-    "collapse": "Zijbalk inklappen",
-    "move_left": "Zijbalk naar links",
-    "move_right": "Zijbalk naar rechts"
+    "settings": "Instellingen"
   },
   "offline": {
     "available": "Beschikbaar offline",
@@ -138,6 +136,8 @@
     "description": "Beheer je voorkeuren",
     "language_section": "Taal",
     "offline_section": "Offline",
+    "sidebar_collapse": "Zijbalk inklappen",
+    "sidebar_expand": "Zijbalk uitklappen",
     "sidebar_expanded": "Uitgeklapte zijbalk",
     "sidebar_expanded_off": "Zijbalk toont alleen pictogrammen",
     "sidebar_expanded_on": "Zijbalk toont pictogrammen en labels",
