@@ -79,12 +79,13 @@ export class PwaUpdateService {
         takeUntilDestroyed(destroyRef),
         filter((e) => e instanceof NavigationStart)
       )
-      .subscribe(() => {
+      .subscribe((e) => {
         if (this._patchUpdatePending) {
           this._patchUpdatePending = false;
           this.isReloadingForUpdate.set(true);
+          const destinationUrl = e.url;
           // Delay to allow the overlay to render before reloading
-          requestAnimationFrame(() => this.activateUpdate());
+          requestAnimationFrame(() => this.activateUpdate(destinationUrl));
         }
       });
   }
@@ -92,13 +93,17 @@ export class PwaUpdateService {
   /**
    * Activate the pending update and reload the app
    */
-  activateUpdate(): void {
+  activateUpdate(navigateTo?: string): void {
     this._swUpdate
       .activateUpdate()
       .then(() => {
         // Clear any persisted toasts so they don't reappear after the reload
         this._toastService.dismissAll();
-        window.location.reload();
+        if (navigateTo && navigateTo !== '/') {
+          window.location.href = navigateTo;
+        } else {
+          window.location.reload();
+        }
       })
       .catch((err) => {
         console.error('Failed to activate update:', err);
