@@ -97,7 +97,7 @@ export class ToastService {
     const type = options.type ?? 'info';
     const duration = options.duration ?? this.defaultDuration(type);
     const dismissible = options.dismissible ?? type !== 'loading';
-    const persist = options.persist ?? type !== 'loading';
+    const persist = options.persist ?? (type !== 'loading' && type !== 'error');
     const id = this._nextId++;
     const now = Date.now();
     const toast: Toast = {

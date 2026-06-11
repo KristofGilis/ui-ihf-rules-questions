@@ -94,6 +94,8 @@ export class PwaUpdateService {
    */
   activateUpdate(): void {
     this._swUpdate.activateUpdate().then(() => {
+      // Clear any persisted toasts so they don't reappear after the reload
+      this._toastService.dismissAll();
       window.location.reload();
     });
   }
