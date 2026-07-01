@@ -34,6 +34,14 @@ const SCHEMA_VERSION_STORAGE_KEY = 'ihf:offline:schemaVersion';
 const CACHE_FORMAT_VERSION_STORAGE_KEY = 'ihf:offline:cacheFormatVersion';
 
 /**
+ * Maximum age (ms) of the cached data before a full resync is forced,
+ * even if the server's versions manifest and schema version are unchanged.
+ * Guards against long-lived offline sessions silently drifting from the
+ * server for weeks/months.
+ */
+const MAX_CACHE_AGE_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+/**
  * Bump this whenever the shape of the persisted Apollo cache changes in a way
  * that requires existing users to wipe their IndexedDB cache on next load
  * (e.g. typePolicy changes, new merge strategies, fixes for bogus cached
@@ -42,7 +50,7 @@ const CACHE_FORMAT_VERSION_STORAGE_KEY = 'ihf:offline:cacheFormatVersion';
  * On boot, if the stored value does not match this constant, the entire
  * persisted cache + in-memory cache + manifest are purged before resync.
  */
-const CACHE_FORMAT_VERSION = '2';
+const CACHE_FORMAT_VERSION = '3';
 
 /** Entity buckets driven by `prefetchVersions`. */
 type Entity = 'rules' | 'questions' | 'answers' | 'languages' | 'scoreConfiguration';
@@ -187,8 +195,10 @@ export class OfflineDataService {
         // When the app version changes the GraphQL schema may have changed too;
         // force a full resync so stale cached data never causes type mismatches.
         const schemaChanged = this.readSchemaVersion() !== SCHEMA_VERSION;
+        const cacheExpired = this.isCacheStale();
 
-        const changed: Entity[] = isFirstRun || manifestChanged || schemaChanged ? [...ALL_ENTITIES] : [];
+        const changed: Entity[] =
+          isFirstRun || manifestChanged || schemaChanged || cacheExpired ? [...ALL_ENTITIES] : [];
 
         if (changed.length === 0) {
           this.writeSchemaVersion();
@@ -196,6 +206,10 @@ export class OfflineDataService {
           this.status.set('up-to-date');
           this.touchLastSync();
           return of(undefined);
+        }
+
+        if (cacheExpired && !isFirstRun && !manifestChanged && !schemaChanged) {
+          console.info('[offline-data] cache exceeded max age, forcing full resync');
         }
 
         this.status.set('prefetching');
@@ -265,6 +279,14 @@ export class OfflineDataService {
     } catch {
       return true;
     }
+  }
+
+  private isCacheStale(): boolean {
+    const last = this.readLastSync();
+    if (!last) return true; // never synced -> treat as stale
+    const lastTime = Date.parse(last);
+    if (Number.isNaN(lastTime)) return true;
+    return Date.now() - lastTime > MAX_CACHE_AGE_MS;
   }
 
   private prefetchEntity(entity: Entity): Observable<void> {
