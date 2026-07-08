@@ -65,7 +65,7 @@
     "@commitlint/config-conventional": "~21.2.0",
     "@graphql-codegen/cli": "~7.2.0",
     "@graphql-codegen/typescript": "~6.1.0",
-    "@graphql-codegen/typescript-apollo-angular": "~5.0.0",
+    "@graphql-codegen/typescript-apollo-angular": "~5.0.1",
     "@graphql-codegen/typescript-operations": "~6.1.0",
     "@tailwindcss/postcss": "~4.3.0",
     "@tailwindcss/vite": "~4.3.0",
