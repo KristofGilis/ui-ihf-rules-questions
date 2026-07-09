@@ -80,11 +80,7 @@
     {
       "description": "Group Angular framework packages together (they release in lockstep)",
       "matchManagers": ["npm"],
-      "matchPackageNames": [
-        "/^@angular/",
-        "/^@angular-devkit/",
-        "/^@angular-eslint/"
-      ],
+      "matchPackageNames": ["/^@angular/", "/^@angular-devkit/", "/^@angular-eslint/"],
       "groupName": "angular monorepo packages",
       "automerge": false
     },
@@ -121,11 +117,7 @@
     },
     {
       "description": "Critical runtime packages — always require manual review, never automerge, even on minor/patch",
-      "matchPackageNames": [
-        "@angular/core",
-        "@angular/cli",
-        "Microsoft.NETCore.App"
-      ],
+      "matchPackageNames": ["@angular/core", "@angular/cli", "Microsoft.NETCore.App"],
       "automerge": false,
       "dependencyDashboardApproval": true,
       "prPriority": 5
