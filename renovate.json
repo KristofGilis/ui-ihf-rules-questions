@@ -54,7 +54,9 @@
     {
       "description": "Security/vulnerability fixes bypass schedule and dashboard approval, but still require CI + human merge",
       "matchDatasources": ["npm", "nuget"],
-      "vulnerabilityAlerts": true,
+      "vulnerabilityAlerts": {
+        "enabled": true
+      },
       "prPriority": 10,
       "schedule": ["at any time"],
       "dependencyDashboardApproval": false,
@@ -78,7 +80,11 @@
     {
       "description": "Group Angular framework packages together (they release in lockstep)",
       "matchManagers": ["npm"],
-      "matchPackageNames": ["/^@angular/", "/^@angular-devkit/", "/^@angular-eslint/"],
+      "matchPackageNames": [
+        "/^@angular/",
+        "/^@angular-devkit/",
+        "/^@angular-eslint/"
+      ],
       "groupName": "angular monorepo packages",
       "automerge": false
     },
@@ -115,7 +121,11 @@
     },
     {
       "description": "Critical runtime packages — always require manual review, never automerge, even on minor/patch",
-      "matchPackageNames": ["@angular/core", "@angular/cli", "Microsoft.NETCore.App"],
+      "matchPackageNames": [
+        "@angular/core",
+        "@angular/cli",
+        "Microsoft.NETCore.App"
+      ],
       "automerge": false,
       "dependencyDashboardApproval": true,
       "prPriority": 5
@@ -126,9 +136,5 @@
       "minimumReleaseAge": "3 days"
     }
   ],
-  "ignorePaths": [
-    "**/node_modules/**",
-    "**/vendor/**",
-    "**/test/fixtures/**"
-  ]
+  "ignorePaths": ["**/node_modules/**", "**/vendor/**", "**/test/fixtures/**"]
 }
