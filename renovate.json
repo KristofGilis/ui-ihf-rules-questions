@@ -9,6 +9,8 @@
   ],
   "timezone": "Europe/Brussels",
   "schedule": ["before 4am every weekday"],
+  "npmrc": "allow-remote=all\n",
+  "npmrcMerge": true,
   "prConcurrentLimit": 10,
   "prHourlyLimit": 5,
   "rangeStrategy": "bump",
@@ -82,7 +84,8 @@
       "matchManagers": ["npm"],
       "matchPackageNames": ["/^@angular/", "/^@angular-devkit/", "/^@angular-eslint/"],
       "groupName": "angular monorepo packages",
-      "automerge": false
+      "automerge": false,
+      "minimumReleaseAge": "0 days"
     },
     {
       "description": "Group remaining npm minor/patch prod deps",
@@ -90,7 +93,12 @@
       "matchDepTypes": ["dependencies"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "npm prod dependencies (minor/patch)",
-      "automerge": false
+      "automerge": false,
+      "matchPackageNames": [
+        "!/^@angular/",
+        "!/^@angular-devkit/",
+        "!/^@angular-eslint/"
+      ]
     },
     {
       "description": "Group all NuGet minor/patch updates into one PR",
@@ -126,7 +134,20 @@
       "description": "Wait a few days before picking up new npm/nuget releases (avoid yanked/broken versions)",
       "matchManagers": ["npm", "nuget"],
       "minimumReleaseAge": "3 days"
+    },
+    {
+      "description": "Angular major updates still get grouped together, but require dashboard approval",
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["/^@angular/", "/^@angular-devkit/", "/^@angular-eslint/"],
+      "matchUpdateTypes": ["major"],
+      "groupName": "angular monorepo packages",
+      "dependencyDashboardApproval": true,
+      "automerge": false
     }
   ],
-  "ignorePaths": ["**/node_modules/**", "**/vendor/**", "**/test/fixtures/**"]
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/vendor/**",
+    "**/test/fixtures/**"
+  ]
 }
