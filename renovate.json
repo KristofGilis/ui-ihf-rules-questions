@@ -94,11 +94,7 @@
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "npm prod dependencies (minor/patch)",
       "automerge": false,
-      "matchPackageNames": [
-        "!/^@angular/",
-        "!/^@angular-devkit/",
-        "!/^@angular-eslint/"
-      ]
+      "matchPackageNames": ["!/^@angular/", "!/^@angular-devkit/", "!/^@angular-eslint/"]
     },
     {
       "description": "Group all NuGet minor/patch updates into one PR",
@@ -145,9 +141,5 @@
       "automerge": false
     }
   ],
-  "ignorePaths": [
-    "**/node_modules/**",
-    "**/vendor/**",
-    "**/test/fixtures/**"
-  ]
+  "ignorePaths": ["**/node_modules/**", "**/vendor/**", "**/test/fixtures/**"]
 }
