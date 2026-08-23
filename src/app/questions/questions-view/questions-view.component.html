@@ -1,5 +1,7 @@
-<!-- Global reveal toggle -->
-<div class="mb-6 flex items-center justify-between rounded-xl bg-slate-100 p-4 dark:bg-slate-800">
+<!-- Global reveal toggle - sticky so it stays reachable while scrolling long question lists -->
+<div
+  class="sticky z-20 mb-6 flex items-center justify-between rounded-xl bg-slate-100 p-4 shadow-md dark:bg-slate-800"
+  style="top: var(--app-header-height, 4rem)">
   <span class="text-sm font-medium text-slate-900 dark:text-white">
     {{ (globalReveal() ? 'questions.hide_correct_answers' : 'questions.show_correct_answers') | translate }}
     @if (revealedOverrides().size > 0) {
