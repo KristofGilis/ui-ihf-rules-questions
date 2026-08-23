@@ -75,12 +75,19 @@
   "questions": {
     "calculate_score": "Calculer le score",
     "description": "Parcourez et étudiez toutes les questions disponibles à votre rythme",
+    "hidden_exceptions_count": "{{count}} masquée(s)",
+    "hide_correct_answer": "Masquer la réponse correcte",
+    "hide_correct_answers": "Masquer les réponses correctes",
     "loading": "Chargement des questions...",
     "no_questions": "Aucune question disponible",
     "recalculate_score": "Recalculer",
     "recalculate_score_full": "Recalculer le score",
     "restart": "Redémarrer",
+    "rule_references": "Références des règles",
+    "show_correct_answer": "Afficher la réponse correcte",
+    "show_correct_answers": "Afficher les réponses correctes",
     "show_score": "Afficher le score",
+    "shown_exceptions_count": "{{count}} affichée(s)",
     "title": "Toutes les questions",
     "wrong": "Faux"
   },
@@ -104,6 +111,7 @@
   "quiz_results": {
     "completion_time": "Temps de complétion",
     "correct": "Correct",
+    "correct_answer": "Bonne réponse",
     "home": "Accueil",
     "question": "Question",
     "retake": "Reprendre le quiz",

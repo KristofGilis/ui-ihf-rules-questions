@@ -8,6 +8,7 @@ query prefetchQuestions($cursor: String) {
         phrase
         translations
         ruleId
+        ruleReferences
         answers(order: { number: ASC }) {
           nodes {
             id

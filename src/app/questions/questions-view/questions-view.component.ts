@@ -2,6 +2,7 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
   input,
@@ -62,6 +63,9 @@ export class QuestionsViewComponent {
 
   readonly selectedAnswers = signal<string[]>([]);
   readonly showMobileScoreDialog = signal(false);
+  readonly globalReveal = signal(false);
+  readonly revealedOverrides = signal<Set<string>>(new Set());
+  readonly anyRevealed = computed(() => this.globalReveal() || this.revealedOverrides().size > 0);
   private savedScrollY = 0;
   private isInitialLoad = true;
 
@@ -130,7 +134,7 @@ export class QuestionsViewComponent {
   }
 
   onCalculateScore(): void {
-    if (!this.hasMoreQuestions()) {
+    if (!this.hasMoreQuestions() && !this.anyRevealed()) {
       this.calculareScore.emit({
         questionIds: this.questions()
           .filter((q) => q !== null)
@@ -141,18 +145,48 @@ export class QuestionsViewComponent {
   }
 
   onRestart(): void {
-    // Clear all selected answers
+    this.clearQuizProgress();
+    // Scroll to top of page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  isQuestionRevealed(questionId: string): boolean {
+    return this.globalReveal() ? !this.revealedOverrides().has(questionId) : this.revealedOverrides().has(questionId);
+  }
+
+  toggleGlobalReveal(): void {
+    const turningOn = !this.globalReveal();
+    this.globalReveal.set(turningOn);
+    this.revealedOverrides.set(new Set());
+    if (turningOn) {
+      this.clearQuizProgress();
+    }
+  }
+
+  onToggleQuestionReveal(questionId: string): void {
+    const wasAnyRevealed = this.anyRevealed();
+    this.revealedOverrides.update((overrides) => {
+      const next = new Set(overrides);
+      if (next.has(questionId)) {
+        next.delete(questionId);
+      } else {
+        next.add(questionId);
+      }
+      return next;
+    });
+    if (!wasAnyRevealed && this.anyRevealed()) {
+      this.clearQuizProgress();
+    }
+  }
+
+  // Shared by restart and reveal toggles - both must drop in-progress answers/score.
+  private clearQuizProgress(): void {
     this.selectedAnswers.set([]);
-    // Uncheck all checkboxes
     const checkboxElements = document.querySelectorAll('input[type="checkbox"]');
     checkboxElements.forEach((checkbox: Element) => {
       (checkbox as HTMLInputElement).checked = false;
     });
-    // Close mobile dialog if open
     this.showMobileScoreDialog.set(false);
-    // Scroll to top of page
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    // Emit restart event to parent to clear score
     this.restart.emit();
   }
 

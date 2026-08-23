@@ -75,12 +75,19 @@
   "questions": {
     "calculate_score": "Прикажи бодове",
     "description": "Прегледајте и проучите сва доступна питања у свом темпу",
+    "hidden_exceptions_count": "{{count}} сакривено",
+    "hide_correct_answer": "Сакриј тачан одговор",
+    "hide_correct_answers": "Сакриј Тачне Одговоре",
     "loading": "Учитавање питања...",
     "no_questions": "Нема доступних питања",
     "recalculate_score": "Поново израчунај",
     "recalculate_score_full": "Поново израчунај бодове",
     "restart": "Поново покрени",
+    "rule_references": "Референце правила",
+    "show_correct_answer": "Прикажи тачан одговор",
+    "show_correct_answers": "Прикажи Тачне Одговоре",
     "show_score": "Прикажи бодове",
+    "shown_exceptions_count": "{{count}} приказано",
     "title": "Сва питања",
     "wrong": "Погрешно"
   },
@@ -104,6 +111,7 @@
   "quiz_results": {
     "completion_time": "Време завршетка",
     "correct": "Тачно",
+    "correct_answer": "Тачан одговор",
     "home": "Почетна",
     "question": "Питање",
     "retake": "Понови Квиз",

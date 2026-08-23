@@ -362,7 +362,8 @@
   [class.md:mr-44]="sidebar.position() === 'right' && sidebar.expanded()"
   role="main"
   tabindex="-1"
-  [style.padding-top.px]="topBar.height()">
+  [style.padding-top.px]="topBar.height()"
+  [style.--app-header-height]="topBar.height() + 'px'">
   <router-outlet />
 </main>
 

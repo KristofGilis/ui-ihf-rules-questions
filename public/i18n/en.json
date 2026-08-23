@@ -75,12 +75,19 @@
   "questions": {
     "calculate_score": "Calculate Score",
     "description": "Browse and study all available questions at your own pace",
+    "hidden_exceptions_count": "{{count}} hidden",
+    "hide_correct_answer": "Hide correct answer",
+    "hide_correct_answers": "Hide Correct Answers",
     "loading": "Loading questions...",
     "no_questions": "No questions available",
     "recalculate_score": "Recalculate",
     "recalculate_score_full": "Recalculate Score",
     "restart": "Restart",
+    "rule_references": "Rule References",
+    "show_correct_answer": "Show correct answer",
+    "show_correct_answers": "Show Correct Answers",
     "show_score": "Show Score",
+    "shown_exceptions_count": "{{count}} shown",
     "title": "All Questions",
     "wrong": "Wrong"
   },
@@ -104,6 +111,7 @@
   "quiz_results": {
     "completion_time": "Completion Time",
     "correct": "Correct",
+    "correct_answer": "Correct Answer",
     "home": "Home",
     "question": "Question",
     "retake": "Retake Quiz",

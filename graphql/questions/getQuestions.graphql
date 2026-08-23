@@ -7,12 +7,15 @@ query getQuestions($first: Int!, $after: String, $order: [QuestionSortInput!], $
         number
         phrase
         translations
+        ruleId
+        ruleReferences
         answers(order: { number: ASC }) {
           nodes {
             id
             number
             phrase
             translations
+            isCorrect
           }
         }
       }

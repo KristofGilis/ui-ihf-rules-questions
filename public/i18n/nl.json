@@ -75,12 +75,19 @@
   "questions": {
     "calculate_score": "Bereken score",
     "description": "Bekijk en bestudeer alle beschikbare vragen in je eigen tempo",
+    "hidden_exceptions_count": "{{count}} verborgen",
+    "hide_correct_answer": "Verberg correct antwoord",
+    "hide_correct_answers": "Verberg Correcte Antwoorden",
     "loading": "Vragen laden...",
     "no_questions": "Geen vragen beschikbaar",
     "recalculate_score": "Herbereken",
     "recalculate_score_full": "Herbereken Score",
     "restart": "Opnieuw",
+    "rule_references": "Regelverwijzingen",
+    "show_correct_answer": "Toon correct antwoord",
+    "show_correct_answers": "Toon Correcte Antwoorden",
     "show_score": "Toon Score",
+    "shown_exceptions_count": "{{count}} getoond",
     "title": "Alle vragen",
     "wrong": "Fout"
   },
@@ -104,6 +111,7 @@
   "quiz_results": {
     "completion_time": "Voltooiingstijd",
     "correct": "Correct",
+    "correct_answer": "Correct Antwoord",
     "home": "Home",
     "question": "Vraag",
     "retake": "Opnieuw Doen",
