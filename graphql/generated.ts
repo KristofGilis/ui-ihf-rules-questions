@@ -34,7 +34,7 @@ export type PrefetchQuestionsQueryVariables = Exact<{
 }>;
 
 
-export type PrefetchQuestionsQuery = { questions: { edges: Array<{ cursor: string, node: { id: string, number: string, phrase: string | null, translations: unknown, ruleId: string, answers: { nodes: Array<{ id: string, number: string, phrase: string | null, translations: unknown }> | null } } }> | null, pageInfo: { endCursor: string | null, hasNextPage: boolean } } };
+export type PrefetchQuestionsQuery = { questions: { edges: Array<{ cursor: string, node: { id: string, number: string, phrase: string | null, translations: unknown, ruleId: string, ruleReferences: Array<string>, answers: { nodes: Array<{ id: string, number: string, phrase: string | null, translations: unknown }> | null } } }> | null, pageInfo: { endCursor: string | null, hasNextPage: boolean } } };
 
 export type PrefetchRulesQueryVariables = Exact<{
   cursor?: string | null | undefined;
@@ -69,7 +69,7 @@ export type GetQuestionsQueryVariables = Exact<{
 }>;
 
 
-export type GetQuestionsQuery = { questions: { edges: Array<{ cursor: string, node: { id: string, number: string, phrase: string | null, translations: unknown, answers: { nodes: Array<{ id: string, number: string, phrase: string | null, translations: unknown }> | null } } }> | null, pageInfo: { endCursor: string | null, hasNextPage: boolean } } };
+export type GetQuestionsQuery = { questions: { edges: Array<{ cursor: string, node: { id: string, number: string, phrase: string | null, translations: unknown, ruleId: string, ruleReferences: Array<string>, answers: { nodes: Array<{ id: string, number: string, phrase: string | null, translations: unknown, isCorrect: boolean }> | null } } }> | null, pageInfo: { endCursor: string | null, hasNextPage: boolean } } };
 
 export type GetRuleQueryVariables = Exact<{
   id: string | number;
@@ -78,7 +78,7 @@ export type GetRuleQueryVariables = Exact<{
 }>;
 
 
-export type GetRuleQuery = { ruleById: { id: string, number: string, name: string | null, translations: unknown, questions: { edges: Array<{ cursor: string, node: { id: string, number: string, phrase: string | null, translations: unknown, answers: { nodes: Array<{ id: string, number: string, phrase: string | null, translations: unknown }> | null } } }> | null, pageInfo: { endCursor: string | null, hasNextPage: boolean } } } | null };
+export type GetRuleQuery = { ruleById: { id: string, number: string, name: string | null, translations: unknown, questions: { edges: Array<{ cursor: string, node: { id: string, number: string, phrase: string | null, translations: unknown, ruleId: string, ruleReferences: Array<string>, answers: { nodes: Array<{ id: string, number: string, phrase: string | null, translations: unknown, isCorrect: boolean }> | null } } }> | null, pageInfo: { endCursor: string | null, hasNextPage: boolean } } } | null };
 
 export type GetRulesQueryVariables = Exact<{
   first: number;
@@ -147,6 +147,7 @@ export const PrefetchQuestionsDocument = gql`
         phrase
         translations
         ruleId
+        ruleReferences
         answers(order: {number: ASC}) {
           nodes {
             id
@@ -274,12 +275,15 @@ export const GetQuestionsDocument = gql`
         number
         phrase
         translations
+        ruleId
+        ruleReferences
         answers(order: {number: ASC}) {
           nodes {
             id
             number
             phrase
             translations
+            isCorrect
           }
         }
       }
@@ -317,12 +321,15 @@ export const GetRuleDocument = gql`
           number
           phrase
           translations
+          ruleId
+          ruleReferences
           answers(order: [{number: ASC}]) {
             nodes {
               id
               number
               phrase
               translations
+              isCorrect
             }
           }
         }

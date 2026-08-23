@@ -10,6 +10,7 @@ interface PrefetchedQuestion {
   phrase: string | null;
   translations: unknown;
   ruleId: string;
+  ruleReferences: string[];
   answers: {
     nodes: Array<{
       id: string;
@@ -88,6 +89,7 @@ export class LocalQuestionsService {
         number: q.number,
         phrase: q.phrase,
         translations: q.translations,
+        ruleReferences: q.ruleReferences ?? [],
         answers: { nodes: shuffledAnswers },
       } as unknown as Question;
     });

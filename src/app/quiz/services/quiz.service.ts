@@ -1,6 +1,6 @@
 import { computed, inject, Service, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, map, Observable, tap } from 'rxjs';
+import { catchError, combineLatest, map, Observable, tap } from 'rxjs';
 import { CalculateScoreGQL } from '../../../../graphql/generated';
 import { Question, Score } from '../../../../graphql/types';
 import { QUIZ_CONFIG } from '../../constants';
@@ -19,6 +19,7 @@ interface Answer {
   number: string;
   phrase: string;
   translations: Record<string, string>; // JSON string of translations
+  isCorrect: boolean;
 }
 
 /** Represents a user's answer to a specific question */
@@ -34,6 +35,7 @@ interface QuizQuestion {
   number: string;
   phrase: string;
   translations: Record<string, string>; // JSON string of translations
+  ruleReferences: string[];
   answers: Answer[]; // Original unshuffled answers
   shuffledAnswers: Answer[]; // Randomized order shown to user
 }
@@ -72,6 +74,7 @@ interface QuizResult {
     selectedAnswerIds: string[];
     isCorrect: boolean;
     allAnswers: Answer[]; // Shuffled answers as shown during quiz
+    ruleReferences: string[];
   }>;
 }
 
@@ -186,6 +189,9 @@ export class QuizService {
               number: a.number ?? '',
               phrase: a.phrase ?? '',
               translations: parseTranslations(a.translations as string | Record<string, string> | null | undefined),
+              // Offline quizzes never expose isCorrect here (see LocalQuestionsService) -
+              // it's fetched separately at completion time to avoid leaking it mid-quiz.
+              isCorrect: a.isCorrect,
             })) || [];
 
         return {
@@ -196,6 +202,7 @@ export class QuizService {
             ('translations' in q ? (q.translations as string | Record<string, string> | null | undefined) : null) ??
               undefined
           ),
+          ruleReferences: ('ruleReferences' in q ? (q.ruleReferences as string[] | null | undefined) : null) ?? [],
           answers,
           shuffledAnswers: shuffle([...answers], rng),
         };
@@ -325,7 +332,13 @@ export class QuizService {
     // answers; when online, defer to the backend. Both branches emit the
     // same `{ loading, result }` shape so downstream consumers (and the
     // results page) don't need to care which source produced the score.
-    const score$: Observable<{ loading: boolean; score: Score | null | undefined }> = this._connectivity.online
+    const score$: Observable<{
+      loading: boolean;
+      score: Score | null | undefined;
+      // Only populated for offline quizzes - correct answers are withheld from
+      // the live question state until completion, so they're fetched here instead.
+      correctAnswerIds?: Set<string>;
+    }> = this._connectivity.online
       ? this._calculateScoreGQL
           .watch({
             variables: { questionIds, selectedAnswerIds },
@@ -344,12 +357,13 @@ export class QuizService {
                 .pipe(map((s) => ({ loading: false, score: s })))
             )
           )
-      : this._localScore
-          .calculateScore(questionIds, selectedAnswerIds)
-          .pipe(map((s) => ({ loading: false, score: s })));
+      : combineLatest([
+          this._localScore.calculateScore(questionIds, selectedAnswerIds),
+          this._localScore.getCorrectAnswerIds(questionIds),
+        ]).pipe(map(([s, correctAnswerIds]) => ({ loading: false, score: s, correctAnswerIds })));
 
     return score$.pipe(
-      map(({ loading, score }) => {
+      map(({ loading, score, correctAnswerIds }) => {
         if (loading) {
           return { loading, result: undefined };
         }
@@ -378,12 +392,19 @@ export class QuizService {
           // Question is correct if it's NOT in the wrong questions list
           const isCorrect = !wrongQuestionIds.has(q.id);
 
+          // Offline: shuffledAnswers never carry real isCorrect values, so override
+          // them from the ids fetched separately at completion time.
+          const allAnswers = correctAnswerIds
+            ? q.shuffledAnswers.map((a) => ({ ...a, isCorrect: correctAnswerIds.has(a.id) }))
+            : q.shuffledAnswers;
+
           return {
             questionNumber: q.number,
             question: q.phrase,
             selectedAnswerIds: selectedIds,
             isCorrect,
-            allAnswers: q.shuffledAnswers,
+            allAnswers,
+            ruleReferences: q.ruleReferences,
           };
         });
 
@@ -498,15 +519,6 @@ export class QuizService {
       return `${mins}m ${secs}s`;
     }
     return `${secs}s`;
-  }
-
-  /**
-   * Shuffle array using Fisher–Yates algorithm with a non-deterministic RNG.
-   * Kept for callers that don't need reproducibility; quiz initialization uses
-   * the seeded `shuffle` helper instead.
-   */
-  private shuffleArray<T>(array: T[]): T[] {
-    return shuffle(array, Math.random);
   }
 
   /**

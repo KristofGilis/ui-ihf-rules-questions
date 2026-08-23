@@ -55,6 +55,13 @@ export class LocalScoreService {
     );
   }
 
+  /** Correct answer ids for the given questions - only meant to be read after quiz completion. */
+  getCorrectAnswerIds(questionIds: string[]): Observable<Set<string>> {
+    return this.readAnswersForQuestions(questionIds).pipe(
+      map((answers) => new Set(answers.filter((a) => a.isCorrect).map((a) => a.id)))
+    );
+  }
+
   private scoreFor(
     questionIds: string[],
     selectedAnswerIds: string[],
