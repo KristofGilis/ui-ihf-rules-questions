@@ -71,6 +71,15 @@ export type GetQuestionsQueryVariables = Exact<{
 
 export type GetQuestionsQuery = { questions: { edges: Array<{ cursor: string, node: { id: string, number: string, phrase: string | null, translations: unknown, ruleId: string, ruleReferences: Array<string>, answers: { nodes: Array<{ id: string, number: string, phrase: string | null, translations: unknown, isCorrect: boolean }> | null } } }> | null, pageInfo: { endCursor: string | null, hasNextPage: boolean } } };
 
+export type SearchQuestionsQueryVariables = Exact<{
+  searchTerm: string;
+  first?: number | null | undefined;
+  after?: string | null | undefined;
+}>;
+
+
+export type SearchQuestionsQuery = { searchQuestions: { edges: Array<{ cursor: string, node: { id: string, number: string, phrase: string | null, translations: unknown, ruleId: string, ruleReferences: Array<string>, answers: { nodes: Array<{ id: string, number: string, phrase: string | null, translations: unknown, isCorrect: boolean }> | null } } }> | null, pageInfo: { hasNextPage: boolean, endCursor: string | null } } };
+
 export type GetRuleQueryVariables = Exact<{
   id: string | number;
   first: number;
@@ -301,6 +310,47 @@ export const GetQuestionsDocument = gql`
   })
   export class GetQuestionsGQL extends Apollo.Query<GetQuestionsQuery, GetQuestionsQueryVariables> {
     override document = GetQuestionsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const SearchQuestionsDocument = gql`
+    query searchQuestions($searchTerm: String!, $first: Int, $after: String) {
+  searchQuestions(searchTerm: $searchTerm, first: $first, after: $after) {
+    edges {
+      node {
+        id
+        number
+        phrase
+        translations
+        ruleId
+        ruleReferences
+        answers(order: {number: ASC}) {
+          nodes {
+            id
+            number
+            phrase
+            translations
+            isCorrect
+          }
+        }
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class SearchQuestionsGQL extends Apollo.Query<SearchQuestionsQuery, SearchQuestionsQueryVariables> {
+    override document = SearchQuestionsDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

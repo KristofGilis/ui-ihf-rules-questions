@@ -7,6 +7,7 @@ import {
   faChevronRight,
   faExternalLinkAlt,
   faFileAlt,
+  faMagnifyingGlass,
   faQuestionCircle,
   faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
@@ -46,6 +47,7 @@ export class HomeComponent {
   readonly faFileAlt = faFileAlt;
   readonly faChevronRight = faChevronRight;
   readonly faQuestionCircle = faQuestionCircle;
+  readonly faMagnifyingGlass = faMagnifyingGlass;
   readonly faGithub = faGithub;
   readonly faExternalLinkAlt = faExternalLinkAlt;
   readonly faSpinner = faSpinner;

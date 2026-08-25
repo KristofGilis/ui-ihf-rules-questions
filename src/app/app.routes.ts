@@ -4,6 +4,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 _('navigation.home');
 _('navigation.rules');
 _('navigation.questions');
+_('navigation.search');
 _('navigation.quiz');
 _('navigation.settings');
 
@@ -24,6 +25,10 @@ export const routes: Routes = [
   {
     path: 'questions',
     loadChildren: () => import('./questions/questions.routes'),
+  },
+  {
+    path: 'search',
+    loadChildren: () => import('./search/search.routes'),
   },
   {
     path: 'quiz',

@@ -1,0 +1,46 @@
+<app-page-container padding="pt-20 pb-24">
+  <app-page-hero [title]="'search.title' | translate" [description]="'search.description' | translate" />
+
+  <div class="relative mb-8">
+    <fa-icon
+      [icon]="faMagnifyingGlass"
+      class="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-slate-400"
+      aria-hidden="true" />
+    <input
+      type="search"
+      [ngModel]="searchTerm()"
+      (ngModelChange)="onSearchTermChange($event)"
+      [attr.aria-label]="'search.placeholder' | translate"
+      placeholder="{{ 'search.placeholder' | translate }}"
+      class="w-full rounded-xl border border-slate-300 bg-white py-3 pr-4 pl-11 text-slate-900 shadow-sm transition-colors focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-white" />
+  </div>
+
+  @if (!searchTerm().trim()) {
+    <app-empty-state [message]="'search.prompt' | translate" [hasAction]="true">
+      <fa-icon [icon]="faMagnifyingGlass" size="3x" class="text-slate-400 dark:text-slate-600" />
+      <ul action class="mt-4 max-w-md list-disc space-y-1.5 pl-5 text-left text-sm text-slate-500 dark:text-slate-400">
+        <li>{{ 'search.tip_number' | translate }}</li>
+        <li>{{ 'search.tip_keyword' | translate }}</li>
+        <li>{{ 'search.tip_offline' | translate }}</li>
+      </ul>
+    </app-empty-state>
+  } @else {
+    <div class="space-y-5">
+      @for (question of questions(); track question.id) {
+        <app-question [question]="question" [revealed]="true" [disabled]="true" [showRevealToggle]="false" />
+      } @empty {
+        @if (!loading()) {
+          <app-empty-state [message]="'search.no_results' | translate">
+            <fa-icon [icon]="faQuestionCircle" size="3x" class="text-slate-400 dark:text-slate-600" />
+          </app-empty-state>
+        }
+      }
+
+      @if (loading()) {
+        @for (placeholder of skeletonPlaceholders; track placeholder) {
+          <app-question-skeleton />
+        }
+      }
+    </div>
+  }
+</app-page-container>

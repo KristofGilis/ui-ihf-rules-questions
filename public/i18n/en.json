@@ -33,6 +33,10 @@
       "content": "Go to the list of all rules. From here you can get all questions related to the selected rule.",
       "title": "Rules"
     },
+    "search_card": {
+      "content": "Search all questions and answers by question number, phrase or answer phrase in any language.",
+      "title": "Search"
+    },
     "timed_mode_description": "Race against the clock",
     "version": "Version {{version}}"
   },
@@ -53,6 +57,7 @@
     "questions": "Questions",
     "quiz": "Quiz",
     "rules": "Rules",
+    "search": "Search",
     "settings": "Settings"
   },
   "offline": {
@@ -139,6 +144,16 @@
     "review_mistakes": "Review Mistakes",
     "title": "Result",
     "wrong": "Wrong"
+  },
+  "search": {
+    "description": "Search all questions and answers by question number, phrase or answer phrase in any language.",
+    "no_results": "No questions match your search.",
+    "placeholder": "Search questions...",
+    "prompt": "Type a keyword to search questions.",
+    "tip_keyword": "Or type a keyword — spelling mistakes and partial words are okay.",
+    "tip_number": "Enter a question number or its exact phrase for a precise match.",
+    "tip_offline": "Search works offline too, using the data already synced to your device.",
+    "title": "Search Questions"
   },
   "settings": {
     "description": "Manage your preferences",

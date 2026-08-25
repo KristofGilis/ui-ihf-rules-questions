@@ -33,7 +33,7 @@
     <app-quiz-config-card [title]="'quiz.configure' | translate" (startQuiz)="onStartQuiz($event)" />
 
     <!-- Quick Access Links -->
-    <div class="grid gap-4 md:grid-cols-2">
+    <div class="grid gap-4 md:grid-cols-3">
       <a
         routerLink="/rules"
         class="group relative overflow-hidden rounded-2xl bg-white p-6 shadow-lg ring-1 ring-slate-900/5 transition-all hover:shadow-xl hover:ring-cyan-500/50 dark:bg-slate-900 dark:ring-slate-100/10">
@@ -62,6 +62,24 @@
         </h3>
         <p class="text-sm text-slate-600 dark:text-slate-400">
           {{ 'home.all_questions_card.content' | translate }}
+        </p>
+        <div class="absolute right-4 bottom-4 text-cyan-500 opacity-0 transition-opacity group-hover:opacity-100">
+          <fa-icon [icon]="faChevronRight" />
+        </div>
+      </a>
+
+      <a
+        routerLink="/search"
+        class="group relative overflow-hidden rounded-2xl bg-white p-6 shadow-lg ring-1 ring-slate-900/5 transition-all hover:shadow-xl hover:ring-cyan-500/50 dark:bg-slate-900 dark:ring-slate-100/10">
+        <div
+          class="mb-4 inline-flex rounded-xl bg-cyan-100 p-3 text-cyan-600 transition-colors group-hover:bg-cyan-500 group-hover:text-white dark:bg-cyan-900/30 dark:text-cyan-400 dark:group-hover:bg-cyan-500 dark:group-hover:text-white">
+          <fa-icon [icon]="faMagnifyingGlass" size="lg" />
+        </div>
+        <h3 class="mb-2 text-xl font-bold text-slate-900 dark:text-white">
+          {{ 'home.search_card.title' | translate }}
+        </h3>
+        <p class="text-sm text-slate-600 dark:text-slate-400">
+          {{ 'home.search_card.content' | translate }}
         </p>
         <div class="absolute right-4 bottom-4 text-cyan-500 opacity-0 transition-opacity group-hover:opacity-100">
           <fa-icon [icon]="faChevronRight" />

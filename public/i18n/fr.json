@@ -33,6 +33,10 @@
       "content": "Accédez à la liste de toutes les règles. À partir d'ici, vous pouvez obtenir toutes les questions liées à la règle sélectionnée.",
       "title": "Règles"
     },
+    "search_card": {
+      "content": "Recherchez toutes les questions et réponses par numéro, phrase ou réponse dans n'importe quelle langue.",
+      "title": "Recherche"
+    },
     "timed_mode_description": "Course contre la montre",
     "version": "Version {{version}}"
   },
@@ -53,6 +57,7 @@
     "questions": "Questions",
     "quiz": "Quiz",
     "rules": "Règles",
+    "search": "Recherche",
     "settings": "Paramètres"
   },
   "offline": {
@@ -139,6 +144,16 @@
     "review_mistakes": "Revoir les erreurs",
     "title": "Résultat",
     "wrong": "Faux"
+  },
+  "search": {
+    "description": "Recherchez toutes les questions et réponses par numéro, phrase ou réponse dans n'importe quelle langue.",
+    "no_results": "Aucune question ne correspond à votre recherche.",
+    "placeholder": "Rechercher des questions...",
+    "prompt": "Saisissez un mot-clé pour rechercher des questions.",
+    "tip_keyword": "Ou tapez un mot-clé — les fautes de frappe et les mots partiels sont acceptés.",
+    "tip_number": "Saisissez un numéro de question ou sa phrase exacte pour une correspondance précise.",
+    "tip_offline": "La recherche fonctionne aussi hors ligne, avec les données déjà synchronisées sur votre appareil.",
+    "title": "Recherche de questions"
   },
   "settings": {
     "description": "Gérez vos préférences",
