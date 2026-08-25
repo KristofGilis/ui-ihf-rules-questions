@@ -5,6 +5,10 @@ import { Title } from '@angular/platform-browser';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
+  faHouse as faHouseRegular,
+  faCircleQuestion as faQuestionCircleRegular,
+} from '@fortawesome/free-regular-svg-icons';
+import {
   faBook,
   faDesktop,
   faGear,
@@ -17,6 +21,7 @@ import {
   faTrophy,
   faWifi,
   faXmark,
+  IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { getLanguage } from './language';
@@ -28,6 +33,14 @@ import { SidebarService } from './services/sidebar.service';
 import { ThemeService } from './services/theme.service';
 import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 import { ElementHeightDirective } from './shared/directives/element-height.directive';
+
+interface TabBarItem {
+  readonly route: string;
+  readonly exact?: boolean;
+  readonly labelKey: string;
+  readonly solidIcon: IconDefinition;
+  readonly regularIcon?: IconDefinition;
+}
 
 @Component({
   selector: 'app-root',
@@ -61,9 +74,11 @@ export class AppComponent {
 
   // FontAwesome icons - readonly for immutability
   protected readonly faHome = faHome;
+  protected readonly faHouseRegular = faHouseRegular;
   protected readonly faTrophy = faTrophy;
-  protected readonly faBook = faBook;
   protected readonly faQuestionCircle = faQuestionCircle;
+  protected readonly faQuestionCircleRegular = faQuestionCircleRegular;
+  protected readonly faBook = faBook;
   protected readonly faMagnifyingGlass = faMagnifyingGlass;
   protected readonly faSun = faSun;
   protected readonly faMoon = faMoon;
@@ -72,6 +87,34 @@ export class AppComponent {
   protected readonly faRotate = faRotate;
   protected readonly faXmark = faXmark;
   protected readonly faGear = faGear;
+
+  // Mobile tabbar items
+  protected readonly tabItems: readonly TabBarItem[] = [
+    {
+      route: '/home',
+      exact: true,
+      labelKey: 'navigation.home',
+      solidIcon: this.faHome,
+      regularIcon: this.faHouseRegular,
+    },
+    { route: '/quiz', labelKey: 'navigation.quiz', solidIcon: this.faTrophy },
+    {
+      route: '/questions',
+      labelKey: 'navigation.questions',
+      solidIcon: this.faQuestionCircle,
+      regularIcon: this.faQuestionCircleRegular,
+    },
+    {
+      route: '/rules',
+      labelKey: 'navigation.rules',
+      solidIcon: this.faBook,
+    },
+    {
+      route: '/search',
+      labelKey: 'navigation.search',
+      solidIcon: this.faMagnifyingGlass,
+    },
+  ];
 
   // State signals
   protected readonly currentLang = signal(getLanguage());

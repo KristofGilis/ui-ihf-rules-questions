@@ -13,6 +13,39 @@ aside a.active-nav:is(.dark *) {
   color: #22d3ee; /* cyan-400 for dark mode */
 }
 
+/* Pill-shaped highlight behind the icon of the selected tab, iOS/WhatsApp style */
+footer a.active-nav .tab-icon-pill {
+  background-color: rgb(14 116 144 / 12%);
+}
+
+footer a.active-nav:is(.dark *) .tab-icon-pill {
+  background-color: rgb(34 211 238 / 16%);
+}
+
+@keyframes tab-bounce {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+footer a.active-nav fa-icon {
+  animation: tab-bounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: scale(1.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  footer a.active-nav fa-icon {
+    animation: none;
+    transform: none;
+  }
+}
+
 .language-dropdown button.bg-cyan-500,
 .theme-dropdown button.bg-cyan-500 {
   color: white;

@@ -23,6 +23,7 @@ export default {
         'rules',
         'shared',
         'search',
+        'app',
 
         // Cross-cutting / infra
         'graphql',

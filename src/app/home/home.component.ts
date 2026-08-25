@@ -3,12 +3,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
+import { faCircleQuestion as faQuestionCircleRegular } from '@fortawesome/free-regular-svg-icons';
 import {
+  faBook,
   faChevronRight,
   faExternalLinkAlt,
-  faFileAlt,
   faMagnifyingGlass,
-  faQuestionCircle,
   faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -44,9 +44,9 @@ export class HomeComponent {
   readonly githubUrl = environment.githubUrl;
 
   // Font Awesome icons
-  readonly faFileAlt = faFileAlt;
+  readonly faBook = faBook;
   readonly faChevronRight = faChevronRight;
-  readonly faQuestionCircle = faQuestionCircle;
+  readonly faQuestionCircleRegular = faQuestionCircleRegular;
   readonly faMagnifyingGlass = faMagnifyingGlass;
   readonly faGithub = faGithub;
   readonly faExternalLinkAlt = faExternalLinkAlt;

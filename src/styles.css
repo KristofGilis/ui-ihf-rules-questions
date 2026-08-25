@@ -50,6 +50,8 @@
 :root {
   --color-bg-light: #ffffff;
   --color-bg-dark: #0f172a;
+  --mobile-tabbar-margin: calc(0.75rem + env(safe-area-inset-bottom));
+  --mobile-tabbar-top: calc(var(--mobile-tabbar-margin) + 4rem);
 }
 
 body {

@@ -1,6 +1,6 @@
 <!-- Global reveal toggle - sticky so it stays reachable while scrolling long question lists -->
 <div
-  class="sticky z-20 mb-6 flex items-center justify-between rounded-xl bg-slate-100 p-4 shadow-md dark:bg-slate-800"
+  class="sticky z-20 mb-6 flex items-center justify-between rounded-4xl border border-white/50 bg-white/70 p-4 shadow-[0_8px_32px_rgba(15,23,42,0.18)] backdrop-blur-2xl backdrop-saturate-150 dark:border-white/10 dark:bg-slate-900/60 dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
   style="top: var(--app-header-height, 4rem)">
   <span class="text-sm font-medium text-slate-900 dark:text-white">
     {{ (globalReveal() ? 'questions.hide_correct_answers' : 'questions.show_correct_answers') | translate }}
@@ -66,7 +66,8 @@
 
 <!-- Mobile: Fixed Bottom Bar (only when score exists) -->
 @if (score() && isMobile() && !showMobileScoreDialog() && !anyRevealed()) {
-  <div class="fixed right-0 bottom-16 left-0 z-40 bg-white p-4 shadow-2xl dark:bg-slate-900">
+  <div
+    class="fixed inset-x-3 bottom-[calc(var(--mobile-tabbar-top)+0.5rem)] z-40 mx-auto max-w-lg rounded-4xl border border-white/50 bg-white/70 p-4 shadow-[0_8px_32px_rgba(15,23,42,0.18)] backdrop-blur-2xl backdrop-saturate-150 dark:border-white/10 dark:bg-slate-900/60 dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
     @if (score()?.percentage !== '100.00 %') {
       <!-- Show both buttons when there are wrong answers -->
       <div class="mx-auto flex max-w-md gap-3">
