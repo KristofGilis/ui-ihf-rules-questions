@@ -22,6 +22,7 @@ export default {
         'questions',
         'rules',
         'shared',
+        'search',
 
         // Cross-cutting / infra
         'graphql',

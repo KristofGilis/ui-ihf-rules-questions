@@ -9,6 +9,7 @@ import {
   faDesktop,
   faGear,
   faHome,
+  faMagnifyingGlass,
   faMoon,
   faQuestionCircle,
   faRotate,
@@ -63,6 +64,7 @@ export class AppComponent {
   protected readonly faTrophy = faTrophy;
   protected readonly faBook = faBook;
   protected readonly faQuestionCircle = faQuestionCircle;
+  protected readonly faMagnifyingGlass = faMagnifyingGlass;
   protected readonly faSun = faSun;
   protected readonly faMoon = faMoon;
   protected readonly faDesktop = faDesktop;

@@ -313,6 +313,18 @@
       'navigation.rules' | translate
     }}</span>
   </a>
+  <a
+    routerLink="/search"
+    routerLinkActive="active-nav"
+    [title]="!sidebar.expanded() ? ('navigation.search' | translate) : null"
+    class="mx-2 flex h-10 shrink-0 items-center gap-3 rounded-lg text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:outline-none dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
+    [class.justify-center]="!sidebar.expanded()"
+    [class.px-2]="sidebar.expanded()">
+    <fa-icon [icon]="faMagnifyingGlass" size="lg" class="shrink-0" aria-hidden="true" />
+    <span [class.sr-only]="!sidebar.expanded()" class="truncate text-sm font-medium">{{
+      'navigation.search' | translate
+    }}</span>
+  </a>
 
   <!-- Settings link -->
   <a
@@ -399,6 +411,13 @@
       class="flex min-w-15 flex-col items-center justify-center gap-0.5 text-slate-600 opacity-90 transition-opacity hover:text-slate-900 hover:opacity-100 dark:text-slate-400 dark:hover:text-white">
       <fa-icon [icon]="faBook" size="lg" />
       <span class="text-xs font-medium">{{ 'navigation.rules' | translate }}</span>
+    </a>
+    <a
+      routerLink="/search"
+      routerLinkActive="active-nav"
+      class="flex min-w-15 flex-col items-center justify-center gap-0.5 text-slate-600 opacity-90 transition-opacity hover:text-slate-900 hover:opacity-100 dark:text-slate-400 dark:hover:text-white">
+      <fa-icon [icon]="faMagnifyingGlass" size="lg" />
+      <span class="text-xs font-medium">{{ 'navigation.search' | translate }}</span>
     </a>
   </nav>
 </footer>

@@ -35,6 +35,7 @@ export class QuestionComponent implements OnInit {
   readonly isWrong = input<boolean>(false);
   readonly disabled = input<boolean>(false);
   readonly revealed = input<boolean>(false);
+  readonly showRevealToggle = input<boolean>(true);
   readonly selectAnswer = output<string>();
   readonly deselectAnswer = output<string>();
   readonly toggleReveal = output<void>();

@@ -33,6 +33,10 @@
       "content": "Ga naar de lijst met alle spelregels. Vanaf hier kun je alle vragen krijgen die betrekking hebben op de geselecteerde spelregel.",
       "title": "Spelregels"
     },
+    "search_card": {
+      "content": "Zoek alle vragen en antwoorden op vraagnummer, zin of antwoordzin in elke taal.",
+      "title": "Zoeken"
+    },
     "timed_mode_description": "Race tegen de klok",
     "version": "Versie {{version}}"
   },
@@ -53,6 +57,7 @@
     "questions": "Vragen",
     "quiz": "Quiz",
     "rules": "Spelregels",
+    "search": "Zoeken",
     "settings": "Instellingen"
   },
   "offline": {
@@ -139,6 +144,16 @@
     "review_mistakes": "Fouten Bekijken",
     "title": "Resultaat",
     "wrong": "Fout"
+  },
+  "search": {
+    "description": "Zoek alle vragen en antwoorden op vraagnummer, zin of antwoordzin in elke taal.",
+    "no_results": "Geen vragen komen overeen met je zoekopdracht.",
+    "placeholder": "Zoek vragen...",
+    "prompt": "Typ een trefwoord om vragen te zoeken.",
+    "tip_keyword": "Of typ een trefwoord — typefouten en gedeeltelijke woorden zijn prima.",
+    "tip_number": "Voer een vraagnummer of de exacte zin in voor een precieze match.",
+    "tip_offline": "Zoeken werkt ook offline, met de gegevens die al op je apparaat zijn gesynchroniseerd.",
+    "title": "Vragen zoeken"
   },
   "settings": {
     "description": "Beheer je voorkeuren",
