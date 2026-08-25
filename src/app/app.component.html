@@ -20,7 +20,7 @@
 <div #topBar="appElementHeight" appElementHeight class="fixed top-0 right-0 left-0 z-50">
   <!-- Header -->
   <header
-    class="border-b border-slate-300 bg-slate-100 pt-[calc(env(safe-area-inset-top)+0.5rem)] dark:border-slate-800 dark:bg-slate-900"
+    class="border-b border-slate-300 bg-slate-100 pt-[env(safe-area-inset-top)] dark:border-slate-800 dark:bg-slate-900"
     role="banner">
     <nav class="flex h-16 items-center justify-between px-4" role="navigation" aria-label="Main navigation">
       <!-- Logo -->
@@ -355,7 +355,8 @@
         <span
           class="tab-icon-pill flex flex-col items-center gap-0.5 rounded-full py-1.5 transition-all duration-200"
           [class.px-2]="!rla.isActive"
-          [class.px-5]="rla.isActive">
+          [class.px-3]="rla.isActive"
+          [class.min-w-16]="rla.isActive">
           <fa-icon [icon]="rla.isActive ? tab.solidIcon : (tab.regularIcon ?? tab.solidIcon)" size="lg" />
           <span class="text-xs font-medium">{{ tab.labelKey | translate }}</span>
         </span>
