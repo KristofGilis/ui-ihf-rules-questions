@@ -10,8 +10,8 @@
       content="Master IHF handball rules with our interactive quiz. Test your knowledge of handball regulations, learn official rules, and improve your understanding of the game." />
 
     <!-- iOS PWA Meta Tags -->
-    <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#f1f5f9" media="(prefers-color-scheme: light)" />
+    <!-- content is kept in sync with the app's theme (not just OS preference) by ThemeService -->
+    <meta name="theme-color" content="#0f172a" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="IHF Rules Quiz" />
@@ -49,14 +49,8 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <meta name="msapplication-TileColor" content="#0f172a" />
     <!-- Windows Tile for dark mode -->
-    <meta name="msapplication-config" content="browserconfig.xml" />
     <meta name="msapplication-config" content="icons/browserconfig.xml" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8fafc" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f172a" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="IHF Rules Quiz" />
   </head>
   <body>
     <app-root></app-root>

@@ -15,7 +15,15 @@ export class ThemeService {
     return {
       light: styles.getPropertyValue('--color-bg-light').trim(),
       dark: styles.getPropertyValue('--color-bg-dark').trim(),
+      statusBarLight: styles.getPropertyValue('--status-bar-color-light').trim(),
+      statusBarDark: styles.getPropertyValue('--status-bar-color-dark').trim(),
     };
+  }
+
+  // Single dynamic meta tag replaces the old static prefers-color-scheme media-query pair,
+  // which drifted from the app's actual theme once users could pick it independently of the OS.
+  private setStatusBarColor(color: string): void {
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', color);
   }
 
   constructor() {
@@ -60,9 +68,11 @@ export class ThemeService {
       if (isDark) {
         root.classList.add('dark');
         root.style.backgroundColor = colors.dark;
+        this.setStatusBarColor(colors.statusBarDark);
       } else {
         root.classList.remove('dark');
         root.style.backgroundColor = colors.light;
+        this.setStatusBarColor(colors.statusBarLight);
       }
       return;
     }
@@ -71,9 +81,11 @@ export class ThemeService {
     if (theme === 'dark') {
       root.classList.add('dark');
       root.style.backgroundColor = colors.dark;
+      this.setStatusBarColor(colors.statusBarDark);
     } else {
       root.classList.remove('dark');
       root.style.backgroundColor = colors.light;
+      this.setStatusBarColor(colors.statusBarLight);
     }
   }
 

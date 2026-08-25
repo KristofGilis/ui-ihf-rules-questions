@@ -1,4 +1,4 @@
-<app-page-container [padding]="'pb-24 pt-12'">
+<app-page-container [padding]="'pb-(--mobile-page-bottom-padding) pt-12'">
   @if (completingQuiz$ | async; as completingState) {
     @if (completingState.loading) {
       <div class="flex flex-col items-center justify-center py-20" role="status" aria-live="polite">
