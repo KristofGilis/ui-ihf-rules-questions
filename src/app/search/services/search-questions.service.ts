@@ -75,7 +75,7 @@ export class SearchQuestionsService {
       this._searchQuestionsGQL
         .fetch({
           variables: { searchTerm: term, first: PAGE_SIZE, after: this._cursor },
-          fetchPolicy: 'network-only',
+          fetchPolicy: 'no-cache',
         })
         .pipe(
           map((result) => ({
