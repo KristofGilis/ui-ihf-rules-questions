@@ -59,9 +59,18 @@ export class QuestionsComponent {
     return this._questionsService.hasNextPage;
   }
 
+  // Mobile keyboard close/open resizes the viewport and fires scroll events; without this guard that
+  // spuriously triggers fetchMore() and makes it look like the results changed.
+  private _lastInnerHeight = window.innerHeight;
+
   @HostListener('window:scroll')
   onScroll(): void {
     if (this.loading()) {
+      return;
+    }
+
+    if (window.innerHeight !== this._lastInnerHeight) {
+      this._lastInnerHeight = window.innerHeight;
       return;
     }
 

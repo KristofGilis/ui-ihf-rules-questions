@@ -146,6 +146,7 @@
     "wrong": "Wrong"
   },
   "search": {
+    "clear": "Clear search",
     "description": "Search all questions and answers by question number, phrase or answer phrase in any language.",
     "no_results": "No questions match your search.",
     "placeholder": "Search questions...",

@@ -146,6 +146,7 @@
     "wrong": "Fout"
   },
   "search": {
+    "clear": "Zoekopdracht wissen",
     "description": "Zoek alle vragen en antwoorden op vraagnummer, zin of antwoordzin in elke taal.",
     "no_results": "Geen vragen komen overeen met je zoekopdracht.",
     "placeholder": "Zoek vragen...",

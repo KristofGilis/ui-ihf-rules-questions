@@ -146,6 +146,7 @@
     "wrong": "Faux"
   },
   "search": {
+    "clear": "Effacer la recherche",
     "description": "Recherchez toutes les questions et réponses par numéro, phrase ou réponse dans n'importe quelle langue.",
     "no_results": "Aucune question ne correspond à votre recherche.",
     "placeholder": "Rechercher des questions...",
