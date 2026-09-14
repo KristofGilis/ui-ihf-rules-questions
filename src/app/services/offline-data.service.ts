@@ -50,7 +50,7 @@ const MAX_CACHE_AGE_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
  * On boot, if the stored value does not match this constant, the entire
  * persisted cache + in-memory cache + manifest are purged before resync.
  */
-const CACHE_FORMAT_VERSION = '5';
+const CACHE_FORMAT_VERSION = '6';
 
 /** Entity buckets driven by `prefetchVersions`. */
 type Entity = 'rules' | 'questions' | 'answers' | 'languages' | 'scoreConfiguration';
