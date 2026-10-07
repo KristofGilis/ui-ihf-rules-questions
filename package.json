@@ -89,5 +89,8 @@
     "sharp": "~0.35.4",
     "tailwindcss": "~4.3.3",
     "typescript": "~6.0.3"
+  },
+  "overrides": {
+    "conventional-changelog-writer": "9.3.0"
   }
 }
