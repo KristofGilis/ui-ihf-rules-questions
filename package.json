@@ -89,10 +89,5 @@
     "sharp": "~0.35.4",
     "tailwindcss": "~4.3.3",
     "typescript": "~6.0.3"
-  },
-  "overrides": {
-    "@commitlint/config-conventional": {
-      "conventional-changelog-conventionalcommits": "9.3.1"
-    }
   }
 }
