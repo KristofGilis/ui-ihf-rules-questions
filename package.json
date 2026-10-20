@@ -73,7 +73,7 @@
     "@testing-library/angular": "~19.5.0",
     "@testing-library/user-event": "~14.6.8",
     "@types/hammerjs": "~2.0.46",
-    "@types/node": "~26.6.4",
+    "@types/node": "~26.6.5",
     "@typescript-eslint/eslint-plugin": "~8.71.1",
     "@typescript-eslint/parser": "~8.71.1",
     "@vendure/ngx-translate-extract": "~10.3.0",
