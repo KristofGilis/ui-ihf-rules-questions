@@ -19,7 +19,7 @@ npm run mobile:sync:ios
 
 These scripts build Angular in production mode and copy its output into the native project. Use Android Studio to build and run `android/`. On a Mac with Xcode 26 or newer, build and run `ios/App/App.xcworkspace`. Android Studio and an Android SDK are required for Android; Xcode on macOS is required for iOS.
 
-If no Mac is available locally, run the manual **Native Compile Checks** GitHub Actions workflow after pushing these changes. It compiles an unsigned iOS simulator app on a macOS runner and an Android debug app on an Ubuntu runner. It does not replace physical-device testing, store signing, or submission.
+If no Mac is available locally, use the **Native Compile Checks** GitHub Actions workflow. It runs on relevant pull requests and can also be started manually. It compiles an unsigned iOS simulator app on a macOS runner and an Android debug app on an Ubuntu runner. It does not replace physical-device testing, store signing, or submission.
 
 The native icons and splash screens were generated from the square vector source in `assets/logo.svg`. If the artwork changes, regenerate Android and iOS resources with the current `@capacitor/assets` tool using icon background `#229cde`, splash background `#0f172a`, and logo splash scale `0.5`. Restrict generation to `--android` and `--ios` so the existing PWA manifest and icons stay intact. Review the resulting icons at small sizes. Confirm rights to the IHF name, logo, and question content before submitting either app.
 
