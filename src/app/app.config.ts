@@ -11,6 +11,7 @@ import { provideRouter } from '@angular/router';
 
 import { HttpInterceptorFn, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideServiceWorker } from '@angular/service-worker';
+import { Capacitor } from '@capacitor/core';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { switchMap } from 'rxjs';
@@ -60,7 +61,9 @@ export const appConfig: ApplicationConfig = {
         .subscribe();
     }),
     provideServiceWorker('ngsw-worker.js', {
-      enabled: !isDevMode(),
+      // Native releases contain their web assets in the signed app bundle.
+      // Angular's service worker and its web update flow remain PWA-only.
+      enabled: !isDevMode() && !Capacitor.isNativePlatform(),
       registrationStrategy: 'registerWhenStable:30000',
     }),
     provideHttpClient(withInterceptors([languageInterceptor])),

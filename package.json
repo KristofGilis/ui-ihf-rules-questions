@@ -13,6 +13,10 @@
     "start": "ng serve",
     "build": "ng build",
     "build:web": "ng build --configuration production",
+    "build:mobile": "ng build --configuration production",
+    "mobile:sync:android": "npm run build:mobile && cap sync android",
+    "mobile:sync:ios": "npm run build:mobile && cap sync ios",
+    "mobile:android:legacy-icons": "node scripts/generate-android-legacy-icons.mjs",
     "preview": "ng build --configuration production && npx http-server dist/ui-ihf-rules-questions/browser -p 4200 -c-1 -P http://localhost:4200?",
     "watch": "ng build --watch --configuration development",
     "codegen": "graphql-codegen && node scripts/inject-schema-version.mjs",
@@ -37,6 +41,9 @@
     "@angular/router": "~22.2.1",
     "@angular/service-worker": "~22.2.1",
     "@apollo/client": "~4.3.4",
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/ios": "^8.5.3",
     "@fortawesome/angular-fontawesome": "~5.1.0",
     "@fortawesome/fontawesome-svg-core": "~7.3.1",
     "@fortawesome/free-brands-svg-icons": "~7.3.1",
@@ -62,6 +69,7 @@
     "@angular/cli": "~22.2.2",
     "@angular/compiler-cli": "~22.2.1",
     "@biesbjerg/ngx-translate-extract-marker": "~1.0.0",
+    "@capacitor/cli": "^8.5.3",
     "@commitlint/cli": "~21.2.4",
     "@commitlint/config-conventional": "~21.2.4",
     "@graphql-codegen/cli": "~7.4.6",
@@ -91,6 +99,7 @@
     "typescript": "~6.0.3"
   },
   "overrides": {
-    "conventional-changelog-writer": "9.3.0"
+    "conventional-changelog-writer": "9.3.0",
+    "zod": "4.6.6"
   }
 }

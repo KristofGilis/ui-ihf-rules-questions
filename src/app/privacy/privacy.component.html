@@ -1,0 +1,89 @@
+<app-page-container [gradient]="false" [padding]="'pt-20 pb-(--mobile-page-bottom-padding)'">
+  <article
+    class="mx-auto max-w-3xl space-y-8 rounded-2xl bg-white p-6 text-slate-700 shadow-lg ring-1 ring-slate-900/5 sm:p-10 dark:bg-slate-900 dark:text-slate-300 dark:ring-slate-100/10">
+    <header class="space-y-3 border-b border-slate-200 pb-6 dark:border-slate-700">
+      <h1 class="text-3xl font-bold text-slate-900 dark:text-white">{{ 'privacy.title' | translate }}</h1>
+      <p class="text-sm">{{ 'privacy.updated' | translate }}</p>
+      <p>
+        {{ 'privacy.intro' | translate }}
+        <a class="font-medium text-cyan-700 underline dark:text-cyan-400" href="mailto:kristof.gilis@outlook.be"
+          >kristof.gilis@outlook.be</a
+        >.
+      </p>
+    </header>
+
+    <section aria-labelledby="privacy-data" class="space-y-3">
+      <h2 id="privacy-data" class="text-xl font-semibold text-slate-900 dark:text-white">
+        {{ 'privacy.data_heading' | translate }}
+      </h2>
+      <ul class="list-disc space-y-2 pl-6">
+        <li>
+          <strong>{{ 'privacy.device_label' | translate }}</strong> {{ 'privacy.device' | translate }}
+        </li>
+        <li>
+          <strong>{{ 'privacy.online_label' | translate }}</strong> {{ 'privacy.online' | translate }}
+        </li>
+        <li>
+          <strong>{{ 'privacy.technical_label' | translate }}</strong> {{ 'privacy.technical' | translate }}
+        </li>
+        <li>
+          <strong>{{ 'privacy.contact_label' | translate }}</strong> {{ 'privacy.contact' | translate }}
+        </li>
+      </ul>
+      <p>{{ 'privacy.no_account' | translate }}</p>
+    </section>
+
+    <section aria-labelledby="privacy-purpose" class="space-y-3">
+      <h2 id="privacy-purpose" class="text-xl font-semibold text-slate-900 dark:text-white">
+        {{ 'privacy.purpose_heading' | translate }}
+      </h2>
+      <p>{{ 'privacy.purpose' | translate }}</p>
+      <p>{{ 'privacy.offline' | translate }}</p>
+    </section>
+
+    <section aria-labelledby="privacy-sharing" class="space-y-3">
+      <h2 id="privacy-sharing" class="text-xl font-semibold text-slate-900 dark:text-white">
+        {{ 'privacy.hosting_heading' | translate }}
+      </h2>
+      <p>
+        {{ 'privacy.hosting_before_link' | translate }}
+        <a
+          class="font-medium text-cyan-700 underline dark:text-cyan-400"
+          href="https://www.microsoft.com/licensing/docs/view/Microsoft-Products-and-Services-Data-Protection-Addendum-DPA"
+          target="_blank"
+          rel="noopener noreferrer"
+          >{{ 'privacy.dpa_label' | translate }}</a
+        >. {{ 'privacy.hosting_after_link' | translate }}
+      </p>
+    </section>
+
+    <section aria-labelledby="privacy-retention" class="space-y-3">
+      <h2 id="privacy-retention" class="text-xl font-semibold text-slate-900 dark:text-white">
+        {{ 'privacy.retention_heading' | translate }}
+      </h2>
+      <p>{{ 'privacy.retention_local' | translate }}</p>
+      <p>{{ 'privacy.retention_logs' | translate }}</p>
+    </section>
+
+    <section aria-labelledby="privacy-choices" class="space-y-3">
+      <h2 id="privacy-choices" class="text-xl font-semibold text-slate-900 dark:text-white">
+        {{ 'privacy.rights_heading' | translate }}
+      </h2>
+      <p>{{ 'privacy.choices' | translate }}</p>
+      <p>
+        {{ 'privacy.rights_before_email' | translate }}
+        <a class="font-medium text-cyan-700 underline dark:text-cyan-400" href="mailto:kristof.gilis@outlook.be"
+          >kristof.gilis@outlook.be</a
+        >
+        {{ 'privacy.rights_after_email' | translate }}
+      </p>
+    </section>
+
+    <section aria-labelledby="privacy-changes" class="space-y-3">
+      <h2 id="privacy-changes" class="text-xl font-semibold text-slate-900 dark:text-white">
+        {{ 'privacy.changes_heading' | translate }}
+      </h2>
+      <p>{{ 'privacy.changes' | translate }}</p>
+    </section>
+  </article>
+</app-page-container>

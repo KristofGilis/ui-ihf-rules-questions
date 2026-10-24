@@ -150,7 +150,7 @@ This application is a fully-featured PWA that works offline and can be installed
 - **App Shortcuts** - Quick access to "Browse Rules" and "Start Quiz"
 - **Standalone Mode** - Runs like a native app when installed
 
-> **Note**: Native mobile apps (iOS/Android via Capacitor) were removed in v2.0.0 to focus on perfecting the PWA experience. They will be re-implemented in a future release with proper asset generation and testing.
+Native Android and iOS projects are now included via Capacitor. See [Mobile release guide](docs/MOBILE_RELEASE.md) for build, testing, and store preparation steps. Offline questions become available after the first successful data sync.
 
 ## 🌍 Internationalization
 

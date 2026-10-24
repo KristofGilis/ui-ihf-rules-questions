@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">IHF Rules Quiz</string>
+    <string name="title_activity_main">IHF Rules Quiz</string>
+    <string name="package_name">io.github.kristofgilis.ihfrulesquiz</string>
+    <string name="custom_url_scheme">io.github.kristofgilis.ihfrulesquiz</string>
+</resources>

@@ -1,6 +1,7 @@
 import { DatePipe, DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faArrowRightArrowLeft,
@@ -29,7 +30,7 @@ import { PageHeroComponent } from '../shared/components/page-hero/page-hero.comp
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslatePipe, FaIconComponent, PageContainerComponent, PageHeroComponent, DatePipe],
+  imports: [TranslatePipe, FaIconComponent, PageContainerComponent, PageHeroComponent, DatePipe, RouterLink],
 })
 export class SettingsComponent {
   private readonly _translateService = inject(TranslateService);
