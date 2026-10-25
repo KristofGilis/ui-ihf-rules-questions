@@ -193,6 +193,7 @@
     "offline_section": "Hors ligne",
     "privacy_policy": "Lire la politique de confidentialité",
     "privacy_section": "Confidentialité",
+    "support_contact": "Obtenir de l’aide",
     "sidebar_collapse": "Réduire la barre latérale",
     "sidebar_expand": "Agrandir la barre latérale",
     "sidebar_expanded": "Barre latérale agrandie",
@@ -204,6 +205,18 @@
     "sidebar_section": "Barre latérale",
     "theme_section": "Thème",
     "title": "Paramètres"
+  },
+  "support": {
+    "title": "Assistance",
+    "intro": "Besoin d’aide avec IHF Rules Quiz ? Envoyez-nous un e-mail et nous vous répondrons.",
+    "contact_heading": "Contact",
+    "contact_details": "Indiquez-nous ce qui s’est passé, votre appareil, la version de l’application et la langue choisie. N’incluez pas de données personnelles sensibles.",
+    "offline_heading": "Utiliser l’application hors ligne",
+    "offline_details": "Une nouvelle installation nécessite une connexion Internet pour télécharger le contenu du quiz. Après une première synchronisation réussie, les questions, les règles et le calcul du score téléchargés fonctionnent hors ligne. Pour actualiser le contenu, ouvrez Paramètres et choisissez Synchroniser maintenant lorsque vous êtes connecté.",
+    "content_heading": "Commentaires sur les questions ou les règles",
+    "content_details": "Si une question ou une règle semble incorrecte, indiquez son numéro et la langue afin que nous puissions vérifier.",
+    "privacy_before_link": "Pour en savoir plus sur l’utilisation des données, consultez notre",
+    "privacy_link": "politique de confidentialité"
   },
   "theme": {
     "dark": "Sombre",

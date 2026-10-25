@@ -6,6 +6,8 @@ Review the IHF name and artwork rights before using this copy in either store. C
 
 **Privacy policy URL after the frontend is deployed:** `https://rulequestions.azurewebsites.net/privacy`
 
+**Support URL after the frontend is deployed:** `https://rulequestions.azurewebsites.net/support`
+
 **Name:** IHF Rules Quiz
 
 **Short description / subtitle:** Practice handball rules with interactive quizzes
@@ -34,7 +36,7 @@ Update the notes with the device and OS versions tested, the verified offline be
 
 ## Required facts to verify before submission
 
-- Publisher identity and rights to the name, artwork, rules, and questions
+- Publisher identity and rights to the name, artwork, rules, and questions (operator confirmed permission)
 - Confirm the public privacy policy URL resolves after deployment and provide a support URL
 - Recheck logging before submission: on 24 October 2026, application and HTTP logging were disabled on both Azure App Services, neither app had Azure Monitor diagnostic settings, and Azure SQL auditing was disabled. These settings were not retaining request logs. Update all four privacy-policy translations if logging changes.
 - Third-party SDK data collection and any crash reporting added after this review

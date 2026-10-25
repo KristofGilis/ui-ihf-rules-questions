@@ -193,6 +193,7 @@
     "offline_section": "Offline",
     "privacy_policy": "Read privacy policy",
     "privacy_section": "Privacy",
+    "support_contact": "Get help",
     "sidebar_collapse": "Collapse sidebar",
     "sidebar_expand": "Expand sidebar",
     "sidebar_expanded": "Expanded sidebar",
@@ -204,6 +205,18 @@
     "sidebar_section": "Sidebar",
     "theme_section": "Theme",
     "title": "Settings"
+  },
+  "support": {
+    "title": "Support",
+    "intro": "Need help with IHF Rules Quiz? Contact us by email and we will reply.",
+    "contact_heading": "Contact",
+    "contact_details": "Please tell us what happened, your device and app version, and your selected language. Do not include sensitive personal information.",
+    "offline_heading": "Using the app offline",
+    "offline_details": "A new installation needs an internet connection to download quiz content. After the first successful sync, downloaded questions, rules, and scoring work offline. To refresh content, open Settings and choose Sync now while connected.",
+    "content_heading": "Question or rule feedback",
+    "content_details": "If a question or rule seems incorrect, include its number and the language so we can investigate.",
+    "privacy_before_link": "For information about data use, read our",
+    "privacy_link": "privacy policy"
   },
   "theme": {
     "dark": "Dark",
