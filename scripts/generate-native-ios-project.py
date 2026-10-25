@@ -66,7 +66,10 @@ products = object_("Products", f'isa = PBXGroup; name = Products; children = ({a
 root_group = object_("Root", f'isa = PBXGroup; children = ({app_group}, {test_group}, {products},); sourceTree = "<group>";')
 common = 'SDKROOT = iphoneos; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SUPPORTS_MACCATALYST = NO; IPHONEOS_DEPLOYMENT_TARGET = 15.0; CLANG_ENABLE_MODULES = YES; SWIFT_VERSION = 5.0;'
 project_config = configurations("Project", common)
-app_config = configurations("App", '''ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; CODE_SIGN_STYLE = Automatic;
+app_config = configurations("App", '''ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+    IHF_APP_CODE_SIGN_STYLE = Automatic; IHF_APP_CODE_SIGN_IDENTITY = "Apple Development";
+    CODE_SIGN_STYLE = "$(IHF_APP_CODE_SIGN_STYLE)"; CODE_SIGN_IDENTITY = "$(IHF_APP_CODE_SIGN_IDENTITY)";
+    PROVISIONING_PROFILE_SPECIFIER = "$(IHF_APP_PROVISIONING_PROFILE)";
     DEVELOPMENT_TEAM = XKF5T9N38M; CURRENT_PROJECT_VERSION = 4; MARKETING_VERSION = 1.0;
     PRODUCT_BUNDLE_IDENTIFIER = io.github.kristofgilis.ihfrulesquiz; PRODUCT_NAME = "$(TARGET_NAME)";
     INFOPLIST_FILE = App/Info.plist; TARGETED_DEVICE_FAMILY = "1,2";
