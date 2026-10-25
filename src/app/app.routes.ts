@@ -38,4 +38,8 @@ export const routes: Routes = [
     path: 'settings',
     loadComponent: () => import('./settings/settings.component').then((m) => m.SettingsComponent),
   },
+  {
+    path: 'privacy',
+    loadComponent: () => import('./privacy/privacy.component').then((m) => m.PrivacyComponent),
+  },
 ];
