@@ -2,7 +2,10 @@ import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, HostListener, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Capacitor } from '@capacitor/core';
+import { NativeNavigation } from '@capgo/capacitor-native-navigation';
+import type { NativeNavigationIcon } from '@capgo/capacitor-native-navigation';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faHouse as faHouseRegular,
@@ -24,6 +27,7 @@ import {
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { filter, startWith } from 'rxjs';
 import { getLanguage } from './language';
 import { LogoComponent } from './logo/logo.component';
 import { ConnectivityService } from './services/connectivity.service';
@@ -60,6 +64,7 @@ interface TabBarItem {
 })
 export class AppComponent {
   private readonly _translateService = inject(TranslateService);
+  private readonly _router = inject(Router);
   private readonly _document = inject(DOCUMENT);
   private readonly _themeService = inject(ThemeService);
   private readonly _titleService = inject(Title);
@@ -87,6 +92,8 @@ export class AppComponent {
   protected readonly faRotate = faRotate;
   protected readonly faXmark = faXmark;
   protected readonly faGear = faGear;
+  protected readonly isNativeApp = Capacitor.isNativePlatform();
+  protected readonly nativeTabbarReady = signal(false);
 
   // Mobile tabbar items
   protected readonly tabItems: readonly TabBarItem[] = [
@@ -150,7 +157,20 @@ export class AppComponent {
     this._translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => {
       // Update document title on language change
       this._titleService.setTitle(this._translateService.instant('main.title'));
+      void this.updateNativeTabbar();
     });
+
+    if (this.isNativeApp) {
+      this._router.events
+        .pipe(
+          filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+          startWith(null),
+          takeUntilDestroyed(this._destroyRef)
+        )
+        .subscribe(() => void this.updateNativeTabbar());
+
+      void this.initializeNativeTabbar();
+    }
 
     // Initialize PWA update checking with proper subscription cleanup
     this._pwaUpdateService.initializeUpdateCheck(this._destroyRef);
@@ -200,5 +220,76 @@ export class AppComponent {
 
   refreshOfflineData(): void {
     this.offlineData.refresh().pipe(takeUntilDestroyed(this._destroyRef)).subscribe();
+  }
+
+  private async initializeNativeTabbar(): Promise<void> {
+    try {
+      await NativeNavigation.configure({
+        contentInsetMode: 'css',
+        platformStyle: 'auto',
+        colors: { dynamic: true },
+      });
+
+      await NativeNavigation.addListener('tabSelect', ({ id }) => {
+        const selectedTab = this.tabItems.find((tab) => tab.route.slice(1) === id);
+        if (selectedTab) {
+          void this._router.navigateByUrl(selectedTab.route);
+        }
+      });
+
+      await this.updateNativeTabbar(true);
+      this.nativeTabbarReady.set(true);
+    } catch (error) {
+      // Keep the web tab bar as a usable fallback if native setup fails.
+      console.error('Could not initialize the native tab bar', error);
+    }
+  }
+
+  private async updateNativeTabbar(force = false): Promise<void> {
+    if (!this.isNativeApp || (!force && !this.nativeTabbarReady())) {
+      return;
+    }
+
+    const tabs = this.tabItems.map((tab) => ({
+      id: tab.route.slice(1),
+      title: this._translateService.instant(tab.labelKey),
+      icon: this.toNativeIcon(tab.regularIcon ?? tab.solidIcon),
+      selectedIcon: this.toNativeIcon(tab.solidIcon),
+    }));
+
+    try {
+      await NativeNavigation.setTabbar({
+        tabs,
+        selectedId: this.selectedTabId(),
+        labels: true,
+        icons: true,
+        style: { placement: 'auto' },
+        colors: { dynamic: true },
+      });
+    } catch (error) {
+      console.error('Could not update the native tab bar', error);
+    }
+  }
+
+  private selectedTabId(): string | undefined {
+    const currentPath = this._router.url.split(/[?#]/, 1)[0];
+    const activeTab = [...this.tabItems]
+      .sort((first, second) => second.route.length - first.route.length)
+      .find((tab) => currentPath === tab.route || (!tab.exact && currentPath.startsWith(`${tab.route}/`)));
+
+    return activeTab?.route.slice(1);
+  }
+
+  private toNativeIcon(definition: IconDefinition): NativeNavigationIcon {
+    const [width, height, , , rawPathData] = definition.icon;
+    const paths = Array.isArray(rawPathData) ? rawPathData : [rawPathData];
+    const pathElements = paths.map((path) => `<path d="${path}"/>`).join('');
+
+    return {
+      svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">${pathElements}</svg>`,
+      width: 24,
+      height: 24,
+      template: true,
+    };
   }
 }
