@@ -12,7 +12,7 @@ final class NativeAppTests: XCTestCase {
         ])
     }
 
-    func testFirstLaunchContainsEveryLanguageWithoutDownload() throws {
+    func testFirstLaunchContainsEveryLanguageWithoutDownload() async throws {
         let repository = try ContentRepository()
         for locale in ["en", "nl", "fr", "srb"] {
             XCTAssertEqual(try repository.rules(locale: locale).count, 19)
@@ -23,7 +23,7 @@ final class NativeAppTests: XCTestCase {
         }
     }
 
-    func testScoringMatchesBackendPartialCreditPenaltyAndClamp() {
+    func testScoringMatchesBackendPartialCreditPenaltyAndClamp() async {
         XCTAssertEqual(Scorer.calculate([sample], selections: ["1.1": ["a", "b"]], configuration: configuration),
                        Score(points: 2, total: 2, wrongQuestionIds: []))
         XCTAssertEqual(Scorer.calculate([sample], selections: ["1.1": ["a"]], configuration: configuration),
@@ -33,13 +33,13 @@ final class NativeAppTests: XCTestCase {
         XCTAssertEqual(Scorer.calculate([sample], selections: [:], configuration: configuration).wrongQuestionIds, ["1.1"])
     }
 
-    func testScoringHonorsNegativeAndMissedAnswerConfiguration() {
+    func testScoringHonorsNegativeAndMissedAnswerConfiguration() async {
         let custom = ScoringConfiguration(Correct: 2, InCorrect: -3, NotAnswered: -1, NegativeScore: true, PenalizeGuessingStrategy: false)
         XCTAssertEqual(Scorer.calculate([sample], selections: ["1.1": ["c"]], configuration: custom).points, -5)
         XCTAssertEqual(Scorer.calculate([sample], selections: ["1.1": ["a", "b", "c"]], configuration: custom).points, 1)
     }
 
-    func testSearchNumbersAccentsPartialWordsAndTypos() {
+    func testSearchNumbersAccentsPartialWordsAndTypos() async {
         let documents = [("1", LocalSearch.normalize("1.1 Playing court speelveld terrain")), ("2", LocalSearch.normalize("2.1 équipe екипа"))]
         XCTAssertEqual(LocalSearch.matchingIds(query: "1.1", documents: documents), ["1"])
         XCTAssertEqual(LocalSearch.matchingIds(query: "speelv", documents: documents), ["1"])
@@ -49,13 +49,13 @@ final class NativeAppTests: XCTestCase {
         XCTAssertTrue(LocalSearch.matchingIds(query: "", documents: documents).isEmpty)
     }
 
-    func testSearchFindsOtherLanguageAndReturnsCurrentLanguageQuestion() throws {
+    func testSearchFindsOtherLanguageAndReturnsCurrentLanguageQuestion() async throws {
         let repository = try ContentRepository()
         let ids = LocalSearch.matchingIds(query: "speelveld", documents: try repository.searchDocuments(locale: "en"))
         XCTAssertTrue(ids.contains("1.1"))
     }
 
-    func testTimedQuizExpiresAfterBackgroundAndRestoresSelections() {
+    func testTimedQuizExpiresAfterBackgroundAndRestoresSelections() async {
         QuizSession.removeSaved()
         let session = QuizSession(questions: [sample], count: 1, timed: true, language: "en", contentHash: "test", configuration: configuration, seed: 1)
         session.toggle("a")
@@ -69,7 +69,7 @@ final class NativeAppTests: XCTestCase {
         QuizSession.removeSaved()
     }
 
-    func testShufflingIsReproducibleAndQuestionSelectionIsUnique() throws {
+    func testShufflingIsReproducibleAndQuestionSelectionIsUnique() async throws {
         let questions = try ContentRepository().questions(locale: "en")
         let first = QuizSession(questions: questions, count: 30, timed: false, language: "en", contentHash: "test", configuration: configuration, seed: 42)
         let second = QuizSession(questions: questions, count: 30, timed: false, language: "en", contentHash: "test", configuration: configuration, seed: 42)

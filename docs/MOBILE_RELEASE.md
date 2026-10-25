@@ -30,7 +30,7 @@ Run `npm ci`, `npm run lint`, and `npm run build:web` for the PWA. Web service-w
 
 ## Bundled content
 
-`native/content.json` is the reviewed portable snapshot. Its manifest records content and scoring source commits, individual language editions, schema version and complete scoring parameters. `ios/App/App/Resources/content.sqlite` is generated from it. Both files are committed so a normal checkout builds without sibling repositories or network content requests.
+`native/content.json` is the reviewed portable snapshot. Its manifest records content and scoring source commits, individual language editions, schema version and complete scoring parameters. `ios/App/App/OfflineContent/content.sqlite` is generated from it. Both files are committed so a normal checkout builds without sibling repositories or network content requests.
 
 Update content from clean, reviewed checkouts:
 

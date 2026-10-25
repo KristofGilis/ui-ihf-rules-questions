@@ -40,7 +40,9 @@ class ContentTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(dir=content.ROOT / "native") as directory:
             path = pathlib.Path(directory)
             first = content.make_database(self.pack, path / "first.sqlite")
-            second = content.make_database(self.pack, path / "second.sqlite")
+            reordered = copy.deepcopy(self.pack)
+            reordered["locales"] = dict(reversed(list(reordered["locales"].items())))
+            second = content.make_database(reordered, path / "second.sqlite")
             self.assertEqual(first, second)
             self.assertEqual((path / "first.sqlite").read_bytes(), (path / "second.sqlite").read_bytes())
             with content.contextlib.closing(sqlite3.connect(path / "first.sqlite")) as database:

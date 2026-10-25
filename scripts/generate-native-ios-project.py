@@ -44,7 +44,7 @@ app_id = identifier("AppTarget")
 app_refs, app_sources = build_files("App", "AppSources")
 test_refs, test_sources = build_files("AppTests", "TestSources")
 resources = []
-for name, kind in [("Assets.xcassets", "folder.assetcatalog"), ("Resources", "folder"), ("PrivacyInfo.xcprivacy", "text.xml")]:
+for name, kind in [("Assets.xcassets", "folder.assetcatalog"), ("OfflineContent", "folder"), ("PrivacyInfo.xcprivacy", "text.xml")]:
     ref = object_(name, f'isa = PBXFileReference; lastKnownFileType = {kind}; path = "{name}"; sourceTree = "<group>";')
     app_refs.append(ref)
     resources.append(object_(name + "Build", f'isa = PBXBuildFile; fileRef = {ref};'))

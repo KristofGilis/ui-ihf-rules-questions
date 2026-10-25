@@ -16,7 +16,7 @@ import unicodedata
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SNAPSHOT = ROOT / "native/content.json"
-DATABASE = ROOT / "ios/App/App/Resources/content.sqlite"
+DATABASE = ROOT / "ios/App/App/OfflineContent/content.sqlite"
 LOCALES = {"en": "En", "nl": "Nl", "fr": "Fr", "srb": "Srb"}
 
 
@@ -44,6 +44,15 @@ def flatten(value, prefix=""):
 
 def normalize(text):
     return "".join(c for c in unicodedata.normalize("NFD", text.lower()) if not unicodedata.combining(c))
+
+
+def search_documents(pack):
+    documents = {}
+    for _, data in sorted(pack["locales"].items()):
+        for question in data["questions"]:
+            documents.setdefault(question["id"], []).extend(
+                [question["number"], question["phrase"]] + [a["phrase"] for a in question["answers"]])
+    return {key: normalize(" ".join(parts)) for key, parts in documents.items()}
 
 
 def import_source(source, api):
@@ -106,11 +115,7 @@ def validate(pack):
 
 def make_database(pack, path):
     path.parent.mkdir(parents=True, exist_ok=True)
-    documents = {}
-    for data in pack["locales"].values():
-        for question in data["questions"]:
-            documents.setdefault(question["id"], []).extend(
-                [question["number"], question["phrase"]] + [a["phrase"] for a in question["answers"]])
+    documents = search_documents(pack)
     metadata = {k: v for k, v in pack.items() if k != "locales"}
     metadata["contentHash"] = hashlib.sha256(canonical(pack).encode()).hexdigest()
     metadata["locales"] = {locale: {"edition": data["edition"], "strings": data["strings"]}
@@ -127,17 +132,18 @@ def make_database(pack, path):
             CREATE INDEX questions_rule ON questions(locale,ruleId,position);
         """)
         db.execute("INSERT INTO metadata VALUES ('manifest', ?)", (canonical(metadata),))
-        for locale, data in pack["locales"].items():
+        for locale, data in sorted(pack["locales"].items()):
             db.executemany("INSERT INTO rules VALUES (?,?,?,?)",
                            [(locale, r["id"], i, canonical(r)) for i, r in enumerate(data["rules"])])
             db.executemany("INSERT INTO questions VALUES (?,?,?,?,?,?)",
-                           [(locale, q["id"], q["ruleId"], i, canonical(q), normalize(" ".join(documents[q["id"]])))
+                           [(locale, q["id"], q["ruleId"], i, canonical(q), documents[q["id"]])
                             for i, q in enumerate(data["questions"])])
         assert db.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
     return metadata
 
 
 def verify_database(pack):
+    documents = search_documents(pack)
     with contextlib.closing(sqlite3.connect(f"file:{DATABASE.as_posix()}?mode=ro", uri=True)) as db:
         assert db.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
         metadata = json.loads(db.execute("SELECT value FROM metadata WHERE key='manifest'").fetchone()[0])
@@ -146,6 +152,8 @@ def verify_database(pack):
             for table in ("rules", "questions"):
                 actual = [json.loads(row[0]) for row in db.execute(f"SELECT payload FROM {table} WHERE locale=? ORDER BY position", (locale,))]
                 assert actual == data[table], f"Bundled {table} differ for {locale}"
+            assert dict(db.execute("SELECT id, searchText FROM questions WHERE locale=?", (locale,))) == {
+                q["id"]: documents[q["id"]] for q in data["questions"]}, f"Search index differs for {locale}"
     return metadata
 
 

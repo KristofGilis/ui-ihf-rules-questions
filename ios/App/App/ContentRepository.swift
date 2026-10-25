@@ -7,7 +7,7 @@ final class ContentRepository {
     private let decoder = JSONDecoder()
 
     init(bundle: Bundle = .main) throws {
-        guard let url = bundle.url(forResource: "content", withExtension: "sqlite", subdirectory: "Resources") else {
+        guard let url = bundle.url(forResource: "content", withExtension: "sqlite", subdirectory: "OfflineContent") else {
             throw CocoaError(.fileNoSuchFile)
         }
         var configuration = Configuration()

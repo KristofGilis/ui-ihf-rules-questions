@@ -54,7 +54,7 @@ struct AcknowledgementsView: View {
     }
 
     private var notices: String {
-        guard let url = Bundle.main.url(forResource: "ThirdPartyNotices", withExtension: "txt", subdirectory: "Resources") else { return "" }
+        guard let url = Bundle.main.url(forResource: "ThirdPartyNotices", withExtension: "txt", subdirectory: "OfflineContent") else { return "" }
         return (try? String(contentsOf: url, encoding: .utf8)) ?? ""
     }
 }

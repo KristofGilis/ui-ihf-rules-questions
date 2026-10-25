@@ -25,6 +25,7 @@ struct QuizView: View {
                         }
                         Section {
                             QuestionHeader(question: question)
+                            Text(app.text("quiz.select_answers")).font(.subheadline).foregroundStyle(.secondary)
                             ForEach(question.answers) { answer in
                                 AnswerRow(answer: answer, selected: session.snapshot.selections[question.id]?.contains(answer.id) ?? false,
                                           action: { session.toggle(answer.id) })
