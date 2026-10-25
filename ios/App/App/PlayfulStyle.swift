@@ -1,10 +1,16 @@
 import SwiftUI
 
 enum Playful {
-    static let blue = Color(red: 0.19, green: 0.30, blue: 0.91)
-    static let orange = Color(red: 1, green: 0.53, blue: 0.24)
-    static let mint = Color(red: 0.19, green: 0.61, blue: 0.43)
-    static let purple = Color(red: 0.57, green: 0.36, blue: 0.84)
+    static let buttonBlue = Color(red: 0.19, green: 0.30, blue: 0.91)
+    static let ball = Color(red: 1, green: 0.53, blue: 0.24)
+    static let blue = Color(UIColor { $0.userInterfaceStyle == .dark
+        ? UIColor(red: 0.57, green: 0.64, blue: 1, alpha: 1) : UIColor(red: 0.19, green: 0.30, blue: 0.91, alpha: 1) })
+    static let orange = Color(UIColor { $0.userInterfaceStyle == .dark
+        ? UIColor(red: 0.99, green: 0.62, blue: 0.30, alpha: 1) : UIColor(red: 0.77, green: 0.30, blue: 0.08, alpha: 1) })
+    static let mint = Color(UIColor { $0.userInterfaceStyle == .dark
+        ? UIColor(red: 0.43, green: 0.83, blue: 0.64, alpha: 1) : UIColor(red: 0.10, green: 0.46, blue: 0.31, alpha: 1) })
+    static let purple = Color(UIColor { $0.userInterfaceStyle == .dark
+        ? UIColor(red: 0.74, green: 0.61, blue: 0.99, alpha: 1) : UIColor(red: 0.48, green: 0.27, blue: 0.76, alpha: 1) })
     static let paper = Color(UIColor.secondarySystemGroupedBackground)
     static let background = Color(UIColor.systemGroupedBackground)
     static let spring = Animation.spring(response: 0.34, dampingFraction: 0.72)
@@ -44,7 +50,7 @@ struct PressableStyle: ButtonStyle {
 struct PrimaryAction: View {
     let title: String
     var symbol = "arrow.right"
-    var color = Playful.blue
+    var color = Playful.buttonBlue
     var action: () -> Void
     var body: some View {
         Button(action: action) {
@@ -88,7 +94,7 @@ struct SectionHeading: View {
 struct HandballMark: View {
     var body: some View {
         ZStack {
-            Circle().fill(Playful.orange)
+            Circle().fill(Playful.ball)
             Circle().stroke(Color.black.opacity(0.17), lineWidth: 2).padding(7)
             GeometryReader { geometry in
                 let size = geometry.size.width

@@ -34,6 +34,16 @@ final class NativeLayoutUITests: XCTestCase {
         app.buttons["settings.open"].tap()
         XCTAssertTrue(app.staticTexts["Make it yours."].waitForExistence(timeout: 5))
         capture(app, "settings")
+        app.terminate()
+        app.launchArguments = ["-ui-testing-reset", "-native.language", "en", "-native.appearance", "dark"]
+        app.launch()
+        XCTAssertTrue(app.buttons["quiz.start"].waitForExistence(timeout: 10))
+        capture(app, "home-dark")
+        app.terminate()
+        app.launchArguments = ["-ui-testing-reset", "-native.language", "fr", "-native.appearance", "light"]
+        app.launch()
+        XCTAssertTrue(app.buttons["quiz.start"].waitForExistence(timeout: 10))
+        capture(app, "home-french")
     }
 
     @MainActor
@@ -44,6 +54,15 @@ final class NativeLayoutUITests: XCTestCase {
         attachment.lifetime = .keepAlways
         add(attachment)
         // Small simulator previews remain retrievable if Actions artifact storage is full.
-        print("NATIVE_UI_PREVIEW:\(name):\(screenshot.pngRepresentation.base64EncodedString())")
+        let encoded = screenshot.pngRepresentation.base64EncodedString()
+        var start = encoded.startIndex
+        var part = 0
+        while start < encoded.endIndex {
+            let end = encoded.index(start, offsetBy: 12_000, limitedBy: encoded.endIndex) ?? encoded.endIndex
+            print("NATIVE_UI_PREVIEW:\(name):\(part):\(encoded[start..<end])")
+            part += 1
+            start = end
+        }
+        print("NATIVE_UI_PREVIEW_END:\(name):\(part)")
     }
 }

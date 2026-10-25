@@ -135,7 +135,7 @@ struct HomeHero: View {
             }.font(.system(.caption, design: .rounded).weight(.bold)).foregroundColor(.white)
                 .padding(.horizontal, 12).padding(.vertical, 8).background(Color.white.opacity(0.15)).clipShape(Capsule())
         }.padding(24).frame(maxWidth: .infinity, alignment: .leading)
-            .background(LinearGradient(colors: [Playful.blue, Color(red: 0.23, green: 0.20, blue: 0.68)], startPoint: .topLeading, endPoint: .bottomTrailing))
+            .background(LinearGradient(colors: [Playful.buttonBlue, Color(red: 0.23, green: 0.20, blue: 0.68)], startPoint: .topLeading, endPoint: .bottomTrailing))
             .clipShape(RoundedRectangle(cornerRadius: 31, style: .continuous))
             .onAppear {
                 if !reduceMotion && !ProcessInfo.processInfo.arguments.contains("-ui-testing-reset") {
@@ -157,7 +157,7 @@ struct QuizSetupSection: View {
 
     var body: some View {
         PaperCard {
-            VStack(alignment: .leading, spacing: 21) {
+            VStack(alignment: .leading, spacing: 16) {
                 HStack(alignment: .top, spacing: 12) {
                     Image(systemName: "bolt.fill").font(.title3).foregroundColor(Playful.orange)
                         .frame(width: 45, height: 45).background(Playful.orange.opacity(0.12)).clipShape(RoundedRectangle(cornerRadius: 16))
@@ -178,7 +178,7 @@ struct QuizSetupSection: View {
                                 .foregroundColor(count == value ? .white : .primary)
                                 .background {
                                     if count == value {
-                                        RoundedRectangle(cornerRadius: 17).fill(Playful.blue).matchedGeometryEffect(id: "count", in: choice)
+                                        RoundedRectangle(cornerRadius: 17).fill(Playful.buttonBlue).matchedGeometryEffect(id: "count", in: choice)
                                     } else { RoundedRectangle(cornerRadius: 17).fill(Playful.background) }
                                 }
                         }.buttonStyle(PressableStyle()).accessibilityLabel(app.text("native.questions", ["count": String(value)]))
