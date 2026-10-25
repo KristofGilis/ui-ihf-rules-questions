@@ -12,6 +12,8 @@ on:
       - 'scripts/native-content.py'
       - 'scripts/generate-native-ios-project.py'
       - 'scripts/test_native_content.py'
+      - 'scripts/apple-testflight.py'
+      - 'scripts/test_apple_testflight.py'
 
 permissions:
   contents: read
@@ -24,6 +26,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - run: python3 scripts/native-content.py --check
       - run: python3 scripts/test_native_content.py
+      - run: python3 scripts/test_apple_testflight.py
       - name: Verify generated Xcode project
         run: |
           python3 scripts/generate-native-ios-project.py
