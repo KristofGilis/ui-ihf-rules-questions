@@ -37,14 +37,14 @@
 		3A1926085471FC5F24CD7859 /* TestGroup */ = { isa = PBXGroup; path = AppTests; children = (D14765630ACE0474196D5794,); sourceTree = "<group>"; };
 		4EDC8BFAFC6BD936B849F38C /* Products */ = { isa = PBXGroup; name = Products; children = (DEF93E8F8AC229A0D98BBEFA, 970FB190220EDCE2E3BBCD1A,); sourceTree = "<group>"; };
 		44CB005EE2E65D9CC817B0A0 /* Root */ = { isa = PBXGroup; children = (A5660BF89DD2D657048780AB, 3A1926085471FC5F24CD7859, 4EDC8BFAFC6BD936B849F38C,); sourceTree = "<group>"; };
-		433548979C024CC63B5F3B8D /* ProjectDebug */ = { isa = XCBuildConfiguration; name = Debug; buildSettings = { SDKROOT = iphoneos; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SUPPORTS_MACCATALYST = NO; IPHONEOS_DEPLOYMENT_TARGET = 15.0; CLANG_ENABLE_MODULES = YES; SWIFT_VERSION = 5.0; SWIFT_OPTIMIZATION_LEVEL = "-Onone"; ENABLE_TESTABILITY = YES; SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG; }; };
+		433548979C024CC63B5F3B8D /* ProjectDebug */ = { isa = XCBuildConfiguration; name = Debug; buildSettings = { SDKROOT = iphoneos; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SUPPORTS_MACCATALYST = NO; IPHONEOS_DEPLOYMENT_TARGET = 15.0; CLANG_ENABLE_MODULES = YES; SWIFT_VERSION = 5.0; SWIFT_OPTIMIZATION_LEVEL = "-Onone"; ENABLE_TESTABILITY = YES; ONLY_ACTIVE_ARCH = YES; SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG; }; };
 		B800A40FDE6F0A0218D9BCD2 /* ProjectRelease */ = { isa = XCBuildConfiguration; name = Release; buildSettings = { SDKROOT = iphoneos; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SUPPORTS_MACCATALYST = NO; IPHONEOS_DEPLOYMENT_TARGET = 15.0; CLANG_ENABLE_MODULES = YES; SWIFT_VERSION = 5.0; SWIFT_COMPILATION_MODE = wholemodule; SWIFT_OPTIMIZATION_LEVEL = "-O"; }; };
 		67F98A53B3601D59AC990BA8 /* ProjectConfigurations */ = { isa = XCConfigurationList; buildConfigurations = (433548979C024CC63B5F3B8D, B800A40FDE6F0A0218D9BCD2,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
 		6CCC433D89988F3E2859E1DB /* AppDebug */ = { isa = XCBuildConfiguration; name = Debug; buildSettings = { ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; CODE_SIGN_STYLE = Automatic;
     DEVELOPMENT_TEAM = XKF5T9N38M; CURRENT_PROJECT_VERSION = 4; MARKETING_VERSION = 1.0;
     PRODUCT_BUNDLE_IDENTIFIER = io.github.kristofgilis.ihfrulesquiz; PRODUCT_NAME = "$(TARGET_NAME)";
     INFOPLIST_FILE = App/Info.plist; TARGETED_DEVICE_FAMILY = "1,2";
-    LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks",); SWIFT_OPTIMIZATION_LEVEL = "-Onone"; ENABLE_TESTABILITY = YES; SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG; }; };
+    LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks",); SWIFT_OPTIMIZATION_LEVEL = "-Onone"; ENABLE_TESTABILITY = YES; ONLY_ACTIVE_ARCH = YES; SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG; }; };
 		60E450B27FD0D02DD5AA6B63 /* AppRelease */ = { isa = XCBuildConfiguration; name = Release; buildSettings = { ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; CODE_SIGN_STYLE = Automatic;
     DEVELOPMENT_TEAM = XKF5T9N38M; CURRENT_PROJECT_VERSION = 4; MARKETING_VERSION = 1.0;
     PRODUCT_BUNDLE_IDENTIFIER = io.github.kristofgilis.ihfrulesquiz; PRODUCT_NAME = "$(TARGET_NAME)";
@@ -55,7 +55,7 @@
     GENERATE_INFOPLIST_FILE = YES; PRODUCT_BUNDLE_IDENTIFIER = io.github.kristofgilis.ihfrulesquiz.tests;
     PRODUCT_NAME = "$(TARGET_NAME)"; TARGETED_DEVICE_FAMILY = "1,2";
     TEST_HOST = "$(BUILT_PRODUCTS_DIR)/App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/App";
-    BUNDLE_LOADER = "$(TEST_HOST)"; LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@loader_path/Frameworks",); SWIFT_OPTIMIZATION_LEVEL = "-Onone"; ENABLE_TESTABILITY = YES; SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG; }; };
+    BUNDLE_LOADER = "$(TEST_HOST)"; LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@loader_path/Frameworks",); SWIFT_OPTIMIZATION_LEVEL = "-Onone"; ENABLE_TESTABILITY = YES; ONLY_ACTIVE_ARCH = YES; SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG; }; };
 		DEDA9D104CA7C0AEA04B3F19 /* TestsRelease */ = { isa = XCBuildConfiguration; name = Release; buildSettings = { CODE_SIGN_STYLE = Automatic; DEVELOPMENT_TEAM = XKF5T9N38M;
     GENERATE_INFOPLIST_FILE = YES; PRODUCT_BUNDLE_IDENTIFIER = io.github.kristofgilis.ihfrulesquiz.tests;
     PRODUCT_NAME = "$(TARGET_NAME)"; TARGETED_DEVICE_FAMILY = "1,2";

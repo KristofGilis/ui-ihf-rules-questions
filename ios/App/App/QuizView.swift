@@ -71,7 +71,7 @@ struct QuizView: View {
     private var results: some View {
         List {
             Section {
-                ScoreSummary(score: session.score, questionCount: session.snapshot.questions.count)
+                ScoreSummary(score: session.score)
                 Text("\(app.text("quiz_results.completion_time")): \(QuizSession.clock(session.elapsed))")
                     .foregroundStyle(.secondary)
                 Button(app.text("quiz_results.retake")) { app.discardQuiz(); close() }

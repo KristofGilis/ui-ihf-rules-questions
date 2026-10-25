@@ -23,7 +23,7 @@ def array(values):
 def configurations(target, settings):
     configs = []
     for mode in ("Debug", "Release"):
-        extra = ('SWIFT_OPTIMIZATION_LEVEL = "-Onone"; ENABLE_TESTABILITY = YES; SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;'
+        extra = ('SWIFT_OPTIMIZATION_LEVEL = "-Onone"; ENABLE_TESTABILITY = YES; ONLY_ACTIVE_ARCH = YES; SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;'
                  if mode == "Debug" else 'SWIFT_COMPILATION_MODE = wholemodule; SWIFT_OPTIMIZATION_LEVEL = "-O";')
         configs.append(object_(target + mode, f'isa = XCBuildConfiguration; name = {mode}; buildSettings = {{ {settings} {extra} }};'))
     return object_(target + "Configurations", f'isa = XCConfigurationList; buildConfigurations = {array(configs)}; defaultConfigurationIsVisible = 0; defaultConfigurationName = Release;')

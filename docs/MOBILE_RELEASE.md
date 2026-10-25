@@ -57,7 +57,7 @@ Before uploading a release candidate, pass simulator CI and review the parity ch
 5. Check accessibility text, VoiceOver, safe areas, default tab bar/back gestures, small/large screens, iPad and orientation.
 6. Confirm no network requests during normal native use. Email, GitHub and other external links deliberately leave the app and require connectivity.
 
-Privacy/support are external links in Settings, alongside a direct email contact; there are no dedicated native privacy/support screens. Apple requires accessible policy/support links, and Google requires in-app policy access. The public website privacy policy must describe the offline native client before store submission. No analytics, ads or additional crash services are included.
+Privacy/support are external links in Settings, alongside a direct email contact; there are no dedicated native privacy/support screens. Apple requires accessible policy/support links, and Google requires in-app policy access. The public privacy/support page sources now distinguish the offline native client from the website; deploy and verify those URLs before store submission. No analytics, ads or additional crash services are included.
 
 ## Android and API infrastructure
 

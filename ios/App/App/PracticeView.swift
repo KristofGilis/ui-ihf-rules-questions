@@ -104,7 +104,7 @@ struct PracticeView: View {
                                 score = nil
                             }
                         }
-                        ReferenceLinks(question: question)
+                        if revealed.contains(question.id) { ReferenceLinks(question: question) }
                     } header: {
                         if let score = score {
                             Label(question.number, systemImage: score.wrongQuestionIds.contains(question.id) ? "xmark.circle" : "checkmark.circle")
@@ -126,15 +126,12 @@ struct PracticeView: View {
 struct ScoreSummary: View {
     @EnvironmentObject private var app: AppState
     let score: Score
-    var questionCount: Int? = nil
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(String(format: "%.0f%%", questionCount.map { $0 > 0 ? Double($0 - score.wrongQuestionIds.count) / Double($0) * 100 : 0 } ?? score.percentage)).font(.largeTitle.bold())
+            Text(String(format: "%.0f%%", score.percentage)).font(.largeTitle.bold())
             Text(app.text("native.score", ["score": String(score.points), "total": String(score.total)]))
-            if let count = questionCount {
-                Text("\(app.text("quiz_results.correct")): \(count - score.wrongQuestionIds.count) / \(count)")
-            }
-            Text("\(app.text("quiz_results.wrong")): \(score.wrongQuestionIds.count)").foregroundStyle(.secondary)
+            Text("\(app.text("quiz_results.correct")): \(score.points)")
+            Text("\(app.text("quiz_results.wrong")): \(score.total - score.points)").foregroundStyle(.secondary)
         }.padding(.vertical, 8).accessibilityElement(children: .combine)
     }
 }
