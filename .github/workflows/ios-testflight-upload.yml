@@ -44,6 +44,24 @@ jobs:
       - name: 📦 Install dependencies
         run: npm ci
 
+      - name: 🏷 Inject app and schema versions
+        env:
+          APP_VERSION: ${{ inputs.marketing_version }}
+        run: |
+          set -euo pipefail
+          [[ "$APP_VERSION" =~ ^[0-9]+(\.[0-9]+){1,2}$ ]]
+
+          SCHEMA_VERSION="$(shasum -a 256 graphql/generated.ts | awk '{print substr($1, 1, 12)}')"
+          sed -i '' \
+            -e "s/__APP_VERSION__/${APP_VERSION}/g" \
+            -e "s/__SCHEMA_VERSION__/${SCHEMA_VERSION}/g" \
+            src/version.ts
+
+          if grep -Eq '__APP_VERSION__|__SCHEMA_VERSION__' src/version.ts; then
+            echo "Version placeholders remain in src/version.ts" >&2
+            exit 1
+          fi
+
       - name: 🏗 Build and sync web assets
         run: npm run mobile:sync:ios
 
