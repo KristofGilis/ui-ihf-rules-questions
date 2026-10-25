@@ -9,7 +9,7 @@ struct AnswerRow: View {
     var action: (() -> Void)?
     private var correct: Bool { revealed && answer.isCorrect }
     private var wrong: Bool { revealed && selected && !answer.isCorrect }
-    private var accent: Color { correct ? Playful.mint : (wrong ? .red : Playful.blue) }
+    private var accent: Color { correct ? Playful.success : (wrong ? .red : Playful.blue) }
 
     var body: some View {
         Button {
@@ -28,7 +28,7 @@ struct AnswerRow: View {
                     .multilineTextAlignment(.leading).fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, alignment: .leading).padding(.vertical, 6)
                 if correct {
-                    Image(systemName: "checkmark.seal.fill").foregroundColor(Playful.mint).padding(.top, 8)
+                    Image(systemName: "checkmark.seal.fill").foregroundColor(Playful.success).padding(.top, 8)
                         .accessibilityLabel(app.text("native.correct_answer"))
                 }
             }.padding(15).frame(maxWidth: .infinity, alignment: .leading)
@@ -47,7 +47,7 @@ struct QuestionHeader: View {
     let question: Question
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            TinyBadge(title: question.number, symbol: "number", color: Playful.purple)
+            TinyBadge(title: question.number, symbol: "number", color: Playful.navy)
             Text(question.phrase).font(.system(.title3, design: .rounded).weight(.bold))
                 .fixedSize(horizontal: false, vertical: true).textSelection(.enabled)
         }.frame(maxWidth: .infinity, alignment: .leading).accessibilityElement(children: .combine)
@@ -86,7 +86,7 @@ struct PracticeView: View {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 25) {
                     SectionHeading(title: app.text("native.study_title"), detail: app.text("native.questions", ["count": String(questions.count)]))
-                    PaperCard(tint: Playful.purple) {
+                    PaperCard(tint: Playful.navy) {
                         VStack(alignment: .leading, spacing: 13) {
                             HStack(alignment: .top) {
                                 Label(app.text("native.study_mode"), systemImage: "sparkles")
@@ -129,7 +129,7 @@ struct PracticeView: View {
                                 QuestionHeader(question: question)
                                 if let score = score {
                                     Image(systemName: score.wrongQuestionIds.contains(question.id) ? "xmark.circle.fill" : "checkmark.circle.fill")
-                                        .font(.title2).foregroundColor(score.wrongQuestionIds.contains(question.id) ? .red : Playful.mint)
+                                        .font(.title2).foregroundColor(score.wrongQuestionIds.contains(question.id) ? .red : Playful.success)
                                         .accessibilityLabel(app.text(score.wrongQuestionIds.contains(question.id) ? "quiz_results.wrong" : "quiz_results.correct"))
                                 }
                             }
@@ -187,10 +187,10 @@ struct ScoreSummary: View {
                 ZStack {
                     Circle().stroke(Playful.background, lineWidth: 13)
                     Circle().trim(from: 0, to: appeared ? fraction : 0)
-                        .stroke(score.percentage >= 50 ? Playful.blue : Playful.orange, style: StrokeStyle(lineWidth: 13, lineCap: .round))
+                        .stroke(score.percentage >= 50 ? Playful.blue : Playful.gold, style: StrokeStyle(lineWidth: 13, lineCap: .round))
                         .rotationEffect(.degrees(-90))
                     VStack(spacing: 5) {
-                        Image(systemName: score.percentage >= 75 ? "trophy.fill" : "sparkles").font(.title2).foregroundColor(Playful.orange)
+                        Image(systemName: score.percentage >= 75 ? "trophy.fill" : "sparkles").font(.title2).foregroundColor(Playful.gold)
                         Text(String(format: questionCount == nil ? "%.0f%%" : "%.2f%%", score.percentage))
                             .font(.system(.largeTitle, design: .rounded).weight(.black)).minimumScaleFactor(0.7)
                         Text(app.text("score_overview.title")).font(.caption).foregroundStyle(.secondary)
@@ -201,8 +201,8 @@ struct ScoreSummary: View {
                 Text(app.text("native.score", ["score": String(score.points), "total": String(score.total)]))
                     .font(.subheadline).foregroundStyle(.secondary)
                 HStack(spacing: 13) {
-                    resultStat(title: app.text("quiz_results.correct"), value: questionCount.map { $0 - score.wrongQuestionIds.count } ?? score.points, color: Playful.mint, symbol: "checkmark")
-                    resultStat(title: app.text("quiz_results.wrong"), value: questionCount == nil ? score.total - score.points : score.wrongQuestionIds.count, color: Playful.orange, symbol: "arrow.clockwise")
+                    resultStat(title: app.text("quiz_results.correct"), value: questionCount.map { $0 - score.wrongQuestionIds.count } ?? score.points, color: Playful.success, symbol: "checkmark")
+                    resultStat(title: app.text("quiz_results.wrong"), value: questionCount == nil ? score.total - score.points : score.wrongQuestionIds.count, color: Playful.gold, symbol: "arrow.clockwise")
                 }
             }.frame(maxWidth: .infinity)
         }.onAppear { withAnimation(reduceMotion ? nil : .easeOut(duration: 0.8)) { appeared = true } }
@@ -229,7 +229,7 @@ struct SearchView: View {
                     EmptyPlayState(title: app.text("native.search_title"), detail: app.text("native.search_hint"))
                     HStack(spacing: 9) {
                         ForEach(["1.1", "2.1", "16.1"], id: \.self) { number in
-                            Button { query = number } label: { TinyBadge(title: number, symbol: "number", color: Playful.purple) }
+                            Button { query = number } label: { TinyBadge(title: number, symbol: "number", color: Playful.navy) }
                                 .buttonStyle(PressableStyle())
                         }
                     }.frame(maxWidth: .infinity)
@@ -244,7 +244,7 @@ struct SearchView: View {
                     NavigationLink(destination: PracticeView(questions: [question], title: question.number)) {
                         PaperCard {
                             VStack(alignment: .leading, spacing: 12) {
-                                HStack { TinyBadge(title: question.number, symbol: "number", color: Playful.purple); Spacer(); Image(systemName: "arrow.up.right").foregroundColor(Playful.purple) }
+                                HStack { TinyBadge(title: question.number, symbol: "number", color: Playful.navy); Spacer(); Image(systemName: "arrow.up.right").foregroundColor(Playful.navy) }
                                 Text(question.phrase).font(.system(.headline, design: .rounded)).foregroundColor(.primary).lineLimit(4)
                             }
                         }

@@ -15,16 +15,14 @@ struct SettingsView: View {
                         }.pickerStyle(.menu).frame(maxWidth: .infinity, alignment: .leading)
                         Divider()
                         Label(app.text("settings.theme_section"), systemImage: "paintpalette.fill")
-                            .font(.system(.headline, design: .rounded).bold()).foregroundColor(Playful.purple)
+                            .font(.system(.headline, design: .rounded).bold()).foregroundColor(Playful.navy)
                         Picker(app.text("settings.theme_section"), selection: $app.appearance) {
                             ForEach(["system", "light", "dark"], id: \.self) { theme in Text(app.text("theme.\(theme)")).tag(theme) }
                         }.pickerStyle(.segmented)
                     }
                 }
-                PaperCard(tint: Playful.mint) {
+                PaperCard(tint: Playful.blue) {
                     VStack(alignment: .leading, spacing: 17) {
-                        TinyBadge(title: app.text("native.offline_short"), symbol: "wifi.slash", color: Playful.mint)
-                        Text(app.text("native.offline_details")).font(.subheadline).foregroundStyle(.secondary)
                         DisclosureGroup(app.text("native.content")) {
                             VStack(alignment: .leading, spacing: 14) {
                                 ForEach(app.languages, id: \.0) { code, name in
@@ -40,7 +38,7 @@ struct SettingsView: View {
                 PaperCard {
                     VStack(spacing: 19) {
                         Link(destination: URL(string: "https://rulequestions.azurewebsites.net/privacy")!) {
-                            settingsRow(app.text("privacy.title"), symbol: "hand.raised.fill", color: Playful.purple)
+                            settingsRow(app.text("privacy.title"), symbol: "hand.raised.fill", color: Playful.navy)
                         }
                         Divider()
                         Link(destination: URL(string: "https://rulequestions.azurewebsites.net/support")!) {
@@ -48,11 +46,11 @@ struct SettingsView: View {
                         }
                         Divider()
                         Link(destination: URL(string: "mailto:kristof.gilis@outlook.be")!) {
-                            settingsRow("kristof.gilis@outlook.be", symbol: "envelope.fill", color: Playful.mint)
+                            settingsRow("kristof.gilis@outlook.be", symbol: "envelope.fill", color: Playful.blue)
                         }
                         Divider()
                         NavigationLink(destination: AcknowledgementsView()) {
-                            settingsRow(app.text("native.source"), symbol: "heart.fill", color: Playful.orange)
+                            settingsRow(app.text("native.source"), symbol: "heart.fill", color: Playful.gold)
                         }
                     }.buttonStyle(PressableStyle())
                 }
@@ -81,9 +79,9 @@ struct AcknowledgementsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 22) {
-                PaperCard(tint: Playful.orange) {
+                PaperCard(tint: Playful.gold) {
                     VStack(alignment: .leading, spacing: 15) {
-                        Image(systemName: "heart.fill").font(.title).foregroundColor(Playful.orange)
+                        Image(systemName: "heart.fill").font(.title).foregroundColor(Playful.gold)
                         Text(app.text("native.acknowledgements")).font(.body)
                         Link("GitHub", destination: URL(string: "https://github.com/KristofGilis/ihf_rules_questions")!)
                         Text(app.repository?.manifest.sourceRevision ?? "").font(.caption2.monospaced()).foregroundStyle(.secondary).textSelection(.enabled)

@@ -81,14 +81,14 @@ struct HomeView: View {
                 SectionHeading(title: app.text("native.explore"), detail: app.text("native.explore_detail"))
                 LazyVGrid(columns: columns, alignment: .leading, spacing: 14) {
                     NavigationLink(destination: PracticeView(questions: app.questions)) {
-                        FeatureTile(title: app.text("native.study"), detail: app.text("native.questions", ["count": String(app.questions.count)]), symbol: "rectangle.stack.fill", color: Playful.purple)
+                        FeatureTile(title: app.text("native.study"), detail: app.text("native.questions", ["count": String(app.questions.count)]), symbol: "rectangle.stack.fill", color: Playful.navy)
                     }.buttonStyle(PressableStyle()).accessibilityIdentifier("home.study")
                     NavigationLink(destination: RulesView()) {
-                        FeatureTile(title: app.text("rules.title"), detail: app.text("native.rule_count", ["count": String(app.rules.count)]), symbol: "book.closed.fill", color: Playful.mint)
+                        FeatureTile(title: app.text("rules.title"), detail: app.text("native.rule_count", ["count": String(app.rules.count)]), symbol: "book.closed.fill", color: Playful.gold)
                     }.buttonStyle(PressableStyle()).accessibilityIdentifier("home.rules")
                 }
                 HStack(alignment: .top, spacing: 11) {
-                    Image(systemName: "shippingbox.fill").foregroundColor(Playful.mint).padding(.top, 2)
+                    Image(systemName: "shippingbox.fill").foregroundColor(Playful.blue).padding(.top, 2)
                     VStack(alignment: .leading, spacing: 5) {
                         Text(app.text("native.content")).font(.system(.caption, design: .rounded).bold())
                         Text(app.edition).font(.caption).foregroundStyle(.secondary)
@@ -129,13 +129,8 @@ struct HomeHero: View {
                     }.frame(width: 116, height: 116).padding(.trailing, -5).accessibilityHidden(true)
                 }
             }
-            HStack(spacing: 7) {
-                Image(systemName: "wifi.slash")
-                Text(app.text("native.offline_short"))
-            }.font(.system(.caption, design: .rounded).weight(.bold)).foregroundColor(.white)
-                .padding(.horizontal, 12).padding(.vertical, 8).background(Color.white.opacity(0.15)).clipShape(Capsule())
         }.padding(24).frame(maxWidth: .infinity, alignment: .leading)
-            .background(LinearGradient(colors: [Playful.buttonBlue, Color(red: 0.23, green: 0.20, blue: 0.68)], startPoint: .topLeading, endPoint: .bottomTrailing))
+            .background(LinearGradient(colors: [Playful.buttonBlue, Playful.heroNavy], startPoint: .topLeading, endPoint: .bottomTrailing))
             .clipShape(RoundedRectangle(cornerRadius: 31, style: .continuous))
             .onAppear {
                 if !reduceMotion && !ProcessInfo.processInfo.arguments.contains("-ui-testing-reset") {
@@ -159,8 +154,8 @@ struct QuizSetupSection: View {
         PaperCard {
             VStack(alignment: .leading, spacing: 16) {
                 HStack(alignment: .top, spacing: 12) {
-                    Image(systemName: "bolt.fill").font(.title3).foregroundColor(Playful.orange)
-                        .frame(width: 45, height: 45).background(Playful.orange.opacity(0.12)).clipShape(RoundedRectangle(cornerRadius: 16))
+                    Image(systemName: "bolt.fill").font(.title3).foregroundColor(Playful.gold)
+                        .frame(width: 45, height: 45).background(Playful.gold.opacity(0.12)).clipShape(RoundedRectangle(cornerRadius: 16))
                     VStack(alignment: .leading, spacing: 4) {
                         Text(app.text("home.quiz_card.title")).font(.system(.title2, design: .rounded).weight(.heavy))
                         Text(app.text("native.quiz_invite")).font(.subheadline).foregroundStyle(.secondary)
@@ -187,7 +182,7 @@ struct QuizSetupSection: View {
                 }
                 Toggle(isOn: $timed) {
                     HStack(spacing: 10) {
-                        Image(systemName: timed ? "timer" : "clock").foregroundColor(Playful.purple)
+                        Image(systemName: timed ? "timer" : "clock").foregroundColor(Playful.navy)
                         VStack(alignment: .leading, spacing: 3) {
                             Text(app.text("native.timed_label")).font(.system(.subheadline, design: .rounded).bold())
                             Text(app.text("native.timed_detail")).font(.caption).foregroundStyle(.secondary)
@@ -220,10 +215,10 @@ struct PracticeHomeView: View {
                 SectionHeading(title: app.text("native.practice_title"), detail: app.text("native.practice_detail"))
                 QuizSetupSection(openQuiz: openQuiz)
                 NavigationLink(destination: PracticeView(questions: app.questions)) {
-                    FeatureTile(title: app.text("native.study"), detail: app.text("questions.description"), symbol: "rectangle.stack.fill", color: Playful.purple)
+                    FeatureTile(title: app.text("native.study"), detail: app.text("questions.description"), symbol: "rectangle.stack.fill", color: Playful.navy)
                 }.buttonStyle(PressableStyle())
                 NavigationLink(destination: RulesView()) {
-                    FeatureTile(title: app.text("rules.title"), detail: app.text("rule.description"), symbol: "book.closed.fill", color: Playful.mint)
+                    FeatureTile(title: app.text("rules.title"), detail: app.text("rule.description"), symbol: "book.closed.fill", color: Playful.gold)
                 }.buttonStyle(PressableStyle())
             }.padding(20).padding(.bottom, 18).frame(maxWidth: 760).frame(maxWidth: .infinity)
         }.background(PlayfulBackground())
@@ -237,7 +232,7 @@ struct RulesView: View {
             LazyVStack(alignment: .leading, spacing: 13) {
                 SectionHeading(title: app.text("native.rules_title"), detail: app.text("rules.description")).padding(.bottom, 10)
                 ForEach(Array(app.rules.enumerated()), id: \.element.id) { index, rule in
-                    let accent = [Playful.blue, Playful.mint, Playful.purple, Playful.orange][index % 4]
+                    let accent = [Playful.blue, Playful.gold, Playful.navy][index % 3]
                     NavigationLink(destination: PracticeView(questions: app.questions.filter { $0.ruleId == rule.id }, title: "\(rule.number) · \(rule.name)")) {
                         PaperCard {
                             HStack(spacing: 16) {

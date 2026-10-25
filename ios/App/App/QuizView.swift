@@ -28,7 +28,7 @@ struct QuizView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if !session.isComplete, let remaining = session.remaining {
-                        TinyBadge(title: QuizSession.clock(remaining), symbol: "timer", color: remaining < 60 ? .red : Playful.purple)
+                        TinyBadge(title: QuizSession.clock(remaining), symbol: "timer", color: remaining < 60 ? .red : Playful.navy)
                             .monospacedDigit().accessibilityLabel("\(app.text("native.remaining")): \(QuizSession.clock(remaining))")
                     }
                 }
@@ -114,7 +114,7 @@ struct QuizView: View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 22) {
                 ScoreSummary(score: session.score)
-                TinyBadge(title: "\(app.text("quiz_results.completion_time")) · \(QuizSession.clock(session.elapsed))", symbol: "clock", color: Playful.purple)
+                TinyBadge(title: "\(app.text("quiz_results.completion_time")) · \(QuizSession.clock(session.elapsed))", symbol: "clock", color: Playful.navy)
                     .frame(maxWidth: .infinity)
                 PrimaryAction(title: app.text("quiz_results.retake"), symbol: "arrow.clockwise") { app.discardQuiz(); close() }
                     .accessibilityIdentifier("quiz.retake")
@@ -124,7 +124,7 @@ struct QuizView: View {
                         VStack(alignment: .leading, spacing: 15) {
                             let wrong = session.score.wrongQuestionIds.contains(question.id)
                             TinyBadge(title: app.text(wrong ? "quiz_results.wrong" : "quiz_results.correct"),
-                                      symbol: wrong ? "arrow.clockwise" : "checkmark", color: wrong ? Playful.orange : Playful.mint)
+                                      symbol: wrong ? "arrow.clockwise" : "checkmark", color: wrong ? Playful.gold : Playful.success)
                             QuestionHeader(question: question)
                             ForEach(question.answers) { answer in
                                 AnswerRow(answer: answer, selected: session.snapshot.selections[question.id]?.contains(answer.id) ?? false, revealed: true)
