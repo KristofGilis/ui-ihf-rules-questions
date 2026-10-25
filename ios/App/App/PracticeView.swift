@@ -84,7 +84,7 @@ struct PracticeView: View {
                     }.disabled(!revealed.isEmpty || questions.isEmpty)
                     Button(app.text("native.reset")) { selections = [:]; score = nil; revealed = [] }
                     if let score = score {
-                        ScoreSummary(score: score).id("score")
+                        ScoreSummary(score: score, questionCount: questions.count).id("score")
                         ForEach(questions.filter { score.wrongQuestionIds.contains($0.id) }) { question in
                             Button(question.number) { withAnimation { scroll.scrollTo(question.id, anchor: .top) } }
                         }
@@ -126,12 +126,13 @@ struct PracticeView: View {
 struct ScoreSummary: View {
     @EnvironmentObject private var app: AppState
     let score: Score
+    var questionCount: Int? = nil
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(String(format: "%.0f%%", score.percentage)).font(.largeTitle.bold())
+            Text(String(format: questionCount == nil ? "%.0f%%" : "%.2f%%", score.percentage)).font(.largeTitle.bold())
             Text(app.text("native.score", ["score": String(score.points), "total": String(score.total)]))
-            Text("\(app.text("quiz_results.correct")): \(score.points)")
-            Text("\(app.text("quiz_results.wrong")): \(score.total - score.points)").foregroundStyle(.secondary)
+            Text("\(app.text("quiz_results.correct")): \(questionCount.map { $0 - score.wrongQuestionIds.count } ?? score.points)")
+            Text("\(app.text("quiz_results.wrong")): \(questionCount == nil ? score.total - score.points : score.wrongQuestionIds.count)").foregroundStyle(.secondary)
         }.padding(.vertical, 8).accessibilityElement(children: .combine)
     }
 }
