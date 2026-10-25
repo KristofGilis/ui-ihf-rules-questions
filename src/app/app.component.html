@@ -255,7 +255,6 @@
 <!-- Sidebar Navigation (desktop only) -->
 <aside
   class="fixed bottom-0 z-40 hidden flex-col gap-1 overflow-hidden border-slate-300 bg-slate-100 py-2 transition-[width] duration-200 md:flex dark:border-slate-800 dark:bg-slate-900"
-  [class.md:hidden]="nativeTabbarReady()"
   [class.left-0]="sidebar.position() === 'left'"
   [class.right-0]="sidebar.position() === 'right'"
   [class.border-r]="sidebar.position() === 'left'"
@@ -328,10 +327,10 @@
 <main
   id="main-content"
   class="min-h-screen"
-  [class.md:ml-14]="!nativeTabbarReady() && sidebar.position() === 'left' && !sidebar.expanded()"
-  [class.md:ml-44]="!nativeTabbarReady() && sidebar.position() === 'left' && sidebar.expanded()"
-  [class.md:mr-14]="!nativeTabbarReady() && sidebar.position() === 'right' && !sidebar.expanded()"
-  [class.md:mr-44]="!nativeTabbarReady() && sidebar.position() === 'right' && sidebar.expanded()"
+  [class.md:ml-14]="sidebar.position() === 'left' && !sidebar.expanded()"
+  [class.md:ml-44]="sidebar.position() === 'left' && sidebar.expanded()"
+  [class.md:mr-14]="sidebar.position() === 'right' && !sidebar.expanded()"
+  [class.md:mr-44]="sidebar.position() === 'right' && sidebar.expanded()"
   role="main"
   tabindex="-1"
   [style.padding-top.px]="topBar.height()"
@@ -341,7 +340,6 @@
 
 <!-- Footer Navigation (mobile only) - floating "liquid glass" style -->
 <footer
-  [class.hidden]="nativeTabbarReady()"
   class="fixed inset-x-4 bottom-(--mobile-tabbar-margin) z-50 mx-auto max-w-lg overflow-hidden rounded-4xl border border-white/50 bg-white/70 shadow-[0_8px_32px_rgba(15,23,42,0.18)] backdrop-blur-2xl backdrop-saturate-150 md:hidden dark:border-white/10 dark:bg-slate-900/60 dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
   <div
     class="pointer-events-none absolute inset-0 bg-linear-to-b from-white/50 via-white/5 to-transparent dark:from-white/10 dark:via-white/0"
