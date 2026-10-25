@@ -17,7 +17,7 @@ npm run mobile:sync:android
 npm run mobile:sync:ios
 ```
 
-These scripts build Angular in production mode and copy its output into the native project. Use Android Studio to build and run `android/`. On a Mac with Xcode 26 or newer, build and run `ios/App/App.xcworkspace`. Android Studio and an Android SDK are required for Android; Xcode on macOS is required for iOS.
+These scripts build Angular in production mode and copy its output into the native project. Use Android Studio to build and run `android/`. On a Mac with Xcode 26 or newer, build and run `ios/App/App.xcodeproj`. Android Studio and an Android SDK are required for Android; Xcode on macOS is required for iOS.
 
 If no Mac is available locally, use the **Native Compile Checks** GitHub Actions workflow. It runs on relevant pull requests and can also be started manually. It compiles an unsigned iOS simulator app on a macOS runner and an Android debug app on an Ubuntu runner. It does not replace physical-device testing, store signing, or submission.
 
