@@ -32,9 +32,9 @@ def configurations(target, settings):
 def build_files(folder, phase):
     references, builds = [], []
     for path in sorted((ROOT / folder).glob("*.swift")):
-        ref = object_(str(path.relative_to(ROOT)), f'isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "{path.name}"; sourceTree = "<group>";')
+        ref = object_(path.relative_to(ROOT).as_posix(), f'isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "{path.name}"; sourceTree = "<group>";')
         references.append(ref)
-        builds.append(object_(str(path.relative_to(ROOT)) + "Build", f'isa = PBXBuildFile; fileRef = {ref};'))
+        builds.append(object_(path.relative_to(ROOT).as_posix() + "Build", f'isa = PBXBuildFile; fileRef = {ref};'))
     build = object_(phase, f'isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = {array(builds)}; runOnlyForDeploymentPostprocessing = 0;')
     return references, build
 
@@ -64,7 +64,7 @@ app_group = object_("AppGroup", f'isa = PBXGroup; path = App; children = {array(
 test_group = object_("TestGroup", f'isa = PBXGroup; path = AppTests; children = {array(test_refs)}; sourceTree = "<group>";')
 products = object_("Products", f'isa = PBXGroup; name = Products; children = ({app_product}, {test_product},); sourceTree = "<group>";')
 root_group = object_("Root", f'isa = PBXGroup; children = ({app_group}, {test_group}, {products},); sourceTree = "<group>";')
-common = 'SDKROOT = iphoneos; IPHONEOS_DEPLOYMENT_TARGET = 15.0; CLANG_ENABLE_MODULES = YES; SWIFT_VERSION = 5.0;'
+common = 'SDKROOT = iphoneos; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SUPPORTS_MACCATALYST = NO; IPHONEOS_DEPLOYMENT_TARGET = 15.0; CLANG_ENABLE_MODULES = YES; SWIFT_VERSION = 5.0;'
 project_config = configurations("Project", common)
 app_config = configurations("App", '''ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; CODE_SIGN_STYLE = Automatic;
     DEVELOPMENT_TEAM = XKF5T9N38M; CURRENT_PROJECT_VERSION = 4; MARKETING_VERSION = 1.0;
