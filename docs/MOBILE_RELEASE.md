@@ -38,6 +38,8 @@ Test on physical Android and iPhone devices before uploading a release build:
 
 ## Google Play
 
+As of 25 October 2026, the personal Play Console account is still behind Google's identity, contact, and device-verification steps. The device check requires the account owner to use the Play Console app on a non-rooted physical Android 10+ device; an emulator and the available phone older than ten years do not satisfy this gate. The Android debug build compiles in CI, but Google Play cannot accept a release until account verification is complete. See [Google's device-verification requirements](https://support.google.com/googleplay/android-developer/answer/14316361).
+
 1. Create the Play Console app with the application ID above. Use an Android build that targets API 36 or later.
 2. Generate and securely back up an upload key. Keep keystores and passwords outside Git. Enable Play App Signing and upload a signed Android App Bundle (`.aab`).
 3. Complete the listing, screenshots, age rating, content declarations, support contact, privacy policy, and Data safety form based on actual app and API behavior.
@@ -46,10 +48,14 @@ Test on physical Android and iPhone devices before uploading a release build:
 
 ## Apple App Store
 
-1. The explicit bundle ID `io.github.kristofgilis.ihfrulesquiz` is registered with Apple Developer Team `XKF5T9N38M`, and the Xcode project uses that team for automatic signing. The App Store Connect record (Apple ID `6826826667`, SKU `ihf-rules-quiz-ios`) is in Prepare for Submission. Confirm the membership is active before uploading a build.
-2. On macOS, archive with a supported Xcode/iOS SDK and upload to App Store Connect. Increase the build number for every upload and set the release version.
-3. Complete screenshots, age rating, support URL, an accessible in-app and listing privacy policy, and App Privacy answers. Check any native SDK privacy manifests.
-4. Test through TestFlight. In the review notes, explain the quiz, offline sync, and any external service dependencies. Submit the verified build for App Review.
+As of 25 October 2026, the Apple Developer membership page shows renewal on 26 October 2027. The explicit bundle ID `io.github.kristofgilis.ihfrulesquiz` is registered with Team `XKF5T9N38M`, and the Xcode project uses that team for automatic signing. The App Store Connect record (Apple ID `6826826667`, SKU `ihf-rules-quiz-ios`) is in **Prepare for Submission**. Its English listing draft, review contact and notes, Sports category, licensed third-party content declaration, calculated 4+ age rating, published “Data Not Collected” privacy response, verified privacy and support URLs, Free price, and availability in all 175 current App Store countries and regions are set.
+
+The current GitHub Actions workflow compiles an unsigned iOS simulator app. It does not create or upload a signed App Store archive. Apple's Xcode Cloud setup page says the first workflow must be started in Xcode, so an Apple account alone cannot initialize that path from this Windows workspace. A macOS environment with Xcode can archive and upload directly; a GitHub macOS runner can be used once distribution signing assets and App Store Connect upload credentials are securely configured. Keep certificates, provisioning profiles, private keys, and passwords out of Git. See [Apple's Xcode Cloud setup guide](https://developer.apple.com/documentation/xcode/configuring-your-first-xcode-cloud-workflow) and [build upload guide](https://developer.apple.com/help/app-store-connect/manage-builds/upload-builds/).
+
+1. Produce a signed iOS archive for bundle ID `io.github.kristofgilis.ihfrulesquiz`, version `1.0`, build `1`, and upload it to App Store Connect. Increase the build number for every subsequent upload.
+2. Capture iPhone and any required iPad screenshots from the running native app. Inspect the generated privacy manifests and export-compliance answers for the final signed build.
+3. Test the uploaded build through TestFlight, including first sync, offline use, all four languages, and native navigation. Add the device and OS versions tested to the App Review notes.
+4. Select the tested build, complete any remaining store questions, and submit it for App Review. The availability setting makes the app downloadable in the selected regions only after a release.
 
 ## Release gate
 
