@@ -103,6 +103,8 @@ jobs:
           cp "$PROFILE_PATH" "$HOME/Library/MobileDevice/Provisioning Profiles/${PROFILE_UUID}.mobileprovision"
           printf '%s' "$ASC_PRIVATE_KEY_BASE64" | base64 --decode > "$API_KEY_PATH"
           chmod 600 "$API_KEY_PATH"
+          openssl pkey -in "$API_KEY_PATH" -noout
+          xcrun altool --generate-jwt --api-key "$ASC_KEY_ID" --api-issuer "$ASC_ISSUER_ID" --p8-file-path "$API_KEY_PATH" >/dev/null
 
           cat > "$RUNNER_TEMP/ExportOptions.plist" <<EOF
           <?xml version="1.0" encoding="UTF-8"?>
@@ -141,6 +143,7 @@ jobs:
 
           IPA_PATH="$EXPORT_PATH/App.ipa"
           test -f "$IPA_PATH"
-          xcrun altool --upload-app --type ios --file "$IPA_PATH" --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID"
+          unzip -t "$IPA_PATH" >/dev/null
+          xcrun altool --upload-app --type ios --file "$IPA_PATH" --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID" --p8-file-path "$API_KEY_PATH" --verbose
 
           rm -f "$RUNNER_TEMP/ExportOptions.plist"
