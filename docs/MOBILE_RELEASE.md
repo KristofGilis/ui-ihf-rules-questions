@@ -46,7 +46,7 @@ Test on physical Android and iPhone devices before uploading a release build:
 
 ## Apple App Store
 
-1. Enrol in the Apple Developer Program, create the bundle ID and App Store Connect record, and configure the Xcode signing team.
+1. The explicit bundle ID `io.github.kristofgilis.ihfrulesquiz` is registered with Apple Developer Team `XKF5T9N38M`, and the Xcode project uses that team for automatic signing. Confirm the membership is active, then create the App Store Connect record for this bundle ID.
 2. On macOS, archive with a supported Xcode/iOS SDK and upload to App Store Connect. Increase the build number for every upload and set the release version.
 3. Complete screenshots, age rating, support URL, an accessible in-app and listing privacy policy, and App Privacy answers. Check any native SDK privacy manifests.
 4. Test through TestFlight. In the review notes, explain the quiz, offline sync, and any external service dependencies. Submit the verified build for App Review.
