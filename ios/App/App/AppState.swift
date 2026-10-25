@@ -17,6 +17,11 @@ final class AppState: ObservableObject {
     let languages = [("en", "English"), ("nl", "Nederlands"), ("fr", "Français"), ("srb", "Српски")]
 
     init() {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-ui-testing-reset") {
+            UserDefaults.standard.removeObject(forKey: "native.quiz")
+        }
+        #endif
         let system = Locale.preferredLanguages.first?.prefix(2).lowercased() ?? "en"
         let suggested = system == "sr" ? "srb" : system
         let saved = UserDefaults.standard.string(forKey: "native.language") ?? suggested
