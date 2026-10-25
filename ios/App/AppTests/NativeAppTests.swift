@@ -40,12 +40,15 @@ final class NativeAppTests: XCTestCase {
     }
 
     func testSearchNumbersAccentsPartialWordsAndTypos() async {
-        let documents = [("1", LocalSearch.normalize("1.1 Playing court speelveld terrain")), ("2", LocalSearch.normalize("2.1 équipe екипа"))]
-        XCTAssertEqual(LocalSearch.matchingIds(query: "1.1", documents: documents), ["1"])
-        XCTAssertEqual(LocalSearch.matchingIds(query: "speelv", documents: documents), ["1"])
-        XCTAssertEqual(LocalSearch.matchingIds(query: "equipe", documents: documents), ["2"])
-        XCTAssertEqual(LocalSearch.matchingIds(query: "екипа", documents: documents), ["2"])
-        XCTAssertEqual(LocalSearch.matchingIds(query: "courtt", documents: documents), ["1"])
+        let documents = [("1.1", LocalSearch.normalize("1.1 Playing court speelveld terrain")),
+                         ("2.1", LocalSearch.normalize("2.1 équipe екипа")),
+                         ("1.10", LocalSearch.normalize("1.10 Goal"))]
+        XCTAssertEqual(LocalSearch.matchingIds(query: "1.1", documents: documents), ["1.1"])
+        XCTAssertEqual(LocalSearch.matchingIds(query: "1.1 court", documents: documents), ["1.1"])
+        XCTAssertEqual(LocalSearch.matchingIds(query: "speelv", documents: documents), ["1.1"])
+        XCTAssertEqual(LocalSearch.matchingIds(query: "equipe", documents: documents), ["2.1"])
+        XCTAssertEqual(LocalSearch.matchingIds(query: "екипа", documents: documents), ["2.1"])
+        XCTAssertEqual(LocalSearch.matchingIds(query: "courtt", documents: documents), ["1.1"])
         XCTAssertTrue(LocalSearch.matchingIds(query: "", documents: documents).isEmpty)
     }
 

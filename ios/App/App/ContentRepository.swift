@@ -56,10 +56,14 @@ enum LocalSearch {
     }
 
     static func tokens(_ text: String) -> [String] {
-        normalize(text).components(separatedBy: CharacterSet.alphanumerics.inverted).filter { !$0.isEmpty }
+        let separators = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: ".:")).inverted
+        return normalize(text).components(separatedBy: separators)
+            .map { $0.trimmingCharacters(in: CharacterSet(charactersIn: ".:")) }.filter { !$0.isEmpty }
     }
 
     static func matchingIds(query: String, documents: [(String, String)]) -> Set<String> {
+        let identifier = normalize(query.trimmingCharacters(in: .whitespacesAndNewlines))
+        if let exact = documents.first(where: { normalize($0.0) == identifier }) { return [exact.0] }
         let terms = tokens(query)
         guard !terms.isEmpty else { return [] }
         let strict = documents.filter { _, text in terms.allSatisfy { text.contains($0) } }
