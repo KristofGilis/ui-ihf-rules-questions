@@ -42,4 +42,8 @@ export const routes: Routes = [
     path: 'privacy',
     loadComponent: () => import('./privacy/privacy.component').then((m) => m.PrivacyComponent),
   },
+  {
+    path: 'support',
+    loadComponent: () => import('./support/support.component').then((m) => m.SupportComponent),
+  },
 ];

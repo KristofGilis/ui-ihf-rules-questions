@@ -193,6 +193,7 @@
     "offline_section": "Offline",
     "privacy_policy": "Privacybeleid lezen",
     "privacy_section": "Privacy",
+    "support_contact": "Hulp krijgen",
     "sidebar_collapse": "Zijbalk inklappen",
     "sidebar_expand": "Zijbalk uitklappen",
     "sidebar_expanded": "Uitgeklapte zijbalk",
@@ -204,6 +205,18 @@
     "sidebar_section": "Zijbalk",
     "theme_section": "Thema",
     "title": "Instellingen"
+  },
+  "support": {
+    "title": "Ondersteuning",
+    "intro": "Hulp nodig bij IHF Rules Quiz? Stuur ons een e-mail en we antwoorden je.",
+    "contact_heading": "Contact",
+    "contact_details": "Vertel ons wat er gebeurde, welk apparaat en welke appversie je gebruikt, en welke taal je hebt gekozen. Vermeld geen gevoelige persoonsgegevens.",
+    "offline_heading": "De app offline gebruiken",
+    "offline_details": "Een nieuwe installatie heeft internet nodig om de quizinhoud te downloaden. Na de eerste geslaagde synchronisatie werken gedownloade vragen, regels en scoreberekening offline. Open Instellingen en kies Nu synchroniseren terwijl je verbonden bent om de inhoud te vernieuwen.",
+    "content_heading": "Feedback over vragen of regels",
+    "content_details": "Lijkt een vraag of regel onjuist? Vermeld het nummer en de taal zodat we dit kunnen onderzoeken.",
+    "privacy_before_link": "Lees ons",
+    "privacy_link": "privacybeleid voor informatie over gegevensgebruik"
   },
   "theme": {
     "dark": "Donker",
