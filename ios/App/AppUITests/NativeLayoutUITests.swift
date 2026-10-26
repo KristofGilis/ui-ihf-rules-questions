@@ -46,15 +46,19 @@ final class NativeLayoutUITests: XCTestCase {
         XCTAssertTrue(percentage.waitForExistence(timeout: 5))
         XCTAssertEqual(percentage.label, "100.00%")
         let summary = app.otherElements["score.summary"]
+        let compactWidth = app.frame.width < 600
         let aligned = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             guard summary.exists else { return false }
             let top = summary.frame.minY
             let navigationBottom = app.navigationBars.firstMatch.frame.maxY
-            return top >= navigationBottom - 5 && top <= navigationBottom + 30
+            // A short page on iPad can clamp scrolling before the card reaches the top.
+            let fullyVisible = top >= navigationBottom - 5 && summary.frame.maxY <= calculate.frame.minY - 8
+            return fullyVisible && (!compactWidth || top <= navigationBottom + 30)
         }, object: nil)
-        XCTAssertEqual(XCTWaiter.wait(for: [aligned], timeout: 5), .completed, "One tap should align the new score with the top of the page.")
-        XCTAssertLessThan(percentage.frame.height, 55, "The perfect score and percent symbol should fit on one line.")
+        let alignmentResult = XCTWaiter.wait(for: [aligned], timeout: 5)
         capture(app, "perfect-practice-score")
+        XCTAssertEqual(alignmentResult, .completed, "One tap should reveal the entire score card, aligned to the top on compact screens. Score: \(summary.frame); navigation: \(app.navigationBars.firstMatch.frame); calculate: \(calculate.frame)")
+        XCTAssertLessThan(percentage.frame.height, 55, "The perfect score and percent symbol should fit on one line.")
     }
 
     @MainActor
