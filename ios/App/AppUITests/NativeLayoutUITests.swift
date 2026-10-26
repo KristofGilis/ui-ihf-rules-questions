@@ -218,8 +218,11 @@ final class NativeLayoutUITests: XCTestCase {
             context.interpolationQuality = .high
             context.draw(image, in: CGRect(x: 0, y: 0, width: side, height: side))
         }
-        let total = stride(from: 0, to: pixels.count, by: 4).reduce(0) {
-            $0 + Int(pixels[$1]) + Int(pixels[$1 + 1]) + Int(pixels[$1 + 2])
+        var total = 0
+        for index in stride(from: 0, to: pixels.count, by: 4) {
+            total += Int(pixels[index])
+            total += Int(pixels[index + 1])
+            total += Int(pixels[index + 2])
         }
         return Double(total) / Double(side * side * 3 * 255)
     }
