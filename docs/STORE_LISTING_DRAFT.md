@@ -4,7 +4,7 @@ The native app is named **Handball Rules Quiz**. Capture screenshots from the na
 
 **Branding permission status, 26 October 2026:** the operator clarified that approval to use the IHF logo is not clear. TestFlight build 12 used the website's IHF artwork in white. The updated native artwork introduced for build 13 replaces that mark with the operator's selected handball/checkmark artwork. Website branding is unchanged. Do not use the earlier permission statement or an Apple review outcome as proof of IHF permission. Rights for the rule and question content remain a separate pre-submission check.
 
-**Submission hold:** the operator chose to retain TestFlight distribution while resolving permission; no App Review submission has been authorized since that hold. Check `MOBILE_RELEASE.md` for the latest verified upload and simulator results. App Store Connect still contains the earlier “necessary rights” declaration; recheck its accuracy for the final candidate before submission. The version has no attached review build or uploaded screenshots as checked on 26 October 2026. Build 1.0 (14) is verified for the existing internal TestFlight group and removes the header backplates. Its eight original English iPhone/iPad screenshots are packaged in the ignored `native/previews/store-screenshots-build14.zip`; these have not been uploaded to App Store Connect. The live English subtitle is currently “Based on IHF Regulations”; the copy below remains a draft.
+**Submission preparation:** no App Review submission has been authorized since the earlier TestFlight-only hold. Check `MOBILE_RELEASE.md` for verified delivery and test results. App Store Connect still contains the earlier “necessary rights” declaration; recheck it against the final candidate before submission. A signed-in check on 26 October 2026 confirmed version 1.0 remains Prepare for Submission, with no attached review build and 0/10 screenshots on both iPhone and iPad. Review notes still use the old IHF Rules Quiz name. Build **1.0 (16)** is verified for the existing internal TestFlight group and includes the refreshed typography/interface translations, native offline Privacy/Support pages and system SQLite. Eight original English iPhone/iPad screenshots are packaged in ignored `native/previews/store-screenshots-build16.zip`; they have not been uploaded to App Store Connect. The live English subtitle was previously “Based on IHF Regulations”; the copy below remains a draft.
 
 ## Shared English copy
 
@@ -26,11 +26,12 @@ The app supports English, Dutch, French, and Serbian, with light and dark themes
 
 **Suggested screenshot sequence:**
 
-1. Quiz setup with timed and untimed choices
-2. Question and answer interaction
-3. Results and answer review
-4. Rules browser
-5. Language and appearance choices in Settings
+1. Home and quiz setup with timed and untimed choices (`home`)
+2. Question and answer interaction (`quiz-selected`)
+3. Calculated practice score (`perfect-practice-score`)
+4. Rules browser (`rules`)
+
+These four captures are available for both iPhone and 13-inch iPad in the build 16 package. Additional Settings/results captures are available in the local simulator previews if needed.
 
 Use the exact feature wording supported by the tested native build. Do not describe the app as official or affiliated with IHF unless that relationship is documented.
 
