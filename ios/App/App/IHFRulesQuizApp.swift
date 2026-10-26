@@ -19,6 +19,16 @@ struct RootView: View {
     @State private var settings = false
     @State private var quiz = false
 
+    private var quizPresentation: Binding<Bool> {
+        #if DEBUG
+        // Expose the underlying launch state for a deterministic transition check.
+        if ProcessInfo.processInfo.arguments.contains("-ui-testing-hold-quiz-presentation") {
+            return .constant(false)
+        }
+        #endif
+        return $quiz
+    }
+
     var body: some View {
         Group {
             if app.loadFailed {
@@ -29,9 +39,9 @@ struct RootView: View {
                 }.padding(24).background(PlayfulBackground())
             } else {
                 TabView {
-                    feature(title: "Handball Rules Quiz", literal: true) { HomeView(openQuiz: { quiz = true }) }
+                    feature(title: "Handball Rules Quiz", literal: true) { HomeView(quizPresented: $quiz) }
                         .tabItem { Label(app.text("navigation.home"), systemImage: "house.fill") }
-                    feature(title: "native.practice") { PracticeHomeView(openQuiz: { quiz = true }) }
+                    feature(title: "native.practice") { PracticeHomeView(quizPresented: $quiz) }
                         .tabItem { Label(app.text("native.practice"), systemImage: "bolt.fill") }
                     feature(title: "navigation.rules") { RulesView() }
                         .tabItem { Label(app.text("navigation.rules"), systemImage: "book.closed.fill") }
@@ -47,7 +57,7 @@ struct RootView: View {
                 } }
             }.navigationViewStyle(.stack)
         }
-        .fullScreenCover(isPresented: $quiz) {
+        .fullScreenCover(isPresented: quizPresentation) {
             if let session = app.session { QuizView(session: session, close: { quiz = false }) }
         }
     }
@@ -88,14 +98,14 @@ struct RootView: View {
 struct HomeView: View {
     @EnvironmentObject private var app: AppState
     @Environment(\.dynamicTypeSize) private var typeSize
-    let openQuiz: () -> Void
+    @Binding var quizPresented: Bool
     private var columns: [GridItem] { Array(repeating: GridItem(.flexible(), alignment: .top), count: typeSize.isAccessibilitySize ? 1 : 2) }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 25) {
                 HomeHero()
-                QuizSetupSection(openQuiz: openQuiz)
+                QuizSetupSection(quizPresented: $quizPresented)
                 SectionHeading(title: app.text("native.explore"), detail: app.text("native.explore_detail"))
                 LazyVGrid(columns: columns, alignment: .leading, spacing: 14) {
                     NavigationLink(destination: PracticeView(questions: app.questions)) {
@@ -172,8 +182,9 @@ struct QuizSetupSection: View {
     @State private var count = 10
     @State private var timed = false
     @State private var replace = false
+    @State private var startingQuiz = false
     @Namespace private var choice
-    let openQuiz: () -> Void
+    @Binding var quizPresented: Bool
 
     var body: some View {
         PaperCard {
@@ -214,16 +225,24 @@ struct QuizSetupSection: View {
                         }
                     }
                 }.tint(Playful.blue)
-                if let session = app.session {
-                    PrimaryAction(title: app.text(session.isComplete ? "native.review" : "native.resume"), symbol: "play.fill", action: openQuiz)
+                if let session = app.session, !startingQuiz {
+                    PrimaryAction(title: app.text(session.isComplete ? "native.review" : "native.resume"), symbol: "play.fill") {
+                        quizPresented = true
+                    }.accessibilityIdentifier("quiz.resume")
                     Button(app.text("native.discard"), role: .destructive) { replace = true }.font(.subheadline)
+                        .accessibilityIdentifier("quiz.discard")
                 } else {
                     PrimaryAction(title: app.text("home.quiz_card.button"), symbol: "play.fill") {
+                        // Keep Home stable while the full-screen cover animates in.
+                        // Publishing the new session must not reveal destructive controls.
+                        startingQuiz = true
                         app.startQuiz(count: count, timed: timed)
-                        openQuiz()
-                    }.accessibilityIdentifier("quiz.start")
+                        quizPresented = true
+                    }.disabled(startingQuiz).accessibilityIdentifier("quiz.start")
                 }
             }
+        }.onChange(of: quizPresented) { presented in
+            if !presented { startingQuiz = false }
         }.alert(app.text("quiz.leave_title"), isPresented: $replace) {
             Button(app.text("native.discard"), role: .destructive) { app.discardQuiz() }
             Button(app.text("quiz.leave_cancel"), role: .cancel) {}
@@ -233,12 +252,12 @@ struct QuizSetupSection: View {
 
 struct PracticeHomeView: View {
     @EnvironmentObject private var app: AppState
-    let openQuiz: () -> Void
+    @Binding var quizPresented: Bool
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 SectionHeading(title: app.text("native.practice_title"), detail: app.text("native.practice_detail"))
-                QuizSetupSection(openQuiz: openQuiz)
+                QuizSetupSection(quizPresented: $quizPresented)
                 NavigationLink(destination: PracticeView(questions: app.questions)) {
                     FeatureTile(title: app.text("native.study"), detail: app.text("questions.description"), symbol: "rectangle.stack.fill", color: Playful.navy)
                 }.buttonStyle(PressableStyle())

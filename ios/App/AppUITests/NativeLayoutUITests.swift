@@ -2,6 +2,25 @@ import XCTest
 
 final class NativeLayoutUITests: XCTestCase {
     @MainActor
+    func testStartingQuizDoesNotRevealDiscardControls() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchArguments = ["-ui-testing-reset", "-ui-testing-static-layout", "-ui-testing-hold-quiz-presentation",
+                               "-native.language", "en", "-native.appearance", "light"]
+        app.launch()
+        let start = app.buttons["quiz.start"]
+        XCTAssertTrue(start.waitForExistence(timeout: 15))
+        start.tap()
+        // Hold the cover closed to inspect the Home state normally visible only
+        // during the first frames of presentation, after the session is created.
+        XCTAssertTrue(start.exists)
+        XCTAssertFalse(start.isEnabled, "Repeated taps should not create another quiz during presentation.")
+        XCTAssertFalse(app.buttons["quiz.discard"].exists)
+        XCTAssertFalse(app.buttons["quiz.resume"].exists)
+        capture(app, "quiz-launch")
+    }
+
+    @MainActor
     func testCourtAnimationAdvances() {
         continueAfterFailure = false
         let app = XCUIApplication()
@@ -91,6 +110,8 @@ final class NativeLayoutUITests: XCTestCase {
         XCTAssertTrue(app.buttons["quiz.retake"].waitForExistence(timeout: 5))
         capture(app, "results")
         app.buttons["quiz.close"].tap()
+        XCTAssertTrue(app.buttons["quiz.resume"].waitForExistence(timeout: 5), "Saved quiz controls should appear after dismissing the quiz.")
+        XCTAssertTrue(app.buttons["quiz.discard"].exists)
 
         selectTab("Rules", in: app)
         XCTAssertTrue(app.staticTexts["Study by rule"].waitForExistence(timeout: 5))
