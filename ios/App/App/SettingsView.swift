@@ -37,22 +37,19 @@ struct SettingsView: View {
                 }
                 PaperCard {
                     VStack(spacing: 19) {
-                        Link(destination: URL(string: "https://rulequestions.azurewebsites.net/privacy")!) {
+                        NavigationLink(destination: PrivacyPolicyView()) {
                             settingsRow(app.text("privacy.title"), symbol: "hand.raised.fill", color: Playful.navy)
-                        }
+                        }.accessibilityIdentifier("settings.privacy")
                         Divider()
-                        Link(destination: URL(string: "https://rulequestions.azurewebsites.net/support")!) {
+                        NavigationLink(destination: SupportView()) {
                             settingsRow(app.text("support.title"), symbol: "bubble.left.and.bubble.right.fill", color: Playful.blue)
-                        }
-                        Divider()
-                        Link(destination: URL(string: "mailto:kristof.gilis@outlook.be")!) {
-                            settingsRow("kristof.gilis@outlook.be", symbol: "envelope.fill", color: Playful.blue)
-                        }
+                        }.accessibilityIdentifier("settings.support")
                         Divider()
                         DisclosureGroup(app.text("native.licenses")) {
                             VStack(alignment: .leading, spacing: 14) {
+                                Text("Handball Rules Quiz").font(.subheadline.weight(.semibold))
+                                Text(AppInformation.copyright).font(.footnote)
                                 Text(app.text("native.acknowledgements")).font(.footnote)
-                                Text(notices).font(.footnote).textSelection(.enabled)
                             }.padding(.top, 12).frame(maxWidth: .infinity, alignment: .leading)
                         }.font(.subheadline.weight(.semibold))
                     }.buttonStyle(PressableStyle())
@@ -72,12 +69,8 @@ struct SettingsView: View {
             Text(title).font(.subheadline.weight(.semibold)).foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)
-            Image(systemName: "arrow.up.right").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+            Image(systemName: "chevron.right").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
         }.frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle())
     }
 
-    private var notices: String {
-        guard let url = Bundle.main.url(forResource: "ThirdPartyNotices", withExtension: "txt", subdirectory: "OfflineContent") else { return "" }
-        return (try? String(contentsOf: url, encoding: .utf8)) ?? ""
-    }
 }

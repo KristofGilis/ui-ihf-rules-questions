@@ -17,9 +17,11 @@ The same revision passed **eight Swift tests and three UI tests on each of iPhon
 
 **App Review is on hold:** the operator chose to retain TestFlight distribution while resolving permission for the IHF logo used in build 12. The build 13 artwork replaces that mark. App Store Connect retains an earlier declaration that the app has the necessary rights to third-party content; recheck that declaration against the final candidate and confirm content rights before submission. No App Review submission has been requested since the hold.
 
+Build **1.0 (15)** is being prepared with native offline Privacy/Support pages, refreshed acknowledgements and system SQLite in place of GRDB. Build 14 remains the latest verified upload until build 15 passes native checks and Apple processing.
+
 ## Build and verify
 
-Open `ios/App/App.xcodeproj` in Xcode on macOS and select the App scheme. The project pins GRDB 7.0.0 through Swift Package Manager; resolving dependencies requires internet on the build machine. The installed app uses its bundled database without connectivity.
+Open `ios/App/App.xcodeproj` in Xcode on macOS and select the App scheme. The project links the platform SQLite library directly and has no Swift Package dependencies. The installed app opens its bundled database read-only; content loading makes no API calls.
 
 ```sh
 python3 scripts/native-content.py --check
@@ -71,7 +73,7 @@ Before uploading a release candidate, pass simulator CI and review the parity ch
 5. Check accessibility text, VoiceOver, safe areas, default tab bar/back gestures, small/large screens, iPad and orientation.
 6. Confirm no network requests during normal native use. Email, GitHub and other external links deliberately leave the app and require connectivity.
 
-Privacy/support are external links in Settings, alongside a direct email contact; there are no dedicated native privacy/support screens. A collapsed Licenses section preserves bundled dependency notices and content acknowledgements; there is no separate Content source page, source revision display or repository link. Apple requires accessible policy/support links, and Google requires in-app policy access. The public privacy/support page sources now distinguish the offline native client from the website; deploy and verify those URLs before store submission. No analytics, ads or additional crash services are included.
+Privacy and Support are native pages opened from Settings and readable offline in all four languages. Email contact is inside those pages. A collapsed Licenses section separates app copyright from content acknowledgements; GRDB and its bundled notice have been removed because the app now uses platform SQLite directly. App-information translations are bundled separately from the question database so policy/support copy does not change the quiz content hash. There is no separate Content source page, source revision display or repository link. Apple requires accessible policy/support information in the app and public store URLs. The Angular `/privacy` and `/support` routes remain available; their Settings shortcuts have been removed at the operator’s request. The public privacy/support page sources now distinguish the offline native client from the website; deploy and verify those URLs before store submission. No analytics, ads or additional crash services are included.
 
 ## Android and API infrastructure
 

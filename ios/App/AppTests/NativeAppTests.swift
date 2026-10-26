@@ -4,6 +4,28 @@ import SwiftUI
 
 @MainActor
 final class NativeAppTests: XCTestCase {
+    func testOfflineInformationIsCompleteInEveryLanguage() {
+        let locales = AppInformation.strings
+        XCTAssertEqual(Set(locales.keys), Set(["en", "nl", "fr", "srb"]))
+        let keys = Set(locales["en"]?.keys.map { $0 } ?? [])
+        XCTAssertTrue(keys.contains("info.privacy.local"))
+        XCTAssertTrue(keys.contains("info.support.offline"))
+        XCTAssertTrue(keys.contains("native.acknowledgements"))
+        for translations in locales.values {
+            XCTAssertEqual(Set(translations.keys), keys)
+            XCTAssertTrue(translations.values.allSatisfy { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty })
+        }
+    }
+
+    func testSystemSQLitePreservesFilteringAndTreatsArgumentsAsValues() throws {
+        let repository = try ContentRepository()
+        let all = try repository.questions(locale: "en")
+        XCTAssertEqual(try repository.questions(locale: "en", ruleId: "1"), all.filter { $0.ruleId == "1" })
+        XCTAssertTrue(try repository.questions(locale: "en", ruleId: "1' OR 1=1 --").isEmpty)
+        XCTAssertTrue(try repository.rules(locale: "en' OR 1=1 --").isEmpty)
+        XCTAssertTrue(try repository.searchDocuments(locale: "missing").isEmpty)
+    }
+
     func testCourtRetainsOfficialProportionsInAnyContainer() {
         for size in [CGSize(width: 68, height: 136), CGSize(width: 83, height: 116), CGSize(width: 300, height: 100)] {
             let geometry = HandballCourtGeometry(in: CGRect(origin: .zero, size: size))

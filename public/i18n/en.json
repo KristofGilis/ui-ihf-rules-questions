@@ -74,7 +74,7 @@
   },
   "privacy": {
     "title": "Privacy policy",
-    "updated": "Last updated: 25 October 2026",
+    "updated": "Last updated: 26 October 2026",
     "intro": "This policy covers the IHF Rules Quiz website, progressive web app, and Android and iOS apps. Kristof Gilis operates the app. For privacy questions or requests, email",
     "data_heading": "Website and earlier store builds",
     "device_label": "On your device:",
@@ -97,13 +97,13 @@
     "retention_local": "Website preferences and downloaded content remain until site data is cleared or evicted. Earlier store builds may retain their downloaded cache until app data is removed. The rebuilt native apps keep preferences and saved quiz state locally until they are replaced or removed as described above. We do not keep a server-side quiz history.",
     "retention_logs": "As checked on 24 October 2026, application and HTTP request logging are disabled for the website and API in Azure App Service, and neither app sends diagnostic logs to Azure Monitor. Because those logs are off, we do not retain request logs through these settings. Azure may still process technical data to provide and protect its hosting service. If we enable logging, we will update this policy with the retention period. You can ask us to delete personal data we hold. We keep contact messages only as long as needed to handle the request and any related obligations.",
     "rights_heading": "Your choices and rights",
-    "choices": "You can change language and appearance in Settings. Clear site storage to remove website data; clear app storage or uninstall to remove native app data. The rebuilt native quiz works offline from installation. Opening external privacy/support links or sending email requires connectivity.",
+    "choices": "You can change language and appearance in Settings. Clear site storage to remove website data; delete the app or clear its storage to remove native app data. The native quiz, privacy policy and support pages work offline. Sending support email needs a connection.",
     "rights_before_email": "Depending on applicable law, you may ask to access, correct, delete, or restrict your personal data, object to its processing, or request a portable copy. Email",
     "rights_after_email": "to make a request. You may also complain to your local data protection authority.",
     "changes_heading": "Changes to this policy",
     "changes": "We may update this policy when the app or its data practices change. The updated date at the top shows when this page was last revised.",
     "native_heading": "Fully offline native apps",
-    "native_details": "The rebuilt SwiftUI iOS app, and the planned native Android app, include their content and work offline from the first launch. Rules, questions, search and scoring run on the device. The native app stores language, appearance preferences and quiz state locally; it does not send answers or results to our API. Normal use makes no network requests. Privacy, support and email links open external services when you choose them. App stores deliver app and content updates. Device backups may include local preferences and quiz state. Remove local native app data by deleting the app or clearing its storage. A saved quiz remains until you discard or replace it, its content version changes, or app data is removed."
+    "native_details": "The SwiftUI iOS app includes its content and works offline from the first launch. Rules, questions, search and scoring run on the device. Language, appearance and quiz state are stored locally; answers and results are not sent to our API. Normal use makes no network requests. The privacy policy and support pages are included in the app. Choosing to email support opens your email service and requires connectivity. App stores deliver app and content updates. Device backups may include local preferences and quiz state. Delete the app or clear its storage to remove local native data. A saved quiz remains until you discard or replace it, its content version changes, or app data is removed."
   },
   "pwa": {
     "update_available": "A new version is available.",

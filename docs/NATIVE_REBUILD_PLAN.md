@@ -37,10 +37,10 @@ Prepare layouts for home/setup, rules/detail, question practice, search/results,
 
 ## 4. Architecture and project structure
 
-| Platform | Implementation                                                                                                                            |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| iOS      | Swift, SwiftUI, platform navigation/tab controls, local SQLite storage through GRDB, native localization resources and local preferences. |
-| Android  | Kotlin, Jetpack Compose, platform navigation, Room over SQLite, native localization resources and DataStore preferences.                  |
+| Platform | Implementation                                                                                                                                                   |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| iOS      | Swift, SwiftUI, platform navigation/tab controls, local storage using the platform SQLite library directly, native localization resources and local preferences. |
+| Android  | Kotlin, Jetpack Compose, platform navigation, Room over SQLite, native localization resources and DataStore preferences.                                         |
 
 Choose compatible stable dependency/toolchain versions during setup. Confirm minimum OS support against the current audience before selecting APIs; the present iOS project targets iOS 15, so raising that minimum is a deliberate product decision. Verify tablet scope and orientation requirements at the same point.
 
@@ -48,7 +48,7 @@ Organize each app into presentation, domain logic and local data layers. Views a
 
 Keep native projects in `ios/` and `android/` in the existing UI repository, with independent build workflows and a shared content-generation area. Keep the Angular files in their current web structure. The native first release needs no GraphQL client or native-to-web bridge.
 
-References supporting the stack: [Apple native navigation](https://developer.apple.com/documentation/swiftui/navigation), [GRDB SQLite toolkit](https://github.com/groue/GRDB.swift), [Android Compose guidance](https://android-developers.googleblog.com/2026/05/android-ui-development-is-compose-first.html), and [Room persistence](https://developer.android.com/training/data-storage/room).
+References supporting the stack: [Apple native navigation](https://developer.apple.com/documentation/swiftui/navigation), [SQLite interface](https://sqlite.org/capi3ref.html), [Android Compose guidance](https://android-developers.googleblog.com/2026/05/android-ui-development-is-compose-first.html), and [Room persistence](https://developer.android.com/training/data-storage/room).
 
 ## 5. Bundled content and offline behavior
 

@@ -36,7 +36,7 @@ Use the exact feature wording supported by the tested native build. Do not descr
 
 ## Apple review notes draft
 
-The app is an interactive handball rules quiz. Its main features are timed and untimed quizzes, rules browsing, search, answer review, language selection, and light/dark themes. Question content is bundled with the app and normal use requires no network connection. No account or credentials are required.
+The app is an interactive handball rules quiz. Its main features are timed and untimed quizzes, rules browsing, search, answer review, language selection, and light/dark themes. Privacy and Support are bundled native pages reached from Settings in each language; reading them requires no network access. Selecting the contact email opens the system email service. Question content is bundled with the app and normal use requires no network connection. No account or credentials are required.
 
 Update App Store Connect's existing notes to match this native build, add tested device/OS versions, and resolve or accurately disclose the branding permission status before submission. This file is a draft, not confirmation that store metadata has been saved.
 

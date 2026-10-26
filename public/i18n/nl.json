@@ -74,7 +74,7 @@
   },
   "privacy": {
     "title": "Privacybeleid",
-    "updated": "Laatst bijgewerkt: 25 oktober 2026",
+    "updated": "Laatst bijgewerkt: 26 oktober 2026",
     "intro": "Dit beleid geldt voor de website, de progressive web app en de Android- en iOS-apps van IHF Rules Quiz. Kristof Gilis beheert de app. Voor vragen of verzoeken over privacy kun je mailen naar",
     "data_heading": "Website en eerdere winkelversies",
     "device_label": "Op je apparaat:",
@@ -97,13 +97,13 @@
     "retention_local": "Websitevoorkeuren en gedownloade inhoud blijven bewaard totdat de sitegegevens worden gewist of verwijderd. Eerdere winkelversies kunnen hun cache bewaren tot de appgegevens worden verwijderd. De herbouwde native apps bewaren voorkeuren en quizstatus lokaal totdat ze worden vervangen of verwijderd zoals hierboven beschreven. We bewaren geen persoonlijke quizgeschiedenis op de server.",
     "retention_logs": "Bij controle op 24 oktober 2026 waren applicatie- en HTTP-verzoeklogs voor de website en API in Azure App Service uitgeschakeld. Geen van beide apps stuurt diagnostische logs naar Azure Monitor. Omdat deze logs uitstaan, bewaren we via deze instellingen geen verzoeklogs. Azure kan nog steeds technische gegevens verwerken om zijn hostingdienst te leveren en te beschermen. Als we logging inschakelen, werken we dit beleid bij met de bewaartermijn. Je kunt ons vragen persoonsgegevens die we bewaren te verwijderen. We bewaren contactberichten alleen zolang dat nodig is om het verzoek en eventuele bijbehorende verplichtingen af te handelen.",
     "rights_heading": "Je keuzes en rechten",
-    "choices": "Je kunt taal en weergave wijzigen in Instellingen. Wis de siteopslag om websitegegevens te verwijderen; wis de appopslag of verwijder de app om native appgegevens te verwijderen. De herbouwde native quiz werkt vanaf installatie offline. Externe privacy- en ondersteuningslinks of e-mail vereisen een verbinding.",
+    "choices": "Je kunt taal en weergave wijzigen in Instellingen. Wis de siteopslag om websitegegevens te verwijderen; verwijder de app of wis de appopslag om native gegevens te verwijderen. De native quiz, het privacybeleid en de ondersteuningspagina’s werken offline. Ondersteuning mailen vereist een verbinding.",
     "rights_before_email": "Afhankelijk van de toepasselijke wetgeving kun je vragen om inzage in, correctie of verwijdering van je persoonsgegevens, om beperking van de verwerking, bezwaar maken tegen de verwerking of om een overdraagbare kopie vragen. Mail naar",
     "rights_after_email": "om een verzoek in te dienen. Je kunt ook een klacht indienen bij je lokale toezichthouder voor gegevensbescherming.",
     "changes_heading": "Wijzigingen in dit beleid",
     "changes": "We kunnen dit beleid bijwerken wanneer de app of de manier waarop we gegevens verwerken verandert. De datum bovenaan toont wanneer deze pagina voor het laatst is herzien.",
     "native_heading": "Volledig offline native apps",
-    "native_details": "De herbouwde SwiftUI-app voor iOS en de geplande native Android-app bevatten alle inhoud en werken vanaf de eerste start offline. Regels, vragen, zoeken en scoreberekening werken op het apparaat. Taal, weergavevoorkeuren en quizstatus worden lokaal opgeslagen; antwoorden en resultaten worden niet naar onze API verzonden. Normaal gebruik doet geen netwerkverzoeken. Privacy-, ondersteunings- en e-maillinks openen externe diensten als je daarvoor kiest. Appwinkels leveren app- en inhoudsupdates. Apparaatback-ups kunnen voorkeuren en quizstatus bevatten. Verwijder lokale gegevens door de app of de appopslag te verwijderen. Een opgeslagen quiz blijft bewaard tot je hem verwijdert of vervangt, de inhoudsversie verandert of de appgegevens worden verwijderd."
+    "native_details": "De SwiftUI-app voor iOS bevat de inhoud en werkt vanaf de eerste start offline. Regels, vragen, zoeken en scoreberekening werken op het apparaat. Taal, weergave en quizstatus worden lokaal opgeslagen; antwoorden en resultaten worden niet naar onze API verstuurd. Normaal gebruik doet geen netwerkverzoeken. Het privacybeleid en de ondersteuningspagina’s zitten in de app. Ondersteuning mailen opent je e-maildienst en vereist een verbinding. Appwinkels leveren app- en inhoudsupdates. Apparaatback-ups kunnen voorkeuren en quizstatus bevatten. Verwijder de app of wis de appopslag om lokale gegevens te verwijderen. Een opgeslagen quiz blijft bestaan totdat je hem verwijdert of vervangt, de inhoudsversie verandert of appgegevens worden verwijderd."
   },
   "pwa": {
     "update_available": "Een nieuwe versie is beschikbaar.",

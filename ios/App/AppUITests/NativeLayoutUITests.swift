@@ -98,6 +98,21 @@ final class NativeLayoutUITests: XCTestCase {
         app.buttons["settings.open"].tap()
         XCTAssertTrue(app.staticTexts["Make it yours."].waitForExistence(timeout: 5))
         capture(app, "settings")
+        let privacy = app.buttons["settings.privacy"]
+        for _ in 0..<4 {
+            if privacy.isHittable { break }
+            app.scrollViews.firstMatch.swipeUp()
+        }
+        privacy.tap()
+        XCTAssertTrue(app.staticTexts["privacy.intro"].waitForExistence(timeout: 5))
+        capture(app, "privacy")
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        let support = app.buttons["settings.support"]
+        XCTAssertTrue(support.waitForExistence(timeout: 5))
+        support.tap()
+        XCTAssertTrue(app.staticTexts["support.intro"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "information.email").firstMatch.exists)
+        capture(app, "support")
         app.terminate()
         app.launchArguments = ["-ui-testing-reset", "-ui-testing-static-layout", "-native.language", "en", "-native.appearance", "dark"]
         app.launch()

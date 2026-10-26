@@ -1,51 +1,92 @@
 import Foundation
-import GRDB
+import SQLite3
 
 final class ContentRepository {
     let manifest: ContentManifest
-    private let database: DatabaseQueue
+    private let database: OpaquePointer
     private let decoder = JSONDecoder()
+
+    private struct DatabaseError: LocalizedError {
+        let code: Int32
+        let message: String
+        var errorDescription: String? { "SQLite (\(code)): \(message)" }
+    }
 
     init(bundle: Bundle = .main) throws {
         guard let url = bundle.url(forResource: "content", withExtension: "sqlite", subdirectory: "OfflineContent") else {
             throw CocoaError(.fileNoSuchFile)
         }
-        var configuration = Configuration()
-        configuration.readonly = true
-        database = try DatabaseQueue(path: url.path, configuration: configuration)
-        let payload = try database.read { db in
-            try String.fetchOne(db, sql: "SELECT value FROM metadata WHERE key = 'manifest'")
+        var handle: OpaquePointer?
+        let status = sqlite3_open_v2(url.path, &handle, SQLITE_OPEN_READONLY | SQLITE_OPEN_FULLMUTEX, nil)
+        guard status == SQLITE_OK, let opened = handle else {
+            let message = handle.map { String(cString: sqlite3_errmsg($0)) } ?? "Could not open bundled database"
+            if let handle = handle { sqlite3_close(handle) }
+            throw DatabaseError(code: status, message: message)
         }
-        guard let payload = payload?.data(using: .utf8) else { throw CocoaError(.fileReadCorruptFile) }
-        manifest = try decoder.decode(ContentManifest.self, from: payload)
-        guard manifest.schemaVersion == 1, Set(manifest.locales.keys) == Set(["en", "nl", "fr", "srb"]) else {
-            throw CocoaError(.fileReadCorruptFile)
+        do {
+            guard let payload = try Self.rows(in: opened, sql: "SELECT value FROM metadata WHERE key = 'manifest'").first?.first else {
+                throw CocoaError(.fileReadCorruptFile)
+            }
+            let loaded = try JSONDecoder().decode(ContentManifest.self, from: Data(payload.utf8))
+            guard loaded.schemaVersion == 1, Set(loaded.locales.keys) == Set(["en", "nl", "fr", "srb"]) else {
+                throw CocoaError(.fileReadCorruptFile)
+            }
+            manifest = loaded
+            database = opened
+        } catch {
+            sqlite3_close(opened)
+            throw error
         }
     }
 
+    deinit { sqlite3_close(database) }
+
     func rules(locale: String) throws -> [Rule] {
-        try database.read { db in
-            try String.fetchAll(db, sql: "SELECT payload FROM rules WHERE locale = ? ORDER BY position", arguments: [locale])
-                .map { try decoder.decode(Rule.self, from: Data($0.utf8)) }
-        }
+        try Self.rows(in: database, sql: "SELECT payload FROM rules WHERE locale = ? ORDER BY position", arguments: [locale])
+            .map { try decoder.decode(Rule.self, from: Data($0[0].utf8)) }
     }
 
     func questions(locale: String, ruleId: String? = nil) throws -> [Question] {
-        try database.read { db in
-            let payloads: [String]
-            if let ruleId = ruleId {
-                payloads = try String.fetchAll(db, sql: "SELECT payload FROM questions WHERE locale = ? AND ruleId = ? ORDER BY position", arguments: [locale, ruleId])
-            } else {
-                payloads = try String.fetchAll(db, sql: "SELECT payload FROM questions WHERE locale = ? ORDER BY position", arguments: [locale])
-            }
-            return try payloads.map { try decoder.decode(Question.self, from: Data($0.utf8)) }
-        }
+        let sql = ruleId == nil
+            ? "SELECT payload FROM questions WHERE locale = ? ORDER BY position"
+            : "SELECT payload FROM questions WHERE locale = ? AND ruleId = ? ORDER BY position"
+        let arguments = ruleId.map { [locale, $0] } ?? [locale]
+        return try Self.rows(in: database, sql: sql, arguments: arguments)
+            .map { try decoder.decode(Question.self, from: Data($0[0].utf8)) }
     }
 
     func searchDocuments(locale: String) throws -> [(String, String)] {
-        try database.read { db in
-            try Row.fetchAll(db, sql: "SELECT id, searchText FROM questions WHERE locale = ? ORDER BY position", arguments: [locale])
-                .map { ($0["id"], $0["searchText"]) }
+        try Self.rows(in: database, sql: "SELECT id, searchText FROM questions WHERE locale = ? ORDER BY position", arguments: [locale])
+            .map { ($0[0], $0[1]) }
+    }
+
+    private static func rows(in database: OpaquePointer, sql: String, arguments: [String] = []) throws -> [[String]] {
+        var prepared: OpaquePointer?
+        defer { sqlite3_finalize(prepared) }
+        let status = sqlite3_prepare_v2(database, sql, -1, &prepared, nil)
+        guard status == SQLITE_OK, let statement = prepared else {
+            throw DatabaseError(code: status, message: String(cString: sqlite3_errmsg(database)))
+        }
+        // SQLite copies each UTF-8 argument before its temporary Swift buffer expires.
+        let transient = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
+        for (index, value) in arguments.enumerated() {
+            let bound = value.withCString { sqlite3_bind_text(statement, Int32(index + 1), $0, -1, transient) }
+            guard bound == SQLITE_OK else {
+                throw DatabaseError(code: bound, message: String(cString: sqlite3_errmsg(database)))
+            }
+        }
+        var result: [[String]] = []
+        while true {
+            let step = sqlite3_step(statement)
+            if step == SQLITE_DONE { return result }
+            guard step == SQLITE_ROW else {
+                throw DatabaseError(code: step, message: String(cString: sqlite3_errmsg(database)))
+            }
+            let values = try (0..<sqlite3_column_count(statement)).map { column -> String in
+                guard let text = sqlite3_column_text(statement, column) else { throw CocoaError(.fileReadCorruptFile) }
+                return String(cString: text)
+            }
+            result.append(values)
         }
     }
 }
