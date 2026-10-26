@@ -28,6 +28,10 @@ The **Native iOS checks** workflow validates bundled content and tests the Swift
 
 Run `npm ci`, `npm run lint`, and `npm run build:web` for the PWA. Web service-worker behavior remains enabled in production. Native workflows and web releases are independent.
 
+## App branding
+
+The native icon and Home header reuse the website's original IHF artwork with the app's deep blue/navy background, white lettering and gold handball. Light and dark asset-catalog variants preserve the same shapes: the dark Home Screen icon has transparent backing for iOS's background, and the dark header uses the app's navy with brighter gold. Home Screen appearance follows the system's icon setting; the header follows the app theme. The source paths and proportions are preserved; website branding is unchanged. Run `node scripts/generate-native-branding.mjs` after editing the native palette to regenerate the 1024-pixel icons and header images. See [native branding](../native/branding/README.md).
+
 ## Court artwork
 
 The home graphic uses metre coordinates from [IHF Rule 1, 1 July 2025](https://www.ihf.info/sites/default/files/2025-07/09A%20-%20Rules%20of%20the%20Game_Indoor%20Handball_E.pdf): a 40 × 20 m court, 3 m goal mouths, circular 6 m goal-area boundaries, 7 m marks, 9 m free-throw lines and a centred 4 m diameter throw-off circle. One uniform scale preserves these proportions in every container. The halfway line stops at the circle’s edges. Both goal areas have a subtle lighter blue fill. Line weights and dash cadence are enlarged for legibility at icon size; measured positions remain to scale. The native geometry test covers different container shapes, the 6 m boundaries, 9 m intersections and end-to-end symmetry. The court floats vertically through a 12-point range over a 4.4-second cycle, preserving its proportions. Its animation schedule pauses for Reduce Motion, hidden Home content and inactive app scenes, and resumes automatically. A separate UI test compares header screenshots with motion enabled; layout captures use `-ui-testing-static-layout`.

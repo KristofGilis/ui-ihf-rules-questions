@@ -56,6 +56,18 @@ struct RootView: View {
         NavigationView {
             content().navigationTitle(literal ? title : app.text(title)).navigationBarTitleDisplayMode(.inline)
                 .toolbar {
+                    if literal {
+                        ToolbarItem(placement: .principal) {
+                            HStack(spacing: 8) {
+                                Image("BrandMark").resizable().scaledToFit()
+                                    .frame(width: 30, height: 30)
+                                    .clipShape(RoundedRectangle(cornerRadius: 7, style: .continuous))
+                                    .accessibilityHidden(true)
+                                Text(title).font(.headline).lineLimit(1).minimumScaleFactor(0.8)
+                                    .accessibilityAddTraits(.isHeader)
+                            }
+                        }
+                    }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button { settings = true } label: {
                             Image(systemName: "slider.horizontal.3").font(.subheadline.weight(.semibold))
