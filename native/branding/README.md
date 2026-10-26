@@ -1,13 +1,17 @@
 # Native app branding
 
-The app reuses the website's existing IHF letter-and-handball artwork from `assets/logo.svg`. Its paths and proportions are preserved, with the artwork scaled to leave space for “Rules Quiz” below it in clean sans-serif lettering. Only native assets receive the app palette: a deep blue (`#2047A2`) to navy (`#00206D`) background, white lettering, and a gold (`#B78D15`) ball. Website assets remain unchanged.
+At the operator's request, the proposed native app icon reuses the website's existing IHF letter-and-handball artwork from `assets/logo.svg`, rendered entirely white. Its paths, proportions and placement are preserved, with no additional wording in the icon. The native app name is **Handball Rules Quiz**. Website assets remain unchanged.
 
-`app-icon.svg` and `app-icon-dark.svg` are native vector assets produced directly from the existing SVG, without image generation. The default icon has an opaque blue background; the dark icon has white lettering, brighter gold (`#E8C259`) and transparency so iOS can supply its dark background. Both preserve the original shapes. Rebuild the 1024 × 1024 App Store icons and the Home header's light/dark 1×/2×/3× images with:
+`app-icon.svg` and `app-icon-dark.svg` are native vector assets produced directly from the existing SVG, without image generation. The light background runs from deep blue (`#2047A2`) to navy (`#00206D`); the dark background runs from `#001235` to `#000918`. Both PNG variants have opaque backgrounds. Rebuild the 1024 × 1024 icons and header images with:
 
 ```sh
 node scripts/generate-native-branding.mjs
 ```
 
-The generator verifies that all original artwork paths remain identical, the default App Store PNG has no alpha channel, and the dark variant retains transparency. Asset-catalog appearance entries let iOS select the Home Screen icon according to the user's icon appearance setting; older systems use the default icon. The header displays the artwork beside the full app name, follows the app's selected appearance, and has a dark navy background in dark mode. The animated court remains in the Home hero.
+Add `--preview` to create the comparison in `native/previews/`. The generator verifies that all artwork paths remain identical and both 1024-pixel PNG variants are opaque. Asset-catalog entries let iOS select the Home Screen icon according to its icon appearance setting; older systems use the default icon. The header follows the app's appearance and displays the artwork beside the full app name. The animated court remains in Home.
+
+## Permission status
+
+On 26 October 2026 the operator clarified that approval to use the IHF logo is not clear. The operator subsequently requested this artwork as a proposed Apple review candidate. This request does not establish permission from IHF. Do not claim logo permission is confirmed in store declarations or infer it from Apple's review outcome. Rights for the rules and question content are a separate check before public submission.
 
 Apple reference: [Configuring your app icon using an asset catalog](https://developer.apple.com/documentation/xcode/configuring-your-app-icon).

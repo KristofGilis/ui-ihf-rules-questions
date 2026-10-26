@@ -4,7 +4,7 @@ The iOS app is written in Swift/SwiftUI and reads a bundled SQLite database. It 
 
 ## Identity and baseline
 
-- Name: IHF Rules Quiz
+- Native app name: Handball Rules Quiz
 - Bundle/application ID: `io.github.kristofgilis.ihfrulesquiz`
 - Apple Team: `XKF5T9N38M`
 - Existing App Store Connect record: Apple ID `6826826667`, SKU `ihf-rules-quiz-ios`
@@ -30,7 +30,7 @@ Run `npm ci`, `npm run lint`, and `npm run build:web` for the PWA. Web service-w
 
 ## App branding
 
-The native icon and Home header reuse the website's original IHF artwork with the app's deep blue/navy background, white lettering and gold handball. Light and dark asset-catalog variants preserve the same shapes: the dark Home Screen icon has transparent backing for iOS's background, and the dark header uses the app's navy with brighter gold. Home Screen appearance follows the system's icon setting; the header follows the app theme. The source paths and proportions are preserved; website branding is unchanged. Run `node scripts/generate-native-branding.mjs` after editing the native palette to regenerate the 1024-pixel icons and header images. See [native branding](../native/branding/README.md).
+The proposed native icon and Home header reuse the website's original IHF artwork in solid white on app-matching blue/navy backgrounds. Both light and dark variants are opaque and preserve the original shapes, with no added wording in the icon. Home Screen appearance follows the system's icon setting; the header follows the app theme. Website branding is unchanged. Run `node scripts/generate-native-branding.mjs --preview` to regenerate assets and a comparison. The operator has clarified that IHF logo permission is not clear; using this review candidate must not be recorded as confirmed permission. See [native branding and permission status](../native/branding/README.md).
 
 ## Court artwork
 

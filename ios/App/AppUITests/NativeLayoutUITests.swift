@@ -26,7 +26,9 @@ final class NativeLayoutUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.tabBars.buttons["Search"].waitForExistence(timeout: 15))
         app.tabBars.buttons["Search"].tap()
-        app.buttons["search.example.1.1"].tap()
+        let example = app.buttons["search.example.1.1"]
+        XCTAssertTrue(example.waitForExistence(timeout: 10), "The Search tab should finish appearing before choosing an example.")
+        example.tap()
         let result = app.buttons["search.result.1.1"]
         XCTAssertTrue(result.waitForExistence(timeout: 5))
         result.tap()

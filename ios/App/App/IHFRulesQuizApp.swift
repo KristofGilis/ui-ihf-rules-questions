@@ -23,13 +23,13 @@ struct RootView: View {
         Group {
             if app.loadFailed {
                 VStack(spacing: 24) {
-                    EmptyPlayState(title: "IHF Rules Quiz", detail: app.text("native.load_error"), symbol: "exclamationmark.triangle")
+                    EmptyPlayState(title: "Handball Rules Quiz", detail: app.text("native.load_error"), symbol: "exclamationmark.triangle")
                     PrimaryAction(title: app.text("native.retry")) { app.load() }
                     Link("kristof.gilis@outlook.be", destination: URL(string: "mailto:kristof.gilis@outlook.be")!)
                 }.padding(24).background(PlayfulBackground())
             } else {
                 TabView {
-                    feature(title: "IHF Rules Quiz", literal: true) { HomeView(openQuiz: { quiz = true }) }
+                    feature(title: "Handball Rules Quiz", literal: true) { HomeView(openQuiz: { quiz = true }) }
                         .tabItem { Label(app.text("navigation.home"), systemImage: "house.fill") }
                     feature(title: "native.practice") { PracticeHomeView(openQuiz: { quiz = true }) }
                         .tabItem { Label(app.text("native.practice"), systemImage: "bolt.fill") }
