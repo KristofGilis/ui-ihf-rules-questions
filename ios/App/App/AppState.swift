@@ -30,7 +30,6 @@ final class AppState: ObservableObject {
         load()
     }
 
-    var colorScheme: ColorScheme? { appearance == "system" ? nil : (appearance == "dark" ? .dark : .light) }
     var edition: String { repository?.manifest.locales[language]?.edition ?? "" }
     var version: String {
         let info = Bundle.main.infoDictionary ?? [:]

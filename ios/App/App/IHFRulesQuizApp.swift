@@ -8,7 +8,7 @@ struct IHFRulesQuizApp: App {
             RootView()
                 .environmentObject(state)
                 .environment(\.locale, Locale(identifier: state.language == "srb" ? "sr" : state.language))
-                .preferredColorScheme(state.colorScheme)
+                .background(WindowAppearance(mode: state.appearance).frame(width: 0, height: 0))
                 .tint(Playful.blue)
         }
     }
@@ -55,7 +55,7 @@ struct RootView: View {
                 SettingsView().toolbar { ToolbarItem(placement: .confirmationAction) {
                     Button(app.text("native.close")) { settings = false }
                 } }
-            }.navigationViewStyle(.stack).preferredColorScheme(app.colorScheme)
+            }.navigationViewStyle(.stack)
         }
         .fullScreenCover(isPresented: quizPresentation) {
             if let session = app.session { QuizView(session: session, close: { quiz = false }) }
@@ -226,11 +226,17 @@ struct QuizSetupSection: View {
                     }
                 }.tint(Playful.blue)
                 if let session = app.session, !startingQuiz {
-                    PrimaryAction(title: app.text(session.isComplete ? "native.review" : "native.resume"), symbol: "play.fill") {
-                        quizPresented = true
-                    }.accessibilityIdentifier("quiz.resume")
-                    Button(app.text("native.discard"), role: .destructive) { replace = true }.font(.subheadline)
-                        .accessibilityIdentifier("quiz.discard")
+                    HStack(spacing: 12) {
+                        PrimaryAction(title: app.text(session.isComplete ? "native.review" : "native.resume"), symbol: "play.fill") {
+                            quizPresented = true
+                        }.accessibilityIdentifier("quiz.resume")
+                        Button { replace = true } label: {
+                            Image(systemName: "arrow.counterclockwise").font(.headline.weight(.semibold))
+                                .foregroundColor(Playful.blue).frame(width: 58, height: 58)
+                                .background(Playful.background).clipShape(RoundedRectangle(cornerRadius: 20))
+                        }.buttonStyle(PressableStyle()).accessibilityLabel(app.text("native.discard"))
+                            .accessibilityIdentifier("quiz.discard")
+                    }
                 } else {
                     PrimaryAction(title: app.text("home.quiz_card.button"), symbol: "play.fill") {
                         // Keep Home stable while the full-screen cover animates in.

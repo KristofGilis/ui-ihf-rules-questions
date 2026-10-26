@@ -3,7 +3,7 @@ import UIKit
 
 final class NativeLayoutUITests: XCTestCase {
     @MainActor
-    func testSettingsAppearanceChangesWithoutDismissingSheet() {
+    func testSettingsAppearanceReturnsToDarkSystemWithoutDismissingSheet() {
         continueAfterFailure = false
         let app = XCUIApplication()
         app.launchArguments = ["-ui-testing-reset", "-ui-testing-static-layout", "-native.language", "en", "-native.appearance", "system"]
@@ -15,6 +15,12 @@ final class NativeLayoutUITests: XCTestCase {
         let appearance = app.segmentedControls["settings.appearance"]
         XCTAssertTrue(appearance.buttons["System"].isSelected)
         let systemBrightness = averageBrightness(settings.screenshot())
+        XCTAssertLessThan(systemBrightness, 0.45, "Run the simulator in system Dark appearance for this regression.")
+        appearance.buttons["Light"].tap()
+        XCTAssertGreaterThan(averageBrightness(settings.screenshot()), 0.65)
+        appearance.buttons["System"].tap()
+        XCTAssertLessThan(averageBrightness(settings.screenshot()), 0.45, "System must restore the device's dark appearance after forcing Light.")
+        capture(app, "settings-system")
         appearance.buttons["Dark"].tap()
         XCTAssertLessThan(averageBrightness(settings.screenshot()), 0.45, "The open Settings sheet should switch to dark immediately.")
         capture(app, "settings-dark")
@@ -161,6 +167,8 @@ final class NativeLayoutUITests: XCTestCase {
         app.buttons["quiz.close"].tap()
         XCTAssertTrue(app.buttons["quiz.resume"].waitForExistence(timeout: 5), "Saved quiz controls should appear after dismissing the quiz.")
         XCTAssertTrue(app.buttons["quiz.discard"].exists)
+        XCTAssertFalse(app.staticTexts["Discard quiz"].exists, "The saved-quiz restart action should use a neutral icon, not inline red text.")
+        capture(app, "home-saved-quiz")
 
         selectTab("Rules", in: app)
         XCTAssertTrue(app.staticTexts["Study by rule"].waitForExistence(timeout: 5))
