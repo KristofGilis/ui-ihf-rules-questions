@@ -6,11 +6,15 @@ import sharp from 'sharp';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const branding = path.join(root, 'native/branding');
-const source = await readFile(path.join(root, 'assets/logo.svg'), 'utf8');
-// The user requested the website artwork in solid white; geometry stays identical.
-const white = source.replace(/stop-color: #[0-9a-fA-F]{6}/g, 'stop-color: #FFFFFF');
-const paths = (svg) => [...svg.matchAll(/\bd="([^"]+)"/g)].map((match) => match[1]);
-assert.ok(paths(source).length > 0);
+// Option A: handball, checkmark and motion trails in the native app palette.
+// Keep the generated foreground as the source so regeneration is deterministic.
+const source = await readFile(path.join(branding, 'handball-checkmark.png'));
+const foreground = await sharp(source)
+  .trim()
+  .resize(800, 800, { fit: 'contain', background: '#00000000' })
+  .extend({ top: 112, bottom: 112, left: 112, right: 112, background: '#00000000' })
+  .png()
+  .toBuffer();
 const withBackground = (start, end) => {
   const background =
     '<defs><linearGradient id="nativeBackground" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="' +
@@ -18,11 +22,15 @@ const withBackground = (start, end) => {
     '"/><stop offset="100%" stop-color="' +
     end +
     '"/></linearGradient></defs><rect width="1024" height="1024" fill="url(#nativeBackground)"/>';
-  const svg = white.replace(/(<svg\b[^>]*>)/, '$1' + background);
-  assert.deepEqual(paths(svg), paths(source), 'Existing logo geometry must be preserved.');
-  return svg;
+  return (
+    '<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">' +
+    background +
+    '<image width="1024" height="1024" href="data:image/png;base64,' +
+    foreground.toString('base64') +
+    '"/></svg>'
+  );
 };
-const lightSvg = withBackground('#2047A2', '#00206D');
+const lightSvg = withBackground('#FFFFFF', '#F1F5F9');
 const darkSvg = withBackground('#001235', '#000918');
 await writeFile(path.join(branding, 'app-icon.svg'), lightSvg);
 await writeFile(path.join(branding, 'app-icon-dark.svg'), darkSvg);
@@ -95,6 +103,4 @@ if (process.argv.includes('--preview')) {
     .png()
     .toFile(path.join(previews, 'app-icon-appearances.png'));
 }
-console.log(
-  'Solid-white website artwork generated on light/dark app backgrounds; geometry, 1024px size and opacity verified.'
-);
+console.log('Handball/checkmark native assets generated; 1024px size and opaque light/dark icons verified.');

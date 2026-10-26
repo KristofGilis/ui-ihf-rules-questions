@@ -15,6 +15,8 @@ The latest native TestFlight build is **1.0 (12)** from `3cdda29`. It is named H
 
 Revision `34cb2f8` passed eight Swift tests and three UI tests on **each** of iPhone and 13-inch iPad, alongside content integrity, generated-project validation, Angular lint and production build checks. [Simulator verification](https://github.com/KristofGilis/ui-ihf-rules-questions/actions/runs/40363411414). Changes after the uploaded revision affect only UI tests: locate adaptive tabs by accessible label, verify complete score visibility on wide screens where short content clamps scrolling, and retain top-alignment assertions on compact screens. Actual simulator captures were reviewed; eight unedited English screenshots are packaged locally in the ignored `native/previews/store-screenshots-build12.zip`, with dimensions, hashes and source revisions in its manifest. No App Review submission or public release has been made.
 
+Build **1.0 (13)** is being prepared with the updated handball/checkmark artwork in both icon appearances and the Home header. Build 12 remains the latest verified upload until Apple processing and internal testing for build 13 are confirmed.
+
 **App Review is on hold:** the operator chose to keep this icon in TestFlight while obtaining IHF logo permission. App Store Connect currently retains an earlier declaration that the app has the necessary rights to third-party content. Do not submit with that declaration until the current logo/content rights are established; Apple review is not a substitute for permission.
 
 ## Build and verify
@@ -34,7 +36,7 @@ Run `npm ci`, `npm run lint`, and `npm run build:web` for the PWA. Web service-w
 
 ## App branding
 
-The local native icon and Home header use the selected option A: a sweeping checkmark and curved-panel handball in the app's navy, blue, white and gold palette. Both icon appearances are opaque, with white/slate and deep navy backgrounds. Home Screen appearance follows the system's icon setting; the header follows the app theme. Run `node scripts/generate-native-branding.mjs --preview` to regenerate assets and a comparison. These assets have not been uploaded to TestFlight; the build described above still uses the previous artwork. See [native branding and permission status](../native/branding/README.md).
+The local native icon and Home header use the selected option A: a sweeping checkmark and stitched-panel handball in the app's navy, blue, white and gold palette. Both icon appearances are opaque, with white/slate and deep navy backgrounds. Home Screen appearance follows the system's icon setting; the header follows the app theme. Run `node scripts/compose-native-ball.mjs` followed by `node scripts/generate-native-branding.mjs --preview` to regenerate the composition, assets and comparison. This artwork replaces the previous IHF mark; check the verified TestFlight build status above for availability. See [native branding and permission status](../native/branding/README.md).
 
 On regular-width iPadOS, the system's floating top tab bar displays text labels in the current native layout. The app supplies SF Symbols for every tab; iPhone displays icons and labels. A native sidebar is an alternative if both are wanted on iPad. See [Apple tab navigation guidance](https://developer.apple.com/documentation/swiftui/enhancing-your-app-content-with-tab-navigation).
 

@@ -12,6 +12,7 @@ on:
       - 'scripts/native-content.py'
       - 'scripts/generate-native-ios-project.py'
       - 'scripts/generate-native-branding.mjs'
+      - 'scripts/compose-native-ball.mjs'
       - 'scripts/test_native_content.py'
       - 'scripts/apple-testflight.py'
       - 'scripts/test_apple_testflight.py'
