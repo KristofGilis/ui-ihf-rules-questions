@@ -9,7 +9,7 @@ node scripts/compose-native-ball.mjs
 node scripts/generate-native-branding.mjs
 ```
 
-Add `--preview` to create the comparison in `native/previews/`. The generator verifies that both 1024-pixel PNG variants are opaque. Asset-catalog entries let iOS select the Home Screen icon according to its icon appearance setting; older systems use the default icon. The header follows the app's appearance and displays the artwork beside the full app name. The animated court remains in Home.
+Add `--preview` to create the comparison in `native/previews/`. The generator verifies that both 1024-pixel PNG variants are opaque. Asset-catalog entries let iOS select the Home Screen icon according to its icon appearance setting; older systems use the default icon. The header uses the transparent foreground in both appearances, without the Home Screen icon backgrounds, and displays the artwork beside the full app name. The generator checks header alpha and transparent corners separately from opaque app icons. The animated court remains in Home.
 
 ## Permission status
 

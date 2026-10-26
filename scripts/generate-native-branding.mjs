@@ -62,14 +62,15 @@ await writeFile(
   })
 );
 for (const scale of [1, 2, 3]) {
-  await sharp(light)
+  const headerImage = await sharp(foreground)
     .resize(32 * scale, 32 * scale)
     .png()
-    .toFile(path.join(header, 'BrandMark@' + scale + 'x.png'));
-  await sharp(dark)
-    .resize(32 * scale, 32 * scale)
-    .png()
-    .toFile(path.join(header, 'BrandMark-Dark@' + scale + 'x.png'));
+    .toBuffer();
+  assert.equal((await sharp(headerImage).metadata()).hasAlpha, true);
+  const pixels = await sharp(headerImage).raw().toBuffer();
+  assert.equal(pixels[3], 0, 'Header corners must be transparent');
+  await writeFile(path.join(header, 'BrandMark@' + scale + 'x.png'), headerImage);
+  await writeFile(path.join(header, 'BrandMark-Dark@' + scale + 'x.png'), headerImage);
 }
 await writeFile(
   path.join(header, 'Contents.json'),
@@ -103,4 +104,4 @@ if (process.argv.includes('--preview')) {
     .png()
     .toFile(path.join(previews, 'app-icon-appearances.png'));
 }
-console.log('Handball/checkmark native assets generated; 1024px size and opaque light/dark icons verified.');
+console.log('Native assets generated; opaque 1024px app icons and transparent header marks verified.');
