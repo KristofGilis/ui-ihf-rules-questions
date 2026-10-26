@@ -4,6 +4,8 @@ The native app is named **Handball Rules Quiz**. Capture screenshots from the na
 
 **Branding permission status, 26 October 2026:** the operator clarified that approval to use the IHF logo is not clear. At the operator's request the proposed review candidate still uses the website's IHF artwork in white on app-matching backgrounds. Do not use the earlier permission statement as proof or answer a rights declaration as confirmed without evidence. An Apple review outcome does not establish IHF's permission. Rights for the rule and question content must be checked separately.
 
+**Submission hold:** the operator chose to keep the current icon in TestFlight while obtaining permission. Build 1.0 (12) is available to the existing internal tester group. App Store Connect still contains the earlier “necessary rights” declaration; do not submit the app until the current rights position is resolved. The version has no attached review build or uploaded screenshots as checked on 26 October 2026. iPhone and 13-inch iPad verification passed; eight original English screenshots are packaged in the ignored `native/previews/store-screenshots-build12.zip`. They have not been uploaded to App Store Connect. The live English subtitle is currently “Based on IHF Regulations”; the copy below remains a draft.
+
 ## Shared English copy
 
 **Verified privacy policy URL:** `https://rulequestions.azurewebsites.net/privacy`

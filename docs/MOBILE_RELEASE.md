@@ -11,7 +11,11 @@ The iOS app is written in Swift/SwiftUI and reads a bundled SQLite database. It 
 - Previous container implementation: commit `fed17f7`; recover it from Git history if needed.
 - iOS minimum: 15.0, retained from the previous app. iPhone and iPad remain enabled.
 
-The latest native TestFlight build is **1.0 (10)** from `3661633`. It uses the IHF blue/navy/gold palette, a court graphic with measured proportions and lighter blue goal areas, and inline licenses in Settings. Eight native tests and two simulator UI tests passed, including a visual comparison confirming court motion, alongside content integrity, Angular lint and production build checks. The signed archive uploaded successfully, and Apple confirmed `VALID` processing and `IN_BETA_TESTING` for the existing IHF Rules Quiz Internal group on 26 October 2026. [Upload and processing run](https://github.com/KristofGilis/ui-ihf-rules-questions/actions/runs/40294033363). No App Review submission or public release has been made.
+The latest native TestFlight build is **1.0 (12)** from `3cdda29`. It is named Handball Rules Quiz and uses the website's original artwork in solid white on light/dark blue backgrounds, both as its icon and beside the Home title. It includes the animated court, first-tap scrolling to the calculated score, a single-line perfect-score percentage and the neutral settings icon. The signed archive uploaded successfully, and Apple confirmed `VALID` processing and `IN_BETA_TESTING` for the existing **Handball Rules Quiz Internal** group on 26 October 2026. [Upload and processing run](https://github.com/KristofGilis/ui-ihf-rules-questions/actions/runs/40350939348).
+
+Revision `34cb2f8` passed eight Swift tests and three UI tests on **each** of iPhone and 13-inch iPad, alongside content integrity, generated-project validation, Angular lint and production build checks. [Simulator verification](https://github.com/KristofGilis/ui-ihf-rules-questions/actions/runs/40363411414). Changes after the uploaded revision affect only UI tests: locate adaptive tabs by accessible label, verify complete score visibility on wide screens where short content clamps scrolling, and retain top-alignment assertions on compact screens. Actual simulator captures were reviewed; eight unedited English screenshots are packaged locally in the ignored `native/previews/store-screenshots-build12.zip`, with dimensions, hashes and source revisions in its manifest. No App Review submission or public release has been made.
+
+**App Review is on hold:** the operator chose to keep this icon in TestFlight while obtaining IHF logo permission. App Store Connect currently retains an earlier declaration that the app has the necessary rights to third-party content. Do not submit with that declaration until the current logo/content rights are established; Apple review is not a substitute for permission.
 
 ## Build and verify
 
@@ -24,13 +28,15 @@ python3 scripts/generate-native-ios-project.py
 xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
 ```
 
-The **Native iOS checks** workflow validates bundled content and tests the Swift app on an available iPhone simulator. It needs no Angular build, npm installation or running API. Native tests cover the bundled locales, scoring, search, deterministic selection and quiz restoration/timer expiry. Physical-device and visual acceptance remain required.
+The **Native iOS checks** workflow validates bundled content and tests the Swift app on available iPhone and 13-inch iPad simulators. It needs no Angular build, npm installation or running API. Native tests cover the bundled locales, scoring, search, deterministic selection and quiz restoration/timer expiry. Physical-device and visual acceptance remain required.
 
 Run `npm ci`, `npm run lint`, and `npm run build:web` for the PWA. Web service-worker behavior remains enabled in production. Native workflows and web releases are independent.
 
 ## App branding
 
-The proposed native icon and Home header reuse the website's original IHF artwork in solid white on app-matching blue/navy backgrounds. Both light and dark variants are opaque and preserve the original shapes, with no added wording in the icon. Home Screen appearance follows the system's icon setting; the header follows the app theme. Website branding is unchanged. Run `node scripts/generate-native-branding.mjs --preview` to regenerate assets and a comparison. The operator has clarified that IHF logo permission is not clear; using this review candidate must not be recorded as confirmed permission. See [native branding and permission status](../native/branding/README.md).
+The local native icon and Home header use the selected option A: a sweeping checkmark and curved-panel handball in the app's navy, blue, white and gold palette. Both icon appearances are opaque, with white/slate and deep navy backgrounds. Home Screen appearance follows the system's icon setting; the header follows the app theme. Run `node scripts/generate-native-branding.mjs --preview` to regenerate assets and a comparison. These assets have not been uploaded to TestFlight; the build described above still uses the previous artwork. See [native branding and permission status](../native/branding/README.md).
+
+On regular-width iPadOS, the system's floating top tab bar displays text labels in the current native layout. The app supplies SF Symbols for every tab; iPhone displays icons and labels. A native sidebar is an alternative if both are wanted on iPad. See [Apple tab navigation guidance](https://developer.apple.com/documentation/swiftui/enhancing-your-app-content-with-tab-navigation).
 
 ## Court artwork
 
@@ -52,7 +58,7 @@ python3 scripts/test_native_content.py
 
 ## TestFlight
 
-The existing **Upload iOS build to TestFlight** workflow archives the Swift project directly, using the configured six Actions secrets. It keeps the existing bundle ID/profile and record. Choose a unique build number greater than every existing upload; build 10 is already uploaded. The next distinct candidate must use at least build 11. Check the latest upload before choosing a number. The workflow uploads but does not submit for App Review. `upload_build` controls whether to archive a new binary; disabling it allows managing an existing build. `enable_internal_testing` assigns a valid processed build to the existing IHF Rules Quiz Internal group and verifies Apple’s testing state through the App Store Connect API.
+The existing **Upload iOS build to TestFlight** workflow archives the Swift project directly, using the configured six Actions secrets. It keeps the existing bundle ID/profile and record. Choose a unique build number greater than every existing upload; build 12 is already uploaded. The next distinct candidate must use at least build 13. Check the latest upload before choosing a number. The workflow uploads but does not submit for App Review. `upload_build` controls whether to archive a new binary; disabling it allows managing an existing build. `enable_internal_testing` assigns a valid processed build to the existing **Handball Rules Quiz Internal** group and verifies Apple’s testing state through the App Store Connect API.
 
 Before uploading a release candidate, pass simulator CI and review the parity checklist. Before App Review, test on the available iPhone, capture new screenshots, review all languages and privacy/export declarations, and verify upgrading from the installed container app. Old WebView storage is not imported in this first native implementation: bundled content remains immediately available; locale/theme are initialized from system defaults until selected in native settings. Communicate that one-time settings reset during acceptance.
 
