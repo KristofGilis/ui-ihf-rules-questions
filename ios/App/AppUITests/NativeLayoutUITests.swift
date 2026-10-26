@@ -3,6 +3,7 @@ import XCTest
 final class NativeLayoutUITests: XCTestCase {
     @MainActor
     func testPlayfulScreensAndQuizSelection() throws {
+        continueAfterFailure = false
         let app = XCUIApplication()
         app.launchArguments = ["-ui-testing-reset", "-native.language", "en", "-native.appearance", "light"]
         app.launch()
@@ -18,11 +19,14 @@ final class NativeLayoutUITests: XCTestCase {
         XCTAssertEqual(answer.value as? String, "Selected")
         capture(app, "quiz-selected")
         let finish = app.buttons["quiz.finish"]
-        for _ in 0..<8 {
-            if finish.isHittable { break }
-            app.swipeUp()
+        let next = app.buttons["quiz.next"]
+        for _ in 0..<10 {
+            // XCTest may report an offscreen button as hittable underneath the sticky controls.
+            if finish.isHittable && finish.frame.maxY < next.frame.minY - 8 { break }
+            app.scrollViews.firstMatch.swipeUp()
         }
         XCTAssertTrue(finish.isHittable)
+        XCTAssertLessThan(finish.frame.maxY, next.frame.minY - 8)
         finish.tap()
         XCTAssertTrue(app.buttons["quiz.retake"].waitForExistence(timeout: 5))
         capture(app, "results")
