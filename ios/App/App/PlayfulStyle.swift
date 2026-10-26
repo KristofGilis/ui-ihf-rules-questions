@@ -131,6 +131,8 @@ struct HandballCourtGeometry {
         Path { path in
             path.addRect(court)
             path.move(to: point(0, 20))
+            path.addLine(to: point(8, 20))
+            path.move(to: point(12, 20))
             path.addLine(to: point(20, 20))
             path.addEllipse(in: CGRect(x: point(8, 18).x, y: point(8, 18).y, width: 4 * scale, height: 4 * scale))
             for bottom in [false, true] {
