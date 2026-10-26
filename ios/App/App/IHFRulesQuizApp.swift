@@ -120,11 +120,10 @@ struct HomeHero: View {
                         .accessibilityAddTraits(.isHeader)
                 }.frame(maxWidth: .infinity, alignment: .leading)
                 if !typeSize.isAccessibilitySize {
-                    HandballCourtMark().frame(width: 83, height: 116)
-                        .rotationEffect(.degrees(floating ? 8 : 3))
+                    HandballCourtMark().frame(width: 68, height: 136)
                         .offset(y: floating ? -3 : 2)
                         .padding(.leading, 12)
-                        .frame(width: 100, height: 116).accessibilityHidden(true)
+                        .frame(width: 90, height: 136).accessibilityHidden(true)
                 }
             }
         }.padding(24).frame(maxWidth: .infinity, alignment: .leading)

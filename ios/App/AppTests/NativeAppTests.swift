@@ -1,8 +1,28 @@
 import XCTest
+import SwiftUI
 @testable import App
 
 @MainActor
 final class NativeAppTests: XCTestCase {
+    func testCourtRetainsOfficialProportionsInAnyContainer() {
+        for size in [CGSize(width: 68, height: 136), CGSize(width: 83, height: 116), CGSize(width: 300, height: 100)] {
+            let geometry = HandballCourtGeometry(in: CGRect(origin: .zero, size: size))
+            XCTAssertEqual(geometry.court.height / geometry.court.width, 2, accuracy: 0.0001)
+            let metreAcross = geometry.point(1, 0).x - geometry.point(0, 0).x
+            let metreDown = geometry.point(0, 1).y - geometry.point(0, 0).y
+            XCTAssertEqual(metreAcross, metreDown, accuracy: 0.0001)
+            let area = geometry.goalArea(radius: 6).boundingRect
+            XCTAssertEqual(area.width / geometry.scale, 15, accuracy: 0.0001)
+            XCTAssertEqual(area.height / geometry.scale, 6, accuracy: 0.0001)
+            let freeThrow = geometry.goalArea(radius: 9).boundingRect
+            XCTAssertEqual(freeThrow.minX, geometry.court.minX, accuracy: 0.0001)
+            XCTAssertEqual(freeThrow.maxX, geometry.court.maxX, accuracy: 0.0001)
+            XCTAssertEqual((freeThrow.minY - geometry.court.minY) / geometry.scale, sqrt(9 * 9 - 8.5 * 8.5), accuracy: 0.0001)
+            let opposite = geometry.goalArea(radius: 6, bottom: true).boundingRect
+            XCTAssertEqual(opposite.minY, geometry.court.maxY - 6 * geometry.scale, accuracy: 0.0001)
+        }
+    }
+
     private let configuration = ScoringConfiguration(Correct: 1, InCorrect: -1, NotAnswered: 0, NegativeScore: false, PenalizeGuessingStrategy: true)
     private var sample: Question {
         Question(id: "1.1", number: "1.1", ruleId: "1", phrase: "Example", references: ["1:1"], answers: [

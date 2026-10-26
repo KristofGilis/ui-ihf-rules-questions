@@ -94,38 +94,82 @@ struct SectionHeading: View {
     }
 }
 
+// All positions use metres from IHF Rule 1 (1 July 2025), with one uniform scale.
+// The canvas includes 1 m beside each sideline and 2 m behind each goal line.
+struct HandballCourtGeometry {
+    let scale: CGFloat
+    let origin: CGPoint
+
+    init(in bounds: CGRect) {
+        scale = min(bounds.width / 22, bounds.height / 44)
+        origin = CGPoint(x: bounds.midX - 10 * scale, y: bounds.midY - 20 * scale)
+    }
+
+    var court: CGRect {
+        CGRect(x: origin.x, y: origin.y, width: 20 * scale, height: 40 * scale)
+    }
+
+    func point(_ x: CGFloat, _ y: CGFloat, bottom: Bool = false) -> CGPoint {
+        CGPoint(x: origin.x + x * scale, y: origin.y + (bottom ? 40 - y : y) * scale)
+    }
+
+    func goalArea(radius: CGFloat, bottom: Bool = false) -> Path {
+        // 6 m arcs start on the end line; 9 m arcs intersect the sidelines.
+        // The centres are the inner goalpost corners, 3 m apart.
+        let edgeAngle = acos(Double(min(1, 8.5 / radius)))
+        var path = Path()
+        path.addArc(center: CGPoint(x: 8.5, y: 0), radius: radius,
+                    startAngle: .radians(.pi - edgeAngle), endAngle: .degrees(90), clockwise: true)
+        path.addLine(to: CGPoint(x: 11.5, y: radius))
+        path.addArc(center: CGPoint(x: 11.5, y: 0), radius: radius,
+                    startAngle: .degrees(90), endAngle: .radians(edgeAngle), clockwise: true)
+        return path.applying(CGAffineTransform(a: scale, b: 0, c: 0, d: bottom ? -scale : scale,
+                                              tx: origin.x, ty: origin.y + (bottom ? 40 * scale : 0)))
+    }
+
+    var markings: Path {
+        Path { path in
+            path.addRect(court)
+            path.move(to: point(0, 20))
+            path.addLine(to: point(20, 20))
+            path.addEllipse(in: CGRect(x: point(8, 18).x, y: point(8, 18).y, width: 4 * scale, height: 4 * scale))
+            for bottom in [false, true] {
+                // Goal mouth: 3 m. The net is shown from above, outside the end line.
+                path.move(to: point(8.5, 0, bottom: bottom))
+                path.addLine(to: point(8.5, -1, bottom: bottom))
+                path.addLine(to: point(11.5, -1, bottom: bottom))
+                path.addLine(to: point(11.5, 0, bottom: bottom))
+                path.addPath(goalArea(radius: 6, bottom: bottom))
+                path.move(to: point(9.5, 7, bottom: bottom))
+                path.addLine(to: point(10.5, 7, bottom: bottom))
+                path.move(to: point(9.925, 4, bottom: bottom))
+                path.addLine(to: point(10.075, 4, bottom: bottom))
+                path.move(to: point(-0.15, 15.5, bottom: bottom))
+                path.addLine(to: point(0.15, 15.5, bottom: bottom))
+            }
+        }
+    }
+
+    var freeThrowLines: Path {
+        var path = goalArea(radius: 9)
+        path.addPath(goalArea(radius: 9, bottom: true))
+        return path
+    }
+}
+
 struct HandballCourtMark: View {
     var body: some View {
-        GeometryReader { geometry in
-            let size = geometry.size
-            let line = max(1, size.width * 0.014)
+        GeometryReader { reader in
+            let geometry = HandballCourtGeometry(in: CGRect(origin: .zero, size: reader.size))
+            // Enlarge only line weight and dash cadence for legibility at icon size.
+            // Court, goals, circles and distances all share the same metre scale.
+            let line = max(0.7, geometry.scale * 0.05)
             ZStack {
                 RoundedRectangle(cornerRadius: 12).fill(Color.white.opacity(0.07))
-                Path { path in
-                    let court = CGRect(x: size.width * 0.10, y: size.height * 0.07, width: size.width * 0.80, height: size.height * 0.86)
-                    path.addRoundedRect(in: court, cornerSize: CGSize(width: 3, height: 3))
-                    path.move(to: CGPoint(x: court.minX, y: size.height * 0.5))
-                    path.addLine(to: CGPoint(x: court.maxX, y: size.height * 0.5))
-                    for bottom in [false, true] {
-                        let y: (CGFloat) -> CGFloat = { (bottom ? 1 - $0 : $0) * size.height }
-                        path.addRect(CGRect(x: size.width * 0.40, y: y(bottom ? 0.07 : 0.035), width: size.width * 0.20, height: size.height * 0.035))
-                        path.move(to: CGPoint(x: size.width * 0.10, y: y(0.13)))
-                        path.addQuadCurve(to: CGPoint(x: size.width * 0.38, y: y(0.31)), control: CGPoint(x: size.width * 0.13, y: y(0.31)))
-                        path.addLine(to: CGPoint(x: size.width * 0.62, y: y(0.31)))
-                        path.addQuadCurve(to: CGPoint(x: size.width * 0.90, y: y(0.13)), control: CGPoint(x: size.width * 0.87, y: y(0.31)))
-                    }
-                }.stroke(Color.white.opacity(0.8), style: StrokeStyle(lineWidth: line, lineCap: .round, lineJoin: .round))
-                Path { path in
-                    for bottom in [false, true] {
-                        let y: (CGFloat) -> CGFloat = { (bottom ? 1 - $0 : $0) * size.height }
-                        path.move(to: CGPoint(x: size.width * 0.10, y: y(0.22)))
-                        path.addQuadCurve(to: CGPoint(x: size.width * 0.38, y: y(0.40)), control: CGPoint(x: size.width * 0.13, y: y(0.40)))
-                        path.addLine(to: CGPoint(x: size.width * 0.62, y: y(0.40)))
-                        path.addQuadCurve(to: CGPoint(x: size.width * 0.90, y: y(0.22)), control: CGPoint(x: size.width * 0.87, y: y(0.40)))
-                    }
-                }.stroke(Color.white.opacity(0.4), style: StrokeStyle(lineWidth: line, dash: [3, 4]))
+                geometry.markings.stroke(Color.white.opacity(0.85), style: StrokeStyle(lineWidth: line, lineCap: .butt, lineJoin: .miter))
+                geometry.freeThrowLines.stroke(Color.white.opacity(0.55), style: StrokeStyle(lineWidth: line, dash: [2, 2]))
             }
-        }.aspectRatio(0.72, contentMode: .fit).accessibilityHidden(true)
+        }.aspectRatio(0.5, contentMode: .fit).accessibilityHidden(true)
     }
 }
 
