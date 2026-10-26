@@ -18,7 +18,7 @@ on:
         type: boolean
         default: true
       enable_internal_testing:
-        description: Enable the existing IHF Rules Quiz Internal tester group
+        description: Enable the existing Handball Rules Quiz Internal tester group
         type: boolean
         default: false
 
@@ -171,7 +171,7 @@ jobs:
           printf '%s' "$ASC_PRIVATE_KEY_BASE64" | base64 --decode > "$API_KEY_PATH"
           EXTRA_ARGUMENTS=()
           if [[ "$ENABLE_INTERNAL_TESTING" == 'true' ]]; then
-            EXTRA_ARGUMENTS+=(--enable-internal-group 'IHF Rules Quiz Internal')
+            EXTRA_ARGUMENTS+=(--enable-internal-group 'Handball Rules Quiz Internal')
           fi
           python3 scripts/apple-testflight.py \
             --private-key "$API_KEY_PATH" \
