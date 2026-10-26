@@ -38,8 +38,8 @@ final class AppState: ObservableObject {
     }
 
     func text(_ key: String, _ replacements: [String: String] = [:]) -> String {
-        // App information can change without changing the saved quiz's content hash.
-        var value = AppInformation.strings[language]?[key] ?? AppInformation.strings["en"]?[key]
+        // Interface copy can change without changing the saved quiz's content hash.
+        var value = AppLocalization.strings[language]?[key] ?? AppLocalization.strings["en"]?[key]
             ?? repository?.manifest.locales[language]?.strings[key]
             ?? repository?.manifest.locales["en"]?.strings[key] ?? [
                 "native.load_error": "Bundled content could not be opened. Try again or contact support. No download is required.",

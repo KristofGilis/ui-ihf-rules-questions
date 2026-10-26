@@ -93,10 +93,10 @@ final class NativeLayoutUITests: XCTestCase {
         app.buttons["quiz.close"].tap()
 
         selectTab("Rules", in: app)
-        XCTAssertTrue(app.staticTexts["Read the game."].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Study by rule"].waitForExistence(timeout: 5))
         capture(app, "rules")
         app.buttons["settings.open"].tap()
-        XCTAssertTrue(app.staticTexts["Make it yours."].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Your preferences"].waitForExistence(timeout: 5))
         capture(app, "settings")
         let privacy = app.buttons["settings.privacy"]
         for _ in 0..<4 {
@@ -123,6 +123,14 @@ final class NativeLayoutUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.buttons["quiz.start"].waitForExistence(timeout: 10))
         capture(app, "home-french")
+        for (language, headline) in [("nl", "Ken de\nspelregels."), ("srb", "Познајте\nправила.")] {
+            app.terminate()
+            app.launchArguments = ["-ui-testing-reset", "-ui-testing-static-layout", "-native.language", language, "-native.appearance", "light"]
+            app.launch()
+            XCTAssertTrue(app.buttons["quiz.start"].waitForExistence(timeout: 10))
+            XCTAssertTrue(app.staticTexts[headline].exists)
+            capture(app, "home-\(language)")
+        }
     }
 
     @MainActor

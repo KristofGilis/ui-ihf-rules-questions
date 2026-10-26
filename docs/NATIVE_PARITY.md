@@ -17,7 +17,7 @@ The implementation follows the approved fully offline rebuild. Source baseline: 
 | Persistence            | Native language/theme; saved active quiz; hash change discards incompatible session                            | Upgrade/device test                        |
 | Languages              | en/nl/fr/srb content and UI, standard sr locale mapping                                                        | Human translation review                   |
 | Offline                | Complete SQLite learning content bundled; no network data client                                               | Airplane-mode acceptance                   |
-| Privacy/support        | Settings links to public privacy/support pages and email; inline bundled licenses/acknowledgements             | Public policy/store declarations review    |
+| Privacy/support        | Native offline pages in all four languages, email contact inside them, app copyright/content credits           | Public policy/store declarations review    |
 | CI                     | Content checks, Swift simulator tests, direct signed archive workflow                                          | Passed; physical-device acceptance remains |
 
 ## Deliberate behavior improvements
@@ -34,6 +34,8 @@ Python tests validate the exported snapshot, invalid-content rejection, database
 
 ## Delivery state
 
-Capacitor removal and the native iOS implementation are on the feature branch. Candidate **1.0 (10)** (`3661633`) passed eight Swift tests, including court geometry, and two UI tests, including a visual motion check; content/export checks and Angular lint/build also passed. Actual simulator previews were reviewed. The court uses uniform scaling, the 4 m throw-off circle has a clear interior, and both 6 m goal areas use lighter blue shading. The separate Content source page is omitted; bundled notices remain in Settings. The signed archive uploaded successfully, and Apple confirmed `VALID` processing and `IN_BETA_TESTING` for the existing IHF Rules Quiz Internal group on 26 October 2026. [Upload and processing run](https://github.com/KristofGilis/ui-ihf-rules-questions/actions/runs/40294033363).
+Capacitor removal and the native iOS implementation are on the feature branch. Verified build **1.0 (15)** (`c709ac8`) passed ten Swift tests and three UI tests on each of iPhone and 13-inch iPad. Tests cover court animation, single-tap score visibility, SQLite filtering/bound parameters, and navigation to the native offline Privacy/Support pages. Content/export checks and Angular lint/build also passed. Apple confirmed `VALID` processing and `IN_BETA_TESTING` for the existing Handball Rules Quiz Internal group on 26 October 2026. [Upload and processing run](https://github.com/KristofGilis/ui-ihf-rules-questions/actions/runs/40380198316).
+
+The app links system SQLite directly and has no Swift Package dependencies. The separate Content source page is omitted; app copyright and content credits remain in Settings. The current handball/checkmark artwork replaces the IHF mark, with light/dark app icons and transparent Home header images. Candidate **1.0 (16)** revises native interface wording in all four languages and uses standard system typography on the Home hero. Interface catalogs are independent of the unchanged learning database, preserving existing saved quizzes. See `MOBILE_RELEASE.md` for current verification and delivery status.
 
 Android native implementation, App Review submission, public policy deployment and physical-device acceptance remain subsequent milestones. Preserve the last working container revision in Git and the existing store/signing identities.

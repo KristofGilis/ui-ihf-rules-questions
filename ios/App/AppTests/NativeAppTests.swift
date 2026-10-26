@@ -5,15 +5,25 @@ import SwiftUI
 @MainActor
 final class NativeAppTests: XCTestCase {
     func testOfflineInformationIsCompleteInEveryLanguage() {
-        let locales = AppInformation.strings
+        let locales = AppLocalization.strings
         XCTAssertEqual(Set(locales.keys), Set(["en", "nl", "fr", "srb"]))
         let keys = Set(locales["en"]?.keys.map { $0 } ?? [])
         XCTAssertTrue(keys.contains("info.privacy.local"))
         XCTAssertTrue(keys.contains("info.support.offline"))
         XCTAssertTrue(keys.contains("native.acknowledgements"))
+        XCTAssertTrue(keys.contains("native.hero_title"))
+        XCTAssertTrue(keys.contains("home.quiz_card.button"))
         for translations in locales.values {
             XCTAssertEqual(Set(translations.keys), keys)
             XCTAssertTrue(translations.values.allSatisfy { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty })
+            for key in keys {
+                let placeholders = try! NSRegularExpression(pattern: #"\{\{[^}]+\}\}"#)
+                func tokens(_ text: String) -> [String] {
+                    placeholders.matches(in: text, range: NSRange(text.startIndex..., in: text))
+                        .compactMap { Range($0.range, in: text).map { String(text[$0]) } }.sorted()
+                }
+                XCTAssertEqual(tokens(translations[key]!), tokens(locales["en"]![key]!), "Placeholder mismatch: \(key)")
+            }
         }
     }
 

@@ -3,6 +3,9 @@ import hashlib
 import pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parents[1] / "ios/App"
+# Keep native UI copy outside the frozen question pack and its saved-quiz hash.
+(ROOT / "App/OfflineContent/InterfaceStrings.json").write_bytes(
+    (ROOT.parents[1] / "native/strings.json").read_bytes())
 objects = []
 
 
@@ -72,7 +75,7 @@ app_config = configurations("App", '''ASSETCATALOG_COMPILER_APPICON_NAME = AppIc
     IHF_APP_CODE_SIGN_STYLE = Automatic; IHF_APP_CODE_SIGN_IDENTITY = "Apple Development";
     CODE_SIGN_STYLE = "$(IHF_APP_CODE_SIGN_STYLE)"; CODE_SIGN_IDENTITY = "$(IHF_APP_CODE_SIGN_IDENTITY)";
     PROVISIONING_PROFILE_SPECIFIER = "$(IHF_APP_PROVISIONING_PROFILE)";
-    DEVELOPMENT_TEAM = XKF5T9N38M; CURRENT_PROJECT_VERSION = 15; MARKETING_VERSION = 1.0;
+    DEVELOPMENT_TEAM = XKF5T9N38M; CURRENT_PROJECT_VERSION = 16; MARKETING_VERSION = 1.0;
     PRODUCT_BUNDLE_IDENTIFIER = io.github.kristofgilis.ihfrulesquiz; PRODUCT_NAME = "$(TARGET_NAME)";
     INFOPLIST_FILE = App/Info.plist; TARGETED_DEVICE_FAMILY = "1,2";
     LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks",);''')

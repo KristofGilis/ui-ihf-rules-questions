@@ -75,7 +75,7 @@
   "privacy": {
     "title": "Privacy policy",
     "updated": "Last updated: 26 October 2026",
-    "intro": "This policy covers the IHF Rules Quiz website, progressive web app, and Android and iOS apps. Kristof Gilis operates the app. For privacy questions or requests, email",
+    "intro": "This policy covers the IHF Rules Quiz website and progressive web app, and the native Handball Rules Quiz apps. Kristof Gilis operates these services. For privacy questions or requests, email",
     "data_heading": "Website and earlier store builds",
     "device_label": "On your device:",
     "device": "The app saves your language, theme, and display preferences, along with downloaded rules, questions, answers, scoring configuration, and sync information. Quiz answers are held in the app while you take a quiz.",
@@ -210,7 +210,7 @@
   },
   "support": {
     "title": "Support",
-    "intro": "Need help with IHF Rules Quiz? Contact us by email and we will reply.",
+    "intro": "Need help with the IHF Rules Quiz website or the Handball Rules Quiz app? Contact us by email and we will reply.",
     "contact_heading": "Contact",
     "contact_details": "Please tell us what happened, your device and app version, and your selected language. Do not include sensitive personal information.",
     "offline_heading": "Using the app offline",

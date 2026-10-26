@@ -137,9 +137,9 @@ struct HomeHero: View {
         VStack(alignment: .leading, spacing: 21) {
             HStack(alignment: .top, spacing: 8) {
                 VStack(alignment: .leading, spacing: 11) {
-                    Text(app.text("native.hero_eyebrow")).font(.system(.caption2, design: .rounded).weight(.heavy)).tracking(2)
+                    Text(app.text("native.hero_eyebrow")).font(.caption2.weight(.semibold)).tracking(1.2)
                         .foregroundColor(.white.opacity(0.76))
-                    Text(app.text("native.hero_title")).font(.system(.largeTitle, design: .rounded).weight(.black))
+                    Text(app.text("native.hero_title")).font(.largeTitle.weight(.semibold))
                         .foregroundColor(.white).fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
                 }.frame(maxWidth: .infinity, alignment: .leading)

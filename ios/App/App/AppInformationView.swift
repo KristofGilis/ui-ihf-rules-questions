@@ -3,12 +3,6 @@ import SwiftUI
 enum AppInformation {
     static let email = "kristof.gilis@outlook.be"
     static let copyright = "© 2026 Kristof Gilis"
-    static let strings: [String: [String: String]] = {
-        guard let url = Bundle.main.url(forResource: "AppInformation", withExtension: "json", subdirectory: "OfflineContent"),
-              let data = try? Data(contentsOf: url),
-              let values = try? JSONDecoder().decode([String: [String: String]].self, from: data) else { return [:] }
-        return values
-    }()
 }
 
 private struct InformationPage<Content: View>: View {
