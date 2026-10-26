@@ -8,7 +8,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const source = await readFile(path.join(root, 'assets/logo.svg'), 'utf8');
 const palette = { blue: '#2047A2', navy: '#00206D', gold: '#B78D15' };
 
-// Reuse the website's existing geometry and placement. Only native files are written.
+// Reuse the website's existing artwork paths. Only native files are written.
 const recolored = source
   .replaceAll('#06b6d4', palette.blue)
   .replaceAll('#3b82f6', palette.navy)
@@ -23,7 +23,18 @@ const background = `
     </linearGradient>
   </defs>
   <rect width="1024" height="1024" fill="url(#nativeIconBackground)"/>`;
-const svg = recolored.replace(/(<svg\b[^>]*>)/, '$1' + background);
+const markSvg = recolored.replace(/(<svg\b[^>]*>)/, '$1' + background);
+const withName = (mark) => {
+  const placed = mark.replace(
+    '<svg x="286" y="132" width="452" height="760"',
+    '<svg x="326" y="108" width="372" height="626"'
+  );
+  assert.ok(placed !== mark, 'Artwork placement must leave room for the app name.');
+  const name =
+    '\n  <text x="512" y="860" fill="#FFFFFF" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="80" font-weight="600" letter-spacing="0.5">Rules Quiz</text>\n</svg>\n';
+  return placed.replace(/<\/svg>\s*$/, name);
+};
+const svg = withName(markSvg);
 const paths = (value) => [...value.matchAll(/\bd="([^"]+)"/g)].map((match) => match[1]);
 assert.ok(paths(source).length > 0, 'Source artwork paths must be present.');
 assert.deepEqual(paths(svg), paths(source), 'Website artwork geometry must remain identical.');
@@ -36,12 +47,15 @@ await mkdir(branding, { recursive: true });
 await mkdir(header, { recursive: true });
 await writeFile(path.join(branding, 'app-icon.svg'), svg);
 const icon = await sharp(Buffer.from(svg)).resize(1024, 1024).removeAlpha().png().toBuffer();
+const headerIcon = await sharp(Buffer.from(markSvg)).resize(1024, 1024).removeAlpha().png().toBuffer();
 // Dark Home Screen icons retain transparency so iOS supplies its own background.
 // The in-app header flattens the same artwork onto the app's dark navy.
-const darkSvg = recolored.replaceAll(palette.gold, '#E8C259');
+const darkMarkSvg = recolored.replaceAll(palette.gold, '#E8C259');
+const darkSvg = withName(darkMarkSvg);
 assert.deepEqual(paths(darkSvg), paths(source));
 await writeFile(path.join(branding, 'app-icon-dark.svg'), darkSvg);
 const darkIcon = await sharp(Buffer.from(darkSvg)).resize(1024, 1024).png().toBuffer();
+const darkHeaderIcon = await sharp(Buffer.from(darkMarkSvg)).resize(1024, 1024).png().toBuffer();
 const darkMetadata = await sharp(darkIcon).metadata();
 assert.equal(darkMetadata.width, 1024);
 assert.equal(darkMetadata.height, 1024);
@@ -73,11 +87,11 @@ await writeFile(
   ) + '\n'
 );
 for (const scale of [1, 2, 3]) {
-  await sharp(icon)
+  await sharp(headerIcon)
     .resize(32 * scale, 32 * scale)
     .png()
     .toFile(path.join(header, `BrandMark@${scale}x.png`));
-  await sharp(darkIcon)
+  await sharp(darkHeaderIcon)
     .flatten({ background: '#001235' })
     .removeAlpha()
     .resize(32 * scale, 32 * scale)

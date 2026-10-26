@@ -54,20 +54,26 @@ struct RootView: View {
 
     private func feature<Content: View>(title: String, literal: Bool = false, @ViewBuilder content: () -> Content) -> some View {
         NavigationView {
-            content().navigationTitle(literal ? title : app.text(title)).navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    if literal {
-                        ToolbarItem(placement: .principal) {
-                            HStack(spacing: 8) {
-                                Image("BrandMark").resizable().scaledToFit()
-                                    .frame(width: 30, height: 30)
-                                    .clipShape(RoundedRectangle(cornerRadius: 7, style: .continuous))
-                                    .accessibilityHidden(true)
-                                Text(title).font(.headline).lineLimit(1).minimumScaleFactor(0.8)
-                                    .accessibilityAddTraits(.isHeader)
+            Group {
+                if literal {
+                    content().navigationTitle(title).navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .principal) {
+                                HStack(spacing: 8) {
+                                    Image("BrandMark").resizable().scaledToFit()
+                                        .frame(width: 30, height: 30)
+                                        .clipShape(RoundedRectangle(cornerRadius: 7, style: .continuous))
+                                        .accessibilityHidden(true)
+                                    Text(title).font(.headline).lineLimit(1).minimumScaleFactor(0.8)
+                                        .accessibilityAddTraits(.isHeader)
+                                }
                             }
                         }
-                    }
+                } else {
+                    content().navigationTitle(app.text(title)).navigationBarTitleDisplayMode(.inline)
+                }
+            }
+                .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button { settings = true } label: {
                             Image(systemName: "slider.horizontal.3").font(.subheadline.weight(.semibold))
