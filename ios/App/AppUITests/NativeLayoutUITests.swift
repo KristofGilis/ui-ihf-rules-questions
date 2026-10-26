@@ -112,9 +112,10 @@ final class NativeLayoutUITests: XCTestCase {
         if phoneTab.exists {
             phoneTab.tap()
         } else {
-            // iPadOS exposes floating tab items as cells rather than a TabBar.
-            let floatingTab = app.cells[title]
-            XCTAssertTrue(floatingTab.waitForExistence(timeout: 10), "The native \(title) tab should be available.")
+            // iPadOS floating tabs have inconsistent Button/Cell automation types.
+            let floatingTab = app.descendants(matching: .any)
+                .matching(NSPredicate(format: "label == %@", title)).firstMatch
+            XCTAssertTrue(floatingTab.waitForExistence(timeout: 10), "The native \(title) tab should be available.\n\(app.debugDescription)")
             floatingTab.tap()
         }
     }
