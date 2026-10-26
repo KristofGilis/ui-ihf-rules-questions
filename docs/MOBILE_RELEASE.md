@@ -11,7 +11,7 @@ The iOS app is written in Swift/SwiftUI and reads a bundled SQLite database. It 
 - Previous container implementation: commit `fed17f7`; recover it from Git history if needed.
 - iOS minimum: 15.0, retained from the previous app. iPhone and iPad remain enabled.
 
-This branch prepares the native implementation. It does not upload a new TestFlight build, change store declarations, or submit the app. Existing TestFlight builds contain the previous implementation until the native archive is uploaded.
+Native build 4 was uploaded and tested through TestFlight. The redesigned build 5, using the IHF website’s blue/navy/gold palette, passed simulator checks and is available to the existing internal tester group. Its source is `ab11940`. Build 6 removes the decorative ball and the separate Content source page; it is the next candidate. No App Review submission or public release has been made.
 
 ## Build and verify
 
@@ -44,7 +44,7 @@ python3 scripts/test_native_content.py
 
 ## TestFlight
 
-The existing **Upload iOS build to TestFlight** workflow archives the Swift project directly, using the configured six Actions secrets. It keeps the existing bundle ID/profile and record. Choose a unique build number greater than every existing upload; build 4 is the proposed next value and must be checked at upload time. The workflow uploads but does not submit for App Review.
+The existing **Upload iOS build to TestFlight** workflow archives the Swift project directly, using the configured six Actions secrets. It keeps the existing bundle ID/profile and record. Choose a unique build number greater than every existing upload; build 5 is already uploaded and build 6 is the next candidate. Check the latest upload before choosing a number. The workflow uploads but does not submit for App Review. `upload_build` controls whether to archive a new binary; disabling it allows managing an existing build. `enable_internal_testing` assigns a valid processed build to the existing IHF Rules Quiz Internal group and verifies Apple’s testing state through the App Store Connect API.
 
 Before uploading a release candidate, pass simulator CI and review the parity checklist. Before App Review, test on the available iPhone, capture new screenshots, review all languages and privacy/export declarations, and verify upgrading from the installed container app. Old WebView storage is not imported in this first native implementation: bundled content remains immediately available; locale/theme are initialized from system defaults until selected in native settings. Communicate that one-time settings reset during acceptance.
 
@@ -57,7 +57,7 @@ Before uploading a release candidate, pass simulator CI and review the parity ch
 5. Check accessibility text, VoiceOver, safe areas, default tab bar/back gestures, small/large screens, iPad and orientation.
 6. Confirm no network requests during normal native use. Email, GitHub and other external links deliberately leave the app and require connectivity.
 
-Privacy/support are external links in Settings, alongside a direct email contact; there are no dedicated native privacy/support screens. Apple requires accessible policy/support links, and Google requires in-app policy access. The public privacy/support page sources now distinguish the offline native client from the website; deploy and verify those URLs before store submission. No analytics, ads or additional crash services are included.
+Privacy/support are external links in Settings, alongside a direct email contact; there are no dedicated native privacy/support screens. A collapsed Licenses section preserves bundled dependency notices and content acknowledgements; there is no separate Content source page, source revision display or repository link. Apple requires accessible policy/support links, and Google requires in-app policy access. The public privacy/support page sources now distinguish the offline native client from the website; deploy and verify those URLs before store submission. No analytics, ads or additional crash services are included.
 
 ## Android and API infrastructure
 

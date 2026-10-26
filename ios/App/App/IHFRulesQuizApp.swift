@@ -120,13 +120,11 @@ struct HomeHero: View {
                         .accessibilityAddTraits(.isHeader)
                 }.frame(maxWidth: .infinity, alignment: .leading)
                 if !typeSize.isAccessibilitySize {
-                    ZStack {
-                        Circle().strokeBorder(Color.white.opacity(0.16), style: StrokeStyle(lineWidth: 1, dash: [4, 7])).frame(width: 116, height: 116)
-                        HandballMark().frame(width: 81, height: 81).rotationEffect(.degrees(floating ? 13 : -8))
-                            .offset(y: floating ? -5 : 4)
-                            .shadow(color: .black.opacity(0.18), radius: 12, x: 2, y: 12)
-                        Image(systemName: "sparkle").font(.title3.bold()).foregroundColor(.white).offset(x: 44, y: -43)
-                    }.frame(width: 116, height: 116).padding(.trailing, -5).accessibilityHidden(true)
+                    HandballCourtMark().frame(width: 83, height: 116)
+                        .rotationEffect(.degrees(floating ? 8 : 3))
+                        .offset(y: floating ? -3 : 2)
+                        .padding(.leading, 12)
+                        .frame(width: 100, height: 116).accessibilityHidden(true)
                 }
             }
         }.padding(24).frame(maxWidth: .infinity, alignment: .leading)

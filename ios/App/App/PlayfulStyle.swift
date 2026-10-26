@@ -6,7 +6,6 @@ enum Playful {
     static let buttonBlue = Color(red: 32 / 255, green: 71 / 255, blue: 162 / 255)
     static let heroNavy = Color(red: 0, green: 32 / 255, blue: 109 / 255)
     static let brandBlue = Color(red: 60 / 255, green: 128 / 255, blue: 193 / 255)
-    static let ball = Color(red: 183 / 255, green: 141 / 255, blue: 21 / 255)
     static let blue = Color(UIColor { $0.userInterfaceStyle == .dark
         ? UIColor(red: 0.48, green: 0.73, blue: 0.96, alpha: 1) : UIColor(red: 0.15, green: 0.39, blue: 0.59, alpha: 1) })
     static let gold = Color(UIColor { $0.userInterfaceStyle == .dark
@@ -95,49 +94,38 @@ struct SectionHeading: View {
     }
 }
 
-struct HandballMark: View {
+struct HandballCourtMark: View {
     var body: some View {
-        ZStack {
-            Circle().fill(Color(red: 0.98, green: 0.95, blue: 0.87))
-            GeometryReader { geometry in
-                let size = geometry.size.width
-                let center = CGPoint(x: size * 0.5, y: size * 0.5)
-                let points = (0..<5).map { index -> CGPoint in
-                    let angle = -Double.pi / 2 + Double(index) * Double.pi * 2 / 5
-                    return CGPoint(x: center.x + cos(angle) * size * 0.23, y: center.y + sin(angle) * size * 0.23)
-                }
-                ForEach(0..<5, id: \.self) { index in
-                    let a = points[index]
-                    let b = points[(index + 1) % 5]
-                    let angle = -Double.pi / 2 + (Double(index) + 0.5) * Double.pi * 2 / 5
-                    let dx = CGFloat(cos(angle)), dy = CGFloat(sin(angle))
-                    let outer = CGPoint(x: center.x + dx * size * 0.51, y: center.y + dy * size * 0.51)
-                    let panel = polygon([a, b,
-                        CGPoint(x: b.x + dx * size * 0.17, y: b.y + dy * size * 0.17),
-                        CGPoint(x: outer.x - dy * size * 0.16, y: outer.y + dx * size * 0.16),
-                        CGPoint(x: outer.x + dy * size * 0.16, y: outer.y - dx * size * 0.16),
-                        CGPoint(x: a.x + dx * size * 0.17, y: a.y + dy * size * 0.17)])
-                    panel.fill(index % 2 == 0 ? Playful.ball : Playful.heroNavy)
-                    panel.stroke(Color(red: 0.10, green: 0.18, blue: 0.28).opacity(0.7), lineWidth: size * 0.013)
-                    panel.stroke(Color.white.opacity(0.8), style: StrokeStyle(lineWidth: size * 0.006, dash: [size * 0.019, size * 0.018]))
-                }
-                polygon(points).fill(Playful.brandBlue)
-                polygon(points).stroke(Color(red: 0.10, green: 0.18, blue: 0.28), lineWidth: size * 0.018)
-                polygon(points).stroke(Color.white.opacity(0.8), style: StrokeStyle(lineWidth: size * 0.006, dash: [size * 0.019, size * 0.018]))
-            }.clipShape(Circle())
-            Circle().fill(RadialGradient(colors: [.white.opacity(0.30), .clear, .black.opacity(0.16)], center: .topLeading, startRadius: 0, endRadius: 100))
-            Circle().strokeBorder(Color.white.opacity(0.3), lineWidth: 1)
-        }.aspectRatio(1, contentMode: .fit).accessibilityHidden(true)
-    }
-
-    private func polygon(_ points: [CGPoint]) -> Path {
-        Path { path in
-            if let first = points.first {
-                path.move(to: first)
-                for point in points.dropFirst() { path.addLine(to: point) }
-                path.closeSubpath()
+        GeometryReader { geometry in
+            let size = geometry.size
+            let line = max(1, size.width * 0.014)
+            ZStack {
+                RoundedRectangle(cornerRadius: 12).fill(Color.white.opacity(0.07))
+                Path { path in
+                    let court = CGRect(x: size.width * 0.10, y: size.height * 0.07, width: size.width * 0.80, height: size.height * 0.86)
+                    path.addRoundedRect(in: court, cornerSize: CGSize(width: 3, height: 3))
+                    path.move(to: CGPoint(x: court.minX, y: size.height * 0.5))
+                    path.addLine(to: CGPoint(x: court.maxX, y: size.height * 0.5))
+                    for bottom in [false, true] {
+                        let y: (CGFloat) -> CGFloat = { (bottom ? 1 - $0 : $0) * size.height }
+                        path.addRect(CGRect(x: size.width * 0.40, y: y(bottom ? 0.07 : 0.035), width: size.width * 0.20, height: size.height * 0.035))
+                        path.move(to: CGPoint(x: size.width * 0.10, y: y(0.13)))
+                        path.addQuadCurve(to: CGPoint(x: size.width * 0.38, y: y(0.31)), control: CGPoint(x: size.width * 0.13, y: y(0.31)))
+                        path.addLine(to: CGPoint(x: size.width * 0.62, y: y(0.31)))
+                        path.addQuadCurve(to: CGPoint(x: size.width * 0.90, y: y(0.13)), control: CGPoint(x: size.width * 0.87, y: y(0.31)))
+                    }
+                }.stroke(Color.white.opacity(0.8), style: StrokeStyle(lineWidth: line, lineCap: .round, lineJoin: .round))
+                Path { path in
+                    for bottom in [false, true] {
+                        let y: (CGFloat) -> CGFloat = { (bottom ? 1 - $0 : $0) * size.height }
+                        path.move(to: CGPoint(x: size.width * 0.10, y: y(0.22)))
+                        path.addQuadCurve(to: CGPoint(x: size.width * 0.38, y: y(0.40)), control: CGPoint(x: size.width * 0.13, y: y(0.40)))
+                        path.addLine(to: CGPoint(x: size.width * 0.62, y: y(0.40)))
+                        path.addQuadCurve(to: CGPoint(x: size.width * 0.90, y: y(0.22)), control: CGPoint(x: size.width * 0.87, y: y(0.40)))
+                    }
+                }.stroke(Color.white.opacity(0.4), style: StrokeStyle(lineWidth: line, dash: [3, 4]))
             }
-        }
+        }.aspectRatio(0.72, contentMode: .fit).accessibilityHidden(true)
     }
 }
 

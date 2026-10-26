@@ -49,9 +49,12 @@ struct SettingsView: View {
                             settingsRow("kristof.gilis@outlook.be", symbol: "envelope.fill", color: Playful.blue)
                         }
                         Divider()
-                        NavigationLink(destination: AcknowledgementsView()) {
-                            settingsRow(app.text("native.source"), symbol: "heart.fill", color: Playful.gold)
-                        }
+                        DisclosureGroup(app.text("native.licenses")) {
+                            VStack(alignment: .leading, spacing: 14) {
+                                Text(app.text("native.acknowledgements")).font(.footnote)
+                                Text(notices).font(.footnote).textSelection(.enabled)
+                            }.padding(.top, 12).frame(maxWidth: .infinity, alignment: .leading)
+                        }.font(.subheadline.weight(.semibold))
                     }.buttonStyle(PressableStyle())
                 }
                 HStack {
@@ -72,30 +75,7 @@ struct SettingsView: View {
             Image(systemName: "arrow.up.right").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
         }.frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle())
     }
-}
 
-struct AcknowledgementsView: View {
-    @EnvironmentObject private var app: AppState
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 22) {
-                PaperCard(tint: Playful.gold) {
-                    VStack(alignment: .leading, spacing: 15) {
-                        Image(systemName: "heart.fill").font(.title).foregroundColor(Playful.gold)
-                        Text(app.text("native.acknowledgements")).font(.body)
-                        Link("GitHub", destination: URL(string: "https://github.com/KristofGilis/ihf_rules_questions")!)
-                        Text(app.repository?.manifest.sourceRevision ?? "").font(.caption2.monospaced()).foregroundStyle(.secondary).textSelection(.enabled)
-                    }
-                }
-                PaperCard {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("GRDB.swift · SQLite").font(.system(.headline, design: .rounded).bold())
-                        Text(notices).font(.footnote).textSelection(.enabled)
-                    }
-                }
-            }.padding(20).frame(maxWidth: 760).frame(maxWidth: .infinity)
-        }.background(PlayfulBackground()).navigationTitle(app.text("native.source")).navigationBarTitleDisplayMode(.inline)
-    }
     private var notices: String {
         guard let url = Bundle.main.url(forResource: "ThirdPartyNotices", withExtension: "txt", subdirectory: "OfflineContent") else { return "" }
         return (try? String(contentsOf: url, encoding: .utf8)) ?? ""

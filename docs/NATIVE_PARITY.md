@@ -2,23 +2,23 @@
 
 The implementation follows the approved fully offline rebuild. Source baseline: UI commit `fed17f7`; content/scoring revisions are recorded in `native/content.json`. Every content language currently includes 19 rule groups and 432 questions. Search includes question numbers and question/answer phrases across all languages, matching the current website's documented cross-language behavior.
 
-| Capability             | Implementation                                                                                                 | Acceptance still required               |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
-| Home and version       | Native lists, quiz entry, content edition, app version/build                                                   | Visual/device review                    |
-| Navigation             | Four SwiftUI system tabs, standard navigation, settings sheet                                                  | Gestures, safe areas, iPad              |
-| Rules                  | Rule-ordered list and associated question practice                                                             | All-language content review             |
-| Full question practice | Multi-select, calculate, wrong-question links, reset                                                           | Device journey                          |
-| Reveal                 | Per-question and global reveal; clears selections/score; prevents scoring while revealed                       | Device journey                          |
-| Search                 | Numbers, all languages, partial words, typo fallback, local execution                                          | Ranking/latency comparison with server  |
-| Setup                  | 10, 15, 20, 30 questions, default 10, timed/untimed                                                            | Device journey                          |
-| Quiz                   | Unique random selection, repeatable shuffle, previous/next, swipe, answer retention, exit warning              | VoiceOver/gesture review                |
-| Timing                 | Total duration = question count times 90 seconds; auto-complete at deadline                                    | Background/termination device test      |
-| Results                | Score percentage, correct/wrong counts, points, duration, selected/correct answers, references, new quiz entry | Device journey                          |
-| Persistence            | Native language/theme; saved active quiz; hash change discards incompatible session                            | Upgrade/device test                     |
-| Languages              | en/nl/fr/srb content and UI, standard sr locale mapping                                                        | Human translation review                |
-| Offline                | Complete SQLite content and policy bundled; no network data client                                             | Airplane-mode acceptance                |
-| Privacy/support        | Settings links to public privacy/support pages and email; offline acknowledgements                             | Public policy/store declarations review |
-| CI                     | Content checks, Swift simulator tests, direct signed archive workflow                                          | Successful remote run required          |
+| Capability             | Implementation                                                                                                 | Acceptance still required                  |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| Home and version       | Playful IHF blue/gold cards, quiz entry, content edition, app version/build                                    | Visual/device review                       |
+| Navigation             | Four SwiftUI system tabs, standard navigation, settings sheet                                                  | Gestures, safe areas, iPad                 |
+| Rules                  | Rule-ordered list and associated question practice                                                             | All-language content review                |
+| Full question practice | Multi-select, calculate, wrong-question links, reset                                                           | Device journey                             |
+| Reveal                 | Per-question and global reveal; clears selections/score; prevents scoring while revealed                       | Device journey                             |
+| Search                 | Numbers, all languages, partial words, typo fallback, local execution                                          | Ranking/latency comparison with server     |
+| Setup                  | 10, 15, 20, 30 questions, default 10, timed/untimed                                                            | Device journey                             |
+| Quiz                   | Unique random selection, repeatable shuffle, previous/next, swipe, answer retention, exit warning              | VoiceOver/gesture review                   |
+| Timing                 | Total duration = question count times 90 seconds; auto-complete at deadline                                    | Background/termination device test         |
+| Results                | Score percentage, correct/wrong counts, points, duration, selected/correct answers, references, new quiz entry | Device journey                             |
+| Persistence            | Native language/theme; saved active quiz; hash change discards incompatible session                            | Upgrade/device test                        |
+| Languages              | en/nl/fr/srb content and UI, standard sr locale mapping                                                        | Human translation review                   |
+| Offline                | Complete SQLite learning content bundled; no network data client                                               | Airplane-mode acceptance                   |
+| Privacy/support        | Settings links to public privacy/support pages and email; inline bundled licenses/acknowledgements             | Public policy/store declarations review    |
+| CI                     | Content checks, Swift simulator tests, direct signed archive workflow                                          | Passed; physical-device acceptance remains |
 
 ## Deliberate behavior improvements
 
@@ -34,4 +34,4 @@ Python tests validate the exported snapshot, invalid-content rejection, database
 
 ## Delivery state
 
-Capacitor removal and iOS implementation are on the feature branch. Android native implementation, store upload/submission, public policy update and physical-device acceptance are subsequent milestones. Preserve the last working container revision in Git and the existing store/signing identities.
+Capacitor removal and iOS implementation are on the feature branch. TestFlight builds 4 and 5 were uploaded; build 5 (`ab11940`) passed seven Swift tests and the UI journey and was verified as `VALID` and `IN_BETA_TESTING` for the existing internal group. The redesigned layout was checked in light/dark mode and French. Build 6 replaces the ball illustration with a court graphic and removes the separate Content source page. Android native implementation, App Review submission, public policy deployment and physical-device acceptance remain subsequent milestones. Preserve the last working container revision in Git and the existing store/signing identities.
