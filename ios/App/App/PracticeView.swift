@@ -158,7 +158,7 @@ struct PracticeView: View {
                         score = Scorer.calculate(questions, selections: selections, configuration: configuration)
                         withAnimation(reduceMotion ? nil : Playful.spring) { scroll.scrollTo("score", anchor: .top) }
                     }
-                }.disabled(!revealed.isEmpty || questions.isEmpty).opacity(revealed.isEmpty ? 1 : 0.45)
+                }.accessibilityIdentifier("practice.calculate").disabled(!revealed.isEmpty || questions.isEmpty).opacity(revealed.isEmpty ? 1 : 0.45)
                     .padding(.horizontal, 20).padding(.vertical, 10).frame(maxWidth: 800).frame(maxWidth: .infinity)
                     .background(.ultraThinMaterial)
             }
@@ -179,6 +179,8 @@ struct ScoreSummary: View {
     let score: Score
     var questionCount: Int? = nil
     @State private var appeared = false
+    @ScaledMetric(relativeTo: .largeTitle) private var scoreDiameter: CGFloat = 174
+    private var ringSize: CGFloat { min(240, scoreDiameter) }
     private var fraction: Double { min(1, max(0, score.percentage / 100)) }
 
     var body: some View {
@@ -192,10 +194,12 @@ struct ScoreSummary: View {
                     VStack(spacing: 5) {
                         Image(systemName: score.percentage >= 75 ? "trophy.fill" : "sparkles").font(.title2).foregroundColor(Playful.gold)
                         Text(String(format: questionCount == nil ? "%.0f%%" : "%.2f%%", score.percentage))
-                            .font(.system(.largeTitle, design: .rounded).weight(.black)).minimumScaleFactor(0.7)
+                            .font(.system(.largeTitle, design: .rounded).weight(.black))
+                            .lineLimit(1).minimumScaleFactor(0.2).allowsTightening(true)
+                            .accessibilityIdentifier("score.percentage")
                         Text(app.text("score_overview.title")).font(.caption).foregroundStyle(.secondary)
                     }.padding(20)
-                }.frame(width: 174, height: 174).padding(.top, 7)
+                }.frame(width: ringSize, height: ringSize).padding(.top, 7)
                 Text(app.text(score.percentage >= 75 ? "native.result_high" : "native.result_keep_going"))
                     .font(.system(.title2, design: .rounded).weight(.heavy)).multilineTextAlignment(.center)
                 Text(app.text("native.score", ["score": String(score.points), "total": String(score.total)]))
@@ -230,7 +234,7 @@ struct SearchView: View {
                     HStack(spacing: 9) {
                         ForEach(["1.1", "2.1", "16.1"], id: \.self) { number in
                             Button { query = number } label: { TinyBadge(title: number, symbol: "number", color: Playful.navy) }
-                                .buttonStyle(PressableStyle())
+                                .buttonStyle(PressableStyle()).accessibilityIdentifier("search.example.\(number)")
                         }
                     }.frame(maxWidth: .infinity)
                 } else if searching {
@@ -248,7 +252,7 @@ struct SearchView: View {
                                 Text(question.phrase).font(.system(.headline, design: .rounded)).foregroundColor(.primary).lineLimit(4)
                             }
                         }
-                    }.buttonStyle(PressableStyle())
+                    }.buttonStyle(PressableStyle()).accessibilityIdentifier("search.result.\(question.id)")
                 }
             }.padding(20).padding(.bottom, 20).frame(maxWidth: 760).frame(maxWidth: .infinity)
         }.background(PlayfulBackground()).navigationTitle(app.text("search.title")).navigationBarTitleDisplayMode(.inline)

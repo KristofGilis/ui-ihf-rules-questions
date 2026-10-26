@@ -127,6 +127,10 @@ struct HandballCourtGeometry {
                                               tx: origin.x, ty: origin.y + (bottom ? 40 * scale : 0)))
     }
 
+    var throwOffArea: CGRect {
+        CGRect(x: point(8, 18).x, y: point(8, 18).y, width: 4 * scale, height: 4 * scale)
+    }
+
     var markings: Path {
         Path { path in
             path.addRect(court)
@@ -134,7 +138,7 @@ struct HandballCourtGeometry {
             path.addLine(to: point(8, 20))
             path.move(to: point(12, 20))
             path.addLine(to: point(20, 20))
-            path.addEllipse(in: CGRect(x: point(8, 18).x, y: point(8, 18).y, width: 4 * scale, height: 4 * scale))
+            path.addEllipse(in: throwOffArea)
             for bottom in [false, true] {
                 // Goal mouth: 3 m. The net is shown from above, outside the end line.
                 path.move(to: point(8.5, 0, bottom: bottom))
@@ -178,6 +182,7 @@ struct HandballCourtMark: View {
             ZStack {
                 RoundedRectangle(cornerRadius: 12).fill(Color.white.opacity(0.07))
                 geometry.goalAreas.fill(Playful.brandBlue.opacity(0.28))
+                Path(ellipseIn: geometry.throwOffArea).fill(Playful.brandBlue.opacity(0.28))
                 geometry.markings.stroke(Color.white.opacity(0.85), style: StrokeStyle(lineWidth: line, lineCap: .butt, lineJoin: .miter))
                 geometry.freeThrowLines.stroke(Color.white.opacity(0.55), style: StrokeStyle(lineWidth: line, dash: [2, 2]))
             }

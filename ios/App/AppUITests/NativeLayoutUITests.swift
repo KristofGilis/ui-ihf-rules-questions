@@ -19,6 +19,35 @@ final class NativeLayoutUITests: XCTestCase {
     }
 
     @MainActor
+    func testPerfectPracticeScoreStaysOnOneLine() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchArguments = ["-ui-testing-reset", "-ui-testing-static-layout", "-native.language", "en", "-native.appearance", "light"]
+        app.launch()
+        XCTAssertTrue(app.tabBars.buttons["Search"].waitForExistence(timeout: 15))
+        app.tabBars.buttons["Search"].tap()
+        app.buttons["search.example.1.1"].tap()
+        let result = app.buttons["search.result.1.1"]
+        XCTAssertTrue(result.waitForExistence(timeout: 5))
+        result.tap()
+        let answer = app.buttons["answer.1.1/a"]
+        let calculate = app.buttons["practice.calculate"]
+        XCTAssertTrue(answer.waitForExistence(timeout: 5))
+        for _ in 0..<8 {
+            if answer.isHittable && answer.frame.maxY < calculate.frame.minY - 8 { break }
+            app.scrollViews.firstMatch.swipeUp()
+        }
+        answer.tap()
+        XCTAssertEqual(answer.value as? String, "Selected")
+        calculate.tap()
+        let percentage = app.staticTexts["score.percentage"]
+        XCTAssertTrue(percentage.waitForExistence(timeout: 5))
+        XCTAssertEqual(percentage.label, "100.00%")
+        XCTAssertLessThan(percentage.frame.height, 55, "The perfect score and percent symbol should fit on one line.")
+        capture(app, "perfect-practice-score")
+    }
+
+    @MainActor
     func testPlayfulScreensAndQuizSelection() throws {
         continueAfterFailure = false
         let app = XCUIApplication()
