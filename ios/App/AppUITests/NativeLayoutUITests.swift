@@ -24,8 +24,8 @@ final class NativeLayoutUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments = ["-ui-testing-reset", "-ui-testing-static-layout", "-native.language", "en", "-native.appearance", "light"]
         app.launch()
-        XCTAssertTrue(app.tabBars.buttons["Search"].waitForExistence(timeout: 15))
-        app.tabBars.buttons["Search"].tap()
+        XCTAssertTrue(app.buttons["quiz.start"].waitForExistence(timeout: 15))
+        selectTab("Search", in: app)
         let example = app.buttons["search.example.1.1"]
         XCTAssertTrue(example.waitForExistence(timeout: 10), "The Search tab should finish appearing before choosing an example.")
         example.tap()
@@ -88,7 +88,7 @@ final class NativeLayoutUITests: XCTestCase {
         capture(app, "results")
         app.buttons["quiz.close"].tap()
 
-        app.tabBars.buttons["Rules"].tap()
+        selectTab("Rules", in: app)
         XCTAssertTrue(app.staticTexts["Read the game."].waitForExistence(timeout: 5))
         capture(app, "rules")
         app.buttons["settings.open"].tap()
@@ -104,6 +104,19 @@ final class NativeLayoutUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.buttons["quiz.start"].waitForExistence(timeout: 10))
         capture(app, "home-french")
+    }
+
+    @MainActor
+    private func selectTab(_ title: String, in app: XCUIApplication) {
+        let phoneTab = app.tabBars.buttons[title]
+        if phoneTab.exists {
+            phoneTab.tap()
+        } else {
+            // iPadOS exposes floating tab items as cells rather than a TabBar.
+            let floatingTab = app.cells[title]
+            XCTAssertTrue(floatingTab.waitForExistence(timeout: 10), "The native \(title) tab should be available.")
+            floatingTab.tap()
+        }
     }
 
     @MainActor
