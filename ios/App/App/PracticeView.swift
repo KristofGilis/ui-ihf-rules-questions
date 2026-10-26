@@ -80,6 +80,7 @@ struct PracticeView: View {
     @State private var selections: [String: Set<String>] = [:]
     @State private var revealed: Set<String> = []
     @State private var score: Score?
+    @State private var scoreScrollRequest = UUID()
 
     var body: some View {
         ScrollViewReader { scroll in
@@ -156,11 +157,18 @@ struct PracticeView: View {
                 PrimaryAction(title: app.text("native.calculate"), symbol: "checkmark.circle.fill") {
                     if let configuration = app.repository?.manifest.scoring {
                         score = Scorer.calculate(questions, selections: selections, configuration: configuration)
-                        withAnimation(reduceMotion ? nil : Playful.spring) { scroll.scrollTo("score", anchor: .top) }
+                        scoreScrollRequest = UUID()
                     }
                 }.accessibilityIdentifier("practice.calculate").disabled(!revealed.isEmpty || questions.isEmpty).opacity(revealed.isEmpty ? 1 : 0.45)
                     .padding(.horizontal, 20).padding(.vertical, 10).frame(maxWidth: 800).frame(maxWidth: .infinity)
                     .background(.ultraThinMaterial)
+            }
+            .onChange(of: scoreScrollRequest) { _ in
+                // Wait until SwiftUI has registered the newly inserted score card.
+                DispatchQueue.main.async {
+                    guard score != nil else { return }
+                    withAnimation(reduceMotion ? nil : Playful.spring) { scroll.scrollTo("score", anchor: .top) }
+                }
             }
         }.background(PlayfulBackground()).navigationTitle(title ?? app.text("questions.title")).navigationBarTitleDisplayMode(.inline)
     }

@@ -43,6 +43,8 @@ final class NativeLayoutUITests: XCTestCase {
         let percentage = app.staticTexts["score.percentage"]
         XCTAssertTrue(percentage.waitForExistence(timeout: 5))
         XCTAssertEqual(percentage.label, "100.00%")
+        let visible = XCTNSPredicateExpectation(predicate: NSPredicate(format: "hittable == true"), object: percentage)
+        XCTAssertEqual(XCTWaiter.wait(for: [visible], timeout: 5), .completed, "One tap should scroll the new score into view.")
         XCTAssertLessThan(percentage.frame.height, 55, "The perfect score and percent symbol should fit on one line.")
         capture(app, "perfect-practice-score")
     }
