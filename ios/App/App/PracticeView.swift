@@ -217,7 +217,8 @@ struct ScoreSummary: View {
                     resultStat(title: app.text("quiz_results.wrong"), value: questionCount == nil ? score.total - score.points : score.wrongQuestionIds.count, color: Playful.gold, symbol: "arrow.clockwise")
                 }
             }.frame(maxWidth: .infinity)
-        }.onAppear { withAnimation(reduceMotion ? nil : .easeOut(duration: 0.8)) { appeared = true } }
+        }.accessibilityElement(children: .contain).accessibilityIdentifier("score.summary")
+            .onAppear { withAnimation(reduceMotion ? nil : .easeOut(duration: 0.8)) { appeared = true } }
     }
 
     private func resultStat(title: String, value: Int, color: Color, symbol: String) -> some View {

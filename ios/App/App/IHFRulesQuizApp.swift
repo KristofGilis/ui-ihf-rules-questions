@@ -59,7 +59,7 @@ struct RootView: View {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button { settings = true } label: {
                             Image(systemName: "slider.horizontal.3").font(.subheadline.weight(.semibold))
-                                .foregroundStyle(.primary)
+                                .foregroundStyle(Color(UIColor.label))
                         }.accessibilityLabel(app.text("settings.title")).accessibilityIdentifier("settings.open")
                     }
                 }
