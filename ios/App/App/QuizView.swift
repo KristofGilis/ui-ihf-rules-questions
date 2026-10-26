@@ -64,7 +64,7 @@ struct QuizView: View {
                     }.id("question-top")
                     PaperCard {
                         VStack(alignment: .leading, spacing: 18) {
-                            QuestionHeader(question: question)
+                            QuestionHeader(question: question, showsNumber: false)
                             Label(app.text("quiz.select_answers"), systemImage: "hand.tap")
                                 .font(.caption).foregroundStyle(.secondary)
                         }
@@ -72,7 +72,7 @@ struct QuizView: View {
                     VStack(spacing: 12) {
                         ForEach(question.answers) { answer in
                             AnswerRow(answer: answer, selected: session.snapshot.selections[question.id]?.contains(answer.id) ?? false,
-                                      action: { session.toggle(answer.id) })
+                                      showsNumber: false, action: { session.toggle(answer.id) })
                         }
                     }.id(question.id)
                     if session.snapshot.index < session.snapshot.questions.count - 1 {
@@ -98,6 +98,7 @@ struct QuizView: View {
                     .frame(width: 58, height: 58).background(Playful.paper).clipShape(RoundedRectangle(cornerRadius: 20))
             }.buttonStyle(PressableStyle()).disabled(session.snapshot.index == 0)
                 .accessibilityLabel(app.text("quiz.previous"))
+                .accessibilityIdentifier("quiz.previous")
             if session.snapshot.index == session.snapshot.questions.count - 1 {
                 PrimaryAction(title: app.text("native.finish"), symbol: "checkmark") { session.finish() }
                     .accessibilityIdentifier("quiz.finish")

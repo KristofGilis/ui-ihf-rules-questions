@@ -1,6 +1,31 @@
 import XCTest
+import UIKit
 
 final class NativeLayoutUITests: XCTestCase {
+    @MainActor
+    func testSettingsAppearanceChangesWithoutDismissingSheet() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchArguments = ["-ui-testing-reset", "-ui-testing-static-layout", "-native.language", "en", "-native.appearance", "system"]
+        app.launch()
+        XCTAssertTrue(app.buttons["settings.open"].waitForExistence(timeout: 15))
+        app.buttons["settings.open"].tap()
+        let settings = app.scrollViews["settings.page"]
+        XCTAssertTrue(settings.waitForExistence(timeout: 5))
+        let appearance = app.segmentedControls["settings.appearance"]
+        XCTAssertTrue(appearance.buttons["System"].isSelected)
+        let systemBrightness = averageBrightness(settings.screenshot())
+        appearance.buttons["Dark"].tap()
+        XCTAssertLessThan(averageBrightness(settings.screenshot()), 0.45, "The open Settings sheet should switch to dark immediately.")
+        capture(app, "settings-dark")
+        appearance.buttons["Light"].tap()
+        XCTAssertGreaterThan(averageBrightness(settings.screenshot()), 0.65, "The open Settings sheet should switch to light immediately.")
+        capture(app, "settings-light")
+        appearance.buttons["System"].tap()
+        XCTAssertTrue(appearance.buttons["System"].isSelected)
+        XCTAssertEqual(averageBrightness(settings.screenshot()), systemBrightness, accuracy: 0.15)
+    }
+
     @MainActor
     func testStartingQuizDoesNotRevealDiscardControls() {
         continueAfterFailure = false
@@ -94,9 +119,19 @@ final class NativeLayoutUITests: XCTestCase {
         capture(app, "quiz")
         let answer = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "answer.")).firstMatch
         XCTAssertTrue(answer.waitForExistence(timeout: 5))
+        let activeAnswers = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "answer.")).allElementsBoundByIndex
+        let answerIDs = activeAnswers.map(\.identifier)
+        let answerLabels = activeAnswers.map(\.label)
+        let questionID = String(answerIDs[0].dropFirst("answer.".count).split(separator: "/")[0])
+        let header = app.descendants(matching: .any).matching(identifier: "question.\(questionID)").firstMatch
+        let activeHeaderLabel = header.label
         answer.tap()
         XCTAssertEqual(answer.value as? String, "Selected")
         capture(app, "quiz-selected")
+        app.buttons["quiz.next"].tap()
+        app.buttons["quiz.previous"].tap()
+        XCTAssertEqual(app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "answer.")).allElementsBoundByIndex.map(\.identifier), answerIDs)
+        XCTAssertEqual(app.buttons[answerIDs[0]].value as? String, "Selected")
         let finish = app.buttons["quiz.finish"]
         let next = app.buttons["quiz.next"]
         for _ in 0..<10 {
@@ -109,6 +144,20 @@ final class NativeLayoutUITests: XCTestCase {
         finish.tap()
         XCTAssertTrue(app.buttons["quiz.retake"].waitForExistence(timeout: 5))
         capture(app, "results")
+        let reviewedHeader = app.descendants(matching: .any).matching(identifier: "question.\(questionID)").firstMatch
+        for _ in 0..<5 {
+            if reviewedHeader.exists && app.buttons[answerIDs[0]].exists { break }
+            app.scrollViews.firstMatch.swipeUp()
+        }
+        XCTAssertTrue(reviewedHeader.exists)
+        XCTAssertNotEqual(reviewedHeader.label, activeHeaderLabel, "Review should restore the original question number.")
+        XCTAssertTrue(reviewedHeader.label.contains(activeHeaderLabel))
+        let reviewedAnswers = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "answer.\(questionID)/")).allElementsBoundByIndex
+        XCTAssertEqual(reviewedAnswers.map(\.identifier), answerIDs, "Review must retain the displayed answer order.")
+        for (index, id) in answerIDs.enumerated() {
+            let number = id.split(separator: "/").last!.uppercased()
+            XCTAssertEqual(app.buttons[id].label, "\(number). \(answerLabels[index])", "Only review should announce original answer numbers.")
+        }
         app.buttons["quiz.close"].tap()
         XCTAssertTrue(app.buttons["quiz.resume"].waitForExistence(timeout: 5), "Saved quiz controls should appear after dismissing the quiz.")
         XCTAssertTrue(app.buttons["quiz.discard"].exists)
@@ -152,6 +201,27 @@ final class NativeLayoutUITests: XCTestCase {
             XCTAssertTrue(app.staticTexts[headline].exists)
             capture(app, "home-\(language)")
         }
+    }
+
+    @MainActor
+    private func averageBrightness(_ screenshot: XCUIScreenshot) -> Double {
+        guard let image = UIImage(data: screenshot.pngRepresentation)?.cgImage else {
+            XCTFail("Settings screenshot should decode.")
+            return -1
+        }
+        let side = 16
+        var pixels = [UInt8](repeating: 0, count: side * side * 4)
+        pixels.withUnsafeMutableBytes { bytes in
+            let context = CGContext(data: bytes.baseAddress, width: side, height: side,
+                                    bitsPerComponent: 8, bytesPerRow: side * 4,
+                                    space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+            context.interpolationQuality = .high
+            context.draw(image, in: CGRect(x: 0, y: 0, width: side, height: side))
+        }
+        let total = stride(from: 0, to: pixels.count, by: 4).reduce(0) {
+            $0 + Int(pixels[$1]) + Int(pixels[$1 + 1]) + Int(pixels[$1 + 2])
+        }
+        return Double(total) / Double(side * side * 3 * 255)
     }
 
     @MainActor

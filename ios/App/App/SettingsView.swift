@@ -18,7 +18,7 @@ struct SettingsView: View {
                             .font(.system(.headline, design: .rounded).bold()).foregroundColor(Playful.navy)
                         Picker(app.text("settings.theme_section"), selection: $app.appearance) {
                             ForEach(["system", "light", "dark"], id: \.self) { theme in Text(app.text("theme.\(theme)")).tag(theme) }
-                        }.pickerStyle(.segmented)
+                        }.pickerStyle(.segmented).accessibilityIdentifier("settings.appearance")
                     }
                 }
                 PaperCard(tint: Playful.blue) {
@@ -61,6 +61,7 @@ struct SettingsView: View {
                 }.font(.caption).foregroundStyle(.secondary).padding(.horizontal, 6)
             }.padding(20).padding(.bottom, 20).frame(maxWidth: 760).frame(maxWidth: .infinity)
         }.background(PlayfulBackground()).navigationTitle(app.text("settings.title")).navigationBarTitleDisplayMode(.inline)
+            .accessibilityIdentifier("settings.page")
     }
 
     private func settingsRow(_ title: String, symbol: String, color: Color) -> some View {

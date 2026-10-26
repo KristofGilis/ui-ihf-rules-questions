@@ -130,6 +130,19 @@ final class NativeAppTests: XCTestCase {
         let second = QuizSession(questions: questions, count: 30, timed: false, language: "en", contentHash: "test", configuration: configuration, seed: 42)
         XCTAssertEqual(first.snapshot.questions, second.snapshot.questions)
         XCTAssertEqual(Set(first.snapshot.questions.map(\.id)).count, 30)
+        let shuffled = first.snapshot.questions
+        XCTAssertTrue(shuffled.contains { question in
+            question.answers.map(\.id) != questions.first(where: { $0.id == question.id })!.answers.map(\.id)
+        }, "The quiz should randomize answer order, not just question order.")
+        for question in shuffled {
+            XCTAssertEqual(Set(question.answers.map(\.id)), Set(questions.first(where: { $0.id == question.id })!.answers.map(\.id)))
+        }
+        first.toggle(shuffled[0].answers[0].id)
+        first.move(1)
+        first.move(-1)
+        first.finish()
+        XCTAssertEqual(first.snapshot.questions, shuffled, "Selection, navigation and results must retain the same shuffled order.")
+        XCTAssertEqual(QuizSession.restore(contentHash: "test")?.snapshot.questions, shuffled)
         QuizSession.removeSaved()
     }
 }

@@ -55,7 +55,7 @@ struct RootView: View {
                 SettingsView().toolbar { ToolbarItem(placement: .confirmationAction) {
                     Button(app.text("native.close")) { settings = false }
                 } }
-            }.navigationViewStyle(.stack)
+            }.navigationViewStyle(.stack).preferredColorScheme(app.colorScheme)
         }
         .fullScreenCover(isPresented: quizPresentation) {
             if let session = app.session { QuizView(session: session, close: { quiz = false }) }

@@ -6,6 +6,7 @@ struct AnswerRow: View {
     let answer: Answer
     let selected: Bool
     var revealed = false
+    var showsNumber = true
     var action: (() -> Void)?
     private var correct: Bool { revealed && answer.isCorrect }
     private var wrong: Bool { revealed && selected && !answer.isCorrect }
@@ -20,11 +21,12 @@ struct AnswerRow: View {
                     RoundedRectangle(cornerRadius: 12).fill(selected || correct ? accent : Playful.background)
                     if correct || selected {
                         Image(systemName: wrong ? "xmark" : "checkmark").font(.subheadline.weight(.heavy)).foregroundColor(.white)
-                    } else {
+                    } else if showsNumber && !revealed {
                         Text(answer.number.uppercased()).font(.system(.subheadline, design: .rounded).weight(.heavy)).foregroundColor(.secondary)
                     }
                 }.frame(width: 36, height: 36).accessibilityHidden(true)
-                Text(answer.phrase).font(.body).foregroundColor(.primary)
+                Text(showsNumber && revealed ? "\(answer.number.uppercased()). \(answer.phrase)" : answer.phrase)
+                    .font(.body).foregroundColor(.primary)
                     .multilineTextAlignment(.leading).fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, alignment: .leading).padding(.vertical, 6)
                 if correct {
@@ -37,7 +39,7 @@ struct AnswerRow: View {
                 .overlay(RoundedRectangle(cornerRadius: 21, style: .continuous).strokeBorder(
                     selected || correct || wrong ? accent.opacity(0.85) : Color.primary.opacity(0.07), lineWidth: selected || correct ? 2 : 1))
         }.buttonStyle(PressableStyle()).disabled(action == nil || revealed)
-            .accessibilityLabel("\(answer.number). \(answer.phrase)")
+            .accessibilityLabel(showsNumber ? "\(answer.number.uppercased()). \(answer.phrase)" : answer.phrase)
             .accessibilityValue(app.text(selected ? "native.selected" : "native.not_selected"))
             .accessibilityIdentifier("answer.\(answer.id)")
     }
@@ -45,12 +47,14 @@ struct AnswerRow: View {
 
 struct QuestionHeader: View {
     let question: Question
+    var showsNumber = true
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            TinyBadge(title: question.number, symbol: "number", color: Playful.navy)
+            if showsNumber { TinyBadge(title: question.number, symbol: "number", color: Playful.navy) }
             Text(question.phrase).font(.system(.title3, design: .rounded).weight(.bold))
                 .fixedSize(horizontal: false, vertical: true).textSelection(.enabled)
         }.frame(maxWidth: .infinity, alignment: .leading).accessibilityElement(children: .combine)
+            .accessibilityIdentifier("question.\(question.id)")
     }
 }
 
