@@ -2,10 +2,27 @@ import XCTest
 
 final class NativeLayoutUITests: XCTestCase {
     @MainActor
-    func testPlayfulScreensAndQuizSelection() throws {
+    func testCourtAnimationAdvances() {
         continueAfterFailure = false
         let app = XCUIApplication()
         app.launchArguments = ["-ui-testing-reset", "-native.language", "en", "-native.appearance", "light"]
+        app.launch()
+        let hero = app.otherElements["home.hero"]
+        XCTAssertTrue(hero.waitForExistence(timeout: 15))
+        var frames: [Data] = []
+        for _ in 0..<3 {
+            frames.append(hero.screenshot().pngRepresentation)
+            Thread.sleep(forTimeInterval: 0.7)
+        }
+        // Capture only the hero so clocks and other system UI cannot fake motion.
+        XCTAssertGreaterThan(Set(frames).count, 1, "The court should move while Home is visible.")
+    }
+
+    @MainActor
+    func testPlayfulScreensAndQuizSelection() throws {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchArguments = ["-ui-testing-reset", "-ui-testing-static-layout", "-native.language", "en", "-native.appearance", "light"]
         app.launch()
         XCTAssertTrue(app.buttons["quiz.start"].waitForExistence(timeout: 15))
         capture(app, "home")
@@ -39,12 +56,12 @@ final class NativeLayoutUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Make it yours."].waitForExistence(timeout: 5))
         capture(app, "settings")
         app.terminate()
-        app.launchArguments = ["-ui-testing-reset", "-native.language", "en", "-native.appearance", "dark"]
+        app.launchArguments = ["-ui-testing-reset", "-ui-testing-static-layout", "-native.language", "en", "-native.appearance", "dark"]
         app.launch()
         XCTAssertTrue(app.buttons["quiz.start"].waitForExistence(timeout: 10))
         capture(app, "home-dark")
         app.terminate()
-        app.launchArguments = ["-ui-testing-reset", "-native.language", "fr", "-native.appearance", "light"]
+        app.launchArguments = ["-ui-testing-reset", "-ui-testing-static-layout", "-native.language", "fr", "-native.appearance", "light"]
         app.launch()
         XCTAssertTrue(app.buttons["quiz.start"].waitForExistence(timeout: 10))
         capture(app, "home-french")

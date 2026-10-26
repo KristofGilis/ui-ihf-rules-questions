@@ -107,7 +107,13 @@ struct HomeHero: View {
     @EnvironmentObject private var app: AppState
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
-    @State private var floating = false
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var visible = false
+    @State private var motionStartedAt = Date()
+    private var animateCourt: Bool {
+        visible && scenePhase == .active && !reduceMotion
+            && !ProcessInfo.processInfo.arguments.contains("-ui-testing-static-layout")
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 21) {
@@ -120,8 +126,12 @@ struct HomeHero: View {
                         .accessibilityAddTraits(.isHeader)
                 }.frame(maxWidth: .infinity, alignment: .leading)
                 if !typeSize.isAccessibilitySize {
-                    HandballCourtMark().frame(width: 68, height: 136)
-                        .offset(y: floating ? -3 : 2)
+                    TimelineView(.animation(minimumInterval: 1.0 / 30, paused: !animateCourt)) { context in
+                        let phase = animateCourt ? context.date.timeIntervalSince(motionStartedAt) * 2 * .pi / 4.4 : 0
+                        HandballCourtMark().frame(width: 68, height: 136)
+                            .shadow(color: Playful.brandBlue.opacity(animateCourt ? 0.25 : 0), radius: 6, y: 3)
+                            .offset(y: -6 * CGFloat(sin(phase)))
+                    }.frame(width: 68, height: 136)
                         .padding(.leading, 12)
                         .frame(width: 90, height: 136).accessibilityHidden(true)
                 }
@@ -129,12 +139,12 @@ struct HomeHero: View {
         }.padding(24).frame(maxWidth: .infinity, alignment: .leading)
             .background(LinearGradient(colors: [Playful.buttonBlue, Playful.heroNavy], startPoint: .topLeading, endPoint: .bottomTrailing))
             .clipShape(RoundedRectangle(cornerRadius: 31, style: .continuous))
-            .onAppear {
-                if !reduceMotion && !ProcessInfo.processInfo.arguments.contains("-ui-testing-reset") {
-                    withAnimation(.easeInOut(duration: 3).repeatForever(autoreverses: true)) { floating = true }
-                }
+            .accessibilityElement(children: .contain).accessibilityIdentifier("home.hero")
+            .onAppear { motionStartedAt = Date(); visible = true }
+            .onDisappear { visible = false }
+            .onChange(of: scenePhase) { phase in
+                if phase == .active { motionStartedAt = Date() }
             }
-            .onChange(of: reduceMotion) { value in if value { floating = false } }
     }
 }
 
