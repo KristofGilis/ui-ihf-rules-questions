@@ -152,6 +152,15 @@ struct HandballCourtGeometry {
         }
     }
 
+    var goalAreas: Path {
+        var top = goalArea(radius: 6)
+        top.closeSubpath()
+        var bottom = goalArea(radius: 6, bottom: true)
+        bottom.closeSubpath()
+        top.addPath(bottom)
+        return top
+    }
+
     var freeThrowLines: Path {
         var path = goalArea(radius: 9)
         path.addPath(goalArea(radius: 9, bottom: true))
@@ -168,6 +177,7 @@ struct HandballCourtMark: View {
             let line = max(0.7, geometry.scale * 0.05)
             ZStack {
                 RoundedRectangle(cornerRadius: 12).fill(Color.white.opacity(0.07))
+                geometry.goalAreas.fill(Playful.brandBlue.opacity(0.28))
                 geometry.markings.stroke(Color.white.opacity(0.85), style: StrokeStyle(lineWidth: line, lineCap: .butt, lineJoin: .miter))
                 geometry.freeThrowLines.stroke(Color.white.opacity(0.55), style: StrokeStyle(lineWidth: line, dash: [2, 2]))
             }
