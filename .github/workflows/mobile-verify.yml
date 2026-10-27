@@ -2,6 +2,11 @@ name: Native iOS checks
 
 on:
   workflow_dispatch:
+    inputs:
+      store_screenshots_only:
+        description: Capture Dutch and French store journeys without rerunning the full suite
+        type: boolean
+        default: false
   pull_request:
     branches: [main]
     paths:
@@ -44,6 +49,7 @@ jobs:
         device: [iPhone, iPad]
     env:
       DEVICE_FAMILY: ${{ matrix.device }}
+      STORE_SCREENSHOTS_ONLY: ${{ inputs.store_screenshots_only || false }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Verify bundled content
@@ -56,4 +62,8 @@ jobs:
           xcrun simctl boot "$DEVICE_ID" 2>/dev/null || true
           xcrun simctl bootstatus "$DEVICE_ID" -b
           xcrun simctl ui "$DEVICE_ID" appearance dark
-          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath "$RUNNER_TEMP/native-ios" CODE_SIGNING_ALLOWED=NO test
+          TEST_ARGUMENTS=()
+          if [[ "$STORE_SCREENSHOTS_ONLY" == 'true' ]]; then
+            TEST_ARGUMENTS+=(-only-testing:AppUITests/NativeLayoutUITests/testLocalizedStoreScreenshots)
+          fi
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath "$RUNNER_TEMP/native-ios" CODE_SIGNING_ALLOWED=NO "${TEST_ARGUMENTS[@]}" test

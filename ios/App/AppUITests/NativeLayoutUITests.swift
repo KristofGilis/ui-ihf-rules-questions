@@ -223,6 +223,65 @@ final class NativeLayoutUITests: XCTestCase {
     }
 
     @MainActor
+    func testLocalizedStoreScreenshots() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        for (language, searchTitle, rulesTitle, rulesHeading, selectedValue) in [
+            ("nl", "Zoeken", "Spelregels", "Oefen per spelregel", "Geselecteerd"),
+            ("fr", "Recherche", "Règles", "Révisez par règle", "Sélectionné")
+        ] {
+            app.terminate()
+            app.launchArguments = ["-ui-testing-reset", "-ui-testing-static-layout", "-native.language", language, "-native.appearance", "light"]
+            app.launch()
+            XCTAssertTrue(app.buttons["quiz.start"].waitForExistence(timeout: 15))
+            capture(app, "store-home-\(language)")
+            app.buttons["quiz.start"].tap()
+            XCTAssertTrue(app.staticTexts["quiz.progress"].waitForExistence(timeout: 5))
+            let quizAnswer = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "answer.")).firstMatch
+            XCTAssertTrue(quizAnswer.waitForExistence(timeout: 5))
+            quizAnswer.tap()
+            XCTAssertEqual(quizAnswer.value as? String, selectedValue)
+            capture(app, "store-quiz-selected-\(language)")
+
+            // Start a clean practice journey, independent of the saved random quiz.
+            app.terminate()
+            app.launch()
+            XCTAssertTrue(app.buttons["quiz.start"].waitForExistence(timeout: 15))
+            selectTab(searchTitle, in: app)
+            let example = app.buttons["search.example.1.1"]
+            XCTAssertTrue(example.waitForExistence(timeout: 10))
+            example.tap()
+            let result = app.buttons["search.result.1.1"]
+            XCTAssertTrue(result.waitForExistence(timeout: 5))
+            result.tap()
+            let answer = app.buttons["answer.1.1/a"]
+            let calculate = app.buttons["practice.calculate"]
+            XCTAssertTrue(answer.waitForExistence(timeout: 5))
+            for _ in 0..<8 {
+                if answer.isHittable && answer.frame.maxY < calculate.frame.minY - 8 { break }
+                app.scrollViews.firstMatch.swipeUp()
+            }
+            answer.tap()
+            XCTAssertEqual(answer.value as? String, selectedValue)
+            calculate.tap()
+            let percentage = app.staticTexts["score.percentage"]
+            XCTAssertTrue(percentage.waitForExistence(timeout: 5))
+            XCTAssertEqual(percentage.label, "100.00%")
+            let summary = app.otherElements["score.summary"]
+            let visible = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                summary.exists && summary.frame.minY >= app.navigationBars.firstMatch.frame.maxY - 5
+                    && summary.frame.maxY <= calculate.frame.minY - 8
+            }, object: nil)
+            XCTAssertEqual(XCTWaiter.wait(for: [visible], timeout: 5), .completed)
+            capture(app, "store-perfect-practice-score-\(language)")
+
+            selectTab(rulesTitle, in: app)
+            XCTAssertTrue(app.staticTexts[rulesHeading].waitForExistence(timeout: 5))
+            capture(app, "store-rules-\(language)")
+        }
+    }
+
+    @MainActor
     private func averageBrightness(_ screenshot: XCUIScreenshot) -> Double {
         guard let image = UIImage(data: screenshot.pngRepresentation)?.cgImage else {
             XCTFail("Settings screenshot should decode.")
