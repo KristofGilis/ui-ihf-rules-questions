@@ -4,7 +4,7 @@ The native app is named **Handball Rules Quiz**. Capture screenshots from the na
 
 **Branding:** the native app uses its own handball/checkmark artwork, with no IHF logo in its icon, header or launch screen. The earlier logo-specific hold is resolved. Website branding is separate.
 
-**Submission preparation:** final store preparation is still open. Check `MOBILE_RELEASE.md` for verified delivery and test results. The last signed-in draft check on 26 October 2026 found version 1.0 Prepare for Submission, no attached review build, 0/10 iPhone and iPad screenshots, and review notes using the old app name. Build **1.0 (19)** is verified for internal TestFlight on 27 October. It includes the refined interface, native offline information pages, system SQLite, stable quiz launch, anonymous random quizzes with numbered review, corrected System appearance and neutral saved-quiz restart control. Eight original English iPhone/iPad screenshots are packaged in ignored `native/previews/store-screenshots-build19.zip`; they have not been uploaded to App Store Connect. The live subtitle was previously “Based on IHF Regulations”; the copy below remains a draft.
+**Submission preparation:** final store preparation is still open. Check `MOBILE_RELEASE.md` for verified delivery and test results. The last signed-in draft check on 26 October 2026 found version 1.0 Prepare for Submission, no attached review build, 0/10 iPhone and iPad screenshots, and review notes using the old app name. Build **1.0 (20)** is verified for internal TestFlight on 27 October. It includes the refined interface, native offline information pages, system SQLite, stable quiz launch, anonymous random quizzes with numbered review, corrected System appearance and neutral saved-quiz restart control. Eight original English iPhone/iPad screenshots are packaged in ignored `native/previews/store-screenshots-build20.zip`; they have not been uploaded to App Store Connect. The live subtitle was previously “Based on IHF Regulations”; the copy below remains a draft.
 
 ## Shared English copy
 
@@ -31,7 +31,7 @@ The app supports English, Dutch, French, and Serbian, with light and dark themes
 3. Calculated practice score (`perfect-practice-score`)
 4. Rules browser (`rules`)
 
-These four captures are available for both iPhone and 13-inch iPad in the build 19 package. Additional Settings/results captures are available in the local simulator previews if needed.
+These four captures are available for both iPhone and 13-inch iPad in the build 20 package. Additional Settings/results captures are available in the local simulator previews if needed.
 
 Use the exact feature wording supported by the tested native build. Do not describe the app as official or affiliated with IHF unless that relationship is documented.
 
