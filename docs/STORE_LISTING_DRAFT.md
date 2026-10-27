@@ -8,6 +8,8 @@ The native app is named **Handball Rules Quiz**. Capture screenshots from the na
 
 ## Shared English copy
 
+Build **21** is now available for internal TestFlight acceptance with a larger Home header logo. Twelve replacement screenshots are prepared in ignored `native/previews/store-screenshots-build21-multilingual.zip`. The saved store draft still uses build **20** and its verified screenshots; candidate replacement and App Review submission have not been performed.
+
 **Verified privacy policy URL:** `https://rulequestions.azurewebsites.net/privacy`
 
 **Verified support URL:** `https://rulequestions.azurewebsites.net/support`
