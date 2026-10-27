@@ -4,7 +4,7 @@ The native app is named **Handball Rules Quiz**. Capture screenshots from the na
 
 **Branding:** the native app uses its own handball/checkmark artwork, with no IHF logo in its icon, header or launch screen. The earlier logo-specific hold is resolved. Website branding is separate.
 
-**Saved draft, 27 October 2026:** version 1.0 remains **Prepare for Submission**, with build **1.0 (21)** attached and **manual release** selected. The descriptions, keywords, names and subtitles below are saved in English (U.S.), Dutch and French; current native-app review notes are saved and sign-in is not required. All three localizations have the public privacy-policy URL. Twenty-four original build 21 screenshots are uploaded in explicit order and verified **COMPLETE** by Apple's API: four per device in every store language. Check `MOBILE_RELEASE.md` for binary verification and remaining release work. No App Review submission or public release has been made.
+**Submitted, 27 October 2026:** Apple received version **1.0**, build **21**, at 13:53:12 UTC. Both version and submission report **WAITING_FOR_REVIEW**, with **manual release** selected. The descriptions, keywords, names and subtitles below are saved in English (U.S.), Dutch and French; current native-app review notes are saved and sign-in is not required. All three localizations have the public privacy-policy URL. All **24** original screenshots are processed: four per device in every store language. Check `MOBILE_RELEASE.md` for verified delivery and submission details. The native app has not been publicly released.
 
 ## Shared English copy
 
@@ -69,12 +69,12 @@ L’app est disponible en français, anglais, néerlandais et serbe et propose u
 
 The app is an interactive handball rules quiz. Its main features are timed and untimed quizzes, rules browsing, search, answer review, language selection, and light/dark themes. Privacy and Support are bundled native pages reached from Settings in each language; reading them requires no network access. Selecting the contact email opens the system email service. Question content is bundled with the app and normal use requires no network connection. No account or credentials are required.
 
-These notes were saved and verified through Apple's API on 27 October 2026. The version is still a draft and has not been submitted for review.
+These notes were saved, verified and included in the App Review submission on 27 October 2026.
 
 ## Required facts to verify before submission
 
 - Publisher identity and final store declarations
-- Public privacy and support URLs both returned HTTP 200 on 27 October 2026. Verify the multilingual page copy included in PR #772 through the [Stable Release workflow](https://github.com/KristofGilis/ui-ihf-rules-questions/actions/workflows/release.yml) before submission; HTTP reachability alone does not confirm that source changes are live.
+- Website v2.22.0 deployed successfully on 27 October 2026. Privacy/support routes return HTTP 200, all four live translation catalogs match the released copy, and rendered privacy/support pages plus website Settings were checked. [Deployment](https://github.com/KristofGilis/ui-ihf-rules-questions/actions/runs/40512493071).
 - Recheck logging before submission: on 24 October 2026, application and HTTP logging were disabled on both Azure App Services, neither app had Azure Monitor diagnostic settings, and Azure SQL auditing was disabled. These settings were not retaining request logs. Update all four privacy-policy translations if logging changes.
 - Third-party SDK data collection and any crash reporting added after this review
 - Store age ratings and target audience
