@@ -62,8 +62,8 @@ jobs:
           xcrun simctl boot "$DEVICE_ID" 2>/dev/null || true
           xcrun simctl bootstatus "$DEVICE_ID" -b
           xcrun simctl ui "$DEVICE_ID" appearance dark
-          TEST_ARGUMENTS=()
+          TEST_ARGUMENTS=(-project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath "$RUNNER_TEMP/native-ios" CODE_SIGNING_ALLOWED=NO)
           if [[ "$STORE_SCREENSHOTS_ONLY" == 'true' ]]; then
             TEST_ARGUMENTS+=(-only-testing:AppUITests/NativeLayoutUITests/testLocalizedStoreScreenshots)
           fi
-          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath "$RUNNER_TEMP/native-ios" CODE_SIGNING_ALLOWED=NO "${TEST_ARGUMENTS[@]}" test
+          xcodebuild "${TEST_ARGUMENTS[@]}" test
