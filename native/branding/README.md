@@ -15,6 +15,8 @@ Add `--preview` to create the comparison in `native/previews/`. The generator ve
 
 The native app uses its own handball/checkmark artwork, with no IHF logo in its icon, header or launch screen. The earlier logo-specific release hold is resolved. Website branding is separate. See `docs/MOBILE_RELEASE.md` for verified delivery status.
 
-The launch screen centers a 160-point transparent mark on an adaptive light/dark background matching the app. `generate-native-branding.mjs` exports crisp 1x/2x/3x launch images and named background colors. The native storyboard uses Auto Layout for iPhone, iPad and orientation changes, with no text, progress indicator or artificial startup delay.
+The Home toolbar displays a 40-point transparent mark beside the app name. Header exports use tightly trimmed artwork at 40/80/120 pixels, avoiding the padded app-icon composition and keeping the larger image sharp on Retina screens. The header has no extra shape clipping.
+
+The launch screen centers a 160-point transparent mark on an adaptive light/dark background matching the app. `generate-native-branding.mjs` exports crisp 1x/2x/3x launch images and named background colors. The native storyboard uses Auto Layout for iPhone, iPad and orientation changes, with no text, progress indicator or artificial startup delay. A brief appearance is expected when startup is fast; the app does not hold this screen for branding.
 
 Apple reference: [Configuring your app icon using an asset catalog](https://developer.apple.com/documentation/xcode/configuring-your-app-icon).

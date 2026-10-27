@@ -12,7 +12,7 @@ on:
         description: Unique build number for this version
         required: true
         type: string
-        default: '20'
+        default: '21'
       upload_build:
         description: Build and upload a binary (disable to manage an existing upload)
         type: boolean

@@ -96,9 +96,11 @@ await writeFile(
     info,
   })
 );
+// The toolbar mark uses its own tight bounds; app-icon padding makes it too small.
 for (const scale of [1, 2, 3]) {
-  const headerImage = await sharp(foreground)
-    .resize(32 * scale, 32 * scale)
+  const headerImage = await sharp(source)
+    .trim()
+    .resize(40 * scale, 40 * scale, { fit: 'contain', background: '#00000000' })
     .png()
     .toBuffer();
   assert.equal((await sharp(headerImage).metadata()).hasAlpha, true);

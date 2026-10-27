@@ -19,6 +19,8 @@ The same revision passed **ten Swift tests and five UI tests on each of iPhone a
 
 Apple does not offer Serbian store metadata. Serbian remains fully supported inside the app and listed in its binary localizations; the English store listing provides the fallback. See [Apple's supported store languages](https://developer.apple.com/help/app-store-connect/reference/app-information/app-store-localizations/). Both public privacy/support URLs returned HTTP 200 on 27 October; the updated page copy still needs deployment from PR #772. Final physical-device acceptance and submission authorization remain open.
 
+**Next candidate: build 21.** The Home header mark is enlarged from 30 to 40 points, with tightly cropped 1x/2x/3x header exports. Simulator verification and TestFlight delivery are pending. The saved App Store draft still uses build 20 and its original screenshots; update the candidate and screenshot selection after acceptance of the new header.
+
 Appearance uses a [UIKit window override](https://developer.apple.com/documentation/uikit/uiview/overrideuserinterfacestyle), cleared to `unspecified` for System so the whole hierarchy, including presented sheets, follows iOS. CI explicitly boots each simulator in Dark appearance to verify System → Light → System. The launch screen uses the native storyboard lifecycle with an adaptive background and no artificial delay. The quiz close button uses the standard system toolbar appearance and tap target, without an additional custom fill or shape. Physical-device acceptance and final store preparation remain open.
 
 ## Build and verify
