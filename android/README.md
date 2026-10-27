@@ -28,8 +28,8 @@ On Linux or macOS:
 bash android/gradlew -p android lintDebug assembleDebug assembleRelease bundleRelease
 ```
 
-The independent Android workflow installs the supported toolchain on Linux and runs the same checks. Debug APK output is `app/build/outputs/apk/debug/app-debug.apk`; the release APK and `app/build/outputs/bundle/release/app-release.aab` are unsigned until store signing is configured.
+The independent Android workflow installs the supported toolchain on Linux and runs the same checks. Debug APK output is `app/build/outputs/apk/debug/app-debug.apk`. Ordinary verification builds produce unsigned release outputs. The manual **Android signed bundle** workflow uses the configured repository signing secrets; see [release setup](../docs/MOBILE_RELEASE.md#android-signing-and-play-draft). Minimum supported Android version is 7.0 (API 24), as required by the enabled automatic Play protection.
 
 ## Identity and release
 
-Application ID is provisionally set to `io.github.kristofgilis.ihfrulesquiz` to match the known iOS identifier and proposed Play identity. Before a Play release, verify the existing Play Console record and signing configuration. Set a version code greater than every previously uploaded Android build. Do not place a keystore or Play service-account key in source control.
+Application ID `io.github.kristofgilis.ihfrulesquiz` is confirmed in the Google Play draft for Handball Rules Quiz (app ID `4976385006116525227`). Set a version code greater than every previously uploaded Android build. The first upload key is configured through GitHub secrets; Google manages the separate app-signing key. Do not place a keystore or Play service-account key in source control. Build/sign/upload does not publish the app; rollout needs separate owner approval.

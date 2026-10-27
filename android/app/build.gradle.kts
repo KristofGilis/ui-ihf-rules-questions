@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "io.github.kristofgilis.ihfrulesquiz"
-        minSdk = 23
+        minSdk = 24
         targetSdk = 36
         versionCode = providers.gradleProperty("androidVersionCode").orElse("1").get().toInt().also {
             require(it in 1..2_100_000_000) { "androidVersionCode must be between 1 and 2100000000" }
