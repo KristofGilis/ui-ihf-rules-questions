@@ -17,8 +17,8 @@ struct QuizView: View {
             .background(PlayfulBackground())
             .navigationTitle(app.text(session.isComplete ? "quiz_results.title" : "navigation.quiz"))
             .navigationBarTitleDisplayMode(.inline)
-            .modifier(PlainQuizCloseToolbar(closeButton: closeButton))
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) { closeButton }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if !session.isComplete, let remaining = session.remaining {
                         TinyBadge(title: QuizSession.clock(remaining), symbol: "timer", color: remaining < 60 ? .red : Playful.navy)
@@ -41,10 +41,8 @@ struct QuizView: View {
         Button {
             if session.isComplete { close() } else { leaving = true }
         } label: {
-            Image(systemName: "xmark").font(.headline.weight(.semibold))
-                .frame(width: 44, height: 44).contentShape(Rectangle())
-        }.buttonStyle(.plain).foregroundColor(Playful.blue)
-            .accessibilityLabel(app.text("native.close")).accessibilityIdentifier("quiz.close")
+            Image(systemName: "xmark").font(.subheadline.weight(.semibold))
+        }.accessibilityLabel(app.text("native.close")).accessibilityIdentifier("quiz.close")
     }
 
     private func activeQuestion(_ question: Question) -> some View {
@@ -138,24 +136,6 @@ struct QuizView: View {
                     }
                 }
             }.padding(20).padding(.bottom, 20).frame(maxWidth: 760).frame(maxWidth: .infinity)
-        }
-    }
-}
-
-private struct PlainQuizCloseToolbar<CloseButton: View>: ViewModifier {
-    let closeButton: CloseButton
-
-    @ViewBuilder
-    func body(content: Content) -> some View {
-        if #available(iOS 26.0, *) {
-            content.toolbar {
-                ToolbarItem(placement: .navigationBarLeading) { closeButton }
-                    .sharedBackgroundVisibility(.hidden)
-            }
-        } else {
-            content.toolbar {
-                ToolbarItem(placement: .navigationBarLeading) { closeButton }
-            }
         }
     }
 }
