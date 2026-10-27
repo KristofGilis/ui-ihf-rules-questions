@@ -54,7 +54,7 @@
   --status-bar-color-light: #f1f5f9;
   --status-bar-color-dark: #0f172a;
   --mobile-tabbar-margin: max(0.125rem, calc(env(safe-area-inset-bottom) - 0.375rem));
-  --mobile-tabbar-top: var(--cap-native-navigation-bottom, calc(var(--mobile-tabbar-margin) + 4rem));
+  --mobile-tabbar-top: calc(var(--mobile-tabbar-margin) + 4rem);
   --mobile-page-bottom-padding: calc(var(--mobile-tabbar-top) + 1rem);
 }
 

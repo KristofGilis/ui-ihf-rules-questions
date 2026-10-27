@@ -1,62 +1,88 @@
-# Android and iOS release guide
+# Native mobile development and release
 
-The native apps package this Angular app with Capacitor 8. The web PWA is still deployed separately to Azure. Native app shell updates must go through the stores; the Angular service worker runs only in the web PWA. The native apps use the existing persisted Apollo cache for offline data after an initial successful sync.
+The iOS app is written in Swift/SwiftUI and reads a bundled SQLite database. It has no runtime API dependency. The Angular PWA is still deployed separately to Azure and uses the existing GraphQL API and persisted Apollo cache. Native Android is the next milestone after iOS acceptance; the previous Android WebView shell has been removed.
 
-## Project identity and build
+## Identity and baseline
 
-- Display name: `IHF Rules Quiz`
-- Android application ID and iOS bundle ID: `io.github.kristofgilis.ihfrulesquiz`
-- Capacitor config: `capacitor.config.ts`
-- Angular build output: `dist/ui-ihf-rules-questions/browser`
-- The API must allow `https://localhost` (Android) and `capacitor://localhost` (iOS). Azure App Service's built-in CORS allowlist takes precedence over the API middleware, so both origins must be present there alongside the hosted web origin. Verify preflight responses from both native origins after deployment.
+- Native app name: Handball Rules Quiz
+- Bundle/application ID: `io.github.kristofgilis.ihfrulesquiz`
+- Apple Team: `XKF5T9N38M`
+- Existing App Store Connect record: Apple ID `6826826667`, SKU `ihf-rules-quiz-ios`
+- Previous container implementation: commit `fed17f7`; recover it from Git history if needed.
+- iOS minimum: 15.0, retained from the previous app. iPhone and iPad remain enabled.
 
-Run `npm ci` before building. The checked-in `android/` and `ios/` projects are the source of truth for platform settings.
+The latest verified native TestFlight build is **1.0 (21)** from `00e324d`. It enlarges the Home header logo from 30 to 40 points and uses tightly cropped Retina exports; the visible artwork is about 68% wider. It retains the native Liquid Glass close button, adaptive launch screen, System-theme fix, neutral saved-quiz restart control, stable quiz launch and numbered review in the same shuffled order. The learning database and saved-quiz content hash remain unchanged. Apple confirmed `VALID` processing and `IN_BETA_TESTING` for **Handball Rules Quiz Internal** on 27 October 2026 (build ID `3d8ad1c6-177c-47c5-b5ea-b0445f3b9f21`). [Upload and processing run](https://github.com/KristofGilis/ui-ihf-rules-questions/actions/runs/40504632670).
+
+The uploaded revision passed **ten Swift tests and five UI tests on each of iPhone and 13-inch iPad** (30 tests), alongside content integrity, generated-project/catalog validation, Angular lint and production build checks. [Original simulator verification](https://github.com/KristofGilis/ui-ihf-rules-questions/actions/runs/40502616252). The expanded suite at `9e98f8f` passed **ten Swift tests and six UI tests per device** (32 tests), adding complete Dutch/French screenshot journeys; Release app sources remain identical to build 21. [Expanded verification](https://github.com/KristofGilis/ui-ihf-rules-questions/actions/runs/40509471779). Captures confirm the larger logo with the full app name visible, plus existing launch-storyboard, native close button, System-theme, saved-quiz and shuffled-review behavior. Twenty-four original English/Dutch/French screenshots are packaged in ignored `native/previews/store-screenshots-build21-multilingual.zip`, with dimensions, hashes and binary/capture revisions. No App Review submission or public release has been made.
+
+**App Store draft verified on 27 October:** version 1.0 remains **Prepare for Submission**, with build **21** attached and **manual release** selected. English (U.S.), Dutch and French descriptions, keywords and subtitles now match the native app. All use the name **Handball Rules Quiz** and the public privacy-policy URL. Native offline features are explained in the saved review notes; sign-in is not required. Twenty-four original screenshots are uploaded and verified **COMPLETE** by Apple's API: the same four-screen sequence per device in every language (Home → quiz → practice score → rules). The ignored `native/previews/store-screenshots-build21-multilingual.zip` records dimensions, hashes and source revisions. No review submission or public release has been made.
+
+Apple does not offer Serbian store metadata. Serbian remains fully supported inside the app and listed in its binary localizations; the English store listing provides the fallback. See [Apple's supported store languages](https://developer.apple.com/help/app-store-connect/reference/app-information/app-store-localizations/). Both public privacy/support URLs returned HTTP 200 on 27 October. Updated page copy is included in this release; track deployment through the [Stable Release workflow](https://github.com/KristofGilis/ui-ihf-rules-questions/actions/workflows/release.yml) and verify the live copy before App Review. Final physical-device acceptance and submission authorization remain open.
+
+Appearance uses a [UIKit window override](https://developer.apple.com/documentation/uikit/uiview/overrideuserinterfacestyle), cleared to `unspecified` for System so the whole hierarchy, including presented sheets, follows iOS. CI explicitly boots each simulator in Dark appearance to verify System → Light → System. The launch screen uses the native storyboard lifecycle with an adaptive background and no artificial delay. The quiz close button uses the standard system toolbar appearance and tap target, without an additional custom fill or shape. Physical-device acceptance and final store preparation remain open.
+
+## Build and verify
+
+Open `ios/App/App.xcodeproj` in Xcode on macOS and select the App scheme. The project links the platform SQLite library directly and has no Swift Package dependencies. The installed app opens its bundled database read-only; content loading makes no API calls.
 
 ```sh
-npm run mobile:sync:android
-npm run mobile:sync:ios
+python3 scripts/native-content.py --check
+python3 scripts/test_native_content.py
+python3 scripts/generate-native-ios-project.py
+xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
 ```
 
-These scripts build Angular in production mode and copy its output into the native project. Use Android Studio to build and run `android/`. On a Mac with Xcode 26 or newer, build and run `ios/App/App.xcodeproj`. Android Studio and an Android SDK are required for Android; Xcode on macOS is required for iOS.
+The **Native iOS checks** workflow validates bundled content and tests the Swift app on available iPhone and 13-inch iPad simulators. It needs no Angular build, npm installation or running API. Before running the UI suite locally, boot the chosen simulator and run `xcrun simctl ui booted appearance dark`; the system-theme regression requires this starting state. Native tests cover the bundled locales, scoring, search, deterministic selection and quiz restoration/timer expiry. Physical-device and visual acceptance remain required.
 
-If no Mac is available locally, use the **Native Compile Checks** GitHub Actions workflow. It runs on relevant pull requests and can also be started manually. It compiles an unsigned iOS simulator app on a macOS runner and an Android debug app on an Ubuntu runner. Download the `ihf-rules-quiz-android-debug` artifact from a successful run to install the debug APK on an Android test device. The workflow requests 14 days of artifact retention, but repository policy can shorten it; check the artifact's displayed expiry. It does not replace physical-device testing, store signing, or submission.
+Run `npm ci`, `npm run lint`, and `npm run build:web` for the PWA. Web service-worker behavior remains enabled in production. Native workflows and web releases are independent.
 
-The native icons and splash screens were generated from the square vector source in `assets/logo.svg`. If the artwork changes, regenerate Android and iOS resources with the current `@capacitor/assets` tool using icon background `#229cde`, splash background `#0f172a`, and logo splash scale `0.5`. Restrict generation to `--android` and `--ios` so the existing PWA manifest and icons stay intact. Review the resulting icons at small sizes. Confirm rights to the IHF name, logo, and question content before submitting either app.
+## App branding
 
-After regenerating Android resources, run `npm run mobile:android:legacy-icons` so Android 7 launchers receive opaque blue icons as well as the adaptive icons used on newer Android versions.
+The local native icon and Home header use the selected option A: a sweeping checkmark and stitched-panel handball in the app's navy, blue, white and gold palette. Both icon appearances are opaque, with white/slate and deep navy backgrounds. Home Screen appearance follows the system's icon setting; the header uses the transparent foreground in both app themes. Run `node scripts/compose-native-ball.mjs` followed by `node scripts/generate-native-branding.mjs --preview` to regenerate the composition, assets and comparison. This artwork replaces the previous IHF mark; check the verified TestFlight build status above for availability. See [native branding](../native/branding/README.md).
 
-## Device acceptance checks
+On regular-width iPadOS, the system's floating top tab bar displays text labels in the current native layout. The app supplies SF Symbols for every tab; iPhone displays icons and labels. A native sidebar is an alternative if both are wanted on iPad. See [Apple tab navigation guidance](https://developer.apple.com/documentation/swiftui/enhancing-your-app-content-with-tab-navigation).
 
-Test on physical Android and iPhone devices before uploading a release build:
+## Court artwork
 
-1. Fresh install online: all languages load; rules, questions, search, and quiz results work; the first data sync completes.
-2. Restart in airplane mode: previously synced rules, questions, and quizzes remain usable; the UI communicates the offline state.
-3. Fresh install in airplane mode: the bundled shell starts and clearly indicates that the first content download still needs a connection. Do not advertise content as available offline before this download.
-4. Update the installed app: language, theme, and offline data remain usable; the next sync handles content or schema changes.
-5. Verify the API preflight and GraphQL calls on both native origins, including the `Accept-Language` and `graphql-preflight` request headers.
-6. Check safe areas, system back behavior, links that leave the app, portrait and landscape layout, accessibility labels, and the launch splash on each platform.
+The home graphic uses metre coordinates from [IHF Rule 1, 1 July 2025](https://www.ihf.info/sites/default/files/2025-07/09A%20-%20Rules%20of%20the%20Game_Indoor%20Handball_E.pdf): a 40 × 20 m court, 3 m goal mouths, circular 6 m goal-area boundaries, 7 m marks, 9 m free-throw lines and a centred 4 m diameter throw-off circle. One uniform scale preserves these proportions in every container. The halfway line stops at the circle’s edges. Both goal areas have a subtle lighter blue fill. Line weights and dash cadence are enlarged for legibility at icon size; measured positions remain to scale. The native geometry test covers different container shapes, the 6 m boundaries, 9 m intersections and end-to-end symmetry. The court floats vertically through a 12-point range over a 4.4-second cycle, preserving its proportions. Its animation schedule pauses for Reduce Motion, hidden Home content and inactive app scenes, and resumes automatically. A separate UI test compares header screenshots with motion enabled; layout captures use `-ui-testing-static-layout`.
 
-## Google Play
+## Bundled content
 
-As of 25 October 2026, Google Play Console has not allowed app creation because account verification is incomplete. The identity documents were shown as under review, and contact-phone verification was marked as waiting for other verification tasks; the account owner reports having completed phone verification. Recheck the Console after Google's identity review. Google also requires the account owner to use the Play Console app on a non-rooted physical Android 10+ device for device verification; an emulator and the available phone older than ten years do not satisfy this gate. The Android debug build compiles in CI, but a Play release cannot be uploaded until the account permits app creation. See [Google's device-verification requirements](https://support.google.com/googleplay/android-developer/answer/14316361).
+`native/content.json` is the reviewed portable snapshot. Its manifest records content and scoring source commits, individual language editions, schema version and complete scoring parameters. `ios/App/App/OfflineContent/content.sqlite` is generated from it. Both files are committed so a normal checkout builds without sibling repositories or network content requests.
 
-1. Create the Play Console app with the application ID above. Use an Android build that targets API 36 or later.
-2. Generate and securely back up an upload key. Keep keystores and passwords outside Git. Enable Play App Signing and upload a signed Android App Bundle (`.aab`).
-3. Complete the listing, screenshots, age rating, content declarations, support contact, privacy policy, and Data safety form based on actual app and API behavior.
-4. Test on the internal track. If the developer account is a personal account created after 13 November 2023, run the required closed test with at least 12 continuously opted-in testers for 14 days before requesting production access.
-5. Increase `versionCode` for every upload; set a matching user-facing `versionName`. Promote a verified build to production with a staged rollout.
+Update content from clean, reviewed checkouts:
 
-## Apple App Store
+```sh
+python3 scripts/native-content.py --source ../ihf_rules_questions --api ../api-ihf-rules-questions
+python3 scripts/native-content.py --check
+python3 scripts/test_native_content.py
+```
 
-As of 25 October 2026, the Apple Developer membership page shows renewal on 26 October 2027. The explicit bundle ID `io.github.kristofgilis.ihfrulesquiz` is registered with Team `XKF5T9N38M`, and the Xcode project uses that team for automatic signing. The App Store Connect record (Apple ID `6826826667`, SKU `ihf-rules-quiz-ios`) is in **Prepare for Submission**. Its English listing draft, review contact and notes, Sports category, licensed third-party content declaration, calculated 4+ age rating, published “Data Not Collected” privacy response, verified privacy and support URLs, Free price, and availability in all 175 current App Store countries and regions are set. TestFlight build 2 has passed processing, its export-compliance response is saved, and it is attached to iOS version 1.0. An internal TestFlight group contains build 2, and the account holder has been invited as its tester. The app has not been submitted for review.
+`native/strings.json` contains current native interface wording and overrides inherited web labels. The project generator copies it to `OfflineContent/InterfaceStrings.json`; `AppLocalization` merges this catalog with `AppInformation.json` for policy/support copy. These catalogs take precedence over the snapshot's historical UI strings. Wording updates therefore preserve the question database and saved-quiz content hash. CI verifies the generated catalog and tests complete locale keys and matching interpolation placeholders.
 
-The manual **Upload iOS build to TestFlight** workflow injects the selected marketing version and GraphQL schema version before the Angular bundle is built, then creates a signed App Store archive on GitHub's macOS runner and uploads it to App Store Connect. This keeps the app version shown on the home page aligned with the native version. Its required signing and API key values are configured as repository Actions secrets. Build 2 was uploaded and processed successfully, but predates the version injection and native tab bar changes. The workflow uploads builds but does not submit them for App Review. See Apple's [build upload guide](https://developer.apple.com/help/app-store-connect/manage-builds/upload-builds/).
+During a deliberate content import, the exporter also includes native UI strings in the portable snapshot. It keeps each locale's questions/correctness separate and builds cross-language search documents. It rejects duplicate questions, broken rule relationships, empty native strings and questions with no correct answer. Review content changes and source revisions before committing regenerated artifacts. The bundled database is read-only and is replaced with app updates; preferences and saved sessions are stored separately. Saved sessions tied to a different content hash are discarded safely without a download.
 
-1. Build 2 remains available for comparison, but it predates the app-version injection and native tab bar changes in this branch. After this change is merged, upload the next build through **Upload iOS build to TestFlight**, then accept the internal TestFlight invitation, install that build, and capture the required screenshots. The product page still has no iPhone screenshots, and **Add for Review** is disabled.
-2. Test the new build through TestFlight, including first sync, offline use, all four languages, the homepage app version, and native tab navigation. Add the device and OS versions tested to the App Review notes. No physical-device acceptance test is recorded yet.
-3. Recheck privacy manifests, export compliance, all store metadata, and the selected build after screenshots and device testing are complete.
-4. Submit version 1.0 for App Review only after the remaining requirements are met and you approve submission. The availability setting makes the app downloadable in the selected regions only after a release.
+## TestFlight
 
-## Release gate
+The existing **Upload iOS build to TestFlight** workflow archives the Swift project directly, using the configured six Actions secrets. It keeps the existing bundle ID/profile and record. Choose a unique build number greater than every existing upload; build 21 is already uploaded. The next distinct candidate must use at least build 22. Check the latest upload before choosing a number. The workflow uploads but does not submit for App Review. `upload_build` controls whether to archive a new binary; disabling it allows managing an existing build. `enable_internal_testing` assigns a valid processed build to the existing **Handball Rules Quiz Internal** group and verifies Apple’s testing state through the App Store Connect API.
 
-Before submission, verify the privacy and support URLs, content and branding rights, the wording of the offline promise, native icon quality, API availability, on-device tests, version numbers, and store signing. Store credentials and signing keys must remain outside the repository.
+Before uploading a release candidate, pass simulator CI and review the parity checklist. Before App Review, test on the available iPhone, capture new screenshots, review all languages and privacy/export declarations, and verify upgrading from the installed container app. Old WebView storage is not imported in this first native implementation: bundled content remains immediately available; locale/theme are initialized from system defaults until selected in native settings. Communicate that one-time settings reset during acceptance.
+
+## Acceptance
+
+1. Fresh install with no network: home, all four languages, rules, practice, search, quizzes, scoring, results and privacy/support links are visible (opening external links needs connectivity).
+2. Select 10/15/20/30 questions; verify timed/untimed mode, multi-select, navigation, expiry, exit confirmation and results.
+3. Verify question/rule practice, individual/global answer reveal, score/reset rules and wrong-question navigation.
+4. Background/terminate/relaunch: quiz selections persist; timed sessions expire according to the absolute deadline. New content safely retires a saved session from the previous pack.
+5. Check accessibility text, VoiceOver, safe areas, default tab bar/back gestures, small/large screens, iPad and orientation.
+6. Confirm no network requests during normal native use. Email, GitHub and other external links deliberately leave the app and require connectivity.
+
+Privacy and Support are native pages opened from Settings and readable offline in all four languages. Email contact is inside those pages. A collapsed Licenses section separates app copyright from content acknowledgements; GRDB and its bundled notice have been removed because the app now uses platform SQLite directly. App-information translations are bundled separately from the question database so policy/support copy does not change the quiz content hash. There is no separate Content source page, source revision display or repository link. Apple requires accessible policy/support information in the app and public store URLs. The Angular `/privacy` and `/support` routes remain available; their Settings shortcuts have been removed at the operator’s request. The public privacy/support page sources now distinguish the offline native client from the website; deploy and verify those URLs before store submission. No analytics, ads or additional crash services are included.
+
+## Android and API infrastructure
+
+Implement Android with Kotlin/Compose and Room after iOS acceptance, using the same content snapshot and parity fixtures. Preserve package ID and signing lineage if a Play record/key already exists. Check actual account/device verification and track requirements before release and test on a supported physical device.
+
+Retain API CORS origins `capacitor://localhost` and `https://localhost` while supporting old installed container builds. Remove them only after that support window ends. The API and Azure web origin remain necessary for the PWA.
+
+See [NATIVE_REBUILD_PLAN.md](NATIVE_REBUILD_PLAN.md) for the approved scope and [NATIVE_PARITY.md](NATIVE_PARITY.md) for implementation and acceptance status.

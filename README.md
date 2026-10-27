@@ -150,7 +150,7 @@ This application is a fully-featured PWA that works offline and can be installed
 - **App Shortcuts** - Quick access to "Browse Rules" and "Start Quiz"
 - **Standalone Mode** - Runs like a native app when installed
 
-Native Android and iOS projects are now included via Capacitor. See [Mobile release guide](docs/MOBILE_RELEASE.md) for build, testing, and store preparation steps. Offline questions become available after the first successful data sync.
+The store application is being rebuilt with SwiftUI for iOS, followed by Kotlin/Compose for Android. The native iOS app bundles all four languages and works offline from the first launch. The Angular PWA remains a separate web application and retains its initial-sync behavior. See the [mobile release guide](docs/MOBILE_RELEASE.md), [native rebuild plan](docs/NATIVE_REBUILD_PLAN.md), and [parity checklist](docs/NATIVE_PARITY.md).
 
 ## 🌍 Internationalization
 

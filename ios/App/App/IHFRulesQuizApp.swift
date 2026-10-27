@@ -1,0 +1,330 @@
+import SwiftUI
+import UIKit
+
+@main
+struct IHFRulesQuizApp: App {
+    @StateObject private var state = AppState()
+    var body: some Scene {
+        WindowGroup {
+            appContent
+                .environmentObject(state)
+                .environment(\.locale, Locale(identifier: state.language == "srb" ? "sr" : state.language))
+                .background(WindowAppearance(mode: state.appearance).frame(width: 0, height: 0))
+                .tint(Playful.blue)
+        }
+    }
+
+    @ViewBuilder
+    private var appContent: some View {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-ui-testing-launch-screen") {
+            LaunchScreenPreview().ignoresSafeArea()
+                .accessibilityElement(children: .ignore).accessibilityLabel("Handball Rules Quiz")
+                .accessibilityIdentifier("launch.preview")
+        } else { RootView() }
+        #else
+        RootView()
+        #endif
+    }
+}
+
+#if DEBUG
+// Show the actual storyboard after launch so UI tests can capture both appearances.
+// Production uses the native launch screen without a timed overlay or delay.
+private struct LaunchScreenPreview: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UIViewController {
+        UIStoryboard(name: "LaunchScreen", bundle: .main).instantiateInitialViewController()!
+    }
+    func updateUIViewController(_ controller: UIViewController, context: Context) {}
+}
+#endif
+
+struct RootView: View {
+    @EnvironmentObject private var app: AppState
+    @State private var settings = false
+    @State private var quiz = false
+
+    private var quizPresentation: Binding<Bool> {
+        #if DEBUG
+        // Expose the underlying launch state for a deterministic transition check.
+        if ProcessInfo.processInfo.arguments.contains("-ui-testing-hold-quiz-presentation") {
+            return .constant(false)
+        }
+        #endif
+        return $quiz
+    }
+
+    var body: some View {
+        Group {
+            if app.loadFailed {
+                VStack(spacing: 24) {
+                    EmptyPlayState(title: "Handball Rules Quiz", detail: app.text("native.load_error"), symbol: "exclamationmark.triangle")
+                    PrimaryAction(title: app.text("native.retry")) { app.load() }
+                    Link("kristof.gilis@outlook.be", destination: URL(string: "mailto:kristof.gilis@outlook.be")!)
+                }.padding(24).background(PlayfulBackground())
+            } else {
+                TabView {
+                    feature(title: "Handball Rules Quiz", literal: true) { HomeView(quizPresented: $quiz) }
+                        .tabItem { Label(app.text("navigation.home"), systemImage: "house.fill") }
+                    feature(title: "native.practice") { PracticeHomeView(quizPresented: $quiz) }
+                        .tabItem { Label(app.text("native.practice"), systemImage: "bolt.fill") }
+                    feature(title: "navigation.rules") { RulesView() }
+                        .tabItem { Label(app.text("navigation.rules"), systemImage: "book.closed.fill") }
+                    feature(title: "navigation.search") { SearchView() }
+                        .tabItem { Label(app.text("navigation.search"), systemImage: "magnifyingglass") }
+                }.id(app.language)
+            }
+        }
+        .sheet(isPresented: $settings) {
+            NavigationView {
+                SettingsView().toolbar { ToolbarItem(placement: .confirmationAction) {
+                    Button(app.text("native.close")) { settings = false }
+                } }
+            }.navigationViewStyle(.stack)
+        }
+        .fullScreenCover(isPresented: quizPresentation) {
+            if let session = app.session { QuizView(session: session, close: { quiz = false }) }
+        }
+    }
+
+    private func feature<Content: View>(title: String, literal: Bool = false, @ViewBuilder content: () -> Content) -> some View {
+        NavigationView {
+            Group {
+                if literal {
+                    content().navigationTitle(title).navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .principal) {
+                                HStack(spacing: 8) {
+                                    Image("BrandMark").resizable().scaledToFit()
+                                        .frame(width: 40, height: 40)
+                                        .accessibilityHidden(true)
+                                    Text(title).font(.headline).lineLimit(1).minimumScaleFactor(0.8)
+                                        .accessibilityAddTraits(.isHeader)
+                                }
+                            }
+                        }
+                } else {
+                    content().navigationTitle(app.text(title)).navigationBarTitleDisplayMode(.inline)
+                }
+            }
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button { settings = true } label: {
+                            Image(systemName: "slider.horizontal.3").font(.subheadline.weight(.semibold))
+                                .foregroundStyle(Color(UIColor.label))
+                        }.accessibilityLabel(app.text("settings.title")).accessibilityIdentifier("settings.open")
+                    }
+                }
+        }.navigationViewStyle(.stack)
+    }
+}
+
+struct HomeView: View {
+    @EnvironmentObject private var app: AppState
+    @Environment(\.dynamicTypeSize) private var typeSize
+    @Binding var quizPresented: Bool
+    private var columns: [GridItem] { Array(repeating: GridItem(.flexible(), alignment: .top), count: typeSize.isAccessibilitySize ? 1 : 2) }
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 25) {
+                HomeHero()
+                QuizSetupSection(quizPresented: $quizPresented)
+                SectionHeading(title: app.text("native.explore"), detail: app.text("native.explore_detail"))
+                LazyVGrid(columns: columns, alignment: .leading, spacing: 14) {
+                    NavigationLink(destination: PracticeView(questions: app.questions)) {
+                        FeatureTile(title: app.text("native.study"), detail: app.text("native.questions", ["count": String(app.questions.count)]), symbol: "rectangle.stack.fill", color: Playful.navy)
+                    }.buttonStyle(PressableStyle()).accessibilityIdentifier("home.study")
+                    NavigationLink(destination: RulesView()) {
+                        FeatureTile(title: app.text("rules.title"), detail: app.text("native.rule_count", ["count": String(app.rules.count)]), symbol: "book.closed.fill", color: Playful.gold)
+                    }.buttonStyle(PressableStyle()).accessibilityIdentifier("home.rules")
+                }
+                HStack(alignment: .top, spacing: 11) {
+                    Image(systemName: "shippingbox.fill").foregroundColor(Playful.blue).padding(.top, 2)
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text(app.text("native.content")).font(.system(.caption, design: .rounded).bold())
+                        Text(app.edition).font(.caption).foregroundStyle(.secondary)
+                    }
+                    Spacer(minLength: 0)
+                }.padding(.horizontal, 5)
+                Text("\(app.text("native.version")) \(app.version)")
+                    .font(.caption2).foregroundStyle(.secondary).frame(maxWidth: .infinity)
+            }.padding(20).padding(.bottom, 16).frame(maxWidth: 760)
+                .frame(maxWidth: .infinity)
+        }.background(PlayfulBackground())
+    }
+}
+
+struct HomeHero: View {
+    @EnvironmentObject private var app: AppState
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var visible = false
+    @State private var motionStartedAt = Date()
+    private var animateCourt: Bool {
+        visible && scenePhase == .active && !reduceMotion
+            && !ProcessInfo.processInfo.arguments.contains("-ui-testing-static-layout")
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 21) {
+            HStack(alignment: .top, spacing: 8) {
+                VStack(alignment: .leading, spacing: 11) {
+                    Text(app.text("native.hero_eyebrow")).font(.caption2.weight(.semibold)).tracking(1.2)
+                        .foregroundColor(.white.opacity(0.76))
+                    Text(app.text("native.hero_title")).font(.largeTitle.weight(.semibold))
+                        .foregroundColor(.white).fixedSize(horizontal: false, vertical: true)
+                        .accessibilityAddTraits(.isHeader)
+                }.frame(maxWidth: .infinity, alignment: .leading)
+                if !typeSize.isAccessibilitySize {
+                    TimelineView(.animation(minimumInterval: 1.0 / 30, paused: !animateCourt)) { context in
+                        let phase = animateCourt ? context.date.timeIntervalSince(motionStartedAt) * 2 * .pi / 4.4 : 0
+                        HandballCourtMark().frame(width: 68, height: 136)
+                            .shadow(color: Playful.brandBlue.opacity(animateCourt ? 0.25 : 0), radius: 6, y: 3)
+                            .offset(y: -6 * CGFloat(sin(phase)))
+                    }.frame(width: 68, height: 136)
+                        .padding(.leading, 12)
+                        .frame(width: 90, height: 136).accessibilityHidden(true)
+                }
+            }
+        }.padding(24).frame(maxWidth: .infinity, alignment: .leading)
+            .background(LinearGradient(colors: [Playful.buttonBlue, Playful.heroNavy], startPoint: .topLeading, endPoint: .bottomTrailing))
+            .clipShape(RoundedRectangle(cornerRadius: 31, style: .continuous))
+            .accessibilityElement(children: .contain).accessibilityIdentifier("home.hero")
+            .onAppear { motionStartedAt = Date(); visible = true }
+            .onDisappear { visible = false }
+            .onChange(of: scenePhase) { phase in
+                if phase == .active { motionStartedAt = Date() }
+            }
+    }
+}
+
+struct QuizSetupSection: View {
+    @EnvironmentObject private var app: AppState
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var count = 10
+    @State private var timed = false
+    @State private var replace = false
+    @State private var startingQuiz = false
+    @Namespace private var choice
+    @Binding var quizPresented: Bool
+
+    var body: some View {
+        PaperCard {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack(alignment: .top, spacing: 12) {
+                    Image(systemName: "bolt.fill").font(.title3).foregroundColor(Playful.gold)
+                        .frame(width: 45, height: 45).background(Playful.gold.opacity(0.12)).clipShape(RoundedRectangle(cornerRadius: 16))
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(app.text("home.quiz_card.title")).font(.system(.title2, design: .rounded).weight(.heavy))
+                        Text(app.text("native.quiz_invite")).font(.subheadline).foregroundStyle(.secondary)
+                    }
+                    Spacer(minLength: 0)
+                }
+                Text(app.text("home.quiz_card.count")).font(.system(.subheadline, design: .rounded).weight(.bold))
+                HStack(spacing: 9) {
+                    ForEach([10, 15, 20, 30], id: \.self) { value in
+                        Button {
+                            withAnimation(reduceMotion ? nil : Playful.spring) { count = value }
+                        } label: {
+                            Text(String(value)).font(.system(.title3, design: .rounded).weight(.heavy))
+                                .frame(maxWidth: .infinity).padding(.vertical, 15)
+                                .foregroundColor(count == value ? .white : .primary)
+                                .background {
+                                    if count == value {
+                                        RoundedRectangle(cornerRadius: 17).fill(Playful.buttonBlue).matchedGeometryEffect(id: "count", in: choice)
+                                    } else { RoundedRectangle(cornerRadius: 17).fill(Playful.background) }
+                                }
+                        }.buttonStyle(PressableStyle()).accessibilityLabel(app.text("native.questions", ["count": String(value)]))
+                            .accessibilityAddTraits(count == value ? .isSelected : [])
+                    }
+                }
+                Toggle(isOn: $timed) {
+                    HStack(spacing: 10) {
+                        Image(systemName: timed ? "timer" : "clock").foregroundColor(Playful.navy)
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(app.text("native.timed_label")).font(.system(.subheadline, design: .rounded).bold())
+                            Text(app.text("native.timed_detail")).font(.caption).foregroundStyle(.secondary)
+                        }
+                    }
+                }.tint(Playful.blue)
+                if let session = app.session, !startingQuiz {
+                    HStack(spacing: 12) {
+                        PrimaryAction(title: app.text(session.isComplete ? "native.review" : "native.resume"), symbol: "play.fill") {
+                            quizPresented = true
+                        }.accessibilityIdentifier("quiz.resume")
+                        Button { replace = true } label: {
+                            Image(systemName: "arrow.counterclockwise").font(.headline.weight(.semibold))
+                                .foregroundColor(Playful.blue).frame(width: 58, height: 58)
+                                .background(Playful.background).clipShape(RoundedRectangle(cornerRadius: 20))
+                        }.buttonStyle(PressableStyle()).accessibilityLabel(app.text("native.discard"))
+                            .accessibilityIdentifier("quiz.discard")
+                    }
+                } else {
+                    PrimaryAction(title: app.text("home.quiz_card.button"), symbol: "play.fill") {
+                        // Keep Home stable while the full-screen cover animates in.
+                        // Publishing the new session must not reveal destructive controls.
+                        startingQuiz = true
+                        app.startQuiz(count: count, timed: timed)
+                        quizPresented = true
+                    }.disabled(startingQuiz).accessibilityIdentifier("quiz.start")
+                }
+            }
+        }.onChange(of: quizPresented) { presented in
+            if !presented { startingQuiz = false }
+        }.alert(app.text("quiz.leave_title"), isPresented: $replace) {
+            Button(app.text("native.discard"), role: .destructive) { app.discardQuiz() }
+            Button(app.text("quiz.leave_cancel"), role: .cancel) {}
+        } message: { Text(app.text("quiz.leave_warning")) }
+    }
+}
+
+struct PracticeHomeView: View {
+    @EnvironmentObject private var app: AppState
+    @Binding var quizPresented: Bool
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                SectionHeading(title: app.text("native.practice_title"), detail: app.text("native.practice_detail"))
+                QuizSetupSection(quizPresented: $quizPresented)
+                NavigationLink(destination: PracticeView(questions: app.questions)) {
+                    FeatureTile(title: app.text("native.study"), detail: app.text("questions.description"), symbol: "rectangle.stack.fill", color: Playful.navy)
+                }.buttonStyle(PressableStyle())
+                NavigationLink(destination: RulesView()) {
+                    FeatureTile(title: app.text("rules.title"), detail: app.text("rule.description"), symbol: "book.closed.fill", color: Playful.gold)
+                }.buttonStyle(PressableStyle())
+            }.padding(20).padding(.bottom, 18).frame(maxWidth: 760).frame(maxWidth: .infinity)
+        }.background(PlayfulBackground())
+    }
+}
+
+struct RulesView: View {
+    @EnvironmentObject private var app: AppState
+    var body: some View {
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: 13) {
+                SectionHeading(title: app.text("native.rules_title"), detail: app.text("rules.description")).padding(.bottom, 10)
+                ForEach(Array(app.rules.enumerated()), id: \.element.id) { index, rule in
+                    let accent = [Playful.blue, Playful.gold, Playful.navy][index % 3]
+                    NavigationLink(destination: PracticeView(questions: app.questions.filter { $0.ruleId == rule.id }, title: "\(rule.number) · \(rule.name)")) {
+                        PaperCard {
+                            HStack(spacing: 16) {
+                                Text(rule.number).font(.system(.title3, design: .rounded).weight(.black))
+                                    .foregroundColor(accent).frame(minWidth: 52, minHeight: 52)
+                                    .background(accent.opacity(0.12)).clipShape(RoundedRectangle(cornerRadius: 17))
+                                VStack(alignment: .leading, spacing: 6) {
+                                    Text(rule.name).font(.system(.headline, design: .rounded).bold()).foregroundColor(.primary)
+                                    Text(app.text("native.questions", ["count": String(app.questions.filter { $0.ruleId == rule.id }.count)]))
+                                        .font(.caption).foregroundStyle(.secondary)
+                                }
+                                Spacer(minLength: 0)
+                                Image(systemName: "chevron.right").font(.caption.bold()).foregroundColor(accent)
+                            }
+                        }
+                    }.buttonStyle(PressableStyle())
+                }
+            }.padding(20).padding(.bottom, 18).frame(maxWidth: 760).frame(maxWidth: .infinity)
+        }.background(PlayfulBackground()).navigationTitle(app.text("rules.title")).navigationBarTitleDisplayMode(.inline)
+    }
+}
