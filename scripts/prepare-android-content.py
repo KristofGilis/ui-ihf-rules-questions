@@ -70,6 +70,7 @@ def main():
     resources.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(branding / "AppIcon.appiconset/AppIcon-512@2x.png", resources / "app_icon.png")
     shutil.copyfile(branding / "BrandMark.imageset/BrandMark@3x.png", resources / "brand_mark.png")
+    shutil.copyfile(branding / "LaunchMark.imageset/LaunchMark@3x.png", resources / "launcher_mark.png")
     digest = hashlib.sha256(json.dumps(pack, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     (ASSETS / "content-hash.txt").write_text(digest + "\n", encoding="ascii")
     print(f"Prepared {database.stat().st_size} bytes of offline content ({digest})")

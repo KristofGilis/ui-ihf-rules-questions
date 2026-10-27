@@ -25,11 +25,11 @@ Treat the current iOS implementation and `docs/NATIVE_PARITY.md` as the behavior
 
 ## Android-native design
 
-Use a Material 3 visual system consistent with the app's navy, blue, white and gold palette. Reuse the app's own handball/checkmark artwork, not IHF marks. Design Android screens independently from iOS while keeping terminology and workflows consistent.
+Use a Material 3 visual system consistent with the app's navy, blue, white and gold palette. Reuse the app's own handball/checkmark artwork, not IHF marks. Match the current iOS screens as closely as possible: reuse their hierarchy, screen grouping, card shapes, spacing, gradients, typography sizes and content placement. Keep Android-native navigation, control icons, switches, menus, dialogs, keyboard behavior and system bars.
 
 Use a bottom navigation bar on compact screens and an adaptive navigation rail or drawer on larger screens. Use the Android system back gesture, predictive back where supported, native dialogs/sheets, status/navigation bar insets, keyboard behavior, edge-to-edge layout and standard touch targets. Test light, dark and system appearance, font scaling, TalkBack, landscape/tablet layouts and narrow phones.
 
-Proposed initial top-level destinations: Home, Practice, Rules and Search. Settings is reached from a standard toolbar action. Final grouping can change after design review if every capability stays discoverable.
+Proposed initial top-level destinations: Home, Practice, Rules and Search. Settings is reached from a standard toolbar action. Keep this grouping aligned with iOS, including its Practice landing page and inline question-count/timer controls on Home and Practice.
 
 ## Architecture and data
 
@@ -117,11 +117,13 @@ Once the Android and iOS native apps are established and the user approves endin
 
 ## Implementation status and next actions
 
+The visual reference is iOS build 21 and the current SwiftUI sources. Android uses the same hero, quiz setup, study tiles, rules, answer cards, score ring, results, search states and grouped Settings structure, with platform-native controls and navigation. Home launches directly from its visible 10/15/20/30 selection and timed switch; saved sessions offer Resume/Review and Discard in the same place as iOS.
+
 The initial Kotlin/Compose implementation is in `android/`: shared iOS branding with an adaptive Android launcher icon and animated court, compact bottom navigation and a wide-screen navigation rail, localized Home/Rules/Practice/Search/Settings, local multilingual typo-tolerant search with exact identifier matches and result-to-practice navigation, question/rule practice with score and wrong-question jumps, randomized/timed quizzes with swipe navigation and review, private quiz restoration, and in-app Privacy/Support. Navigation and quiz/practice UI state survive the localized catalog reload; Android Back returns from root tabs to Home. Privacy and Support use the four-language native information catalog with Android-specific Google Play wording. It opens the validated shared SQLite asset with Android's platform SQLite API. `scripts/prepare-android-content.py` prepares the offline content, information and branding assets and the independent Android workflow uses the checksum-pinned Gradle wrapper to run `lintDebug`, `assembleDebug`, `assembleRelease` and `bundleRelease` on Linux. It can also be started manually. The compatible Compose 1.9.4/Material 3 1.4.0 BOM is pinned to keep the API 36/AGP 8.13.2 toolchain coherent.
 
 Next actions:
 
-1. Complete the Android emulator journeys and record the visual/behavior review. Local debug and unsigned release compilation and Android lint pass; first launch in airplane mode opens the bundled Home content. The repository includes the Gradle wrapper, and an isolated local JDK/SDK was used for verification.
+1. Complete the Android emulator journeys and record the visual/behavior review. Local debug and unsigned release compilation and Android lint pass; first launch in airplane mode opens the bundled Home content. A 20-question timed quiz starts with 30 minutes; selected answers survive swipe/previous navigation, and native exit confirmation returns to Home. Grouped Settings, exact-number search and practice are reviewed in the emulator. A correct single-question attempt calculates 100.00%, keeps the percentage on one line, and scrolls to the score on the first tap. The repository includes the Gradle wrapper, and an isolated local JDK/SDK was used for verification.
 2. Review compact/wide layouts, TalkBack labels, large text, system bar colors, long translations and the end-to-end flows on phone/tablet emulators.
 3. Add domain and instrumentation coverage when authorized, and reconcile scoring/search against the shared iOS/API fixtures. No Android automated tests have been added or run in this implementation.
 4. Verify the existing Play Console record, package ID, owner/device gates and signing lineage; set the release version code above all existing uploads.

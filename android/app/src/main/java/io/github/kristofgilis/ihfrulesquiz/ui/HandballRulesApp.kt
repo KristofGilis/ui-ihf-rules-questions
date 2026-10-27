@@ -9,6 +9,15 @@ import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.Layers
+import androidx.compose.material.icons.filled.Inventory2
+import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +32,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -53,8 +63,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -106,8 +118,8 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 private enum class Destination { Home, Practice, Rules, Search }
-private data class AppContent(val repository: ContentRepository, val locale: String, val strings: Map<String, String>, val rules: List<Rule>, val questions: List<Question>, val searchDocuments: List<Pair<String, String>>, val restoredQuiz: QuizState?)
-private data class QuizState(val questions: List<Question>, val selections: Map<String, Set<String>>, val index: Int, val startedAt: Long, val deadline: Long?, val completedAt: Long?, val language: String)
+internal data class AppContent(val repository: ContentRepository, val locale: String, val strings: Map<String, String>, val rules: List<Rule>, val questions: List<Question>, val searchDocuments: List<Pair<String, String>>, val restoredQuiz: QuizState?)
+internal data class QuizState(val questions: List<Question>, val selections: Map<String, Set<String>>, val index: Int, val startedAt: Long, val deadline: Long?, val completedAt: Long?, val language: String)
 
 @Composable
 fun HandballRulesApp() {
@@ -119,7 +131,8 @@ fun HandballRulesApp() {
     var settings by remember { mutableStateOf(false) }
     var infoPage by remember { mutableStateOf<String?>(null) }
     var confirmQuizExit by remember { mutableStateOf(false) }
-    var quizSetup by remember { mutableStateOf(false) }
+    var quizPresented by remember { mutableStateOf(false) }
+    var studyAll by remember { mutableStateOf(false) }
     var quiz by remember { mutableStateOf<QuizState?>(null) }
     var quizHydrated by remember { mutableStateOf(false) }
     var timerNow by remember { mutableLongStateOf(System.currentTimeMillis()) }
@@ -162,16 +175,18 @@ fun HandballRulesApp() {
                             selectedRule = null
                         }
                         LaunchedEffect(appearance) { prefs.edit { putString("appearance", appearance) } }
-                        BackHandler(enabled = settings || infoPage != null || selectedRule != null || selectedSearchQuestion != null || quiz != null || destination != Destination.Home) {
+                        val navigateBack: () -> Unit = {
                             when {
                                 infoPage != null -> infoPage = null
                                 settings -> settings = false
+                                quizPresented -> if (quiz?.completedAt == null) confirmQuizExit = true else quizPresented = false
                                 selectedSearchQuestion != null -> selectedSearchQuestion = null
                                 selectedRule != null -> selectedRule = null
-                                quiz != null -> if (quiz?.completedAt == null) confirmQuizExit = true else quiz = null
+                                studyAll -> studyAll = false
                                 destination != Destination.Home -> destination = Destination.Home
                             }
                         }
+                        BackHandler(enabled = settings || infoPage != null || selectedRule != null || selectedSearchQuestion != null || quizPresented || studyAll || destination != Destination.Home, onBack = navigateBack)
                         LaunchedEffect(quiz?.deadline, quiz?.completedAt) {
                             val deadline = quiz?.deadline ?: return@LaunchedEffect
                             while (quiz?.completedAt == null && System.currentTimeMillis() < deadline) {
@@ -189,8 +204,10 @@ fun HandballRulesApp() {
                         val title = when {
                             infoPage != null -> app.text(if (infoPage == "privacy") "privacy.title" else "support.title")
                             settings -> app.text("settings.title")
+                            quizPresented -> app.text(if (quiz?.completedAt == null) "navigation.quiz" else "quiz_results.title")
                             selectedRule != null -> "${selectedRule!!.number} · ${selectedRule!!.name}"
                             selectedSearchQuestion != null -> selectedSearchQuestion!!.number
+                            studyAll -> app.text("questions.title")
                             else -> when (destination) {
                                 Destination.Home -> "Handball Rules Quiz"
                                 Destination.Practice -> app.text("native.practice")
@@ -200,74 +217,93 @@ fun HandballRulesApp() {
                         }
                         Scaffold(
                             topBar = {
-                                Row(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = 16.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                                    if (destination == Destination.Home && !settings && selectedRule == null) {
-                                        Image(painterResource(R.drawable.brand_mark), contentDescription = null, modifier = Modifier.size(42.dp))
-                                        Spacer(Modifier.width(10.dp))
+                                val nested = settings || infoPage != null || selectedRule != null || selectedSearchQuestion != null || studyAll || quizPresented
+                                Row(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = 8.dp, vertical = 4.dp).heightIn(min = 56.dp), verticalAlignment = Alignment.CenterVertically) {
+                                    if (nested) IconButton(navigateBack) { Icon(if (settings || quizPresented) Icons.Default.Close else Icons.AutoMirrored.Filled.ArrowBack, app.text("native.close")) }
+                                    else Spacer(Modifier.width(48.dp))
+                                    Row(Modifier.weight(1f), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+                                        if (destination == Destination.Home && !nested) {
+                                            Image(painterResource(R.drawable.brand_mark), null, Modifier.size(40.dp)); Spacer(Modifier.width(8.dp))
+                                        }
+                                        Text(title, fontSize = 17.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
                                     }
-                                    Text(title, Modifier.weight(1f), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                                    IconButton(onClick = { settings = !settings; infoPage = null; selectedRule = null }) { Icon(Icons.Default.Settings, contentDescription = app.text("settings.title")) }
+                                    if (quizPresented) {
+                                        val deadline = quiz?.deadline
+                                        if (deadline != null && quiz?.completedAt == null) {
+                                            val seconds = ((deadline - timerNow).coerceAtLeast(0) + 999) / 1000
+                                            TinyBadge("${seconds / 60}:${(seconds % 60).toString().padStart(2, '0')}", color = if (seconds < 60) MaterialTheme.colorScheme.error else Brand.navy())
+                                        } else Spacer(Modifier.width(48.dp))
+                                    } else if (!settings && infoPage == null) {
+                                        IconButton(onClick = { settings = true }) { Icon(Icons.Default.Tune, app.text("settings.title")) }
+                                    } else Spacer(Modifier.width(48.dp))
                                 }
                             },
                             bottomBar = {
-                                if (!wideLayout && !settings && infoPage == null && selectedRule == null && selectedSearchQuestion == null && quiz == null) NavigationBar {
+                                if (!wideLayout && !settings && infoPage == null && selectedRule == null && selectedSearchQuestion == null && !quizPresented && !studyAll) NavigationBar {
                                     listOf(
                                         Destination.Home to (app.text("navigation.home") to Icons.Default.Home),
-                                        Destination.Practice to (app.text("native.practice") to Icons.Default.PlayCircle),
+                                        Destination.Practice to (app.text("native.practice") to Icons.Default.Bolt),
                                         Destination.Rules to (app.text("navigation.rules") to Icons.Default.Book),
                                         Destination.Search to (app.text("navigation.search") to Icons.Default.Search),
                                     ).forEach { (item, pair) ->
                                         NavigationBarItem(selected = destination == item, onClick = {
                                             if (destination != item) { answers.clear(); revealed.clear(); practiceScore = null; selectedRule = null; selectedSearchQuestion = null }
                                             destination = item
-                                        }, icon = { Icon(pair.second, null) }, label = { Text(pair.first, maxLines = 1) })
+                                        }, icon = { Icon(pair.second, null) }, label = { Text(pair.first, maxLines = 1) }, colors = NavigationBarItemDefaults.colors(selectedIconColor = Brand.blue(), selectedTextColor = Brand.blue(), indicatorColor = Brand.blue().copy(alpha = .10f)))
                                     }
                                 }
                             },
                         ) { insets ->
                             Row(Modifier.fillMaxSize()) {
-                                if (wideLayout && !settings && infoPage == null && selectedRule == null && selectedSearchQuestion == null && quiz == null) {
-                                    NavigationRail(modifier = Modifier.padding(insets)) {
+                                if (wideLayout && !settings && infoPage == null && selectedRule == null && selectedSearchQuestion == null && !quizPresented && !studyAll) {
+                                    NavigationRail(modifier = Modifier.padding(insets).widthIn(max = 760.dp)) {
                                         listOf(
                                             Destination.Home to (app.text("navigation.home") to Icons.Default.Home),
-                                            Destination.Practice to (app.text("native.practice") to Icons.Default.PlayCircle),
+                                            Destination.Practice to (app.text("native.practice") to Icons.Default.Bolt),
                                             Destination.Rules to (app.text("navigation.rules") to Icons.Default.Book),
                                             Destination.Search to (app.text("navigation.search") to Icons.Default.Search),
                                         ).forEach { (item, pair) ->
                                             NavigationRailItem(selected = destination == item, onClick = {
                                                 if (destination != item) { answers.clear(); revealed.clear(); practiceScore = null }
                                                 destination = item
-                                            }, icon = { Icon(pair.second, null) }, label = { Text(pair.first) }, alwaysShowLabel = true)
+                                            }, icon = { Icon(pair.second, null) }, label = { Text(pair.first) }, alwaysShowLabel = true, colors = NavigationRailItemDefaults.colors(selectedIconColor = Brand.blue(), selectedTextColor = Brand.blue(), indicatorColor = Brand.blue().copy(alpha = .10f)))
                                         }
                                     }
                                 }
-                                Box(Modifier.weight(1f).fillMaxSize()) { when {
-                                infoPage != null -> InformationScreen(app, infoPage!!, modifier = Modifier.padding(insets))
-                                settings -> SettingsScreen(app, locale, appearance, onLanguage = { locale = it }, onAppearance = { appearance = it }, onInfo = { infoPage = it }, modifier = Modifier.padding(insets))
-                                quiz != null -> QuizScreen(app, quiz!!, timerNow, onUpdate = { quiz = it }, onClose = { if (quiz?.completedAt == null) confirmQuizExit = true else quiz = null }, onNewQuiz = { quiz = null; quizSetup = true }, modifier = Modifier.padding(insets))
+                                Box(Modifier.weight(1f).fillMaxSize(), contentAlignment = Alignment.TopCenter) { when {
+                                infoPage != null -> InformationScreen(app, infoPage!!, modifier = Modifier.padding(insets).widthIn(max = 760.dp))
+                                settings -> SettingsScreen(app, locale, appearance, onLanguage = { locale = it }, onAppearance = { appearance = it }, onInfo = { infoPage = it }, modifier = Modifier.padding(insets).widthIn(max = 760.dp))
+                                quizPresented && quiz != null -> QuizScreen(app, quiz!!, onUpdate = { quiz = it }, onNewQuiz = { quiz = null; quizPresented = false; destination = Destination.Home }, onRule = { selectedRule = it; quizPresented = false; answers.clear(); revealed.clear(); practiceScore = null }, modifier = Modifier.padding(insets).widthIn(max = 760.dp))
                                 selectedSearchQuestion != null -> PracticeScreen(
                                     app, listOf(selectedSearchQuestion!!), answers, revealed, practiceScore,
                                     onScore = { practiceScore = it },
                                     onSelect = { q, a -> val old = answers[q].orEmpty(); answers[q] = if (a in old) old - a else old + a; practiceScore = null },
                                     onReveal = { q -> val showing = revealed[q] != true; if (showing) { answers.clear(); practiceScore = null }; revealed[q] = showing },
                                     onReset = { answers.clear(); revealed.clear(); practiceScore = null },
-                                    onRule = { rule -> selectedSearchQuestion = null; selectedRule = rule; answers.clear(); revealed.clear(); practiceScore = null }, modifier = Modifier.padding(insets),
+                                    onRule = { rule -> selectedSearchQuestion = null; selectedRule = rule; answers.clear(); revealed.clear(); practiceScore = null }, modifier = Modifier.padding(insets).widthIn(max = 760.dp),
                                 )
                                 selectedRule != null -> PracticeScreen(
                                     app, app.questions.filter { it.ruleId == selectedRule!!.id }, answers, revealed,
                                     practiceScore, onScore = { practiceScore = it }, onSelect = { q, a -> answers[q] = (answers[q].orEmpty() + a).let { now -> if (a in answers[q].orEmpty()) now - a else now }; practiceScore = null },
                                     onReveal = { q -> val showing = revealed[q] != true; if (showing) { answers.clear(); practiceScore = null }; revealed[q] = showing },
-                                    onReset = { answers.clear(); revealed.clear(); practiceScore = null }, onRule = { selectedRule = it; answers.clear(); revealed.clear(); practiceScore = null }, modifier = Modifier.padding(insets),
+                                    onReset = { answers.clear(); revealed.clear(); practiceScore = null }, onRule = { selectedRule = it; answers.clear(); revealed.clear(); practiceScore = null }, modifier = Modifier.padding(insets).widthIn(max = 760.dp),
                                 )
-                                destination == Destination.Home -> HomeScreen(app, onQuiz = { quizSetup = true }, onRules = { destination = Destination.Rules }, onPractice = { destination = Destination.Practice }, modifier = Modifier.padding(insets))
-                                destination == Destination.Rules -> RulesScreen(app, onRule = { answers.clear(); revealed.clear(); practiceScore = null; selectedRule = it }, modifier = Modifier.padding(insets))
-                                destination == Destination.Search -> SearchScreen(app, query, { query = it }, { selectedSearchQuestion = it }, modifier = Modifier.padding(insets))
+                                destination == Destination.Home && !studyAll -> HomeScreen(app, quizCount, timed, quiz, { quizCount = it }, { timed = it },
+                                    onQuiz = { timerNow = System.currentTimeMillis(); quiz = freshQuiz(app.questions, quizCount, timed, locale); quizPresented = true },
+                                    onResume = { quizPresented = true }, onDiscard = { confirmQuizExit = true },
+                                    onRules = { destination = Destination.Rules }, onPractice = { studyAll = true }, modifier = Modifier.padding(insets).widthIn(max = 760.dp))
+                                destination == Destination.Practice && !studyAll -> PracticeHomeScreen(app, quizCount, timed, quiz, { quizCount = it }, { timed = it },
+                                    onQuiz = { timerNow = System.currentTimeMillis(); quiz = freshQuiz(app.questions, quizCount, timed, locale); quizPresented = true },
+                                    onResume = { quizPresented = true }, onDiscard = { confirmQuizExit = true },
+                                    onRules = { destination = Destination.Rules }, onPractice = { studyAll = true }, modifier = Modifier.padding(insets).widthIn(max = 760.dp))
+                                destination == Destination.Rules && !studyAll -> RulesScreen(app, onRule = { answers.clear(); revealed.clear(); practiceScore = null; selectedRule = it }, modifier = Modifier.padding(insets).widthIn(max = 760.dp))
+                                destination == Destination.Search && !studyAll -> SearchScreen(app, query, { query = it }, { selectedSearchQuestion = it }, modifier = Modifier.padding(insets).widthIn(max = 760.dp))
                                 else -> PracticeScreen(
                                     app, app.questions, answers, revealed, practiceScore,
                                     onScore = { practiceScore = it },
                                     onSelect = { q, a -> val old = answers[q].orEmpty(); answers[q] = if (a in old) old - a else old + a; practiceScore = null },
                                     onReveal = { q -> val showing = revealed[q] != true; if (showing) { answers.clear(); practiceScore = null }; revealed[q] = showing },
-                                    onReset = { answers.clear(); revealed.clear(); practiceScore = null }, onRule = { selectedRule = it; answers.clear(); revealed.clear(); practiceScore = null }, modifier = Modifier.padding(insets),
+                                    onReset = { answers.clear(); revealed.clear(); practiceScore = null }, onRule = { selectedRule = it; answers.clear(); revealed.clear(); practiceScore = null }, modifier = Modifier.padding(insets).widthIn(max = 760.dp),
                                 )
                                 } }
                             }
@@ -276,15 +312,9 @@ fun HandballRulesApp() {
                             onDismissRequest = { confirmQuizExit = false },
                             title = { Text(app.text("quiz.leave_title")) },
                             text = { Text(app.text("quiz.leave_warning")) },
-                            confirmButton = { TextButton(onClick = { confirmQuizExit = false; quiz = null }) { Text(app.text("quiz.leave_confirm")) } },
+                            confirmButton = { TextButton(onClick = { confirmQuizExit = false; quiz = null; quizPresented = false }) { Text(app.text("quiz.leave_confirm")) } },
                             dismissButton = { TextButton(onClick = { confirmQuizExit = false }) { Text(app.text("quiz.leave_cancel")) } },
                         )
-                        if (quizSetup) QuizSetupDialog(app, quizCount, timed, { quizCount = it }, { timed = it }, onDismiss = { quizSetup = false }) {
-                            val selected = app.questions.shuffled().take(quizCount).map { q -> q.copy(answers = q.answers.shuffled()) }
-                            val start = System.currentTimeMillis()
-                            quiz = QuizState(selected, emptyMap(), 0, start, if (timed) start + selected.size * 90_000L else null, null, locale)
-                            quizSetup = false
-                        }
                     },
                     onFailure = { ErrorScreen(it.localizedMessage ?: "Content unavailable") },
                 )
@@ -300,269 +330,59 @@ private fun systemLanguage(): String = when (Locale.getDefault().language) {
     else -> "en"
 }
 
-private fun AppContent.text(key: String): String = strings[key] ?: key
-private fun AppContent.text(key: String, values: Map<String, String>): String = values.entries.fold(text(key)) { current, entry -> current.replace("{{${entry.key}}}", entry.value) }
+internal fun AppContent.text(key: String): String = strings[key] ?: key
+internal fun AppContent.text(key: String, values: Map<String, String>): String = values.entries.fold(text(key)) { current, entry -> current.replace("{{${entry.key}}}", entry.value) }
 
 @Composable private fun LoadingScreen() = Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) { CircularProgressIndicator(); Spacer(Modifier.height(14.dp)); Text("Handball Rules Quiz") }
 @Composable private fun ErrorScreen(detail: String) = Column(Modifier.fillMaxSize().padding(28.dp), verticalArrangement = Arrangement.Center) { Text("Handball Rules Quiz", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold); Spacer(Modifier.height(10.dp)); Text(detail) }
 
+private fun freshQuiz(questions: List<Question>, count: Int, timed: Boolean, language: String): QuizState {
+    val selected = questions.shuffled().take(count).map { it.copy(answers = it.answers.shuffled()) }
+    val start = System.currentTimeMillis()
+    return QuizState(selected, emptyMap(), 0, start, if (timed) start + selected.size * 90_000L else null, null, language)
+}
+
 @Composable
-private fun HomeScreen(app: AppContent, onQuiz: () -> Unit, onRules: () -> Unit, onPractice: () -> Unit, modifier: Modifier = Modifier) {
+private fun HomeScreen(app: AppContent, count: Int, timed: Boolean, session: QuizState?, onCount: (Int) -> Unit, onTimed: (Boolean) -> Unit,
+    onQuiz: () -> Unit, onResume: () -> Unit, onDiscard: () -> Unit, onRules: () -> Unit, onPractice: () -> Unit, modifier: Modifier = Modifier) {
     val courtMotion = rememberInfiniteTransition(label = "home-court-motion")
     val motionAllowed = remember { Build.VERSION.SDK_INT < 26 || ValueAnimator.areAnimatorsEnabled() }
-    val animatedOffset by courtMotion.animateFloat(-4f, 4f, infiniteRepeatable(tween(2200), RepeatMode.Reverse), label = "court-offset")
-    val courtOffset = if (motionAllowed) animatedOffset else 0f
-    Column(modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(18.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF00206D)), shape = RoundedCornerShape(28.dp)) {
-            Row(Modifier.fillMaxWidth().padding(22.dp), verticalAlignment = Alignment.CenterVertically) {
-                Column(Modifier.weight(1f)) {
-                    Text(app.text("native.hero_eyebrow"), color = Color(0xFFE8C969), style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
-                    Spacer(Modifier.height(8.dp))
-                    Text(app.text("native.hero_title").replace("\n", " "), color = Color.White, style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Black)
-                    Spacer(Modifier.height(12.dp))
-                    Text(app.text("native.practice_detail"), color = Color.White.copy(alpha = .84f), style = MaterialTheme.typography.bodyLarge)
-                }
-                CourtArtwork(Modifier.width(68.dp).offset(y = courtOffset.dp), height = 136.dp)
+    val offset by courtMotion.animateFloat(-6f, 6f, infiniteRepeatable(tween(2200), RepeatMode.Reverse), label = "court-offset")
+    Column(modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp), verticalArrangement = Arrangement.spacedBy(25.dp)) {
+        Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(31.dp)).background(Brush.linearGradient(listOf(Brand.buttonBlue, Brand.heroNavy))).padding(24.dp), verticalAlignment = Alignment.Top) {
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(11.dp)) {
+                Text(app.text("native.hero_eyebrow"), fontSize = 11.sp, letterSpacing = 1.2.sp, color = Color.White.copy(alpha = .76f), fontWeight = FontWeight.SemiBold)
+                Text(app.text("native.hero_title"), fontSize = 34.sp, lineHeight = 40.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+            }
+            if (LocalConfiguration.current.fontScale < 1.5f) Box(Modifier.width(90.dp).height(136.dp).padding(start = 12.dp), contentAlignment = Alignment.Center) {
+                CourtArtwork(Modifier.width(68.dp).offset(y = (if (motionAllowed) offset else 0f).dp), height = 136.dp)
             }
         }
-        Card(shape = RoundedCornerShape(26.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
-            Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text(app.text("home.quiz_card.title"), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                Text(app.text("native.quiz_invite"), color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Button(onClick = onQuiz, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(17.dp)) { Icon(Icons.Default.PlayCircle, null); Spacer(Modifier.width(8.dp)); Text(app.text("home.quiz_card.button")) }
+        QuizSetupSection(app, count, timed, session, onCount, onTimed, onQuiz, onResume, onDiscard)
+        SectionHeading(app.text("native.explore"), app.text("native.explore_detail"))
+        Row(Modifier.height(IntrinsicSize.Min), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+            FeatureTile(app.text("native.study"), app.text("native.questions", mapOf("count" to app.questions.size.toString())), Icons.Default.Layers, Brand.navy(), onPractice, Modifier.weight(1f).fillMaxHeight())
+            FeatureTile(app.text("rules.title"), app.text("native.rule_count", mapOf("count" to app.rules.size.toString())), Icons.Default.Book, Brand.gold(), onRules, Modifier.weight(1f).fillMaxHeight())
+        }
+        Row(Modifier.padding(horizontal = 5.dp), horizontalArrangement = Arrangement.spacedBy(11.dp)) {
+            Icon(Icons.Default.Inventory2, null, Modifier.size(18.dp), tint = Brand.blue())
+            Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                Text(app.text("native.content"), fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                Text(app.repository.edition(app.locale), fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
-        Row(Modifier.height(IntrinsicSize.Min), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            QuickCard(app.text("native.study_title"), app.text("native.questions", mapOf("count" to app.questions.size.toString())), Icons.Default.SportsHandball, Modifier.weight(1f).fillMaxHeight(), onPractice)
-            QuickCard(app.text("native.rules_title"), app.text("native.rule_count", mapOf("count" to app.rules.size.toString())), Icons.Default.Book, Modifier.weight(1f).fillMaxHeight(), onRules)
-        }
-        Text("${app.text("native.content")}: ${app.repository.edition(app.locale)}", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
-        Text("${app.text("native.version")} ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+        Text("${app.text("native.version")} ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})", Modifier.align(Alignment.CenterHorizontally), fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
 @Composable
-private fun QuickCard(title: String, detail: String, icon: androidx.compose.ui.graphics.vector.ImageVector, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Card(modifier.clickable(onClick = onClick), shape = RoundedCornerShape(23.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) { Icon(icon, null, tint = MaterialTheme.colorScheme.primary); Text(title, fontWeight = FontWeight.Bold); Text(detail, style = MaterialTheme.typography.bodySmall) }
-    }
-}
-
-@Composable
-private fun RulesScreen(app: AppContent, onRule: (Rule) -> Unit, modifier: Modifier = Modifier) {
-    LazyColumn(modifier.fillMaxSize(), contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        item { Text(app.text("rules.description"), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 5.dp)) }
-        items(app.rules, key = Rule::id) { rule ->
-            Card(Modifier.fillMaxWidth().clickable { onRule(rule) }, shape = RoundedCornerShape(20.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
-                Row(Modifier.padding(17.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Text(rule.number, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black)
-                    Spacer(Modifier.width(14.dp))
-                    Column(Modifier.weight(1f)) { Text(rule.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold); Text(app.text("native.questions", mapOf("count" to app.questions.count { it.ruleId == rule.id }.toString())), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
-            Icon(Icons.Default.PlayCircle, null, tint = MaterialTheme.colorScheme.primary)
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun SearchScreen(app: AppContent, query: String, onQuery: (String) -> Unit, onQuestion: (Question) -> Unit, modifier: Modifier = Modifier) {
-    val matching by produceState(initialValue = emptySet<String>(), query, app.searchDocuments) {
-        value = withContext(Dispatchers.Default) { LocalSearch.matchingIds(query, app.searchDocuments) }
-    }
-    Column(modifier.fillMaxSize()) {
-        OutlinedTextField(query, onQuery, Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 10.dp), placeholder = { Text(app.text("search.placeholder")) }, leadingIcon = { Icon(Icons.AutoMirrored.Filled.ManageSearch, null) }, singleLine = true, shape = RoundedCornerShape(18.dp))
-        if (query.isNotBlank() && matching.isEmpty()) Text(app.text("search.no_results"), Modifier.padding(20.dp), color = MaterialTheme.colorScheme.onSurfaceVariant)
-        LazyColumn(Modifier.weight(1f), contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            items(app.questions.filter { it.id in matching }, key = Question::id) { question ->
-                Card(onClick = { onQuestion(question) }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
-                    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(question.number, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
-                        Text(question.phrase, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                        Text(question.answers.joinToString("  ·  ") { it.phrase }, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 3, overflow = TextOverflow.Ellipsis)
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun PracticeScreen(
-    app: AppContent, questions: List<Question>, selections: MutableMap<String, Set<String>>, revealed: MutableMap<String, Boolean>, score: QuizScore?,
-    onScore: (QuizScore?) -> Unit, onSelect: (String, String) -> Unit, onReveal: (String) -> Unit, onReset: () -> Unit, modifier: Modifier = Modifier, onRule: (Rule) -> Unit = {},
-) {
-    val listState = rememberLazyListState()
-    val scope = rememberCoroutineScope()
-    Column(modifier.fillMaxSize()) {
-        Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text(app.text("native.questions", mapOf("count" to questions.size.toString())), Modifier.weight(1f), color = MaterialTheme.colorScheme.onSurfaceVariant)
-            TextButton(onClick = onReset) { Text(app.text("native.reset")) }
-            TextButton(onClick = {
-                val allRevealed = questions.isNotEmpty() && questions.all { revealed[it.id] == true }
-                val showAll = !allRevealed
-                if (showAll) { selections.clear(); onScore(null) }
-                questions.forEach { revealed[it.id] = showAll }
-            }) { Text(app.text(if (questions.isNotEmpty() && questions.all { revealed[it.id] == true }) "native.hide_all" else "native.show_all")) }
-        }
-        if (score != null) ScoreCard(app, score)
-        if (score != null && score.wrongQuestionIds.isNotEmpty()) {
-            LazyRow(contentPadding = PaddingValues(horizontal = 14.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(questions.filter { it.id in score.wrongQuestionIds }, key = Question::id) { question ->
-                    FilterChip(selected = false, onClick = { scope.launch { listState.animateScrollToItem(questions.indexOfFirst { it.id == question.id }) } }, label = { Text(question.number) })
-                }
-            }
-        }
-        LazyColumn(state = listState, modifier = Modifier.weight(1f), contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            items(questions, key = Question::id) { question ->
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("${question.number}  ${question.phrase}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    question.answers.forEach { answer -> QuestionAnswer(app, answer, answer.id in selections[question.id].orEmpty(), revealed[question.id] == true, { onSelect(question.id, answer.id) }, enabled = revealed[question.id] != true) }
-                    TextButton(onClick = { onReveal(question.id) }) { Text(app.text(if (revealed[question.id] == true) "native.hide_answer" else "native.show_answer")) }
-                    if (revealed[question.id] == true && question.references.isNotEmpty()) {
-                        Text(question.references.joinToString(), color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
-                        app.rules.firstOrNull { it.id == question.ruleId }?.let { rule ->
-                            TextButton(onClick = { onRule(rule) }) { Text("${rule.number} · ${rule.name}") }
-                        }
-                    }
-                }
-            }
-        }
-        Button(onClick = { onScore(Scorer.calculate(questions, selections.toMap(), app.repository.scoring())) }, enabled = revealed.values.none { it }, modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 10.dp), shape = RoundedCornerShape(18.dp)) { Text(app.text("native.calculate")) }
-    }
-}
-
-@Composable
-private fun QuestionCard(app: AppContent, question: Question, selected: Set<String>, revealed: Boolean, showNumber: Boolean, onSelect: (String) -> Unit, onReveal: () -> Unit, showReveal: Boolean = true) {
-    Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(22.dp)).background(MaterialTheme.colorScheme.surface).padding(15.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text((if (showNumber) "${question.number}  " else "") + question.phrase, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-        question.answers.forEach { QuestionAnswer(app, it, it.id in selected, revealed, { onSelect(it.id) }, enabled = false) }
-        if (revealed && question.references.isNotEmpty()) Text(question.references.joinToString(), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        if (!revealed && showReveal) TextButton(onClick = onReveal) { Text(app.text("native.show_answer")) }
-    }
-}
-
-@Composable
-private fun QuestionAnswer(app: AppContent, answer: Answer, selected: Boolean, revealed: Boolean, onClick: () -> Unit, showNumber: Boolean = true, enabled: Boolean = true) {
-    val correct = revealed && answer.isCorrect
-    val wrong = revealed && selected && !answer.isCorrect
-    val tint = when { correct -> Color(0xFF198754); wrong -> Color(0xFFBD3D48); selected -> MaterialTheme.colorScheme.primary; else -> MaterialTheme.colorScheme.surfaceVariant }
-    Card(onClick = onClick, enabled = enabled, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(17.dp), colors = CardDefaults.cardColors(containerColor = if (selected || correct || wrong) tint.copy(alpha = .12f) else MaterialTheme.colorScheme.surfaceVariant)) {
-        Row(Modifier.padding(13.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text(if (correct || selected) "✓" else if (showNumber) answer.number.uppercase() else "", Modifier.size(32.dp).clip(RoundedCornerShape(10.dp)).background(tint).padding(top = 6.dp), color = if (correct || selected || wrong) Color.White else MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
-            Spacer(Modifier.width(12.dp)); Text(answer.phrase, Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge)
-        }
-    }
-}
-
-@Composable
-private fun ScoreCard(app: AppContent, score: QuizScore) {
-    Card(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp), shape = RoundedCornerShape(22.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
-        Row(Modifier.padding(18.dp), verticalAlignment = Alignment.CenterVertically) { Icon(Icons.Default.Star, null, tint = MaterialTheme.colorScheme.secondary); Spacer(Modifier.width(12.dp)); Column { Text("${"%.2f".format(Locale.ROOT, score.percentage)}%", fontSize = 28.sp, fontWeight = FontWeight.Black); Text(app.text("native.score", mapOf("score" to score.points.toString(), "total" to score.total.toString()))) } }
-    }
-}
-
-@Composable
-private fun QuizSetupDialog(app: AppContent, count: Int, timed: Boolean, onCount: (Int) -> Unit, onTimed: (Boolean) -> Unit, onDismiss: () -> Unit, onStart: () -> Unit) {
-    AlertDialog(onDismissRequest = onDismiss, title = { Text(app.text("home.quiz_card.title")) }, text = {
-        Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            Text(app.text("home.quiz_card.count"))
-            Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) { listOf(10, 15, 20, 30).forEach { FilterChip(selected = count == it, onClick = { onCount(it) }, label = { Text(it.toString()) }) } }
-            Row(verticalAlignment = Alignment.CenterVertically) { Column(Modifier.weight(1f)) { Text(app.text("native.timed_label")); Text(app.text("native.timed_detail"), style = MaterialTheme.typography.bodySmall) }; Switch(timed, onTimed) }
-        }
-    }, confirmButton = { Button(onClick = onStart) { Text(app.text("home.quiz_card.button")) } }, dismissButton = { TextButton(onClick = onDismiss) { Text(app.text("native.close")) } })
-}
-
-@Composable
-private fun QuizScreen(app: AppContent, quiz: QuizState, timerNow: Long, onUpdate: (QuizState) -> Unit, onClose: () -> Unit, onNewQuiz: () -> Unit, modifier: Modifier = Modifier) {
-    val current = quiz.questions.getOrNull(quiz.index)
-    if (quiz.completedAt != null) {
-        val score = Scorer.calculate(quiz.questions, quiz.selections, app.repository.scoring())
-        Column(modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(18.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            Text(app.text("quiz_results.title"), style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Black)
-            ScoreCard(app, score)
-            val correctQuestions = quiz.questions.size - score.wrongQuestionIds.size
-            val elapsed = ((quiz.completedAt - quiz.startedAt).coerceAtLeast(0) / 1000)
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Card(Modifier.weight(1f), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
-                    Column(Modifier.padding(14.dp)) { Text(app.text("quiz_results.correct"), color = MaterialTheme.colorScheme.onSurfaceVariant); Text(correctQuestions.toString(), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold) }
-                }
-                Card(Modifier.weight(1f), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
-                    Column(Modifier.padding(14.dp)) { Text(app.text("quiz_results.wrong"), color = MaterialTheme.colorScheme.onSurfaceVariant); Text(score.wrongQuestionIds.size.toString(), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold) }
-                }
-                if (quiz.deadline != null) Card(Modifier.weight(1f), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
-                    Column(Modifier.padding(14.dp)) { Text(app.text("quiz_results.completion_time"), color = MaterialTheme.colorScheme.onSurfaceVariant); Text("${elapsed / 60}:${(elapsed % 60).toString().padStart(2, '0')}", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold) }
-                }
-            }
-            Text(app.text("native.review_detail"), color = MaterialTheme.colorScheme.onSurfaceVariant)
-            quiz.questions.forEach { question -> QuestionCard(app, question, quiz.selections[question.id].orEmpty(), true, true, {}, {}) }
-            Button(onClick = onNewQuiz, modifier = Modifier.fillMaxWidth()) { Text(app.text("quiz_results.retake")) }
-            OutlinedButton(onClick = onClose, modifier = Modifier.fillMaxWidth()) { Text(app.text("navigation.home")) }
-        }
-        return
-    }
-    Column(modifier.fillMaxSize().padding(18.dp).pointerInput(quiz.index) {
-        var dragDistance = 0f
-        val threshold = 72.dp.toPx()
-        detectHorizontalDragGestures(
-            onDragEnd = {
-                if (dragDistance > threshold && quiz.index > 0) onUpdate(quiz.copy(index = quiz.index - 1))
-                if (dragDistance < -threshold && quiz.index < quiz.questions.lastIndex) onUpdate(quiz.copy(index = quiz.index + 1))
-                dragDistance = 0f
-            },
-            onHorizontalDrag = { change, amount -> change.consume(); dragDistance += amount },
-        )
-    }) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(app.text("native.question_progress", mapOf("current" to (quiz.index + 1).toString(), "total" to quiz.questions.size.toString())), Modifier.weight(1f), color = MaterialTheme.colorScheme.onSurfaceVariant)
-            if (quiz.deadline != null) {
-                val seconds = ((quiz.deadline - timerNow).coerceAtLeast(0) / 1000)
-                Text("${app.text("native.remaining")}: ${seconds / 60}:${(seconds % 60).toString().padStart(2, '0')}", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
-            }
-            TextButton(onClick = onClose) { Text(app.text("native.close")) }
-        }
-        Column(Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()).padding(vertical = 14.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            current?.let { question ->
-                Text(question.phrase, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                Text(app.text("quiz.select_answers"), color = MaterialTheme.colorScheme.onSurfaceVariant)
-                question.answers.forEach { answer -> QuestionAnswer(app, answer, answer.id in quiz.selections[question.id].orEmpty(), false, {
-                    val selected = quiz.selections[question.id].orEmpty().toMutableSet()
-                    if (!selected.add(answer.id)) selected.remove(answer.id)
-                    onUpdate(quiz.copy(selections = quiz.selections + (question.id to selected)))
-                }, showNumber = false) }
-            }
-        }
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            OutlinedButton(onClick = { onUpdate(quiz.copy(index = (quiz.index - 1).coerceAtLeast(0))) }, enabled = quiz.index > 0, modifier = Modifier.weight(1f)) { Text(app.text("quiz.previous")) }
-            Button(onClick = {
-                if (quiz.index == quiz.questions.lastIndex) {
-                    val now = System.currentTimeMillis()
-                    onUpdate(quiz.copy(completedAt = minOf(now, quiz.deadline ?: now)))
-                } else onUpdate(quiz.copy(index = quiz.index + 1))
-            }, modifier = Modifier.weight(1f)) { Text(app.text(if (quiz.index == quiz.questions.lastIndex) "native.finish" else "quiz.next")) }
-        }
-    }
-}
-
-@Composable
-private fun SettingsScreen(app: AppContent, locale: String, appearance: String, onLanguage: (String) -> Unit, onAppearance: (String) -> Unit, onInfo: (String) -> Unit, modifier: Modifier = Modifier) {
-    Column(modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(18.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-        Text(app.text("settings.description"), color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Text(app.text("settings.language_section"), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-        listOf("en" to "English", "nl" to "Nederlands", "fr" to "Français", "srb" to "Српски").forEach { (code, label) ->
-            FilterChip(selected = locale == code, onClick = { onLanguage(code) }, label = { Text(label) })
-        }
-        Text(app.text("settings.theme_section"), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-        listOf("system" to app.text("theme.system"), "light" to app.text("theme.light"), "dark" to app.text("theme.dark")).forEach { (mode, label) ->
-            FilterChip(selected = appearance == mode, onClick = { onAppearance(mode) }, label = { Text(label) })
-        }
-        Text(app.text("native.content"), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-        Text(app.repository.edition(locale), color = MaterialTheme.colorScheme.onSurfaceVariant)
-        OutlinedButton(onClick = { onInfo("privacy") }, modifier = Modifier.fillMaxWidth()) { Text(app.text("privacy.title")) }
-        OutlinedButton(onClick = { onInfo("support") }, modifier = Modifier.fillMaxWidth()) { Text(app.text("support.title")) }
-        Text(app.text("native.licenses"), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-        Text("© 2026 Kristof Gilis", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Text(app.text("native.acknowledgements"), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+private fun PracticeHomeScreen(app: AppContent, count: Int, timed: Boolean, session: QuizState?, onCount: (Int) -> Unit, onTimed: (Boolean) -> Unit,
+    onQuiz: () -> Unit, onResume: () -> Unit, onDiscard: () -> Unit, onRules: () -> Unit, onPractice: () -> Unit, modifier: Modifier = Modifier) {
+    Column(modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp), verticalArrangement = Arrangement.spacedBy(24.dp)) {
+        SectionHeading(app.text("native.practice_title"), app.text("native.practice_detail"))
+        QuizSetupSection(app, count, timed, session, onCount, onTimed, onQuiz, onResume, onDiscard)
+        FeatureTile(app.text("native.study"), app.text("questions.description"), Icons.Default.Layers, Brand.navy(), onPractice)
+        FeatureTile(app.text("rules.title"), app.text("rule.description"), Icons.Default.Book, Brand.gold(), onRules)
     }
 }
 
@@ -635,7 +455,7 @@ private fun InformationScreen(app: AppContent, page: String, modifier: Modifier 
         "support.offline_heading" to "info.support.offline",
         "support.content_heading" to "support.content_details",
     )
-    Column(modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp), verticalArrangement = Arrangement.spacedBy(22.dp)) {
         if (privacy) {
             Text(app.text("info.privacy.updated"), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Text(app.text("info.privacy.intro"), style = MaterialTheme.typography.bodyLarge)
@@ -643,10 +463,10 @@ private fun InformationScreen(app: AppContent, page: String, modifier: Modifier 
             Text(app.text("info.support.intro"), style = MaterialTheme.typography.bodyLarge)
         }
         sections.forEach { (heading, body) ->
-            Card(shape = RoundedCornerShape(20.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
-                Column(Modifier.fillMaxWidth().padding(17.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            PaperCard {
+                Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(13.dp)) {
                     Text(app.text(heading), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    Text(app.text(body), style = MaterialTheme.typography.bodyMedium)
+                    Text(app.text(body), fontSize = 17.sp, lineHeight = 24.sp)
                     if (heading == "privacy.contact_label" || heading == "support.contact_heading") {
                         TextButton(onClick = { context.startActivity(Intent(Intent.ACTION_SENDTO, "mailto:kristof.gilis@outlook.be".toUri())) }) { Text("kristof.gilis@outlook.be") }
                     }

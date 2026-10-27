@@ -1,7 +1,7 @@
 <resources>
     <style name="Theme.HandballRulesQuiz" parent="Theme.HandballRulesQuiz.Base">
         <item name="android:windowLightNavigationBar">true</item>
-        <item name="android:windowSplashScreenBackground">#00206D</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/app_icon</item>
+        <item name="android:windowSplashScreenBackground">@color/launch_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/launcher_foreground</item>
     </style>
 </resources>

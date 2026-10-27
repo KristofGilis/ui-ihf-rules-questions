@@ -1,6 +1,6 @@
 <inset xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/brand_mark"
-    android:insetLeft="22dp"
-    android:insetTop="22dp"
-    android:insetRight="22dp"
-    android:insetBottom="22dp" />
+    android:drawable="@drawable/launcher_mark"
+    android:insetLeft="8%"
+    android:insetTop="8%"
+    android:insetRight="8%"
+    android:insetBottom="8%" />
