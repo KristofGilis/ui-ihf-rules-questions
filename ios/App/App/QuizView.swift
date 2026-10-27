@@ -17,8 +17,8 @@ struct QuizView: View {
             .background(PlayfulBackground())
             .navigationTitle(app.text(session.isComplete ? "quiz_results.title" : "navigation.quiz"))
             .navigationBarTitleDisplayMode(.inline)
+            .modifier(PlainQuizCloseToolbar(closeButton: closeButton))
             .toolbar {
-                closeToolbarItem
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if !session.isComplete, let remaining = session.remaining {
                         TinyBadge(title: QuizSession.clock(remaining), symbol: "timer", color: remaining < 60 ? .red : Playful.navy)
@@ -35,16 +35,6 @@ struct QuizView: View {
             } message: { Text(app.text("quiz.leave_warning")) }
         }.navigationViewStyle(.stack)
             .onChange(of: scenePhase) { phase in if phase == .active { session.tick() } }
-    }
-
-    @ToolbarContentBuilder
-    private var closeToolbarItem: some ToolbarContent {
-        if #available(iOS 26.0, *) {
-            ToolbarItem(placement: .navigationBarLeading) { closeButton }
-                .sharedBackgroundVisibility(.hidden)
-        } else {
-            ToolbarItem(placement: .navigationBarLeading) { closeButton }
-        }
     }
 
     private var closeButton: some View {
@@ -148,6 +138,24 @@ struct QuizView: View {
                     }
                 }
             }.padding(20).padding(.bottom, 20).frame(maxWidth: 760).frame(maxWidth: .infinity)
+        }
+    }
+}
+
+private struct PlainQuizCloseToolbar<CloseButton: View>: ViewModifier {
+    let closeButton: CloseButton
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content.toolbar {
+                ToolbarItem(placement: .navigationBarLeading) { closeButton }
+                    .sharedBackgroundVisibility(.hidden)
+            }
+        } else {
+            content.toolbar {
+                ToolbarItem(placement: .navigationBarLeading) { closeButton }
+            }
         }
     }
 }
