@@ -1,6 +1,6 @@
 # Native mobile development and release
 
-The iOS app is written in Swift/SwiftUI and reads a bundled SQLite database. It has no runtime API dependency. The Angular PWA is still deployed separately to Azure and uses the existing GraphQL API and persisted Apollo cache. Native Android is the next milestone after iOS acceptance; the previous Android WebView shell has been removed.
+The iOS app is written in Swift/SwiftUI and reads a bundled SQLite database. It has no runtime API dependency. The Angular PWA is still deployed separately to Azure and uses the existing GraphQL API and persisted Apollo cache. Native Android development has started in parallel with Apple's review; the previous Android WebView shell has been removed.
 
 ## Identity and baseline
 
@@ -83,7 +83,7 @@ Privacy and Support are native pages opened from Settings and readable offline i
 
 ## Android and API infrastructure
 
-Implement Android with Kotlin/Compose and Room after iOS acceptance, using the same content snapshot and parity fixtures. Preserve package ID and signing lineage if a Play record/key already exists. Check actual account/device verification and track requirements before release and test on a supported physical device.
+The Android implementation plan is in [ANDROID_NATIVE_PLAN.md](ANDROID_NATIVE_PLAN.md). A native Kotlin/Compose foundation now lives in `android/`: it reuses the shared bundled SQLite content, adds native navigation and the initial Home/Rules/Practice/Search/Settings/quiz flows, and has its own Linux build workflow. Continue implementation against the parity and acceptance gates in that plan.
 
 Retain API CORS origins `capacitor://localhost` and `https://localhost` while supporting old installed container builds. Remove them only after that support window ends. The API and Azure web origin remain necessary for the PWA.
 

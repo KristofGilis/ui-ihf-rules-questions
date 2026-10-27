@@ -37,10 +37,10 @@ Prepare layouts for home/setup, rules/detail, question practice, search/results,
 
 ## 4. Architecture and project structure
 
-| Platform | Implementation                                                                                                                                                   |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| iOS      | Swift, SwiftUI, platform navigation/tab controls, local storage using the platform SQLite library directly, native localization resources and local preferences. |
-| Android  | Kotlin, Jetpack Compose, platform navigation, Room over SQLite, native localization resources and DataStore preferences.                                         |
+| Platform | Implementation                                                                                                                                                                |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| iOS      | Swift, SwiftUI, platform navigation/tab controls, local storage using the platform SQLite library directly, native localization resources and local preferences.              |
+| Android  | Kotlin, Jetpack Compose, platform navigation, read-only access to the generated SQLite content database, private preferences/session state and native localization resources. |
 
 Choose compatible stable dependency/toolchain versions during setup. Confirm minimum OS support against the current audience before selecting APIs; the present iOS project targets iOS 15, so raising that minimum is a deliberate product decision. Verify tablet scope and orientation requirements at the same point.
 
@@ -48,7 +48,7 @@ Organize each app into presentation, domain logic and local data layers. Views a
 
 Keep native projects in `ios/` and `android/` in the existing UI repository, with independent build workflows and a shared content-generation area. Keep the Angular files in their current web structure. The native first release needs no GraphQL client or native-to-web bridge.
 
-References supporting the stack: [Apple native navigation](https://developer.apple.com/documentation/swiftui/navigation), [SQLite interface](https://sqlite.org/capi3ref.html), [Android Compose guidance](https://android-developers.googleblog.com/2026/05/android-ui-development-is-compose-first.html), and [Room persistence](https://developer.android.com/training/data-storage/room).
+References supporting the stack: [Apple native navigation](https://developer.apple.com/documentation/swiftui/navigation), [SQLite interface](https://sqlite.org/capi3ref.html), [Android Compose guidance](https://android-developers.googleblog.com/2026/05/android-ui-development-is-compose-first.html), and [Android's platform SQLite API](https://developer.android.com/reference/android/database/sqlite/SQLiteDatabase).
 
 ## 5. Bundled content and offline behavior
 
@@ -108,7 +108,7 @@ Capture fresh screenshots, update descriptions to explain offline operation, and
 
 ### F. Android native app
 
-After iOS acceptance, build Kotlin/Compose in `android/` using the same content pack, scoring/search specifications and parity fixtures. Implement Room, preferences, native navigation, local search, practice/quiz/results, four languages and privacy/support links. Adapt system back, font scaling and TalkBack to Android.
+Start the Android foundation while Apple reviews iOS. Build Kotlin/Compose in `android/` using the same content pack, scoring/search specifications and parity behavior. Read the generated SQLite content database directly; keep preferences/session state separate. Implement native navigation, local search, practice/quiz/results, four languages and privacy/support pages. Adapt system back, font scaling and TalkBack to Android.
 
 Use emulator CI, then validate on a supported physical device. Recheck Play Console's actual account/device verification and testing requirements at release time. Phone-contact verification alone does not establish that every console gate is cleared. Preserve the application ID and any existing signing lineage; configure a backed-up upload key and Play App Signing if still required. Create signed AABs and progress through the account's applicable testing tracks before production.
 
@@ -136,6 +136,6 @@ Update README, mobile release docs, onboarding and CI paths for the native proje
 
 The rebuild is complete when iOS and Android provide the existing user capabilities through native interfaces, work from the first launch without internet, preserve the store identities, and have independent supported release pipelines. The Angular PWA remains available as the web application. Capacitor is removed from active source and workflows during milestone B, with its last implementation preserved in Git history.
 
-Implementation order: baseline/design/content pack -> Capacitor removal and iOS shell -> fully offline iOS data/browsing/search -> full iOS practice/quiz parity -> TestFlight/iOS release -> native Android -> final infrastructure cleanup.
+Implementation order: baseline/design/content pack -> Capacitor removal and iOS shell -> fully offline iOS data/browsing/search -> full iOS practice/quiz parity -> TestFlight/iOS review; begin Android foundation in parallel with App Review -> Android feature parity and Play testing -> final infrastructure cleanup.
 
 Implementation is proceeding on the feature branch; see NATIVE_PARITY.md for current implementation and acceptance status. Store changes remain a later release step.

@@ -1,0 +1,5 @@
+<resources>
+    <style name="Theme.HandballRulesQuiz" parent="Theme.HandballRulesQuiz.Base">
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+</resources>
