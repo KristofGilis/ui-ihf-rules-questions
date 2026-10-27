@@ -18,14 +18,7 @@ struct QuizView: View {
             .navigationTitle(app.text(session.isComplete ? "quiz_results.title" : "navigation.quiz"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        if session.isComplete { close() } else { leaving = true }
-                    } label: {
-                        Image(systemName: "xmark").font(.subheadline.weight(.bold))
-                            .frame(width: 36, height: 36).background(Playful.paper).clipShape(Circle())
-                    }.accessibilityLabel(app.text("native.close")).accessibilityIdentifier("quiz.close")
-                }
+                closeToolbarItem
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if !session.isComplete, let remaining = session.remaining {
                         TinyBadge(title: QuizSession.clock(remaining), symbol: "timer", color: remaining < 60 ? .red : Playful.navy)
@@ -42,6 +35,26 @@ struct QuizView: View {
             } message: { Text(app.text("quiz.leave_warning")) }
         }.navigationViewStyle(.stack)
             .onChange(of: scenePhase) { phase in if phase == .active { session.tick() } }
+    }
+
+    @ToolbarContentBuilder
+    private var closeToolbarItem: some ToolbarContent {
+        if #available(iOS 26.0, *) {
+            ToolbarItem(placement: .navigationBarLeading) { closeButton }
+                .sharedBackgroundVisibility(.hidden)
+        } else {
+            ToolbarItem(placement: .navigationBarLeading) { closeButton }
+        }
+    }
+
+    private var closeButton: some View {
+        Button {
+            if session.isComplete { close() } else { leaving = true }
+        } label: {
+            Image(systemName: "xmark").font(.headline.weight(.semibold))
+                .frame(width: 44, height: 44).contentShape(Rectangle())
+        }.buttonStyle(.plain).foregroundColor(Playful.blue)
+            .accessibilityLabel(app.text("native.close")).accessibilityIdentifier("quiz.close")
     }
 
     private func activeQuestion(_ question: Question) -> some View {

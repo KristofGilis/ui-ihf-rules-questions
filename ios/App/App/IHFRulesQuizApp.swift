@@ -1,18 +1,43 @@
 import SwiftUI
+import UIKit
 
 @main
 struct IHFRulesQuizApp: App {
     @StateObject private var state = AppState()
     var body: some Scene {
         WindowGroup {
-            RootView()
+            appContent
                 .environmentObject(state)
                 .environment(\.locale, Locale(identifier: state.language == "srb" ? "sr" : state.language))
                 .background(WindowAppearance(mode: state.appearance).frame(width: 0, height: 0))
                 .tint(Playful.blue)
         }
     }
+
+    @ViewBuilder
+    private var appContent: some View {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-ui-testing-launch-screen") {
+            LaunchScreenPreview().ignoresSafeArea()
+                .accessibilityElement(children: .ignore).accessibilityLabel("Handball Rules Quiz")
+                .accessibilityIdentifier("launch.preview")
+        } else { RootView() }
+        #else
+        RootView()
+        #endif
+    }
 }
+
+#if DEBUG
+// Show the actual storyboard after launch so UI tests can capture both appearances.
+// Production uses the native launch screen without a timed overlay or delay.
+private struct LaunchScreenPreview: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UIViewController {
+        UIStoryboard(name: "LaunchScreen", bundle: .main).instantiateInitialViewController()!
+    }
+    func updateUIViewController(_ controller: UIViewController, context: Context) {}
+}
+#endif
 
 struct RootView: View {
     @EnvironmentObject private var app: AppState

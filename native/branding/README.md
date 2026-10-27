@@ -11,8 +11,10 @@ node scripts/generate-native-branding.mjs
 
 Add `--preview` to create the comparison in `native/previews/`. The generator verifies that both 1024-pixel PNG variants are opaque. Asset-catalog entries let iOS select the Home Screen icon according to its icon appearance setting; older systems use the default icon. The header uses the transparent foreground in both appearances, without the Home Screen icon backgrounds, and displays the artwork beside the full app name. The generator checks header alpha and transparent corners separately from opaque app icons. The animated court remains in Home.
 
-## Permission status
+## Native artwork
 
-TestFlight build 1.0 (12) used the previous IHF letter-and-handball icon. On 26 October 2026 the operator clarified that approval to use that IHF logo is not clear. The new option A artwork replaces that mark in the native assets. See `docs/MOBILE_RELEASE.md` for the latest verified upload status. Do not claim IHF logo permission is confirmed in store declarations or infer it from Apple's review outcome. Rights for the rules and question content are a separate check before public submission.
+The native app uses its own handball/checkmark artwork, with no IHF logo in its icon, header or launch screen. The earlier logo-specific release hold is resolved. Website branding is separate. See `docs/MOBILE_RELEASE.md` for verified delivery status.
+
+The launch screen centers a 160-point transparent mark on an adaptive light/dark background matching the app. `generate-native-branding.mjs` exports crisp 1x/2x/3x launch images and named background colors. The native storyboard uses Auto Layout for iPhone, iPad and orientation changes, with no text, progress indicator or artificial startup delay.
 
 Apple reference: [Configuring your app icon using an asset catalog](https://developer.apple.com/documentation/xcode/configuring-your-app-icon).

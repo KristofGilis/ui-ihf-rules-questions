@@ -45,12 +45,47 @@ for (const buffer of [light, dark]) {
 const catalog = path.join(root, 'ios/App/App/Assets.xcassets');
 const appIcon = path.join(catalog, 'AppIcon.appiconset');
 const header = path.join(catalog, 'BrandMark.imageset');
+const launchMark = path.join(catalog, 'LaunchMark.imageset');
+const launchBackground = path.join(catalog, 'LaunchBackground.colorset');
 await mkdir(header, { recursive: true });
+await mkdir(launchMark, { recursive: true });
+await mkdir(launchBackground, { recursive: true });
 await writeFile(path.join(appIcon, 'AppIcon-512@2x.png'), light);
 await writeFile(path.join(appIcon, 'AppIcon-Dark.png'), dark);
 const json = (value) => JSON.stringify(value, null, 2) + '\n';
 const info = { author: 'xcode', version: 1 };
 const appearance = [{ appearance: 'luminosity', value: 'dark' }];
+for (const scale of [1, 2, 3]) {
+  await writeFile(
+    path.join(launchMark, 'LaunchMark@' + scale + 'x.png'),
+    await sharp(foreground)
+      .resize(160 * scale, 160 * scale)
+      .png()
+      .toBuffer()
+  );
+}
+await writeFile(
+  path.join(launchMark, 'Contents.json'),
+  json({
+    images: [1, 2, 3].map((scale) => ({
+      filename: 'LaunchMark@' + scale + 'x.png',
+      idiom: 'universal',
+      scale: scale + 'x',
+    })),
+    info,
+  })
+);
+const launchColor = (red, green, blue) => ({ 'color-space': 'srgb', components: { red, green, blue, alpha: '1.000' } });
+await writeFile(
+  path.join(launchBackground, 'Contents.json'),
+  json({
+    colors: [
+      { idiom: 'universal', color: launchColor('0.949019608', '0.949019608', '0.968627451') },
+      { idiom: 'universal', appearances: appearance, color: launchColor('0.000', '0.000', '0.000') },
+    ],
+    info,
+  })
+);
 await writeFile(
   path.join(appIcon, 'Contents.json'),
   json({

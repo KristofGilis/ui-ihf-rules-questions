@@ -48,7 +48,7 @@ app_refs, app_sources = build_files("App", "AppSources")
 test_refs, test_sources = build_files("AppTests", "TestSources")
 ui_refs, ui_sources = build_files("AppUITests", "UISources")
 resources = []
-for name, kind in [("Assets.xcassets", "folder.assetcatalog"), ("OfflineContent", "folder"), ("PrivacyInfo.xcprivacy", "text.xml")]:
+for name, kind in [("Assets.xcassets", "folder.assetcatalog"), ("OfflineContent", "folder"), ("PrivacyInfo.xcprivacy", "text.xml"), ("LaunchScreen.storyboard", "file.storyboard")]:
     ref = object_(name, f'isa = PBXFileReference; lastKnownFileType = {kind}; path = "{name}"; sourceTree = "<group>";')
     app_refs.append(ref)
     resources.append(object_(name + "Build", f'isa = PBXBuildFile; fileRef = {ref};'))
@@ -75,7 +75,7 @@ app_config = configurations("App", '''ASSETCATALOG_COMPILER_APPICON_NAME = AppIc
     IHF_APP_CODE_SIGN_STYLE = Automatic; IHF_APP_CODE_SIGN_IDENTITY = "Apple Development";
     CODE_SIGN_STYLE = "$(IHF_APP_CODE_SIGN_STYLE)"; CODE_SIGN_IDENTITY = "$(IHF_APP_CODE_SIGN_IDENTITY)";
     PROVISIONING_PROFILE_SPECIFIER = "$(IHF_APP_PROVISIONING_PROFILE)";
-    DEVELOPMENT_TEAM = XKF5T9N38M; CURRENT_PROJECT_VERSION = 18; MARKETING_VERSION = 1.0;
+    DEVELOPMENT_TEAM = XKF5T9N38M; CURRENT_PROJECT_VERSION = 19; MARKETING_VERSION = 1.0;
     PRODUCT_BUNDLE_IDENTIFIER = io.github.kristofgilis.ihfrulesquiz; PRODUCT_NAME = "$(TARGET_NAME)";
     INFOPLIST_FILE = App/Info.plist; TARGETED_DEVICE_FAMILY = "1,2";
     LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks",);''')

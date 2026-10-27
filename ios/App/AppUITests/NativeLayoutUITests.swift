@@ -209,6 +209,17 @@ final class NativeLayoutUITests: XCTestCase {
             XCTAssertTrue(app.staticTexts[headline].exists)
             capture(app, "home-\(language)")
         }
+        for appearance in ["light", "dark"] {
+            app.terminate()
+            app.launchArguments = ["-ui-testing-reset", "-ui-testing-launch-screen", "-native.language", "en", "-native.appearance", appearance]
+            app.launch()
+            let preview = app.descendants(matching: .any).matching(identifier: "launch.preview").firstMatch
+            XCTAssertTrue(preview.waitForExistence(timeout: 10))
+            let brightness = averageBrightness(app.screenshot())
+            if appearance == "dark" { XCTAssertLessThan(brightness, 0.45) }
+            else { XCTAssertGreaterThan(brightness, 0.65) }
+            capture(app, "launch-\(appearance)")
+        }
     }
 
     @MainActor
