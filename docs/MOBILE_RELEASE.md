@@ -40,7 +40,9 @@ Run `npm ci`, `npm run lint`, and `npm run build:web` for the PWA. Web service-w
 
 ## Android signing and Play draft
 
-The Google Play draft is **Handball Rules Quiz**, package `io.github.kristofgilis.ihfrulesquiz`, app ID `4976385006116525227`, created on 27 October 2026 with the owner's approval. It is Free, type App, default English (US). Nothing has been released. The initial bundle was rejected because automatic Play protection requires minimum SDK 24; the minimum is now **Android 7.0 (API 24)**, preserving that protection. The dashboard requires a closed test with at least 12 testers continuously enrolled for 14 days before requesting production access; internal testing can precede that.
+The Google Play draft is **Handball Rules Quiz**, package `io.github.kristofgilis.ihfrulesquiz`, app ID `4976385006116525227`, created on 27 October 2026 with the owner's approval. It is Free, type App, default English (US). Nothing has been released. The initial bundle was rejected because automatic Play protection requires minimum SDK 24; the minimum is now **Android 7.0 (API 24)**, preserving that protection. Google accepted the rebuilt signed **1.0 (code 1)** bundle, showing API 24+, target 36, four screen layouts and four ABIs. The internal-release draft was saved and Console confirmed the changes were saved. No rollout was performed and testers cannot install it yet. The dashboard requires a closed test with at least 12 testers continuously enrolled for 14 days before requesting production access; internal testing can precede that.
+
+The accepted AAB has SHA-256 `2c9b71b94cd89b82910fc9e0ff3e30689fa2270e1c6fd4f9289bce766f81a887`. Local `lintRelease`, `bundleRelease` and signature verification pass. The upload certificate SHA-256 is `3E:0F:FB:18:9D:1C:03:4E:80:9F:FA:4D:4B:7B:18:10:60:B6:CF:FA:DF:42:F1:FB:86:53:82:B8:0A:90:5E:25`. A public certificate export is included in the ignored signing-backup directory. Later uploads must use version code 2 or higher.
 
 The manual **Android signed bundle** workflow builds and verifies a signed AAB without uploading it to Google Play. It requires these repository secrets:
 
