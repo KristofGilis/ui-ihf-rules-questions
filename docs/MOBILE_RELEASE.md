@@ -38,6 +38,21 @@ The **Native iOS checks** workflow validates bundled content and tests the Swift
 
 Run `npm ci`, `npm run lint`, and `npm run build:web` for the PWA. Web service-worker behavior remains enabled in production. Native workflows and web releases are independent.
 
+## Android signing and Play draft
+
+The Google Play draft is **Handball Rules Quiz**, package `io.github.kristofgilis.ihfrulesquiz`, app ID `4976385006116525227`, created on 27 October 2026 with the owner's approval. It is Free, type App, default English (US). No bundle has been uploaded or released. The dashboard requires a closed test with at least 12 testers continuously enrolled for 14 days before requesting production access; internal testing can precede that.
+
+The manual **Android signed bundle** workflow builds and verifies a signed AAB without uploading it to Google Play. It requires these repository secrets:
+
+- `ANDROID_KEYSTORE_BASE64`: base64-encoded private upload keystore.
+- `ANDROID_KEYSTORE_PASSWORD`: keystore password.
+- `ANDROID_KEY_ALIAS`: upload key alias.
+- `ANDROID_KEY_PASSWORD`: key password.
+
+The workflow decodes the key only inside the runner's temporary directory, removes it on exit, and saves only the signed AAB as an artifact. Keep an owner-controlled backup of the keystore and passwords outside Git. Never commit them. No Google service-account credential is required for a manual Console upload. The owner approved creating the first upload key, saving all four secrets and uploading code 1 to the internal draft. The key was generated on 27 October 2026; all four repository-secret names were verified after encrypted API writes. The private local backup is in ignored `.local-release-secrets/android/`; copy it to an owner-controlled secure backup before removing this checkout.
+
+Locally, set `ANDROID_KEYSTORE_PATH` to the absolute keystore path and the three password/alias environment variables above, then run `android/gradlew -p android lintRelease bundleRelease -PandroidVersionCode=1`. Builds without signing environment variables remain unsigned for ordinary verification. Every later Play upload needs a unique increasing version code. Signing does not imply authorization to upload, roll out or publish.
+
 ## App branding
 
 The local native icon and Home header use the selected option A: a sweeping checkmark and stitched-panel handball in the app's navy, blue, white and gold palette. Both icon appearances are opaque, with white/slate and deep navy backgrounds. Home Screen appearance follows the system's icon setting; the header uses the transparent foreground in both app themes. Run `node scripts/compose-native-ball.mjs` followed by `node scripts/generate-native-branding.mjs --preview` to regenerate the composition, assets and comparison. This artwork replaces the previous IHF mark; check the verified TestFlight build status above for availability. See [native branding](../native/branding/README.md).

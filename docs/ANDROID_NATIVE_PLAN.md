@@ -109,7 +109,7 @@ Once the Android and iOS native apps are established and the user approves endin
 
 ## Open inputs and risks
 
-- Confirm the existing Google Play application record actually uses `io.github.kristofgilis.ihfrulesquiz`; do not assume a prior draft or phone verification guarantees package identity or production eligibility.
+- Google Play draft created on 27 October 2026: **Handball Rules Quiz**, package `io.github.kristofgilis.ihfrulesquiz`, app ID `4976385006116525227`, default English (US), App, Free. Package availability was confirmed before creation; there were no prior apps or uploaded signing keys in this account. The owner approved the program-policy, Play App Signing and export declarations. Nothing has been published.
 - No physical Android device is currently available. Emulator CI can cover development, but physical-device acceptance and any Play Console device-verification requirement need a viable path before release. The previously mentioned device is over ten years old and is unlikely to satisfy current requirements.
 - Human translation review is still useful for all four languages.
 - Google Play policies, target API deadlines, account testing requirements and data-safety questions must be checked against current official guidance immediately before submission.
@@ -126,5 +126,5 @@ Next actions:
 1. Complete the Android emulator journeys and record the visual/behavior review. Local debug and unsigned release compilation and Android lint pass; first launch in airplane mode opens the bundled Home content. A 20-question timed quiz starts with 30 minutes; selected answers survive swipe/previous navigation, and native exit confirmation returns to Home. Grouped Settings, exact-number search and practice are reviewed in the emulator. A correct single-question attempt calculates 100.00%, keeps the percentage on one line, and scrolls to the score on the first tap. The repository includes the Gradle wrapper, and an isolated local JDK/SDK was used for verification.
 2. Review compact/wide layouts, TalkBack labels, large text, system bar colors, long translations and the end-to-end flows on phone/tablet emulators.
 3. Add domain and instrumentation coverage when authorized, and reconcile scoring/search against the shared iOS/API fixtures. No Android automated tests have been added or run in this implementation.
-4. Verify the existing Play Console record, package ID, owner/device gates and signing lineage; set the release version code above all existing uploads.
+4. Configure the first upload key and produce the signed version-code-1 bundle. Play Console permits preparation of the internal release; account/device acceptance still needs final verification. The dashboard explicitly requires a closed test with at least 12 testers enrolled continuously for 14 days before applying for production access.
 5. Arrange a supported physical Android device for acceptance, then complete the Play listing, current data-safety/content-rating declarations, internal/required testing and owner-approved release.

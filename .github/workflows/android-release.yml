@@ -1,0 +1,67 @@
+name: Android signed bundle
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_code:
+        description: 'Unique increasing Google Play version code'
+        required: true
+        default: '1'
+
+permissions:
+  contents: read
+
+jobs:
+  bundle:
+    name: Build signed Android bundle
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
+      - name: Install Android SDK platform
+        run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+      - name: Prepare shared offline content and branding
+        run: python3 scripts/prepare-android-content.py
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build and verify signed bundle
+        env:
+          VERSION_CODE: ${{ inputs.version_code }}
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! "$VERSION_CODE" =~ ^[1-9][0-9]*$ ]] || (( VERSION_CODE > 2100000000 )); then
+            echo 'Version code must be an integer from 1 to 2100000000.' >&2
+            exit 1
+          fi
+          for secret in KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS ANDROID_KEY_PASSWORD; do
+            if [[ -z "${!secret}" ]]; then
+              echo "Required signing secret is missing: $secret" >&2
+              exit 1
+            fi
+          done
+          export ANDROID_KEYSTORE_PATH="$RUNNER_TEMP/android-upload.jks"
+          trap 'rm -f -- "$ANDROID_KEYSTORE_PATH"' EXIT
+          umask 077
+          printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$ANDROID_KEYSTORE_PATH"
+          bash android/gradlew -p android --no-daemon lintRelease bundleRelease -PandroidVersionCode="$VERSION_CODE"
+          bundle='android/app/build/outputs/bundle/release/app-release.aab'
+          jarsigner -verify "$bundle" | tee "$RUNNER_TEMP/bundle-verification.txt"
+          grep -q 'jar verified\.' "$RUNNER_TEMP/bundle-verification.txt"
+      - name: Save signed bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: handball-rules-quiz-android-${{ inputs.version_code }}
+          path: android/app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+          retention-days: 14

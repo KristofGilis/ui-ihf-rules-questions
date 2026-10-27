@@ -13,7 +13,9 @@ android {
         applicationId = "io.github.kristofgilis.ihfrulesquiz"
         minSdk = 23
         targetSdk = 36
-        versionCode = 1
+        versionCode = providers.gradleProperty("androidVersionCode").orElse("1").get().toInt().also {
+            require(it in 1..2_100_000_000) { "androidVersionCode must be between 1 and 2100000000" }
+        }
         versionName = "1.0"
     }
 
@@ -25,6 +27,19 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    val releaseKeystore = providers.environmentVariable("ANDROID_KEYSTORE_PATH").orNull
+    if (!releaseKeystore.isNullOrBlank()) {
+        signingConfigs {
+            create("release") {
+                storeFile = file(releaseKeystore)
+                storePassword = providers.environmentVariable("ANDROID_KEYSTORE_PASSWORD").get()
+                keyAlias = providers.environmentVariable("ANDROID_KEY_ALIAS").get()
+                keyPassword = providers.environmentVariable("ANDROID_KEY_PASSWORD").get()
+            }
+        }
+        buildTypes.getByName("release").signingConfig = signingConfigs.getByName("release")
     }
 
     packaging {
