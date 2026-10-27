@@ -4,7 +4,7 @@ The native app is named **Handball Rules Quiz**. Capture screenshots from the na
 
 **Branding:** the native app uses its own handball/checkmark artwork, with no IHF logo in its icon, header or launch screen. The earlier logo-specific hold is resolved. Website branding is separate.
 
-**Submission preparation:** final store preparation is still open. Check `MOBILE_RELEASE.md` for verified delivery and test results. The last signed-in draft check on 26 October 2026 found version 1.0 Prepare for Submission, no attached review build, 0/10 iPhone and iPad screenshots, and review notes using the old app name. Build **1.0 (20)** is verified for internal TestFlight on 27 October. It includes the refined interface, native offline information pages, system SQLite, stable quiz launch, anonymous random quizzes with numbered review, corrected System appearance and neutral saved-quiz restart control. Eight original English iPhone/iPad screenshots are packaged in ignored `native/previews/store-screenshots-build20.zip`; they have not been uploaded to App Store Connect. The live subtitle was previously “Based on IHF Regulations”; the copy below remains a draft.
+**Saved draft, 27 October 2026:** version 1.0 remains **Prepare for Submission**, with build **1.0 (20)** attached and **manual release** selected. The descriptions, keywords, names and subtitles below are saved in English (U.S.), Dutch and French; current native-app review notes are saved and sign-in is not required. All three localizations have the public privacy-policy URL. Twelve original build 20 screenshots are uploaded in explicit order and verified **COMPLETE** by Apple's API: four per device for English, and one localized Home capture per device for Dutch and French. Check `MOBILE_RELEASE.md` for binary verification and remaining release work. No App Review submission or public release has been made.
 
 ## Shared English copy
 
@@ -39,7 +39,7 @@ Use the exact feature wording supported by the tested native build. Do not descr
 
 Keep **Handball Rules Quiz** as the app name in each store localization. The app itself supports English, Dutch, French and Serbian (`CFBundleLocalizations`: `en`, `nl`, `fr`, `sr`). Apple's [supported store metadata languages](https://developer.apple.com/help/app-store-connect/reference/app-information/app-store-localizations/) include Dutch and French, but not Serbian. Keep Serbian available inside the app; use the English listing as its store fallback rather than labelling Serbian copy as another language.
 
-The following copy is prepared for approval; it is not confirmation that it has been saved in App Store Connect. Original localized Home captures from build 20 are available for both iPhone and iPad (`home-nl` and `home-french`). Use those for the corresponding listings; do not add English quiz screenshots as though they were localized. Additional localized quiz, score and rules captures can extend these listings later.
+The following copy was approved and saved on 27 October 2026. Original localized Home captures from build 20 are uploaded for both iPhone and iPad (`home-nl` and `home-french`). Additional localized quiz, score and rules captures can extend these listings later. The complete twelve-image package is ignored `native/previews/store-screenshots-build20-multilingual.zip`, with dimensions, hashes and exact binary source revision. Screenshots retain their original pixels.
 
 ### Dutch
 
@@ -69,12 +69,12 @@ L’app est disponible en français, anglais, néerlandais et serbe et propose u
 
 The app is an interactive handball rules quiz. Its main features are timed and untimed quizzes, rules browsing, search, answer review, language selection, and light/dark themes. Privacy and Support are bundled native pages reached from Settings in each language; reading them requires no network access. Selecting the contact email opens the system email service. Question content is bundled with the app and normal use requires no network connection. No account or credentials are required.
 
-Update App Store Connect's existing notes to match this native build and add tested device/OS versions. This file is a draft, not confirmation that store metadata has been saved.
+These notes were saved and verified through Apple's API on 27 October 2026. The version is still a draft and has not been submitted for review.
 
 ## Required facts to verify before submission
 
 - Publisher identity and final store declarations
-- Recheck that the public privacy and support URLs still resolve before submission
+- Public privacy and support URLs both returned HTTP 200 on 27 October 2026. Deploy and verify the updated multilingual page copy in PR #772 before submission; HTTP reachability alone does not confirm that source changes are live.
 - Recheck logging before submission: on 24 October 2026, application and HTTP logging were disabled on both Azure App Services, neither app had Azure Monitor diagnostic settings, and Azure SQL auditing was disabled. These settings were not retaining request logs. Update all four privacy-policy translations if logging changes.
 - Third-party SDK data collection and any crash reporting added after this review
 - Store age ratings and target audience
