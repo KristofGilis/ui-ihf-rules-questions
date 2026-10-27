@@ -35,6 +35,36 @@ These four captures are available for both iPhone and 13-inch iPad in the build 
 
 Use the exact feature wording supported by the tested native build. Do not describe the app as official or affiliated with IHF unless that relationship is documented.
 
+## Localized store listings
+
+Keep **Handball Rules Quiz** as the app name in each store localization. The app itself supports English, Dutch, French and Serbian (`CFBundleLocalizations`: `en`, `nl`, `fr`, `sr`). Apple's [supported store metadata languages](https://developer.apple.com/help/app-store-connect/reference/app-information/app-store-localizations/) include Dutch and French, but not Serbian. Keep Serbian available inside the app; use the English listing as its store fallback rather than labelling Serbian copy as another language.
+
+The following copy is prepared for approval; it is not confirmation that it has been saved in App Store Connect. Original localized Home captures from build 20 are available for both iPhone and iPad (`home-nl` and `home-french`). Use those for the corresponding listings; do not add English quiz screenshots as though they were localized. Additional localized quiz, score and rules captures can extend these listings later.
+
+### Dutch
+
+**Subtitle:** Oefen de handbalspelregels
+
+**Keywords:** `handbal,spelregels,quiz,scheidsrechter,oefenen,vragen,sport`
+
+**Description:**
+
+Leer de handbalspelregels en test je kennis met interactieve quizzen. Oefen met of zonder tijdslimiet, bekijk vragen per spelregel en controleer je antwoorden na elke quiz.
+
+De app is beschikbaar in het Nederlands, Engels, Frans en Servisch en heeft een lichte en donkere weergave. De vragen zijn inbegrepen: je kunt zonder internetverbinding vragen bekijken, zoeken, oefenen en quizzen maken. Je hebt geen account nodig.
+
+### French
+
+**Subtitle:** Révisez les règles du handball
+
+**Keywords:** `handball,règles,quiz,arbitre,révision,questions,sport`
+
+**Description:**
+
+Révisez les règles du handball et testez vos connaissances avec des quiz interactifs. Entraînez-vous avec ou sans limite de temps, consultez les questions par règle et vérifiez vos réponses après chaque quiz.
+
+L’app est disponible en français, anglais, néerlandais et serbe et propose une apparence claire ou sombre. Les questions sont incluses : vous pouvez les consulter, les rechercher, vous entraîner et faire des quiz sans connexion Internet. Aucun compte n’est nécessaire.
+
 ## Apple review notes draft
 
 The app is an interactive handball rules quiz. Its main features are timed and untimed quizzes, rules browsing, search, answer review, language selection, and light/dark themes. Privacy and Support are bundled native pages reached from Settings in each language; reading them requires no network access. Selecting the contact email opens the system email service. Question content is bundled with the app and normal use requires no network connection. No account or credentials are required.
