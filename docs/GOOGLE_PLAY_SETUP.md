@@ -1,6 +1,6 @@
 # Google Play setup draft
 
-Updated 28 October 2026. Internal release 1.0 (1) is active. The privacy-policy URL, unrestricted app access, no ads, Data safety, government, financial and health declarations, IARC ratings and target audience have been saved in Play Console. Store listing text below remains a draft. Saved setup declarations have not been sent for review.
+Updated 28 October 2026. Internal release 1.0 (1) is active. The privacy-policy URL, unrestricted app access, no ads, Data safety, government, financial and health declarations, IARC ratings and target audience have been saved in Play Console. The English, Dutch, French and Serbian listing text below is saved as a draft. Saved setup declarations and listing drafts have not been sent for review.
 
 ## App content
 
@@ -26,7 +26,7 @@ Data safety was saved with no data collection and no sharing. The optional publi
 
 The separate Advertising ID declaration was saved as No, with owner approval. The app and its dependencies do not use the Advertising ID.
 
-Play Console's App content overview now reports no declarations requiring attention. The dashboard marks 9 of 11 setup tasks complete; category/contact and store listing are the remaining tasks. Sports is saved as the app category. The owner approved the four listing translations below for saving as drafts.
+Play Console's App content overview now reports no declarations requiring attention. The dashboard marks 10 of 11 setup tasks complete; store listing is the remaining task. Sports is saved as the app category. The approved public support email and website are saved. The owner approved the four listing translations below for saving as drafts.
 
 ## Listing text
 
@@ -66,6 +66,8 @@ Short description: Вежбајте рукометна правила кроз �
 
 ## Remaining assets and review
 
-Use native Android captures, with the same Home → quiz → score → rules sequence across languages and phone/tablet layouts. Do not upload iOS captures for Android. Prepare the 512 × 512 store icon from existing native artwork and a 1024 × 500 feature graphic consistent with the app design. Uploads, completed declarations and store listing saves need owner approval; nothing here authorizes a closed-test or public rollout.
+The owner approved uploading `native/store/google-play/app-icon.png` (512 × 512) and `feature-graphic.png` (1024 × 500). Both use the existing native artwork, are opaque, and are below Google's size limits. Regenerate with `node scripts/generate-android-store-assets.mjs`. The app name is identical across locales, so the feature graphic can be shared without an English-only tagline.
+
+Screenshots remain pending. Use native Android captures, with the same Home → quiz → score → rules sequence across languages and phone/tablet layouts. Do not upload iOS captures for Android. Existing emulator previews are 1080 × 2400; capture a store-ready layout rather than stretching them. Uploads, completed declarations and store listing saves need owner approval; nothing here authorizes a closed-test or public rollout.
 
 References: [target audience](https://support.google.com/googleplay/android-developer/answer/9867159?hl=en), [Data safety](https://support.google.com/googleplay/android-developer/answer/10787469), [preview assets](https://support.google.com/googleplay/android-developer/answer/9866151?hl=en).
