@@ -1,6 +1,6 @@
 # Google Play setup draft
 
-Updated 29 October 2026. Internal release 1.0 (1) is active. The privacy-policy URL, unrestricted app access, no ads, Data safety, government, financial and health declarations, IARC ratings and target audience have been saved in Play Console. The English, Dutch, French and Serbian listing text and screenshots are saved as drafts. The owner approved the complete Alpha closed-test package, and all 18 changes were submitted on 29 October 2026. Google Play shows changes under review; automated checks run before review.
+Updated 29 October 2026. Internal release 1.0 (1) is active. The privacy-policy URL, unrestricted app access, no ads, Data safety, government, financial and health declarations, IARC ratings and target audience have been saved in Play Console. The English, Dutch, French and Serbian listing text and screenshots are saved as drafts. The owner approved the complete Alpha closed-test package, and all 18 changes were submitted on 29 October 2026. Google Play submission 1 is now PUBLISHED for Alpha closed testing. The enrollment page is live; production remains unreleased.
 
 ## App content
 
@@ -70,7 +70,7 @@ The owner approved uploading `native/store/google-play/app-icon.png` (512 × 512
 
 All 48 native Android screenshots are saved in the listing drafts: four phone, four 7-inch tablet and four 10-inch tablet images for each language. The owner completed the remaining uploads. On 29 October, all twelve screenshot sets were verified in Play Console in Home → quiz → score → rules order, with no unsaved edits. Source images in `native/store/google-play/screenshots` are unmodified full-resolution captures from version 1.0 (1); their provenance and hashes are recorded in `screenshots/manifest.json`. Existing 1080 × 2400 development previews were not stretched or used as store assets.
 
-The submitted package includes Alpha version 1.0 (1), four completed listings, declarations, worldwide test availability (177 countries/regions plus Rest of the world), the owner-approved tester Google Group and feedback contact. Managed publishing is off; the owner explicitly approved automatic availability to eligible closed testers after Google approval. Production remains unreleased. Twelve Testers recruitment is saved as a draft and approved for publication only once closed-test enrollment works. See docs/ANDROID_CLOSED_TEST.md for the group, recruitment listing and status.
+The submitted package includes Alpha version 1.0 (1), four completed listings, declarations, worldwide test availability (177 countries/regions plus Rest of the world), the owner-approved tester Google Group and feedback contact. Managed publishing is off; the owner explicitly approved automatic availability to eligible closed testers after Google approval. Production remains unreleased. Twelve Testers recruitment was published on 29 October 2026 after verifying live closed-test enrollment. Its public post is https://twelvetesters.com/apps/cmvtk1cmd1o5yln2bw8x5awbc. See docs/ANDROID_CLOSED_TEST.md for the group, recruitment listing and status.
 
 The owner still needs to recruit testers. See `docs/ANDROID_CLOSED_TEST.md` for the separate closed-test requirement and an invitation draft. Uploads, completed declarations and store listing saves need owner approval; nothing here authorizes a closed-test or public rollout.
 
