@@ -1,6 +1,8 @@
 # Android release 1.0 (2)
 
-Prepared on 29 October 2026 in response to Google Play's recommendations for version 1.0 (1). The currently published Alpha test remains unchanged; version code 2 has not been uploaded or rolled out.
+Prepared and submitted on 29 October 2026 in response to Google Play's recommendations for version 1.0 (1). The owner approved uploading version code 2, saving the four localized release notes and submitting the Alpha update for review and rollout. Google accepted the signed bundle and its attached ReTrace mapping. The publishing overview shows the single Alpha update under review, with automated checks running first. Managed publishing is off: after approval, build 2 will roll out to 100% of enrolled Alpha testers. Build 1 remains available until then; production is unchanged. Tester-group settings were not changed.
+
+Google's release review estimates a 2.81 MB new-install download (10.2 MB smaller) and a 1.11 MB update download. Its compatibility table reports zero devices losing support. The missing-deobfuscation-file warning is gone; one optional warning remains for missing native debug symbols from bundled native libraries. The release is Google Play release record 3 in Alpha track 4700899783308185552; the application version code is 2.
 
 ## Changes
 
