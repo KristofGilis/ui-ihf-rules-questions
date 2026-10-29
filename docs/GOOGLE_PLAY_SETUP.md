@@ -1,6 +1,6 @@
 # Google Play setup draft
 
-Updated 28 October 2026. Internal release 1.0 (1) is active. The privacy-policy URL, unrestricted app access, no ads, Data safety, government, financial and health declarations, IARC ratings and target audience have been saved in Play Console. The English, Dutch, French and Serbian listing text below is saved as a draft. Saved setup declarations and listing drafts have not been sent for review.
+Updated 29 October 2026. Internal release 1.0 (1) is active. The privacy-policy URL, unrestricted app access, no ads, Data safety, government, financial and health declarations, IARC ratings and target audience have been saved in Play Console. The English, Dutch, French and Serbian listing text and screenshots are saved as drafts. Saved setup declarations and listing drafts have not been sent for review.
 
 ## App content
 
@@ -26,7 +26,7 @@ Data safety was saved with no data collection and no sharing. The optional publi
 
 The separate Advertising ID declaration was saved as No, with owner approval. The app and its dependencies do not use the Advertising ID.
 
-Play Console's App content overview now reports no declarations requiring attention. The dashboard marks 10 of 11 setup tasks complete; store listing is the remaining task. Sports is saved as the app category. The approved public support email and website are saved. The owner approved the four listing translations below for saving as drafts.
+Play Console's App content overview reports no declarations requiring attention. All four store listings now report that their required information is supplied. Sports is saved as the app category. The approved public support email and website are saved. The owner approved the four listing translations below for saving as drafts.
 
 ## Listing text
 
@@ -68,6 +68,10 @@ Short description: Вежбајте рукометна правила кроз �
 
 The owner approved uploading `native/store/google-play/app-icon.png` (512 × 512) and `feature-graphic.png` (1024 × 500). Both use the existing native artwork, are opaque, and are below Google's size limits. Regenerate with `node scripts/generate-android-store-assets.mjs`. The app name is identical across locales, so the feature graphic can be shared without an English-only tagline.
 
-Screenshots remain pending. Use native Android captures, with the same Home → quiz → score → rules sequence across languages and phone/tablet layouts. Do not upload iOS captures for Android. Existing emulator previews are 1080 × 2400; capture a store-ready layout rather than stretching them. Uploads, completed declarations and store listing saves need owner approval; nothing here authorizes a closed-test or public rollout.
+All 48 native Android screenshots are saved in the listing drafts: four phone, four 7-inch tablet and four 10-inch tablet images for each language. The owner completed the remaining uploads. On 29 October, all twelve screenshot sets were verified in Play Console in Home → quiz → score → rules order, with no unsaved edits. Source images in `native/store/google-play/screenshots` are unmodified full-resolution captures from version 1.0 (1); their provenance and hashes are recorded in `screenshots/manifest.json`. Existing 1080 × 2400 development previews were not stretched or used as store assets.
+
+The publishing overview lists the four completed listings and declarations as changes not yet submitted for review. Submission is disabled until the remaining dashboard steps are completed. The closed-test checklist is 0 of 5: countries, testers, release creation, release confirmation and review submission. There are currently zero closed-test enrollments. Managed publishing is off; review submission and test rollout must therefore be approved with their actual release scope before proceeding.
+
+The owner still needs to recruit testers. See `docs/ANDROID_CLOSED_TEST.md` for the separate closed-test requirement and an invitation draft. Uploads, completed declarations and store listing saves need owner approval; nothing here authorizes a closed-test or public rollout.
 
 References: [target audience](https://support.google.com/googleplay/android-developer/answer/9867159?hl=en), [Data safety](https://support.google.com/googleplay/android-developer/answer/10787469), [preview assets](https://support.google.com/googleplay/android-developer/answer/9866151?hl=en).

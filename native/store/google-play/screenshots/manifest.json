@@ -1,0 +1,354 @@
+{
+  "capturedOn": "2026-10-28",
+  "timezone": "Europe/Brussels",
+  "appVersion": "1.0",
+  "versionCode": 1,
+  "sourceRevision": "68566bc951440eee183b382834e86a6b384ef310",
+  "apkVariant": "debug, same application sources and bundled resources as release",
+  "apkSha256": "b7be88de66602bd72435bacb0cb6f07ea7d3b1f807895888643aaeaa23d4921f",
+  "emulator": "HandballRulesPreview, API 37, serial emulator-5560",
+  "phoneDensityDpi": 420,
+  "tabletDensityDpi": 280,
+  "appearance": "light",
+  "captureMethod": "Direct Android screencap through owner-authorized ADB; images unmodified. Scores are real ten-question attempts completed through the UI.",
+  "sequence": ["Home", "Active quiz", "Completed quiz score/review", "Rules"],
+  "files": [
+    {
+      "path": "phone/en/01-home.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 322094,
+      "sha256": "9709254af2cd9cf1fb0ae3642c4c3682337559ad39608407471ec82c5db876bf"
+    },
+    {
+      "path": "phone/en/02-quiz.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 177020,
+      "sha256": "fc59c6d518ee738f79ea23e58cde0b0425b0cb5253c5f74dcf2c3dc4dc67f440"
+    },
+    {
+      "path": "phone/en/03-score.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 113100,
+      "sha256": "8de85073afa7feb3426d76e99872546586b56eca1a8b6ef16a34521da18cd42d"
+    },
+    {
+      "path": "phone/en/04-rules.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 143942,
+      "sha256": "ade42e11b51101da9b823deb498d689ad5bfcbe5d8f78258c0c55637cf2255a1"
+    },
+    {
+      "path": "phone/nl/01-home.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 328970,
+      "sha256": "8cdd89ce44f2220380d857937dbaa67db515e52360114037989ac0267aa18dbb"
+    },
+    {
+      "path": "phone/nl/02-quiz.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 174821,
+      "sha256": "01460a234d751e155997c6fca7ffbb17c1a494f5313e31fd7cfac55800af117c"
+    },
+    {
+      "path": "phone/nl/03-score.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 121884,
+      "sha256": "de9c73a2baae8ac965381be28d746312b00c244443b9554439532e114b9aafdb"
+    },
+    {
+      "path": "phone/nl/04-rules.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 150606,
+      "sha256": "200b29cbda0c8568d063b9ea02ef5af33efa9f9d98b4aa80fddc27a59296d366"
+    },
+    {
+      "path": "phone/fr/01-home.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 342818,
+      "sha256": "3616e2b03d1e4c3a084b493bcb109025df01b4b999ddb7bb9ff37c307b453398"
+    },
+    {
+      "path": "phone/fr/02-quiz.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 194628,
+      "sha256": "dff5502d0194ef7aa3dc4c8a00ff117abe3bc82538368d805752904ab56d287c"
+    },
+    {
+      "path": "phone/fr/03-score.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 122305,
+      "sha256": "0aa3b9884d90878778c0d6f1be00413f8d2ecd59922f0499bece2682e0eff0ee"
+    },
+    {
+      "path": "phone/fr/04-rules.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 158049,
+      "sha256": "32818fa0ea927561b4dcae1176ef1961c4951f84b8e1aa3a93b79a79a1f509ff"
+    },
+    {
+      "path": "phone/srb/01-home.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 328903,
+      "sha256": "ec909578b9f332ddd88f9c41e4399a7a5d5beb998cec57e01ccd1f98f33f9f8f"
+    },
+    {
+      "path": "phone/srb/02-quiz.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 161603,
+      "sha256": "2f45f8a7254a4f5b0c721e304d2f731a02fc730e072de8dd365b9e016f572298"
+    },
+    {
+      "path": "phone/srb/03-score.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 114302,
+      "sha256": "600f3cbacfccc9a521908640adb00e58a5536991c316d6cfb61e35a289f05e41"
+    },
+    {
+      "path": "phone/srb/04-rules.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 135188,
+      "sha256": "e9f3e86fe0dd34e39733772e9784c00f6dd8138326c6cd11c5066db3134c7681"
+    },
+    {
+      "path": "tablet/en/01-home.png",
+      "width": 1600,
+      "height": 2560,
+      "bytes": 305381,
+      "sha256": "de718c2f9ee0a393a6cc16d7978178378f0a5a2229bd7b5fcddb0c5ed18abed9"
+    },
+    {
+      "path": "tablet/en/02-quiz.png",
+      "width": 1600,
+      "height": 2560,
+      "bytes": 139619,
+      "sha256": "931239947c91f08f3f388c5d438f7e5b2f037392d49583d18db3ec189bc3bab0"
+    },
+    {
+      "path": "tablet/en/03-score.png",
+      "width": 1600,
+      "height": 2560,
+      "bytes": 218314,
+      "sha256": "b39036704b07e8550bef9f891ae1bd015ff0029e8e7809ba3eadf66039467581"
+    },
+    {
+      "path": "tablet/en/04-rules.png",
+      "width": 1600,
+      "height": 2560,
+      "bytes": 206252,
+      "sha256": "c0989f217428d7dca26354e3d804bbe93189be3b113b204266a0b4523c1faf5a"
+    },
+    {
+      "path": "tablet/nl/01-home.png",
+      "width": 1600,
+      "height": 2560,
+      "bytes": 308523,
+      "sha256": "c38950de82bdbd6acd76a9fab460b9c18b06243fdca9b2c17faa4406fe542c84"
+    },
+    {
+      "path": "tablet/nl/02-quiz.png",
+      "width": 1600,
+      "height": 2560,
+      "bytes": 220408,
+      "sha256": "5e9f66e815a34d675e4d9db3ca2d482195cad88aaa3b9701ade93ae2aa93c632"
+    },
+    {
+      "path": "tablet/nl/03-score.png",
+      "width": 1600,
+      "height": 2560,
+      "bytes": 252680,
+      "sha256": "dd31db3a88d193b9bdb25be2dbb619c4a3b10b4826ee16b6894bf1fc388c440c"
+    },
+    {
+      "path": "tablet/nl/04-rules.png",
+      "width": 1600,
+      "height": 2560,
+      "bytes": 209782,
+      "sha256": "9d3bf7f05d913f2945e3d38ec794d9b7a2e9d116399d2d5c3d6a91a328055ced"
+    },
+    {
+      "path": "tablet/fr/01-home.png",
+      "width": 1600,
+      "height": 2560,
+      "bytes": 322358,
+      "sha256": "984203e1be9ed13416bfe0dd2f2d28f27b0294ad02a8fb2642985143398bdc28"
+    },
+    {
+      "path": "tablet/fr/02-quiz.png",
+      "width": 1600,
+      "height": 2560,
+      "bytes": 155426,
+      "sha256": "85c5edeff4eaf57bc56179ecb1368b395d7bc0b34b45f088e377b861d3dddf4f"
+    },
+    {
+      "path": "tablet/fr/03-score.png",
+      "width": 1600,
+      "height": 2560,
+      "bytes": 243250,
+      "sha256": "c0f15b5c8b2805f74c5900263fdcad3eae44fb457cf2b27eb9b760c3d9a25c3d"
+    },
+    {
+      "path": "tablet/fr/04-rules.png",
+      "width": 1600,
+      "height": 2560,
+      "bytes": 217355,
+      "sha256": "d4d071c49a2a38da6ea802c90e360c2d1aa94759ba7f64d399051100fb816eb0"
+    },
+    {
+      "path": "tablet/srb/01-home.png",
+      "width": 1600,
+      "height": 2560,
+      "bytes": 308911,
+      "sha256": "165501500531d3ccf794d1bb96ff9d0850713e54e198e8e793cae3c22b4bab18"
+    },
+    {
+      "path": "tablet/srb/02-quiz.png",
+      "width": 1600,
+      "height": 2560,
+      "bytes": 213090,
+      "sha256": "3aa249cf0c4811b70d772bfb1355e46382f9bbeb04be84f87757896d61ee13d9"
+    },
+    {
+      "path": "tablet/srb/03-score.png",
+      "width": 1600,
+      "height": 2560,
+      "bytes": 263527,
+      "sha256": "0acaf420f3bf4271b6bd0884b721f27e7ac9026c19fcd5261f2a7fe54e33cb13"
+    },
+    {
+      "path": "tablet/srb/04-rules.png",
+      "width": 1600,
+      "height": 2560,
+      "bytes": 188668,
+      "sha256": "df7c7bc944a86aa583a70fa7250acceb10a77248f891fdf76e4856751b661ddb"
+    },
+    {
+      "path": "tablet-7/en/01-home.png",
+      "width": 1200,
+      "height": 1920,
+      "bytes": 301484,
+      "sha256": "82973aa195d22076e3200dbfd5dc005ad513ccce93ef555153209d40a9c45b41"
+    },
+    {
+      "path": "tablet-7/en/02-quiz.png",
+      "width": 1200,
+      "height": 1920,
+      "bytes": 145975,
+      "sha256": "0fa9d778b733af71d16422ea5250df7f6ce402954c3913029fad1c89855984b9"
+    },
+    {
+      "path": "tablet-7/en/03-score.png",
+      "width": 1200,
+      "height": 1920,
+      "bytes": 143421,
+      "sha256": "a0ba3916c76f1eff5666e7bcdc0fa97a4c5d8c1b8c2366ff173295f6bd284017"
+    },
+    {
+      "path": "tablet-7/en/04-rules.png",
+      "width": 1200,
+      "height": 1920,
+      "bytes": 163761,
+      "sha256": "36b71be93fe92999bdfb9a6de638117c116d091d032084e467e732df9f52a5e8"
+    },
+    {
+      "path": "tablet-7/nl/01-home.png",
+      "width": 1200,
+      "height": 1920,
+      "bytes": 304935,
+      "sha256": "2bbe82ebadf26d5bd28310c883964179eea372ff4f505c1ed7e14b79f243e4e1"
+    },
+    {
+      "path": "tablet-7/nl/02-quiz.png",
+      "width": 1200,
+      "height": 1920,
+      "bytes": 223259,
+      "sha256": "25c06bbc9e2e1228488a0a17e9a3f45e3cf30b8626697fb3c7575ce2d3633b8b"
+    },
+    {
+      "path": "tablet-7/nl/03-score.png",
+      "width": 1200,
+      "height": 1920,
+      "bytes": 140821,
+      "sha256": "9ba6b477b342cf5b3be74bc311249e64bea587569a46b7d42a9a4e406a4b3f32"
+    },
+    {
+      "path": "tablet-7/nl/04-rules.png",
+      "width": 1200,
+      "height": 1920,
+      "bytes": 167112,
+      "sha256": "32e1e05e13440643c2449c155a73181bffc7c86f068ab0b8f1d2e9567f94c535"
+    },
+    {
+      "path": "tablet-7/fr/01-home.png",
+      "width": 1200,
+      "height": 1920,
+      "bytes": 319763,
+      "sha256": "4ee57c008b9bb43e7a2b03bbc87dadd6b7b5fede062e5807008f1850ceb6f71d"
+    },
+    {
+      "path": "tablet-7/fr/02-quiz.png",
+      "width": 1200,
+      "height": 1920,
+      "bytes": 222413,
+      "sha256": "cd984108e4ec2d8202240f84d2e71f9c3874b7e67b08426f343688a66769eeb3"
+    },
+    {
+      "path": "tablet-7/fr/03-score.png",
+      "width": 1200,
+      "height": 1920,
+      "bytes": 154250,
+      "sha256": "dfc6e38eec43d6f4620a57ff7a533f42b3b6cd4ff1803073583eedb2c975df64"
+    },
+    {
+      "path": "tablet-7/fr/04-rules.png",
+      "width": 1200,
+      "height": 1920,
+      "bytes": 178755,
+      "sha256": "763fb39d12add4ee200759667fa37300d62a099fbd2b2379c61a1f44c7494ff2"
+    },
+    {
+      "path": "tablet-7/srb/01-home.png",
+      "width": 1200,
+      "height": 1920,
+      "bytes": 304493,
+      "sha256": "c11da345f58b4d3a82c11448192826ab1ecf59632d6efa1b698b182c6a875ea9"
+    },
+    {
+      "path": "tablet-7/srb/02-quiz.png",
+      "width": 1200,
+      "height": 1920,
+      "bytes": 189386,
+      "sha256": "b26c299c6cbe8507f557f55d45421656008d510fe5e40d631af7646adf8d79e8"
+    },
+    {
+      "path": "tablet-7/srb/03-score.png",
+      "width": 1200,
+      "height": 1920,
+      "bytes": 145619,
+      "sha256": "1f1fbbd8f825d427481f90e1c89febb63e07943266865d1b90cfdea0f9810d02"
+    },
+    {
+      "path": "tablet-7/srb/04-rules.png",
+      "width": 1200,
+      "height": 1920,
+      "bytes": 148407,
+      "sha256": "fd790640ef0bc6ff123f39bcac1025792a7942a1d301ad648a6d678452ef88e3"
+    }
+  ],
+  "tablet7DensityDpi": 320
+}
