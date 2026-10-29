@@ -54,3 +54,11 @@ stats.json
 
 .codegraph
 /.local-release-secrets/
+
+# Android Studio / Gradle
+/android/.gradle/
+/android/.kotlin/
+/android/local.properties
+/android/**/build/
+*.jks
+*.keystore

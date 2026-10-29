@@ -3,6 +3,7 @@ src/app/quiz/quiz-results/quiz-results.component.html
 
 # Build outputs
 dist/
+/tmp/
 android/
 ios/
 

@@ -1,6 +1,6 @@
 # Native mobile development and release
 
-The iOS app is written in Swift/SwiftUI and reads a bundled SQLite database. It has no runtime API dependency. The Angular PWA is still deployed separately to Azure and uses the existing GraphQL API and persisted Apollo cache. Native Android is the next milestone after iOS acceptance; the previous Android WebView shell has been removed.
+The iOS app is written in Swift/SwiftUI and reads a bundled SQLite database. It has no runtime API dependency. The Angular PWA is still deployed separately to Azure and uses the existing GraphQL API and persisted Apollo cache. Native Android development has started in parallel with Apple's review; the previous Android WebView shell has been removed.
 
 ## Identity and baseline
 
@@ -37,6 +37,25 @@ xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -dest
 The **Native iOS checks** workflow validates bundled content and tests the Swift app on available iPhone and 13-inch iPad simulators. It needs no Angular build, npm installation or running API. Before running the UI suite locally, boot the chosen simulator and run `xcrun simctl ui booted appearance dark`; the system-theme regression requires this starting state. Native tests cover the bundled locales, scoring, search, deterministic selection and quiz restoration/timer expiry. Physical-device and visual acceptance remain required.
 
 Run `npm ci`, `npm run lint`, and `npm run build:web` for the PWA. Web service-worker behavior remains enabled in production. Native workflows and web releases are independent.
+
+## Android signing and Play draft
+
+The Google Play app is **Handball Rules Quiz**, package `io.github.kristofgilis.ihfrulesquiz`, app ID `4976385006116525227`, created on 27 October 2026 with the owner's approval. It is Free, type App, default English (US). The initial bundle was rejected because automatic Play protection requires minimum SDK 24; the minimum is now **Android 7.0 (API 24)**, preserving that protection. Google accepted the rebuilt signed **1.0 (code 1)** bundle, showing API 24+, target 36, four screen layouts and four ABIs.
+
+**Internal rollout verified on 27 October 2026 at 19:28 Brussels time:** track status **Active**, release **Available to internal testers**. The owner approved the rollout, the four-language notes in [Android release notes](ANDROID_RELEASE_NOTES.md), and the **Internal testers** list containing the owner's Google account. That list is selected and saved for this track. Google exposes the opt-in link in the Testers tab; testers must join using an eligible account. Play warns that propagation usually takes up to one hour and can take longer. Until store setup/review is complete, Google displays `io.github.kristofgilis.ihfrulesquiz (unreviewed)` as a temporary store name; the installed app retains Handball Rules Quiz. There are two nonblocking warnings: no deobfuscation mapping (release minification is not enabled) and no separate native debug-symbol archive for bundled library code. No public/closed-test release has been performed. The dashboard requires a separate closed test with at least 12 testers continuously enrolled for 14 days before requesting production access; internal testing does not start that period.
+
+The accepted AAB has SHA-256 `2c9b71b94cd89b82910fc9e0ff3e30689fa2270e1c6fd4f9289bce766f81a887`. Local `lintRelease`, `bundleRelease` and signature verification pass. The upload certificate SHA-256 is `3E:0F:FB:18:9D:1C:03:4E:80:9F:FA:4D:4B:7B:18:10:60:B6:CF:FA:DF:42:F1:FB:86:53:82:B8:0A:90:5E:25`. A public certificate export is included in the ignored signing-backup directory. Later uploads must use version code 2 or higher.
+
+The manual **Android signed bundle** workflow builds and verifies a signed AAB without uploading it to Google Play. It requires these repository secrets:
+
+- `ANDROID_KEYSTORE_BASE64`: base64-encoded private upload keystore.
+- `ANDROID_KEYSTORE_PASSWORD`: keystore password.
+- `ANDROID_KEY_ALIAS`: upload key alias.
+- `ANDROID_KEY_PASSWORD`: key password.
+
+The workflow decodes the key only inside the runner's temporary directory, removes it on exit, and saves only the signed AAB as an artifact. Keep an owner-controlled backup of the keystore and passwords outside Git. Never commit them. No Google service-account credential is required for a manual Console upload. The owner approved creating the first upload key, saving all four secrets and uploading code 1 to the internal draft. The key was generated on 27 October 2026; all four repository-secret names were verified after encrypted API writes. The private local backup is in ignored `.local-release-secrets/android/`; copy it to an owner-controlled secure backup before removing this checkout.
+
+Locally, set `ANDROID_KEYSTORE_PATH` to the absolute keystore path and the three password/alias environment variables above, then run `android/gradlew -p android lintRelease bundleRelease -PandroidVersionCode=1`. Builds without signing environment variables remain unsigned for ordinary verification. Every later Play upload needs a unique increasing version code. Signing does not imply authorization to upload, roll out or publish.
 
 ## App branding
 
@@ -83,7 +102,7 @@ Privacy and Support are native pages opened from Settings and readable offline i
 
 ## Android and API infrastructure
 
-Implement Android with Kotlin/Compose and Room after iOS acceptance, using the same content snapshot and parity fixtures. Preserve package ID and signing lineage if a Play record/key already exists. Check actual account/device verification and track requirements before release and test on a supported physical device.
+The Android implementation plan is in [ANDROID_NATIVE_PLAN.md](ANDROID_NATIVE_PLAN.md). A native Kotlin/Compose foundation now lives in `android/`: it reuses the shared bundled SQLite content, adds native navigation and the initial Home/Rules/Practice/Search/Settings/quiz flows, and has its own Linux build workflow. Continue implementation against the parity and acceptance gates in that plan.
 
 Retain API CORS origins `capacitor://localhost` and `https://localhost` while supporting old installed container builds. Remove them only after that support window ends. The API and Azure web origin remain necessary for the PWA.
 

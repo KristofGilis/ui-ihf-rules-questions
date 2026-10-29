@@ -265,10 +265,6 @@ Contributions are welcome! Please follow these steps:
 - Test in multiple languages
 - Verify mobile responsiveness
 
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
 ## 🙏 Acknowledgments
 
 - IHF (International Handball Federation) for the official rules
