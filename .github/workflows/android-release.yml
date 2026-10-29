@@ -56,12 +56,17 @@ jobs:
           printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$ANDROID_KEYSTORE_PATH"
           bash android/gradlew -p android --no-daemon lintRelease bundleRelease -PandroidVersionCode="$VERSION_CODE"
           bundle='android/app/build/outputs/bundle/release/app-release.aab'
+          test -s android/app/build/outputs/mapping/release/mapping.txt
+          unzip -l "$bundle" 'BUNDLE-METADATA/com.android.tools/r8.json' | grep -q 'r8.json'
           jarsigner -verify "$bundle" | tee "$RUNNER_TEMP/bundle-verification.txt"
           grep -q 'jar verified\.' "$RUNNER_TEMP/bundle-verification.txt"
       - name: Save signed bundle
         uses: actions/upload-artifact@v4
         with:
           name: handball-rules-quiz-android-${{ inputs.version_code }}
-          path: android/app/build/outputs/bundle/release/app-release.aab
+          path: |
+            android/app/build/outputs/bundle/release/app-release.aab
+            android/app/build/outputs/mapping/release/mapping.txt
+            android/app/build/outputs/mapping/release/configuration.txt
           if-no-files-found: error
           retention-days: 14

@@ -54,4 +54,4 @@ jobs:
         run: python3 scripts/prepare-android-content.py
       - uses: gradle/actions/setup-gradle@v4
       - name: Compile and lint Android app
-        run: bash android/gradlew -p android lintDebug assembleDebug assembleRelease bundleRelease
+        run: bash android/gradlew -p android lintDebug lintRelease assembleDebug assembleRelease bundleRelease
