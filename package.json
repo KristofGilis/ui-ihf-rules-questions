@@ -94,6 +94,6 @@
   },
   "overrides": {
     "conventional-changelog-writer": "9.3.0",
-    "zod": "4.6.6"
+    "zod": "4.6.7"
   }
 }
